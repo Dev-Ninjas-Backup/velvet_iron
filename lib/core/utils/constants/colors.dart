@@ -20,8 +20,15 @@ class AppColors {
   static const Color primaryColor = Color(0xFF16A26F);
 
   static const LinearGradient buttonGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [buttonGreen, Color(0xFF2E7D5A), Color(0xFF2E7D5A), buttonGreen],
+    begin: Alignment.bottomLeft,
+    end: Alignment.topRight,
+    colors: [
+      Color(0xFFFDE7BB),
+      Color(0xFF9E6D38),
+      Color(0xFFE9B86E),
+      Color(0xFF9D6933),
+      Color(0xFFFEE9BF),
+      Color(0xFF683E23),
+    ],
   );
 }

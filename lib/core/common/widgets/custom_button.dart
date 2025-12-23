@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
 
 class CustomButton extends StatelessWidget {
@@ -15,15 +16,9 @@ class CustomButton extends StatelessWidget {
       height: 62,
       child: DecoratedBox(
         decoration: BoxDecoration(
+          border: Border.all(width: 1.0, color: Colors.white),
           gradient: AppColors.buttonGradient,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: const [
-            BoxShadow(
-              color: Color.fromRGBO(0, 136, 163, 0.20),
-              blurRadius: 10,
-              offset: Offset(0, 4),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(50),
         ),
         child: ElevatedButton(
           onPressed: onPressed,
@@ -31,12 +26,12 @@ class CustomButton extends StatelessWidget {
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(50),
             ),
           ),
           child: Text(
             label,
-            style: const TextStyle(
+            style: getTextStyle(
               color: AppColors.textColor,
               fontWeight: FontWeight.w600,
               fontSize: 20,
