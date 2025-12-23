@@ -13,7 +13,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: Get.width,
-      height: 62,
+      height: 50,
       child: DecoratedBox(
         decoration: BoxDecoration(
           border: Border.all(width: 1.0, color: Colors.white),
@@ -33,8 +33,8 @@ class CustomButton extends StatelessWidget {
             label,
             style: getTextStyle(
               color: AppColors.textColor,
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              fontSize: 18,
             ),
           ),
         ),
