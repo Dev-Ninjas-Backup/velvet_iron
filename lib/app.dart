@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/routes/app_routes.dart';
 import 'core/bindings/controller_binder.dart';
 import 'core/localization/app_translations.dart';
 
@@ -18,8 +19,8 @@ class VelvetIron extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           translations: AppTranslations(),
-          // initialRoute: AppRoute.getSplashScreen(),
-          // getPages: AppRoute.routes,
+          initialRoute: AppRoute.getSplashScreen(),
+          getPages: AppRoute.routes,
           initialBinding: ControllerBinder(),
           themeMode: ThemeMode.system,
         );

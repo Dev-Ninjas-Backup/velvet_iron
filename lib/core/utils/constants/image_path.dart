@@ -1,4 +1,4 @@
 class ImagePath {
-  static String onboarding1 = 'assets/images/onboarding1.png';
-  static String onboarding2 = 'assets/images/onboarding2.png';
+  static const String authBackground = 'assets/images/auth_back.png';
+  static const String splashBackground = 'assets/images/splash_back.png';
 }
