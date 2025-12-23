@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -35,7 +36,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 53,
+      height: 50,
       width: width ?? Get.width,
       child: TextFormField(
         controller: controller,
@@ -47,19 +48,21 @@ class CustomTextField extends StatelessWidget {
         onFieldSubmitted: onSubmitted,
         validator: validator,
 
-        style: TextStyle(
+        style: getTextStyle(
           fontWeight: FontWeight.w400,
-          fontSize: 14,
+          fontSize: 12,
           // ignore: deprecated_member_use
           color: AppColors.textColor,
         ),
         decoration: InputDecoration(
+          filled: true,
+          fillColor: AppColors.textFieldFillColor,
           hintText: hintText,
-          hintStyle: TextStyle(
+          hintStyle: getTextStyle(
             fontWeight: FontWeight.w400,
-            fontSize: 14,
+            fontSize: 12,
             // ignore: deprecated_member_use
-            color: AppColors.textColor.withOpacity(0.7),
+            color: AppColors.textColor,
           ),
           prefixIcon: prefixIcon,
           suffixIcon: suffixIcon,
@@ -69,20 +72,23 @@ class CustomTextField extends StatelessWidget {
             vertical: 16,
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFF7D7D7D)),
+            borderRadius: BorderRadius.circular(50),
+            borderSide: const BorderSide(color: AppColors.textFieldBorderColor),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFF7D7D7D)),
+            borderRadius: BorderRadius.circular(50),
+            borderSide: const BorderSide(color: AppColors.textFieldBorderColor),
           ),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(50),
             borderSide: const BorderSide(color: Colors.red),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFF7D7D7D), width: 2.0),
+            borderRadius: BorderRadius.circular(50),
+            borderSide: const BorderSide(
+              color: AppColors.textFieldBorderColor,
+              width: 2.0,
+            ),
           ),
           errorStyle: const TextStyle(fontSize: 12, color: Colors.red),
         ),

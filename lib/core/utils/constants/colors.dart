@@ -8,7 +8,8 @@ class AppColors {
   static const Color primaryFontColor = Color(0xFF141414);
 
   // TextField colors
-  static const Color textFieldFillColor = Color(0xFFF5F5F5);
+  static const Color textFieldFillColor = Color(0xFF521212);
+  static const Color textFieldBorderColor = Color(0xFF6B1717);
 
   // Background & text colors
   static const Color backgroundColor = Color(0xFF1E1E1E);

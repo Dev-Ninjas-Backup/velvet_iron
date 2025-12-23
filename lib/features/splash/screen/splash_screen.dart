@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
@@ -27,7 +28,7 @@ class SplashScreen extends StatelessWidget {
           children: [
             Text(
               'Velvet & Iron',
-              style: TextStyle(
+              style: getTextStyle(
                 fontSize: 31,
                 fontWeight: FontWeight.w700,
                 color: AppColors.textColor,
@@ -36,7 +37,7 @@ class SplashScreen extends StatelessWidget {
             SizedBox(height: 4),
             Text(
               'Training Codex'.toUpperCase(),
-              style: TextStyle(
+              style: getTextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w400,
                 color: AppColors.subTextColor,
