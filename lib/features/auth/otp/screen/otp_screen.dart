@@ -1,16 +1,13 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:get/get.dart';
-import 'package:get/utils.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
-import 'package:velvet_iron/core/common/widgets/custom_text_field.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
-import 'package:velvet_iron/features/auth/otp/screen/otp_screen.dart';
 
-class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
+class OtpScreen extends StatelessWidget {
+  const OtpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +46,7 @@ class SignUpScreen extends StatelessWidget {
             SizedBox(height: 40),
             Center(
               child: Text(
-                'Sign Up With Velvet & Iron Training Codex',
+                'OTP Verification',
                 style: getTextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w700,
@@ -58,83 +55,50 @@ class SignUpScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: 40),
+            SizedBox(height: 20),
             Text(
-              'Your Name:',
+              'Please check your mail you********ple.com to see the verification code',
+              style: getTextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+                color: AppColors.textColor,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 94),
+            Text(
+              'Otp Code',
               style: getTextStyle(
                 fontSize: 14,
                 color: AppColors.textColor,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(height: 8),
-            CustomTextField(hintText: 'John Doe'),
             SizedBox(height: 12),
-            Text(
-              'Username:',
-              style: getTextStyle(
-                fontSize: 14,
-                color: AppColors.textColor,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            SizedBox(height: 8),
-            CustomTextField(hintText: 'yourmail@example.com'),
-            SizedBox(height: 12),
-            Text(
-              'Password:',
-              style: getTextStyle(
-                fontSize: 14,
-                color: AppColors.textColor,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            SizedBox(height: 8),
-            CustomTextField(hintText: '********', obscureText: true),
-            SizedBox(height: 12),
-            Text(
-              'Confirm Password:',
-              style: getTextStyle(
-                fontSize: 14,
-                color: AppColors.textColor,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            SizedBox(height: 8),
-            CustomTextField(hintText: '********', obscureText: true),
+            OtpTextField(),
             SizedBox(height: 30),
-            CustomButton(
-              label: 'Sign Up',
-              onPressed: () {
-                Get.to(OtpScreen());
-              },
-            ),
-            SizedBox(height: 90),
-            Center(
-              child: RichText(
-                text: TextSpan(
-                  style: getTextStyle(
+            CustomButton(label: 'Verify', onPressed: () {}),
+            SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Resend code to',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
                     fontSize: 14,
                     color: AppColors.textColor,
-                    fontWeight: FontWeight.w400,
                   ),
-                  children: [
-                    TextSpan(text: 'Already have an account? '),
-                    TextSpan(
-                      text: 'Log in!',
-                      style: getTextStyle(
-                        fontSize: 14,
-                        color: AppColors.textColor,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Get.toNamed('/loginScreen');
-                        },
-                    ),
-                  ],
                 ),
-              ),
+                Text(
+                  '2:00',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    color: AppColors.textColor,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
