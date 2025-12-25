@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
+import 'package:velvet_iron/core/common/widgets/custom_button.dart';
+import 'package:velvet_iron/core/common/widgets/custom_text_field.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 
@@ -44,7 +46,7 @@ class SetPasswordScreen extends StatelessWidget {
             SizedBox(height: 40),
             Center(
               child: Text(
-                'OTP Verification',
+                'Setup New Password',
                 style: getTextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w700,
@@ -52,6 +54,44 @@ class SetPasswordScreen extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
+            ),
+            SizedBox(height: 40),
+            Text(
+              'Enter New Password:',
+              style: getTextStyle(
+                fontSize: 14,
+                color: AppColors.textColor,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 8),
+            CustomTextField(hintText: '********', obscureText: true),
+            SizedBox(height: 12),
+            Text(
+              'Confirm New Password:',
+              style: getTextStyle(
+                fontSize: 14,
+                color: AppColors.textColor,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 8),
+            CustomTextField(hintText: '********', obscureText: true),
+            SizedBox(height: 12),
+            Text(
+              '* Password must be minimum 8 character',
+              style: getTextStyle(
+                fontSize: 12,
+                color: Color(0xFFDCAA64),
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            SizedBox(height: 30),
+            CustomButton(
+              label: 'Update Password',
+              onPressed: () {
+                Get.offNamed('/loginScreen');
+              },
             ),
           ],
         ),
