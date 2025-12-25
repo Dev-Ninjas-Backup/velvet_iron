@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/utils.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/common/widgets/custom_text_field.dart';
@@ -106,7 +105,7 @@ class SignUpScreen extends StatelessWidget {
             CustomButton(
               label: 'Sign Up',
               onPressed: () {
-                Get.to(OtpScreen());
+                Get.to(OtpScreen(previousPage: 'SignUpScreen'));
               },
             ),
             SizedBox(height: 90),

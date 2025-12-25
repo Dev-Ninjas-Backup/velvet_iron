@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
-import 'package:velvet_iron/core/common/widgets/custom_button.dart';
-import 'package:velvet_iron/core/common/widgets/custom_text_field.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
-import 'package:velvet_iron/features/auth/otp/screen/otp_screen.dart';
 
-class ForgotScreen extends StatelessWidget {
-  const ForgotScreen({super.key});
+class SetPasswordScreen extends StatelessWidget {
+  const SetPasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +44,7 @@ class ForgotScreen extends StatelessWidget {
             SizedBox(height: 40),
             Center(
               child: Text(
-                'Forgot Password?',
+                'OTP Verification',
                 style: getTextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w700,
@@ -55,24 +52,6 @@ class ForgotScreen extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-            ),
-            SizedBox(height: 40),
-            Text(
-              'Enter Email:',
-              style: getTextStyle(
-                fontSize: 14,
-                color: AppColors.textColor,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            SizedBox(height: 8),
-            CustomTextField(hintText: 'yourmail@example.com'),
-            SizedBox(height: 30),
-            CustomButton(
-              label: 'Send Code',
-              onPressed: () {
-                Get.to(OtpScreen(previousPage: 'ForgotScreen'));
-              },
             ),
           ],
         ),
