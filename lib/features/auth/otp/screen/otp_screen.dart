@@ -7,7 +7,8 @@ import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 
 class OtpScreen extends StatelessWidget {
-  const OtpScreen({super.key});
+  final String previousPage;
+  const OtpScreen({super.key, required this.previousPage});
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +78,16 @@ class OtpScreen extends StatelessWidget {
             SizedBox(height: 12),
             OtpTextField(),
             SizedBox(height: 30),
-            CustomButton(label: 'Verify', onPressed: () {}),
+            CustomButton(
+              label: 'Verify',
+              onPressed: () {
+                if (previousPage == 'SignUpScreen') {
+                  Get.offAllNamed('/loginScreen');
+                } else {
+                  Get.offAllNamed('/setPasswordScreen');
+                }
+              },
+            ),
             SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
