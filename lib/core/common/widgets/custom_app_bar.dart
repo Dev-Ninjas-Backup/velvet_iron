@@ -10,7 +10,7 @@ class CustomAppBar extends StatelessWidget {
     super.key,
     required this.lable,
     this.cancelText,
-    this.back,
+    this.back, required String title,
   });
 
   @override
