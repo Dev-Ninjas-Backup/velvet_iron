@@ -1,120 +1,167 @@
-
-
-
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
+import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 
 class TodoSection extends StatelessWidget {
   const TodoSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(TodoController());
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+            Text(
               "To-do Lists",
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style: getTextStyle(color: Colors.white, fontSize: 18),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.gold),
+                border: Border.all(color: AppColors.textFieldBorderColor),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
-                children: const [
-                  Text("Today", style: TextStyle(color: Colors.white)),
+                children: [
+                  Text("Today", style: getTextStyle(color: Colors.white)),
                   SizedBox(width: 8),
-                  Icon(Icons.arrow_drop_down, color: Colors.white),
+                  Image.asset(
+                    "assets/icons/dropdown.png",
+                    width: 22,
+                    height: 22,
+                    color: Colors.white,
+                  ),
                 ],
               ),
             ),
           ],
         ),
         const SizedBox(height: 12),
-        _TodoTile(
-            title: "Breakfast",
-            sub: "350 kcal",
-            time: "Wed - 8:30 AM",
-            icon: Icons.free_breakfast),
-        _TodoTile(
-            title: "Ozempic (4mg)",
-            sub: "1 Injection",
-            time: "Wed - 09:30 AM",
-            icon: Icons.medication),
+        ...controller.todos.map(
+          (todo) => _TodoTile(
+            title: todo.title,
+            sub: todo.sub,
+            time: todo.time,
+            iconPath: todo.iconPath,
+            isChecked: todo.isChecked,
+          ),
+        ),
       ],
     );
   }
 }
 
-class _TodoTile extends StatefulWidget {
+class _TodoTile extends StatelessWidget {
   final String title, sub, time;
-  final IconData icon;
-  const _TodoTile(
-      {required this.title,
-      required this.sub,
-      required this.time,
-      required this.icon});
+  final String iconPath;
+  final RxBool isChecked;
 
-  @override
-  State<_TodoTile> createState() => _TodoTileState();
-}
+  const _TodoTile({
+    required this.title,
+    required this.sub,
+    required this.time,
+    required this.iconPath,
+    required this.isChecked,
+  });
 
-class _TodoTileState extends State<_TodoTile> {
-  bool _isChecked = false;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Row(
-        children: [
-          Checkbox(
-            value: _isChecked,
-            onChanged: (bool? value) {
-              setState(() {
-                _isChecked = value ?? false;
-              });
-            },
-            shape: const CircleBorder(),
-            activeColor: AppColors.gold,
-            checkColor: Colors.black,
-            side: const BorderSide(color: Colors.white),
-          ),
-          const SizedBox(width: 8),
-          Icon(widget.icon, color: Colors.white),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Obx(
+      () => Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Row(
+          children: [
+            Checkbox(
+              value: isChecked.value,
+              onChanged: (bool? value) {
+                isChecked.value = value ?? false;
+              },
+              shape: const CircleBorder(),
+              activeColor: AppColors.gold,
+              checkColor: Colors.black,
+              side: const BorderSide(color: Colors.white),
+            ),
+            const SizedBox(width: 4),
+            Image.asset(
+              iconPath,
+              width: 24,
+              height: 24,
+              color: Colors.white,
+              errorBuilder: (context, error, stackTrace) => const Icon(
+                Icons.image_not_supported,
+                color: Colors.white,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style:  getTextStyle(color: Colors.white),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    sub,
+                    style:  getTextStyle(color:  Color.fromARGB(255, 149, 4, 4)),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(widget.title,
-                    style: const TextStyle(color: Colors.white)),
-                Text(widget.sub,
-                    style: const TextStyle(color: Colors.white54)),
+                Text("+10 XP⭐", style: getTextStyle(color: Colors.white),),
+                 SizedBox(height: 4),
+                Text(time, style: getTextStyle(color: Color(0xFF914C4C))),
               ],
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              const Text("+10 XP ⭐", style: TextStyle(color: AppColors.gold)),
-              const SizedBox(height: 4),
-              Text(widget.time,
-                  style: const TextStyle(color: Colors.white54)),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
+}
+
+class TodoController extends GetxController {
+  final todos = <TodoModel>[
+    TodoModel(
+      title: "Breakfast",
+      sub: "350 kcal",
+      time: "Wed - 8:30 AM",
+      iconPath: IconPath.todo,
+    ),
+    TodoModel(
+      title: "Ozempic (4mg)",
+      sub: "1 Injection",
+      time: "Wed - 09:30 AM",
+      iconPath: IconPath.todo2,
+    ),
+  ];
+}
+
+class TodoModel {
+  final String title, sub, time;
+  final String iconPath;
+  final RxBool isChecked = false.obs;
+
+  TodoModel({
+    required this.title,
+    required this.sub,
+    required this.time,
+    required this.iconPath,
+  });
 }

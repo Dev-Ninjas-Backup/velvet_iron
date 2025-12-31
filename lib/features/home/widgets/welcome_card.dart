@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
 
 class WelcomeCard extends StatelessWidget {
@@ -7,7 +8,7 @@ class WelcomeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 142,
+      height: 150,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color:AppColors.card,
@@ -20,11 +21,11 @@ class WelcomeCard extends StatelessWidget {
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children:  [
                 Text(
                   "Welcome Back Adventurer",
                   textAlign: TextAlign.start,
-                  style: TextStyle(
+                  style: getTextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -34,7 +35,7 @@ class WelcomeCard extends StatelessWidget {
                 Text(
                   "Your journey to wellness is a heroic quest. Track your daily progress.",
                   textAlign: TextAlign.start,
-                  style: TextStyle(color: Colors.white70, fontSize: 12),
+                  style: getTextStyle(color: Colors.white70, fontSize: 10),
                 ),
               ],
             ),
