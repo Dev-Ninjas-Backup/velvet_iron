@@ -4,6 +4,7 @@ import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
 import 'package:velvet_iron/features/home/widgets/mood_selector.dart';
 import 'package:velvet_iron/features/home/widgets/todo_list.dart';
+import 'package:velvet_iron/features/medication_logshot_screen/screen/medication_logshot_screen.dart';
 import '../widgets/header_section.dart';
 import '../widgets/welcome_card.dart';
 import '../widgets/weight_progress.dart';
@@ -21,35 +22,26 @@ class HomeScreen extends StatelessWidget {
       body: Stack(
         children: [
           Container(
-            height: 411,
-
-            width: double.infinity,
-
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: const AssetImage('assets/images/bgimage.png'),
-                fit: BoxFit.cover,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF1E0000), Color(0xFF680B0B)],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
           ),
 
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppColors.bgDark.withAlpha(80),
-                    const Color.fromARGB(255, 80, 10, 10),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: const [0.2, 0.6],
-                ),
-              ),
+            Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Image.asset(
+              'assets/images/magicImage.png',
+              width: 378,
+              height: 411,
             ),
           ),
 
-          /// CONTENT
           Obx(
             () => IndexedStack(
               index: controller.tabIndex.value,
@@ -61,12 +53,7 @@ class HomeScreen extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                const Center(
-                  child: Text(
-                    "Medication",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
+                MedicationLogshotScreen(),
                 const Center(
                   child: Text(
                     "Exercise",
