@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
+import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 
 class MoodSelector extends StatelessWidget {
   const MoodSelector({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final moods = ['tired', 'good', 'pissed', 'great', 'poor'];
+    final moods = [
+      {'label': 'Tired', 'icon': IconPath.tiredEmoji},
+      {'label': 'Good', 'icon': IconPath.goodEmoji},
+      {'label': 'Pissed', 'icon': IconPath.pissedEmoji},
+      {'label': 'Great', 'icon': IconPath.greatEmoji},
+      {'label': 'Poor', 'icon': IconPath.poorEmoji},
+    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+         Text(
           "How are you feeling?",
-          style: TextStyle(color: Colors.white, fontSize: 20),
+          style: getTextStyle(color: Colors.white, fontSize: 18),
         ),
         const SizedBox(height: 14),
         Row(
@@ -25,24 +33,24 @@ class MoodSelector extends StatelessWidget {
                 height: 80,
                 padding: const EdgeInsets.only(top: 0, bottom: 4),
                 decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.gold, width: 1),
+                  border: Border.all(color: AppColors.textFieldBorderColor),
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(
+                    SizedBox(
                       width: 40,
                       height: 40,
                       child: Center(
-                        child: Icon(Icons.mood, color: Colors.white, size: 24),
+                        child: Image.asset(m['icon']!, width: 24, height: 24),
                       ),
                     ),
 
                     Text(
-                      m,
-                      style: const TextStyle(color: Colors.white, fontSize: 12),
+                      m['label']!,
+                      style: getTextStyle(color: Colors.white, fontSize: 12),
                     ),
                   ],
                 ),
@@ -50,16 +58,16 @@ class MoodSelector extends StatelessWidget {
             ),
             Container(
               height: 80,
-              width: 56,
+              width: 50,
               decoration: BoxDecoration(
-                color: AppColors.gold,
+                gradient: AppColors.buttonGradient,
                 borderRadius: BorderRadius.circular(50),
               ),
-              child: const Center(
+              child: Center(
                 child: Text(
                   "+\nAdd\n+05 xp",
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.black),
+                  style: getTextStyle(color: Colors.white, fontSize: 12),
                 ),
               ),
             ),

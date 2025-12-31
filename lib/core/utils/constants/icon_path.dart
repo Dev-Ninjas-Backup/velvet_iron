@@ -13,4 +13,7 @@ class IconPath {
   static const String steelyard = 'assets/icons/steelyard.png';
   static const String updown = 'assets/icons/updown.png';
   static const String clock = 'assets/icons/clock.png';
+  static const String todo = 'assets/icons/ToDo1.png';
+  static const String todo2 = 'assets/icons/ToDo2.png';
+  
 }

@@ -4,6 +4,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
 
 class WeightProgress extends StatelessWidget {
@@ -17,26 +18,27 @@ class WeightProgress extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+             Text(
               "Weight Progress (kg)",
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style: getTextStyle(color: Colors.white, fontSize: 18),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: AppColors.bg,
+                border: Border.all(color: AppColors.textFieldBorderColor),
+                color:Colors.transparent,
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Row(
-                children: const [
+                children:  [
                   Text(
                     "This week",
-                    style: TextStyle(color: AppColors.gold, fontSize: 14),
-                  ),
+                    style: getTextStyle(color:Colors.white, fontSize: 12),),
+                
                   SizedBox(width: 4),
                   Icon(
                     Icons.arrow_drop_down,
-                    color: AppColors.gold,
+                    color: Colors.white,
                   ),
                 ],
               ),
