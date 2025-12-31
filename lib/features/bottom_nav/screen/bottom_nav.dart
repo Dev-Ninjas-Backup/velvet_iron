@@ -16,7 +16,7 @@ class BottomNav extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.fromLTRB(20, 20, 20, 20),
       decoration: BoxDecoration(
-        border: Border.all(color:  Color.fromARGB(255, 71, 17, 17)),
+        border: Border.all(color:  Color.fromARGB(255, 71, 9, 9)),
         color: AppColors.textFieldFillColor,
         borderRadius: BorderRadius.circular(20),
       ),
