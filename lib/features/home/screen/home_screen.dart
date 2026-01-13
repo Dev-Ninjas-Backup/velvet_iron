@@ -5,6 +5,7 @@ import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller
 import 'package:velvet_iron/features/home/widgets/mood_selector.dart';
 import 'package:velvet_iron/features/home/widgets/todo_list.dart';
 import 'package:velvet_iron/features/medication_logshot_screen/screen/medication_logshot_screen.dart';
+import 'package:velvet_iron/features/daily_logs/screen/daily_log_screen.dart';
 import '../widgets/header_section.dart';
 import '../widgets/welcome_card.dart';
 import '../widgets/weight_progress.dart';
@@ -31,7 +32,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
 
-            Positioned(
+          Positioned(
             top: 0,
             left: 0,
             right: 0,
@@ -43,30 +44,34 @@ class HomeScreen extends StatelessWidget {
           ),
 
           Obx(
-            () => IndexedStack(
-              index: controller.tabIndex.value,
-              children: [
-                _buildHomeContent(),
-                const Center(
-                  child: Text(
-                    "Daily Log",
-                    style: TextStyle(color: Colors.white),
+            () => Padding(
+              padding: const EdgeInsets.only(bottom: 115),
+              child: IndexedStack(
+                index: controller.tabIndex.value,
+                children: [
+                  _buildHomeContent(),
+                  const DailyLogScreen(),
+                  MedicationLogshotScreen(),
+                  const Center(
+                    child: Text(
+                      "Exercise",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
-                ),
-                MedicationLogshotScreen(),
-                const Center(
-                  child: Text(
-                    "Exercise",
-                    style: TextStyle(color: Colors.white),
+                  const Center(
+                    child: Text(
+                      "Quests",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
-                ),
-                const Center(
-                  child: Text("Quests", style: TextStyle(color: Colors.white)),
-                ),
-                const Center(
-                  child: Text("Profile", style: TextStyle(color: Colors.white)),
-                ),
-              ],
+                  const Center(
+                    child: Text(
+                      "Profile",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           const Positioned(bottom: 20, left: 0, right: 0, child: BottomNav()),
