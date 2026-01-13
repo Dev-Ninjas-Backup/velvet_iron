@@ -24,7 +24,21 @@ class MoodOptionWidget extends StatelessWidget {
         height: 80,
         padding: const EdgeInsets.fromLTRB(7, 7, 7, 11),
         decoration: BoxDecoration(
-          color: const Color(0xFF3A0303),
+          gradient: isSelected
+              ? const LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Color(0xFFFDE7BB),
+                    Color(0xFF9E6D38),
+                    Color(0xFFE9B86E),
+                    Color(0xFF9D6933),
+                    Color(0xFFFEE9BF),
+                    Color(0xFF683E23),
+                  ],
+                )
+              : null,
+          color: isSelected ? null : const Color(0xFF3A0303),
           borderRadius: BorderRadius.circular(50),
           border: Border.all(
             color: isSelected ? const Color(0xFFDCAA64) : Colors.transparent,

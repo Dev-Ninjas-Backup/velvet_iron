@@ -13,4 +13,14 @@ class IconPath {
   static const String steelyard = 'assets/icons/steelyard.png';
   static const String updown = 'assets/icons/updown.png';
   static const String clock = 'assets/icons/clock.png';
+  static const String cup = 'assets/icons/cup.png';
+  static const String token = 'assets/icons/token.png';
+  static const String foodBall = 'assets/icons/foodBall.png';
+  static const String meat = 'assets/icons/meat.png';
+  static const String cookie = 'assets/icons/cookie.png';
+  static const String calendar = 'assets/icons/calendar.png';
+  static const String whitecircle = 'assets/icons/whitecircle.png';
+  static const String goldencircle = 'assets/icons/goldencircle.png';
+  static const String qrCodeIcon = 'assets/icons/qrcodeicon.png';
+  static const String whiteSteelyard = 'assets/icons/whiteSteelyard.png';
 }

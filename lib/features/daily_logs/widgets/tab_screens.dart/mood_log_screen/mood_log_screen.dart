@@ -3,6 +3,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
+import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
@@ -11,6 +12,7 @@ import 'package:velvet_iron/features/daily_logs/widgets/gradient_option_button.d
 import 'package:velvet_iron/features/daily_logs/widgets/log_history_item.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/mood_option_widget.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/selectable_option_row.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/mood_log_screen/widgets/note_textfield.dart';
 
 class MoodLog extends StatelessWidget {
   const MoodLog({super.key, required this.controller});
@@ -194,44 +196,7 @@ class MoodLog extends StatelessWidget {
                               style: getTextStyle(fontSize: 14),
                             ),
                             const SizedBox(height: 10),
-                            TextField(
-                              maxLines: 3,
-                              cursorColor: const Color(0xFFDCAA64),
-                              style: getTextStyle(
-                                fontSize: 12,
-                                color: Colors.white,
-                              ),
-                              decoration: InputDecoration(
-                                hintText: "How are you feeling today?",
-                                hintStyle: getTextStyle(
-                                  fontSize: 12,
-                                  color: const Color(0xFF723737),
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xFF3A0303),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xFFDCAA64),
-                                    width: 1.11,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xFFDCAA64),
-                                    width: 1.11,
-                                  ),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xFFDCAA64),
-                                    width: 1.11,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            NoteTextField(),
                             const SizedBox(height: 14),
                             CustomButton(
                               label: "Log Entry (+10 XP)",
@@ -249,9 +214,24 @@ class MoodLog extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 14),
-                      const LogHistoryItem(),
+                      LogHistoryItem(
+                        title: "16.1 lbs",
+                        xpText: "+10 XP",
+                        iconPath: IconPath.goodEmoji,
+                        secondText: "0.5 lbs increased",
+                        thirdText: "",
+                        dateTimeText: "15 Dec, Wed - 09:30 AM",
+                      ),
+
                       const SizedBox(height: 6),
-                      const LogHistoryItem(),
+                      LogHistoryItem(
+                        title: "16.1 lbs",
+                        xpText: "+10 XP",
+                        iconPath: IconPath.pissedEmoji,
+                        secondText: "0.5 lbs increased",
+                        thirdText: "",
+                        dateTimeText: "15 Dec, Wed - 09:30 AM",
+                      ),
                     ],
                   ),
                 ),

@@ -6,6 +6,8 @@ class DailyLogController extends GetxController {
   final selectedEnergy = 0.obs;
   final selectedHunger = 0.obs;
   final selectedTab = 0.obs;
+  final selectedMealTab = 0.obs;
+  final selectedMealType = 0.obs;
 
   // Weight tracking variables
   final currentWeight = "0".obs;
@@ -27,6 +29,8 @@ class DailyLogController extends GetxController {
   void selectEnergy(int index) => selectedEnergy.value = index;
   void selectHunger(int index) => selectedHunger.value = index;
   void setTab(int index) => selectedTab.value = index;
+  void setMealTab(int index) => selectedMealTab.value = index;
+  void selectMealType(int index) => selectedMealType.value = index;
 
   void updateWeightData(String weight, String target, String icon) {
     currentWeight.value = weight;

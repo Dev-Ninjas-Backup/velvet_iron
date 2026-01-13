@@ -27,25 +27,45 @@ class LogYourWeightCard extends StatelessWidget {
             child: TextFormField(
               style: getTextStyle(fontSize: 14),
               decoration: InputDecoration(
+                hintText: "Enter current weight",
+                hintStyle: getTextStyle(
+                  fontSize: 12,
+                  color: const Color(0xFF723737),
+                ),
                 filled: true,
                 fillColor: const Color(0xFF3A0303),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 suffixIcon: Padding(
                   padding: const EdgeInsets.only(right: 12),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("lbs", style: getTextStyle(fontSize: 14, color: Colors.white70)),
+                      Text(
+                        "lbs",
+                        style: getTextStyle(
+                          fontSize: 14,
+                          color: Colors.white70,
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(50),
-                  borderSide: const BorderSide(color: Color(0xFF992929), width: 1.11),
+                  borderSide: const BorderSide(
+                    color: Color(0xFF992929),
+                    width: 1.11,
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(50),
-                  borderSide: const BorderSide(color: Color(0xFFDCAA64), width: 1.11),
+                  borderSide: const BorderSide(
+                    color: Color(0xFFDCAA64),
+                    width: 1.11,
+                  ),
                 ),
               ),
             ),
@@ -62,25 +82,33 @@ class LogYourWeightCard extends StatelessWidget {
               maxLines: 3,
               style: getTextStyle(fontSize: 14),
               decoration: InputDecoration(
+                hintText: "Feeling good today...",
+                hintStyle: getTextStyle(
+                  fontSize: 12,
+                  color: const Color(0xFF723737),
+                ),
                 filled: true,
                 fillColor: const Color(0xFF3A0303),
                 contentPadding: const EdgeInsets.all(12),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.white12, width: 1.11),
+                  borderSide: const BorderSide(
+                    color: Colors.white12,
+                    width: 1.11,
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Color(0xFFDCAA64), width: 1.11),
+                  borderSide: const BorderSide(
+                    color: Color(0xFFDCAA64),
+                    width: 1.11,
+                  ),
                 ),
               ),
             ),
           ),
           const SizedBox(height: 14),
-          CustomButton(
-            label: "Log Weight (+5 XP)",
-            onPressed: () {},
-          ),
+          CustomButton(label: "Log Weight (+5 XP)", onPressed: () {}),
         ],
       ),
     );
