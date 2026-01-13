@@ -6,7 +6,10 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/gradient_option_button.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/log_history_item.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/log_your_weight.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/weight_log_screen/widgets/drop_down.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/weight_log_screen/widgets/graph.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/weight_status_card.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 
@@ -134,74 +137,9 @@ class WeightLog extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Text(
-                            "Weight Chart",
-                            style: getTextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const Spacer(),
-                          Container(
-                            height: 26,
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(21),
-                              border: Border.all(
-                                color: const Color(0xFF992929),
-                              ),
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: "this week",
-                                icon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  size: 16,
-                                  color: Colors.white,
-                                ),
-                                style: getTextStyle(
-                                  fontSize: 10,
-                                  color: Colors.white,
-                                ),
-                                dropdownColor: const Color(0xFF3A0303),
-                                items: ['this week', 'last week', 'this month']
-                                    .map(
-                                      (e) => DropdownMenuItem(
-                                        value: e,
-                                        child: Text(e),
-                                      ),
-                                    )
-                                    .toList(),
-                                onChanged: (val) {},
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      DropDown(),
                       SizedBox(height: 8),
-                      Container(
-                        width: double.infinity,
-                        height: 114,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF320B0B),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: const Color(0xFF992929).withOpacity(0.5),
-                            width: 1,
-                          ),
-                        ),
-                        child: Text(
-                          "graph",
-                          style: getTextStyle(
-                            fontSize: 14,
-                            color: Colors.white54,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
+                      Graph(),
                       SizedBox(height: 20),
                       Text(
                         "Log Your Weight",
@@ -212,6 +150,34 @@ class WeightLog extends StatelessWidget {
                       ),
                       SizedBox(height: 10),
                       LogYourWeightCard(),
+                      SizedBox(height: 20),
+
+                      Text(
+                        "Log History",
+                        style: getTextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      LogHistoryItem(
+                        title: "16.1 lbs",
+                        xpText: "+10 XP",
+                        iconPath: IconPath.whiteSteelyard,
+                        secondText: "0.5 lbs increased",
+                        thirdText: "Feeling good today...",
+                        dateTimeText: "15 Dec, Wed - 09:30 AM",
+                      ),
+
+                      SizedBox(height: 10),
+                      LogHistoryItem(
+                        title: "16.1 lbs",
+                        xpText: "+10 XP",
+                        iconPath: IconPath.whiteSteelyard,
+                        secondText: "0.5 lbs increased",
+                        thirdText: "",
+                        dateTimeText: "15 Dec, Wed - 09:30 AM",
+                      ),
                     ],
                   ),
                 ),

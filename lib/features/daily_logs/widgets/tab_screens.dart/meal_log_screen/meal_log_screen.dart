@@ -4,9 +4,13 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
-import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/gradient_option_button.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/meal_tab_switcher.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/meal_log_screen/widgets/calorie_consumption_card.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/meal_log_screen/widgets/nutrition_loading_card.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/meal_log_screen/widgets/schedule_content.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/meal_log_screen/widgets/token_content.dart';
 
 class MealLog extends StatelessWidget {
   const MealLog({super.key, required this.controller});
@@ -102,51 +106,52 @@ class MealLog extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20),
+                      CalorieConsumptionCard(),
+                      SizedBox(height: 15),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          NutritionLoadingCard(
+                            amount: "396 g",
+                            label: "Carbs",
+                            progress: 0.7,
+                          ),
+                          NutritionLoadingCard(
+                            amount: "211 g",
+                            label: "Protein",
+                            progress: 0.5,
+                          ),
+                          NutritionLoadingCard(
+                            amount: "141 g",
+                            label: "Fats",
+                            progress: 0.4,
+                          ),
+                        ],
+                      ),
+
                       Text(
-                        "Meal Log",
+                        "Log a Meal",
                         style: getTextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  color: AppColors.textFieldFillColor,
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                      SizedBox(height: 20),
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           color: const Color(0xFF521212),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            width: 1.11,
-                            color: Colors.white12,
-                          ),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        clipBehavior: Clip.antiAlias,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Meal Log", style: getTextStyle(fontSize: 14)),
-                            const SizedBox(height: 20),
-                            Center(
-                              child: Text(
-                                "Meal Log content coming soon",
-                                style: getTextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                          ],
+
+                        child: MealTabSwitcher(
+                          controller: controller,
+                          tokenContent: TokenContent(controller: controller),
+                          scheduleContent: ScheduleContent(
+                            controller: controller,
+                          ),
                         ),
                       ),
                     ],

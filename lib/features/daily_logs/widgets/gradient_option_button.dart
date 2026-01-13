@@ -19,20 +19,16 @@ class CustomGradientOptionButton extends StatelessWidget {
       onTap: onPressed,
       child: AnimatedContainer(
         key: ValueKey(text),
-        duration: const Duration(
-          milliseconds: 150,
-        ), 
+        duration: const Duration(milliseconds: 150),
         curve: Curves.easeInOut,
         width: 85,
         height: 32,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(21),
           border: Border.all(
-            // Smoothly transition border color
-            color: isSelected ? Colors.transparent : const Color(0xFF992929),
+            color: isSelected ? Colors.transparent : Colors.grey.shade300,
             width: 1,
           ),
-          // We wrap the gradient in a way that doesn't "snap"
           gradient: isSelected
               ? const LinearGradient(
                   begin: Alignment.topLeft,
@@ -48,7 +44,6 @@ class CustomGradientOptionButton extends StatelessWidget {
                   stops: [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
                 )
               : null,
-          color: isSelected ? null : const Color(0xFF3A0303),
         ),
         alignment: Alignment.center,
         child: Text(
@@ -56,7 +51,6 @@ class CustomGradientOptionButton extends StatelessWidget {
           style: getTextStyle(
             fontSize: 12,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-            color: isSelected ? const Color(0xFF3A0303) : Colors.white,
           ),
         ),
       ),

@@ -16,10 +16,8 @@ class AppRoute {
   static String homeScreen = "/homeScreen";
   static String bottomNavScreen = "/bottomNavScreen";
   static String medicationLogshotScreen = "/medicationLogshotScreen";
-
   static String dailyLogScreen = "/dailyLogScreen";
   static String medicationScreen = "/medicationScreen";
-
   static String getSplashScreen() => splashScreen;
   static String getLoginScreen() => loginScreen;
   static String getSignUpScreen() => signUpScreen;
@@ -27,7 +25,6 @@ class AppRoute {
   static String getHomeScreen() => homeScreen;
   static String getBottomNavScreen() => bottomNavScreen;
   static String getMedicationLogshotScreen() => medicationLogshotScreen;
-
   static String getdailyLogScreen() => dailyLogScreen;
   static String getmedicationScreen() => medicationScreen;
 
