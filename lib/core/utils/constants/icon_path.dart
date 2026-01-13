@@ -23,4 +23,7 @@ class IconPath {
   static const String goldencircle = 'assets/icons/goldencircle.png';
   static const String qrCodeIcon = 'assets/icons/qrcodeicon.png';
   static const String whiteSteelyard = 'assets/icons/whiteSteelyard.png';
+  static const String todo = 'assets/icons/ToDo1.png';
+  static const String todo2 = 'assets/icons/ToDo2.png';
+  
 }

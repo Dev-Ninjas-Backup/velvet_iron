@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 
 class HeaderSection extends StatelessWidget {
   const HeaderSection({super.key});
@@ -14,14 +15,18 @@ class HeaderSection extends StatelessWidget {
         const SizedBox(width: 12),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text(
               "Varga Boglárka",
-              style: TextStyle(color: Colors.white, fontSize: 18),
+              style: getTextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               "Adventurer | 550 xp ⭐",
-              style: TextStyle(color: Colors.white70),
+              style: getTextStyle(color: Colors.white, fontSize: 12),
             ),
           ],
         ),
@@ -32,7 +37,12 @@ class HeaderSection extends StatelessWidget {
             color: Color(0xCC521212),
             shape: BoxShape.circle,
           ),
-          child: const Icon(Icons.wb_sunny, color: Colors.white),
+          child: Image.asset(
+            "assets/icons/action1.png",
+            width: 24,
+            height: 24,
+            color: Colors.white,
+          ),
         ),
         const SizedBox(width: 12),
         Container(
@@ -41,7 +51,12 @@ class HeaderSection extends StatelessWidget {
             color: Color(0xCC521212),
             shape: BoxShape.circle,
           ),
-          child: const Icon(Icons.wb_sunny, color: Colors.white),
+          child: Image.asset(
+            "assets/icons/action2.png",
+            width: 24,
+            height: 24,
+            color: Colors.white,
+          ),
         ),
       ],
     );
