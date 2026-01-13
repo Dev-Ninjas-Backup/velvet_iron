@@ -14,18 +14,41 @@ class DailyLogScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFF1A0101),
-      body: Obx(() {
-        switch (controller.selectedTab.value) {
-          case 0:
-            return WeightLog(controller: controller);
-          case 1:
-            return MoodLog(controller: controller);
-          case 2:
-            return MealLog(controller: controller);
-          default:
-            return MoodLog(controller: controller);
-        }
-      }),
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF1E0000), Color(0xFF680B0B)],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Image.asset(
+              'assets/images/magicImage.png',
+              width: 378,
+              height: 411,
+            ),
+          ),
+          Obx(() {
+            switch (controller.selectedTab.value) {
+              case 0:
+                return WeightLog(controller: controller);
+              case 1:
+                return MoodLog(controller: controller);
+              case 2:
+                return MealLog(controller: controller);
+              default:
+                return MoodLog(controller: controller);
+            }
+          }),
+        ],
+      ),
     );
   }
 }
