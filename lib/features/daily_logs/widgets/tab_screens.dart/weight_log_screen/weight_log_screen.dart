@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
+import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
 import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/gradient_option_button.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/log_history_item.dart';
@@ -14,8 +13,13 @@ import 'package:velvet_iron/features/daily_logs/widgets/weight_status_card.dart'
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 
 class WeightLog extends StatelessWidget {
-  const WeightLog({super.key, required this.controller});
+  const WeightLog({
+    super.key,
+    required this.controller,
+    required this.navController,
+  });
   final DailyLogController controller;
+  final BottomNavController navController;
   @override
   Widget build(BuildContext context) {
     return NestedScrollView(
@@ -32,7 +36,10 @@ class WeightLog extends StatelessWidget {
               children: [
                 const SizedBox(width: 16),
                 GestureDetector(
-                  onTap: () => Get.back(),
+                  onTap: () {
+                    // Navigate to Home screen tab
+                    navController.changeTabIndex(0);
+                  },
                   child: Container(
                     width: 32,
                     height: 32,
