@@ -1,57 +1,151 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
-import 'package:velvet_iron/core/utils/constants/colors.dart';
+import 'package:velvet_iron/core/utils/constants/icon_path.dart';
+import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
+import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/meal_log_screen/widgets/calorie_consumption_card.dart'
+    hide IconPath;
+import 'package:velvet_iron/features/medication_screen/widgets/log_container.dart';
+import 'package:velvet_iron/features/medication_screen/widgets/meal_tab_switcher_medication.dart';
+import 'package:velvet_iron/features/medication_screen/widgets/schedule_content_medication.dart';
+import 'package:velvet_iron/features/medication_screen/widgets/token_content_medication.dart';
 
 class MedicationScreen extends StatelessWidget {
   const MedicationScreen({super.key});
 
+  DailyLogController get controller => Get.put(DailyLogController());
+  BottomNavController get bottomNavController =>
+      Get.find<BottomNavController>();
+
   @override
   Widget build(BuildContext context) {
-    return NestedScrollView(
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        return <Widget>[
-          SliverAppBar(
-            backgroundColor: AppColors.backgroundColor,
-            elevation: 0,
-            floating: true,
-            snap: true,
-            automaticallyImplyLeading: false,
-            titleSpacing: 0,
-            title: Row(
+    final navController = bottomNavController;
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF1E0000), Color(0xFF680B0B)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Image.asset(
+            'assets/images/magicImage.png',
+            width: 378,
+            height: 411,
+          ),
+        ),
+        NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                floating: true,
+                snap: true,
+                automaticallyImplyLeading: false,
+                titleSpacing: 0,
+                title: Row(
+                  children: [
+                    const SizedBox(width: 16),
+                    GestureDetector(
+                      onTap: () {
+                        // Navigate to previous bottom tab (Daily Log)
+                        navController.changeTabIndex(1);
+                      },
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF521212),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back_ios_new,
+                          size: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      "GLP-1 Medication",
+                      style: getTextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ];
+          },
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(width: 16),
-                GestureDetector(
-                  onTap: () => Get.back(),
-                  child: Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF521212),
-                      borderRadius: BorderRadius.circular(50),
+                CalorieConsumptionCard(),
+                SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomLogContainer(
+                        iconPath: IconPath.injection,
+                        title: "Dose Logged",
+                        value: "50",
+                        rewardAmount: "150",
+                      ),
                     ),
-                    child: const Icon(
-                      Icons.arrow_back_ios_new,
-                      size: 18,
-                      color: Colors.white,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: CustomLogContainer(
+                        iconPath: IconPath.quillpen,
+                        title: "Next Dose",
+                        value: "50",
+                        rewardAmount: "150",
+                      ),
                     ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Text(
+                  "Log GLP-1 Dose",
+                  style: getTextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                const SizedBox(width: 10),
-                Text(
-                  "GLP-1 Medication",
-                  style: getTextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
+                SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF521212),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+
+                  child: MealTabSwitcherMedication(
+                    controller: controller,
+                    tokenContent: TokenContentMedication(
+                      controller: controller,
+                    ),
+                    scheduleContent: ScheduleContentMedication(
+                      controller: controller,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-        ];
-      },
-      body: Container(),
+        ),
+      ],
     );
   }
 }

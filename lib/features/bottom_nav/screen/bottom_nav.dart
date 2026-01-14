@@ -16,7 +16,7 @@ class BottomNav extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.fromLTRB(20, 20, 20, 20),
       decoration: BoxDecoration(
-        border: Border.all(color:  Color.fromARGB(255, 71, 9, 9)),
+        border: Border.all(color: Color.fromARGB(255, 71, 9, 9)),
         color: AppColors.textFieldFillColor,
         borderRadius: BorderRadius.circular(20),
       ),
@@ -83,7 +83,7 @@ class BottomNav extends StatelessWidget {
             iconPath,
             width: 24,
             height: 24,
-            color: isSelected ? AppColors.gold : Colors.white54,
+            color: isSelected ? AppColors.gold : Colors.white,
           ),
           const SizedBox(height: 4),
           Text(

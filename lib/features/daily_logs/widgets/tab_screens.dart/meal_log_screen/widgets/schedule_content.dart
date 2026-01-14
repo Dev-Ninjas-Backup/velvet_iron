@@ -4,8 +4,11 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/log_history_item.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/scan_code_button.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/selectable_option_row.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/meal_log_screen/widgets/date_and_time_picker.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/meal_log_screen/widgets/nutrition_input_field.dart';
 
 class ScheduleContent extends StatelessWidget {
   const ScheduleContent({super.key, required this.controller});
@@ -80,56 +83,67 @@ class ScheduleContent extends StatelessWidget {
           ),
         ),
         SizedBox(height: 14),
-        Text(
-          "Consume Calories:",
-          style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-        ),
-        TextFormField(
-          style: getTextStyle(fontSize: 14),
-          decoration: InputDecoration(
-            hintText: "Optional",
-            hintStyle: getTextStyle(
-              fontSize: 12,
-              color: const Color(0xFF723737),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 98,
+                  child: Text("Carbs", style: getTextStyle(fontSize: 14)),
+                ),
+                SizedBox(
+                  width: 98,
+                  child: Text("Protein", style: getTextStyle(fontSize: 14)),
+                ),
+                SizedBox(
+                  width: 98,
+                  child: Text("Fats", style: getTextStyle(fontSize: 14)),
+                ),
+              ],
             ),
-            filled: true,
-            fillColor: const Color(0xFF3A0303),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 8,
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                NutritionInputField(hintText: "carbs"),
+                NutritionInputField(hintText: "protein"),
+                NutritionInputField(hintText: "fats"),
+              ],
             ),
-            suffixIcon: Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "g",
-                    style: getTextStyle(fontSize: 14, color: Colors.white70),
-                  ),
-                ],
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(50),
-              borderSide: const BorderSide(
-                color: Color(0xFF992929),
-                width: 1.11,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(50),
-              borderSide: const BorderSide(
-                color: Color(0xFFDCAA64),
-                width: 1.11,
-              ),
-            ),
-          ),
+          ],
         ),
         SizedBox(height: 20),
         DateAndTimePicker(),
         SizedBox(height: 20),
+        ScanCodeButton(onPressed: () {}),
+        SizedBox(height: 18),
         CustomButton(label: "Log Meal (+10 XP)", onPressed: () {}),
+        const SizedBox(height: 14),
+        Text(
+          "Log History",
+          style: getTextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 14),
+        LogHistoryItem(
+          title: "Feeling Good",
+          xpText: "+10 XP",
+          iconPath: IconPath.goodEmoji,
+          secondText: "Moderate & Hungry",
+          thirdText: "",
+          dateTimeText: "15 Dec, Wed - 09:30 AM",
+        ),
+
+        const SizedBox(height: 6),
+        LogHistoryItem(
+          title: "Feeling Pissed",
+          xpText: "+10 XP",
+          iconPath: IconPath.pissedEmoji,
+          secondText: "Low & Hungry",
+          thirdText: "",
+          dateTimeText: "15 Dec, Wed - 09:30 AM",
+        ),
       ],
     );
   }

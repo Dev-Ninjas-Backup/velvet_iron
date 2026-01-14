@@ -7,6 +7,7 @@ import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.
 import 'package:velvet_iron/features/daily_logs/widgets/scan_code_button.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/selectable_option_row.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/meal_log_screen/widgets/nutrition_input_field.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/meal_log_screen/widgets/select_meal_type.dart';
 
 class TokenContent extends StatelessWidget {
   const TokenContent({super.key, required this.controller});
@@ -81,7 +82,6 @@ class TokenContent extends StatelessWidget {
           ),
         ),
         SizedBox(height: 16),
-
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -103,7 +103,6 @@ class TokenContent extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            // Input Fields Row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: const [
@@ -116,9 +115,36 @@ class TokenContent extends StatelessWidget {
         ),
         SizedBox(height: 14),
         ScanCodeButton(onPressed: () {}),
-        SizedBox(height: 14),
+        SizedBox(height: 18),
         CustomButton(label: "Log Meal (+10 XP)", onPressed: () {}),
-        const SizedBox(height: 40),
+        SizedBox(height: 16),
+        Text(
+          "What did you eat?",
+          style: getTextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+        ),
+
+        SizedBox(height: 5),
+        SelectMealType(
+          title: "Dinner",
+          sub: "120 calories",
+          time: "12 Dec, Wed - 09:00 PM",
+          iconPath: IconPath.meat,
+          isSelected: RxBool(false),
+        ),
+        SelectMealType(
+          title: "Lounch",
+          sub: "120 calories",
+          time: "12 Dec, Wed - 09:00 PM",
+          iconPath: IconPath.foodBall,
+          isSelected: RxBool(false),
+        ),
+        SelectMealType(
+          title: "Breakfast",
+          sub: "120 calories",
+          time: "12 Dec, Wed - 09:00 PM",
+          iconPath: IconPath.cup,
+          isSelected: RxBool(false),
+        ),
       ],
     );
   }

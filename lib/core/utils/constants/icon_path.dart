@@ -25,5 +25,7 @@ class IconPath {
   static const String whiteSteelyard = 'assets/icons/whiteSteelyard.png';
   static const String todo = 'assets/icons/ToDo1.png';
   static const String todo2 = 'assets/icons/ToDo2.png';
-  
+  static const String injection = 'assets/icons/injection.png';
+  static const String quillpen = 'assets/icons/quillpen.png';
+  static const String injection2 = 'assets/icons/injection2.png';
 }
