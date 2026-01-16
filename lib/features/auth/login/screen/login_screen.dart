@@ -8,6 +8,7 @@ import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/auth/login/widgets/remember_widget.dart';
+import 'package:velvet_iron/routes/app_routes.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -60,7 +61,12 @@ class LoginScreen extends StatelessWidget {
             SizedBox(height: 12),
             RememberWidget(),
             SizedBox(height: 30),
-            CustomButton(label: 'Login', onPressed: () {}),
+            CustomButton(
+              label: 'Login',
+              onPressed: () {
+                Get.toNamed(AppRoute.getHomeScreen());
+              },
+            ),
             SizedBox(height: 30),
             Row(
               children: [
