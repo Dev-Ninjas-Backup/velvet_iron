@@ -64,7 +64,7 @@ class LoginScreen extends StatelessWidget {
             CustomButton(
               label: 'Login',
               onPressed: () {
-                Get.toNamed(AppRoute.getHomeScreen());
+                Get.toNamed(AppRoute.getwelcomeScreen());
               },
             ),
             SizedBox(height: 30),
