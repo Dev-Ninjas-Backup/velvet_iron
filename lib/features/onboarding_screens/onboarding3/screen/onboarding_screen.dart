@@ -1,0 +1,62 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:velvet_iron/core/common/widgets/custom_back_button.dart';
+import 'package:velvet_iron/core/common/widgets/custom_background_withimage.dart';
+import 'package:velvet_iron/core/common/widgets/custom_button.dart';
+import 'package:velvet_iron/core/utils/constants/image_path.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding3/controller/onboarding3_controller.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding3/widgets/onboarding_widget.dart';
+import 'package:velvet_iron/routes/app_routes.dart';
+
+class OnboardingScreen3 extends StatelessWidget {
+  const OnboardingScreen3({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Get.put(Onboarding3Controller());
+
+    return Scaffold(
+      body: CustomBackgroundWithImage(
+        imageAsset: ImagePath.magicImage,
+        child: Stack(
+          children: [
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 60),
+                    const StepsTextWidget3(),
+                    const SizedBox(height: 16),
+                    const ProgressBarWidget3(),
+                    const SizedBox(height: 32),
+                    const OnboardingHeader3Widget(),
+                    const SizedBox(height: 32),
+                    const FitnessGoalsWidget(),
+                    const SizedBox(height: 32),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: CustomButton(
+                        label: 'Continue (+10 XP)',
+                        onPressed: () =>
+                            Get.toNamed(AppRoute.getonboardingScreen4()),
+                      ),
+                    ),
+
+                    const Spacer(flex: 3),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 12,
+              left: 24,
+              child: FigmaBackButton(onPressed: () => Get.back()),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
