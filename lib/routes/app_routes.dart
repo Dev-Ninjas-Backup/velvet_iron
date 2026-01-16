@@ -6,17 +6,17 @@ import 'package:velvet_iron/features/daily_logs/screen/daily_log_screen.dart';
 import 'package:velvet_iron/features/exercise/screen/exercise_screen.dart';
 import 'package:velvet_iron/features/home/screen/home_screen.dart';
 import 'package:velvet_iron/features/medication_screen/screen/medication_screen.dart';
-import 'package:velvet_iron/features/onboarding2/screen/onboarding_screen.dart';
-import 'package:velvet_iron/features/onboarding3/screen/onboarding_screen.dart';
-import 'package:velvet_iron/features/onboarding4/screen/onboarding4_screen.dart';
-import 'package:velvet_iron/features/onboarding5/screen/onboarding5_screen.dart';
-import 'package:velvet_iron/features/onboarding6/screen/onboarding6_screen.dart';
-import 'package:velvet_iron/features/onboarding7/screen/onboarding7_screen.dart';
-import 'package:velvet_iron/features/onboarding8/screen/onboarding8_screen.dart';
-import 'package:velvet_iron/features/onboarding9/screen/onboarding9_screen.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding2/screen/onboarding_screen.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding3/screen/onboarding_screen.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding4/screen/onboarding4_screen.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding5/screen/onboarding5_screen.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding6/screen/onboarding6_screen.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding7/screen/onboarding7_screen.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding8/screen/onboarding8_screen.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding9/screen/onboarding9_screen.dart';
 import 'package:velvet_iron/features/splash/screen/splash_screen.dart';
-import 'package:velvet_iron/features/user_onboarding/onboarding1/screen/onboading1_screen.dart';
-import 'package:velvet_iron/features/welcome_boarding/screen/user_boarding_screen.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding1/screen/onboading1_screen.dart';
+import 'package:velvet_iron/features/onboarding_screens/welcome_boarding/screen/user_boarding_screen.dart';
 
 class AppRoute {
   static String splashScreen = "/splashScreen";
