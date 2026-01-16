@@ -8,7 +8,7 @@ class Graph extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 120,
+      height: 140,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: Image.asset(ImagePath.demoGraph, fit: BoxFit.cover),
