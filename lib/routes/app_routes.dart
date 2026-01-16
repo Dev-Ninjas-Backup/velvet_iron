@@ -10,6 +10,10 @@ import 'package:velvet_iron/features/onboarding2/screen/onboarding_screen.dart';
 import 'package:velvet_iron/features/onboarding3/screen/onboarding_screen.dart';
 import 'package:velvet_iron/features/onboarding4/screen/onboarding4_screen.dart';
 import 'package:velvet_iron/features/onboarding5/screen/onboarding5_screen.dart';
+import 'package:velvet_iron/features/onboarding6/screen/onboarding6_screen.dart';
+import 'package:velvet_iron/features/onboarding7/screen/onboarding7_screen.dart';
+import 'package:velvet_iron/features/onboarding8/screen/onboarding8_screen.dart';
+import 'package:velvet_iron/features/onboarding9/screen/onboarding9_screen.dart';
 import 'package:velvet_iron/features/splash/screen/splash_screen.dart';
 import 'package:velvet_iron/features/user_onboarding/onboarding1/screen/onboading1_screen.dart';
 import 'package:velvet_iron/features/welcome_boarding/screen/user_boarding_screen.dart';
@@ -31,6 +35,10 @@ class AppRoute {
   static String onboardingScreen3 = '/onboardingScreen3';
   static String onboardingScreen4 = '/onboardingScreen4';
   static String onboardingScreen5 = '/onboardingScreen5';
+  static String onboardingScreen6 = '/onboardingScreen6';
+  static String onboardingScreen7 = '/onboardingScreen7';
+  static String onboardingScreen8 = '/onboardingScreen8';
+  static String onboardingScreen9 = '/onboardingScreen9';
 
   static String getSplashScreen() => splashScreen;
   static String getLoginScreen() => loginScreen;
@@ -48,6 +56,10 @@ class AppRoute {
   static String getonboardingScreen3() => onboardingScreen3;
   static String getonboardingScreen4() => onboardingScreen4;
   static String getonboardingScreen5() => onboardingScreen5;
+  static String getonboardingScreen6() => onboardingScreen6;
+  static String getonboardingScreen7() => onboardingScreen7;
+  static String getonboardingScreen8() => onboardingScreen8;
+  static String getonboardingScreen9() => onboardingScreen9;
 
   static List<GetPage> routes = [
     GetPage(name: splashScreen, page: () => SplashScreen()),
@@ -65,5 +77,9 @@ class AppRoute {
     GetPage(name: onboardingScreen3, page: () => OnboardingScreen3()),
     GetPage(name: onboardingScreen4, page: () => OnboardingScreen4()),
     GetPage(name: onboardingScreen5, page: () => OnboardingScreen5()),
+    GetPage(name: onboardingScreen6, page: () => OnboardingScreen6()),
+    GetPage(name: onboardingScreen7, page: () => OnboardingScreen7()),
+    GetPage(name: onboardingScreen8, page: () => OnboardingScreen8()),
+    GetPage(name: onboardingScreen9, page: () => OnboardingScreen9()),
   ];
 }
