@@ -80,7 +80,7 @@ class ExerciseScreen extends StatelessWidget {
               ),
             ];
           },
-          body: SingleChildScrollView(),
+          body: Container(),
         ),
       ],
     );
