@@ -45,4 +45,6 @@ class IconPath {
   static const String time = 'assets/icons/time.png';
   static const String heart = 'assets/icons/heart.png';
   static const String trophy = 'assets/icons/trophy.png';
+  static const String yoga = 'assets/icons/yoga.png';
+  static const String dumble = 'assets/icons/dumble.png';
 }
