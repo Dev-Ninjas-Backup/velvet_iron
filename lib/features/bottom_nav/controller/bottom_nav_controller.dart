@@ -5,6 +5,7 @@ import 'package:velvet_iron/features/exercise/screen/exercise_screen.dart';
 import 'package:velvet_iron/features/medication_screen/screen/medication_screen.dart';
 import 'package:velvet_iron/features/home/screen/home_screen.dart';
 import 'package:velvet_iron/features/settings/screen/setting_screen.dart';
+import 'package:velvet_iron/features/quests/screen/quests_screen.dart';
 
 class BottomNavController extends GetxController {
   var tabIndex = 0.obs;
@@ -25,9 +26,7 @@ class BottomNavController extends GetxController {
       case 3:
         return const ExerciseScreen();
       case 4:
-        return const Center(
-          child: Text("Quests", style: TextStyle(color: Colors.white)),
-        );
+        return const QuestsScreen();
       case 5:
         return const SettingScreen();
       default:

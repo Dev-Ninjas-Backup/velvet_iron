@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/gradient_option_button.dart';
+import 'package:velvet_iron/features/exercise/controller/exercise_controller.dart';
 
 class ExcerciseSwitcher extends StatelessWidget {
-  final DailyLogController controller;
+  final ExerciseController controller;
   final Widget? completedContent;
   final Widget? scheduleContent;
 
@@ -26,19 +26,19 @@ class ExcerciseSwitcher extends StatelessWidget {
             children: [
               CustomGradientOptionButton(
                 text: "Completed",
-                isSelected: controller.selectedMealTab.value == 0,
-                onPressed: () => controller.setMealTab(0),
+                isSelected: controller.selectedExerciseTab.value == 0,
+                onPressed: () => controller.setExerciseTab(0),
               ),
               const SizedBox(width: 10),
               CustomGradientOptionButton(
                 text: "Schedule",
-                isSelected: controller.selectedMealTab.value == 1,
-                onPressed: () => controller.setMealTab(1),
+                isSelected: controller.selectedExerciseTab.value == 1,
+                onPressed: () => controller.setExerciseTab(1),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          controller.selectedMealTab.value == 0
+          controller.selectedExerciseTab.value == 0
               ? (completedContent ?? const SizedBox.shrink())
               : (scheduleContent ?? const SizedBox.shrink()),
         ],
