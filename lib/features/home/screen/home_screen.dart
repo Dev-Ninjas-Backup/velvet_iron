@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
-import 'package:velvet_iron/features/daily_logs/screen/daily_log_screen.dart';
 import 'package:velvet_iron/features/home/widgets/mood_selector.dart';
 import 'package:velvet_iron/features/home/widgets/todo_list.dart';
-import 'package:velvet_iron/features/medication_screen/screen/medication_screen.dart';
 import '../widgets/header_section.dart';
 import '../widgets/welcome_card.dart';
 import '../widgets/weight_progress.dart';
@@ -47,34 +45,7 @@ class HomeScreen extends StatelessWidget {
             final controller = Get.find<BottomNavController>();
             return Padding(
               padding: const EdgeInsets.only(bottom: 115),
-              child: IndexedStack(
-                index: controller.tabIndex.value,
-                children: [
-                  const HomeScreenContent(),
-                  const DailyLogScreen(),
-                  const MedicationScreen(),
-
-                  // const ExerciseScreen(),
-                  const Center(
-                    child: Text(
-                      "Exercise",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  const Center(
-                    child: Text(
-                      "Quests",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  const Center(
-                    child: Text(
-                      "Profile",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
+              child: controller.getCurrentScreen(),
             );
           }),
           const Positioned(bottom: 20, left: 0, right: 0, child: BottomNav()),
