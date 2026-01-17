@@ -27,7 +27,7 @@ class StepsTextWidget8 extends StatelessWidget {
           ),
           Row(
             children: [
-              Image.asset(IconPath.cup, width: 8, height: 14),
+              Image.asset(IconPath.trophy, width: 8, height: 14),
               SizedBox(width: 1.5),
               Text(
                 '+10 XP',
@@ -175,7 +175,7 @@ class MealSelectionWidget8 extends StatelessWidget {
       return GestureDetector(
         onTap: () => controller.selectMeal(value),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           decoration: BoxDecoration(
             gradient: isSelected
                 ? const LinearGradient(
@@ -203,7 +203,7 @@ class MealSelectionWidget8 extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset(iconPath, width: 14, height: 14, fit: BoxFit.contain),
+              Image.asset(iconPath, width: 13, height: 13, fit: BoxFit.contain),
               const SizedBox(width: 6),
               Text(
                 label,

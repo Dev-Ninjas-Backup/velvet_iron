@@ -28,7 +28,7 @@ class StepsTextWidget6 extends StatelessWidget {
           ),
           Row(
             children: [
-              Image.asset(IconPath.cup, width: 8, height: 14),
+              Image.asset(IconPath.trophy, width: 8, height: 14),
               SizedBox(width: 1.5),
               Text(
                 '+10 XP',
