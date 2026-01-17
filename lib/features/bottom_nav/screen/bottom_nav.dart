@@ -57,7 +57,7 @@ class BottomNav extends StatelessWidget {
             ),
             _buildNavItem(
               "assets/icons/btmBar6.png",
-              "Profile",
+              "Settings",
               controller.tabIndex.value == 5,
               () => controller.changeTabIndex(5),
             ),

@@ -41,4 +41,5 @@ class IconPath {
   static const String lunch = 'assets/icons/lunch.png';
   static const String dinner = 'assets/icons/dinner.png';
   static const String snack = 'assets/icons/snack.png';
+  static const String trophy = 'assets/icons/trophy.png';
 }
