@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 
 class FigmaBackButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final double size;
+  final String? appBarTitle;
 
-  const FigmaBackButton({super.key, this.onPressed, this.size = 40});
+  const FigmaBackButton(
+      {super.key, this.onPressed, this.size = 40, this.appBarTitle});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    final backButton = GestureDetector(
       onTap: onPressed ?? () => Navigator.pop(context),
       child: Container(
         width: size,
@@ -22,7 +25,7 @@ class FigmaBackButton extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.35),
+              color: Colors.black.withOpacity(0.35),
               blurRadius: 6,
               offset: const Offset(0, 3),
             ),
@@ -36,6 +39,26 @@ class FigmaBackButton extends StatelessWidget {
           ),
         ),
       ),
+    );
+
+    if (appBarTitle == null) {
+      return backButton;
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        backButton,
+        const SizedBox(width: 12),
+        Text(
+          appBarTitle!,
+          style: getTextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ],
     );
   }
 }
