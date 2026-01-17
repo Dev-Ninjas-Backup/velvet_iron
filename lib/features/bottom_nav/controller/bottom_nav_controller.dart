@@ -4,6 +4,7 @@ import 'package:velvet_iron/features/daily_logs/screen/daily_log_screen.dart';
 import 'package:velvet_iron/features/exercise/screen/exercise_screen.dart';
 import 'package:velvet_iron/features/medication_screen/screen/medication_screen.dart';
 import 'package:velvet_iron/features/home/screen/home_screen.dart';
+import 'package:velvet_iron/features/settings/screen/setting_screen.dart';
 import 'package:velvet_iron/features/quests/screen/quests_screen.dart';
 
 class BottomNavController extends GetxController {
@@ -27,9 +28,7 @@ class BottomNavController extends GetxController {
       case 4:
         return const QuestsScreen();
       case 5:
-        return const Center(
-          child: Text("Profile", style: TextStyle(color: Colors.white)),
-        );
+        return const SettingScreen();
       default:
         return const HomeScreenContent();
     }

@@ -14,6 +14,7 @@ import 'package:velvet_iron/features/onboarding_screens/onboarding6/screen/onboa
 import 'package:velvet_iron/features/onboarding_screens/onboarding7/screen/onboarding7_screen.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding8/screen/onboarding8_screen.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding9/screen/onboarding9_screen.dart';
+import 'package:velvet_iron/features/settings/screen/setting_screen.dart';
 import 'package:velvet_iron/features/quests/screen/quests_screen.dart';
 import 'package:velvet_iron/features/splash/screen/splash_screen.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding1/screen/onboading1_screen.dart';
@@ -86,6 +87,7 @@ class AppRoute {
     GetPage(name: onboardingScreen7, page: () => OnboardingScreen7()),
     GetPage(name: onboardingScreen8, page: () => OnboardingScreen8()),
     GetPage(name: onboardingScreen9, page: () => OnboardingScreen9()),
+    GetPage(name: settingScreen, page: () => SettingScreen()),
     GetPage(name: questsScreen, page: () => QuestsScreen()),
     // GetPage(name: settingScreen, page: () => SettingScreen()),
   ];
