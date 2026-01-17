@@ -42,4 +42,11 @@ class IconPath {
   static const String dinner = 'assets/icons/dinner.png';
   static const String snack = 'assets/icons/snack.png';
   static const String trophy = 'assets/icons/trophy.png';
+  static const String feedback = 'assets/icons/feedback.png';
+  static const String taining = 'assets/icons/aboutTraining.png';
+  static const String logout = 'assets/icons/logout.png';
+  static const String myprofile = 'assets/icons/myprofile.png';
+  static const String serkelProfile = 'assets/icons/serkelProfile.png';
+  static const String themes = 'assets/icons/themes.png';
+  
 }

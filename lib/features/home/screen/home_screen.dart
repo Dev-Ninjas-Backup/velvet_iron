@@ -53,7 +53,6 @@ class HomeScreen extends StatelessWidget {
                   const DailyLogScreen(),
                   MedicationScreen(),
                   // const ExerciseScreen(),
-                  
                   const Center(
                     child: Text(
                       "Exercise",

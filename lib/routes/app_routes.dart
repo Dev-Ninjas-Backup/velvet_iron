@@ -39,6 +39,7 @@ class AppRoute {
   static String onboardingScreen7 = '/onboardingScreen7';
   static String onboardingScreen8 = '/onboardingScreen8';
   static String onboardingScreen9 = '/onboardingScreen9';
+  static String settingScreen = '/settingScreen';
 
   static String getSplashScreen() => splashScreen;
   static String getLoginScreen() => loginScreen;
@@ -60,6 +61,7 @@ class AppRoute {
   static String getonboardingScreen7() => onboardingScreen7;
   static String getonboardingScreen8() => onboardingScreen8;
   static String getonboardingScreen9() => onboardingScreen9;
+  static String getsettingScreen() => settingScreen;
 
   static List<GetPage> routes = [
     GetPage(name: splashScreen, page: () => SplashScreen()),
@@ -81,5 +83,6 @@ class AppRoute {
     GetPage(name: onboardingScreen7, page: () => OnboardingScreen7()),
     GetPage(name: onboardingScreen8, page: () => OnboardingScreen8()),
     GetPage(name: onboardingScreen9, page: () => OnboardingScreen9()),
+    // GetPage(name: settingScreen, page: () => SettingScreen()),
   ];
 }
