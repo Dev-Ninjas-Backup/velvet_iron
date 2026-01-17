@@ -45,4 +45,11 @@ class IconPath {
   static const String time = 'assets/icons/time.png';
   static const String heart = 'assets/icons/heart.png';
   static const String trophy = 'assets/icons/trophy.png';
+  static const String feedback = 'assets/icons/feedback.png';
+  static const String taining = 'assets/icons/aboutTraining.png';
+  static const String logout = 'assets/icons/logout.png';
+  static const String myprofile = 'assets/icons/myprofile.png';
+  static const String serkelProfile = 'assets/icons/serkelProfile.png';
+  static const String themes = 'assets/icons/themes.png';
+  
 }
