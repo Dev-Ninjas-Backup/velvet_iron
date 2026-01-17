@@ -120,8 +120,6 @@ class _IntensityAndDurationState extends State<IntensityAndDuration> {
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        Text("Notes (optional)", style: getTextStyle()),
       ],
     );
   }
