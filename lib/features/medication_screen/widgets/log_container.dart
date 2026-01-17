@@ -41,7 +41,7 @@ class CustomLogContainer extends StatelessWidget {
                       title,
                       style: getTextStyle(
                         color: Colors.white,
-                        fontSize: 14,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

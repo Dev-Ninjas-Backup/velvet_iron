@@ -4,8 +4,6 @@ import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
 import 'package:velvet_iron/features/home/widgets/mood_selector.dart';
 import 'package:velvet_iron/features/home/widgets/todo_list.dart';
-import 'package:velvet_iron/features/daily_logs/screen/daily_log_screen.dart';
-import 'package:velvet_iron/features/medication_screen/screen/medication_screen.dart';
 import '../widgets/header_section.dart';
 import '../widgets/welcome_card.dart';
 import '../widgets/weight_progress.dart';
@@ -16,7 +14,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(BottomNavController());
+    Get.put(BottomNavController());
 
     return Scaffold(
       backgroundColor: AppColors.bg,
@@ -43,9 +41,13 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
 
-          Obx(
-            () => Padding(
+          Obx(() {
+            final controller = Get.find<BottomNavController>();
+            return Padding(
               padding: const EdgeInsets.only(bottom: 115),
+              child: controller.getCurrentScreen(),
+            );
+          }),
               child: IndexedStack(
                 index: controller.tabIndex.value,
                 children: [
@@ -81,8 +83,13 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildHomeContent() {
+class HomeScreenContent extends StatelessWidget {
+  const HomeScreenContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 120),

@@ -9,8 +9,8 @@ import 'package:velvet_iron/features/medication_screen/widgets/custom_drop_down.
 import 'package:velvet_iron/features/medication_screen/widgets/dose_history.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/dose_name_textfield.dart';
 
-class ScheduleContentMedication extends StatelessWidget {
-  const ScheduleContentMedication({super.key, required this.controller});
+class ScheduleTabContent extends StatelessWidget {
+  const ScheduleTabContent({super.key, required this.controller});
 
   final DailyLogController controller;
 
@@ -76,6 +76,7 @@ class ScheduleContentMedication extends StatelessWidget {
         const SizedBox(height: 10),
         DateAndTimePicker(),
         SizedBox(height: 20),
+        SizedBox(height: 18),
         CustomButton(label: "Log Meal (+10 XP)", onPressed: () {}),
         const SizedBox(height: 14),
         Text(
