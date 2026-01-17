@@ -48,6 +48,36 @@ class HomeScreen extends StatelessWidget {
               child: controller.getCurrentScreen(),
             );
           }),
+              child: IndexedStack(
+                index: controller.tabIndex.value,
+                children: [
+                  _buildHomeContent(),
+                  const DailyLogScreen(),
+                  MedicationScreen(),
+                  // const ExerciseScreen(),
+                  
+                  const Center(
+                    child: Text(
+                      "Exercise",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  const Center(
+                    child: Text(
+                      "Quests",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  const Center(
+                    child: Text(
+                      "Profile",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           const Positioned(bottom: 20, left: 0, right: 0, child: BottomNav()),
         ],
       ),
