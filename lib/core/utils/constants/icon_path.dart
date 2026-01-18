@@ -53,4 +53,6 @@ class IconPath {
   static const String taining = 'assets/icons/aboutTraining.png';
   static const String logoutIcon = 'assets/icons/logout.png';
   static const String serkelProfile = 'assets/icons/serkelProfile.png';
+  static const String progress = 'assets/icons/progress.png';
+
 }
