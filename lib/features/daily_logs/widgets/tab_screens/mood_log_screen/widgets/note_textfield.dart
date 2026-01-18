@@ -4,13 +4,17 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 class NoteTextField extends StatelessWidget {
   const NoteTextField({
     super.key,
+    this.onChanged,
   });
+
+  final Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 69,
       child: TextFormField(
+        onChanged: onChanged,
         maxLines: 3,
         style: getTextStyle(fontSize: 14),
         decoration: InputDecoration(

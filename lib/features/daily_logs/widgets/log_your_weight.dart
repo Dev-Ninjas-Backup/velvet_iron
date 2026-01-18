@@ -3,7 +3,16 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 
 class LogYourWeightCard extends StatelessWidget {
-  const LogYourWeightCard({super.key});
+  const LogYourWeightCard({
+    super.key,
+    required this.weightController,
+    required this.noteController,
+    required this.onPressed,
+  });
+
+  final TextEditingController weightController;
+  final TextEditingController noteController;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +34,7 @@ class LogYourWeightCard extends StatelessWidget {
           SizedBox(
             height: 40,
             child: TextFormField(
+              controller: weightController,
               style: getTextStyle(fontSize: 14),
               decoration: InputDecoration(
                 hintText: "Enter current weight",
@@ -79,6 +89,7 @@ class LogYourWeightCard extends StatelessWidget {
           SizedBox(
             height: 69,
             child: TextFormField(
+              controller: noteController,
               maxLines: 3,
               style: getTextStyle(fontSize: 14),
               decoration: InputDecoration(
@@ -108,9 +119,10 @@ class LogYourWeightCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 14),
-          CustomButton(label: "Log Weight (+5 XP)", onPressed: () {}),
+          CustomButton(label: "Log Weight (+5 XP)", onPressed: onPressed),
         ],
       ),
     );
   }
 }
+

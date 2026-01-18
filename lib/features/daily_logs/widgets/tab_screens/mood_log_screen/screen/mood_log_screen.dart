@@ -12,12 +12,17 @@ import 'package:velvet_iron/features/daily_logs/widgets/gradient_option_button.d
 import 'package:velvet_iron/features/daily_logs/widgets/log_history_item.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/mood_option_widget.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/selectable_option_row.dart';
-import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/mood_log_screen/widgets/note_textfield.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_screen/controller/mood_log_controller.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_screen/widgets/note_textfield.dart';
 
 class MoodLog extends StatelessWidget {
-  const MoodLog({super.key, required this.controller});
+  const MoodLog(
+      {super.key,
+      required this.dailyLogController,
+      required this.moodLogController});
 
-  final DailyLogController controller;
+  final DailyLogController dailyLogController;
+  final MoodLogController moodLogController;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +77,6 @@ class MoodLog extends StatelessWidget {
             right: 0,
             child: Image.asset(ImagePath.magicImage, fit: BoxFit.cover),
           ),
-
           SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,24 +91,27 @@ class MoodLog extends StatelessWidget {
                           Obx(
                             () => CustomGradientOptionButton(
                               text: "Weight Log",
-                              isSelected: controller.selectedTab.value == 0,
-                              onPressed: () => controller.setTab(0),
+                              isSelected:
+                                  dailyLogController.selectedTab.value == 0,
+                              onPressed: () => dailyLogController.setTab(0),
                             ),
                           ),
                           const SizedBox(width: 10),
                           Obx(
                             () => CustomGradientOptionButton(
                               text: "Mood Log",
-                              isSelected: controller.selectedTab.value == 1,
-                              onPressed: () => controller.setTab(1),
+                              isSelected:
+                                  dailyLogController.selectedTab.value == 1,
+                              onPressed: () => dailyLogController.setTab(1),
                             ),
                           ),
                           const SizedBox(width: 10),
                           Obx(
                             () => CustomGradientOptionButton(
                               text: "Meal Log",
-                              isSelected: controller.selectedTab.value == 2,
-                              onPressed: () => controller.setTab(2),
+                              isSelected:
+                                  dailyLogController.selectedTab.value == 2,
+                              onPressed: () => dailyLogController.setTab(2),
                             ),
                           ),
                         ],
@@ -147,17 +154,19 @@ class MoodLog extends StatelessWidget {
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
                                   children: List.generate(
-                                    controller.moods.length,
+                                    moodLogController.moods.length,
                                     (index) => Padding(
                                       padding: const EdgeInsets.only(right: 8),
                                       child: MoodOptionWidget(
-                                        icon: controller.moods[index].icon,
-                                        title: controller.moods[index].title,
-                                        isSelected:
-                                            controller.selectedMood.value ==
+                                        icon:
+                                            moodLogController.moods[index].icon,
+                                        title: moodLogController
+                                            .moods[index].title,
+                                        isSelected: moodLogController
+                                                .selectedMood.value ==
                                             index,
                                         onTap: () =>
-                                            controller.selectMood(index),
+                                            moodLogController.selectMood(index),
                                       ),
                                     ),
                                   ),
@@ -172,9 +181,10 @@ class MoodLog extends StatelessWidget {
                             const SizedBox(height: 12),
                             Obx(
                               () => SelectableOptionRow(
-                                options: controller.energyLevels,
-                                selectedIndex: controller.selectedEnergy.value,
-                                onTap: controller.selectEnergy,
+                                options: moodLogController.energyLevels,
+                                selectedIndex:
+                                    moodLogController.selectedEnergy.value,
+                                onTap: moodLogController.selectEnergy,
                               ),
                             ),
                             const SizedBox(height: 14),
@@ -185,9 +195,10 @@ class MoodLog extends StatelessWidget {
                             const SizedBox(height: 12),
                             Obx(
                               () => SelectableOptionRow(
-                                options: controller.hungerLevels,
-                                selectedIndex: controller.selectedHunger.value,
-                                onTap: controller.selectHunger,
+                                options: moodLogController.hungerLevels,
+                                selectedIndex:
+                                    moodLogController.selectedHunger.value,
+                                onTap: moodLogController.selectHunger,
                               ),
                             ),
                             const SizedBox(height: 14),
@@ -196,7 +207,9 @@ class MoodLog extends StatelessWidget {
                               style: getTextStyle(fontSize: 14),
                             ),
                             const SizedBox(height: 10),
-                            NoteTextField(),
+                            NoteTextField(
+                              onChanged: moodLogController.setNote,
+                            ),
                             const SizedBox(height: 14),
                             CustomButton(
                               label: "Log Entry (+10 XP)",
@@ -222,7 +235,6 @@ class MoodLog extends StatelessWidget {
                         thirdText: "",
                         dateTimeText: "15 Dec, Wed - 09:30 AM",
                       ),
-
                       const SizedBox(height: 6),
                       LogHistoryItem(
                         title: "16.1 lbs",

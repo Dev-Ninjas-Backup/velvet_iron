@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
-import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/meal_log_screen/widgets/date_and_time_picker.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/date_and_time_picker.dart';
 import 'package:velvet_iron/features/exercise/controller/exercise_controller.dart';
 import 'package:velvet_iron/features/exercise/widgets/excercise_dropdown.dart';
 import 'package:velvet_iron/features/exercise/widgets/intensity_and_duaration.dart';
-import 'package:velvet_iron/features/medication_screen/widgets/excercise_name_textfield.dart';
+import 'package:velvet_iron/features/exercise/widgets/exercise_name_textfield.dart';
 
 class ScheduleTabContent extends StatelessWidget {
   const ScheduleTabContent({super.key, required this.controller});
@@ -30,11 +31,18 @@ class ScheduleTabContent extends StatelessWidget {
           style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
         ),
         const SizedBox(height: 10),
-        excerciseNameTextField(),
+        const ExerciseNameTextField(),
         SizedBox(height: 16),
         IntensityAndDuration(),
         SizedBox(height: 10),
-        DateAndTimePicker(),
+        Obx(
+          () => DateAndTimePicker(
+            selectedDate: controller.scheduleDate.value,
+            selectedTime: controller.scheduleTime.value,
+            onDateChanged: (date) => controller.setSelectedDate(date),
+            onTimeChanged: (time) => controller.setSelectedTime(time),
+          ),
+        ),
         SizedBox(height: 20),
         Text("Notes (optional)", style: getTextStyle()),
         const SizedBox(height: 10),

@@ -3,40 +3,39 @@ import 'package:intl/intl.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 
-class DateAndTimePicker extends StatefulWidget {
-  const DateAndTimePicker({super.key});
+class DateAndTimePicker extends StatelessWidget {
+  final DateTime selectedDate;
+  final TimeOfDay selectedTime;
+  final ValueChanged<DateTime> onDateChanged;
+  final ValueChanged<TimeOfDay> onTimeChanged;
 
-  @override
-  State<DateAndTimePicker> createState() => _DateAndTimePickerState();
-}
-
-class _DateAndTimePickerState extends State<DateAndTimePicker> {
-  final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _timeController = TextEditingController();
+  const DateAndTimePicker({
+    super.key,
+    required this.selectedDate,
+    required this.selectedTime,
+    required this.onDateChanged,
+    required this.onTimeChanged,
+  });
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: selectedDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-    if (picked != null) {
-      setState(() {
-        _dateController.text = DateFormat('yyyy-MM-dd').format(picked);
-      });
+    if (picked != null && picked != selectedDate) {
+      onDateChanged(picked);
     }
   }
 
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: selectedTime,
     );
-    if (picked != null) {
-      setState(() {
-        _timeController.text = picked.format(context);
-      });
+    if (picked != null && picked != selectedTime) {
+      onTimeChanged(picked);
     }
   }
 
@@ -54,7 +53,7 @@ class _DateAndTimePickerState extends State<DateAndTimePicker> {
               ),
               const SizedBox(height: 8),
               _buildPickerField(
-                controller: _dateController,
+                value: DateFormat('yyyy-MM-dd').format(selectedDate),
                 hint: "Choose",
                 iconPath: IconPath.calendar,
                 onTap: () => _selectDate(context),
@@ -63,7 +62,6 @@ class _DateAndTimePickerState extends State<DateAndTimePicker> {
           ),
         ),
         const SizedBox(width: 12),
-
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +72,7 @@ class _DateAndTimePickerState extends State<DateAndTimePicker> {
               ),
               const SizedBox(height: 8),
               _buildPickerField(
-                controller: _timeController,
+                value: selectedTime.format(context),
                 hint: "Choose",
                 iconPath: IconPath.clock,
                 onTap: () => _selectTime(context),
@@ -87,16 +85,15 @@ class _DateAndTimePickerState extends State<DateAndTimePicker> {
   }
 
   Widget _buildPickerField({
-    required TextEditingController controller,
+    required String value,
     required String hint,
     required String iconPath,
     required VoidCallback onTap,
   }) {
     return SizedBox(
       height: 40,
-
       child: TextFormField(
-        controller: controller,
+        controller: TextEditingController(text: value),
         readOnly: true,
         onTap: onTap,
         style: getTextStyle(fontSize: 12, color: Colors.white),
@@ -137,3 +134,4 @@ class _DateAndTimePickerState extends State<DateAndTimePicker> {
     );
   }
 }
+

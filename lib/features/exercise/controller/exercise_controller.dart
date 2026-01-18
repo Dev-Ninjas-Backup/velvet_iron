@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/features/exercise/model/exercise_model.dart';
 
@@ -46,6 +47,16 @@ class ExerciseController extends GetxController {
   final intensity = 'Medium'.obs;
   final notes = ''.obs;
   final scheduleDate = DateTime.now().obs;
+  final scheduleTime = TimeOfDay.now().obs;
+
+  void setSelectedDate(DateTime date) {
+    scheduleDate.value = date;
+  }
+
+  void setSelectedTime(TimeOfDay time) {
+    scheduleTime.value = time;
+  }
+
   final selectedExerciseTab = 0.obs;
 
   void setExerciseTab(int index) {

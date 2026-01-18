@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
-import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
+import 'package:velvet_iron/features/medication_screen/controller/medication_controller.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/custom_drop_down.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/dose_history.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/dose_name_textfield.dart';
@@ -11,7 +11,7 @@ import 'package:velvet_iron/features/medication_screen/widgets/dose_name_textfie
 class TokenContentMedication extends StatelessWidget {
   const TokenContentMedication({super.key, required this.controller});
 
-  final DailyLogController controller;
+  final MedicationController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -72,14 +72,12 @@ class TokenContentMedication extends StatelessWidget {
           ),
         ),
         SizedBox(height: 14),
-
         CustomButton(label: "Log Meal (+10 XP)", onPressed: () {}),
         SizedBox(height: 16),
         Text(
           "Dose History",
           style: getTextStyle(fontSize: 16, fontWeight: FontWeight.w400),
         ),
-
         SizedBox(height: 5),
         DoseHistory(
           title: "Ozempic (4mg)",
@@ -99,3 +97,4 @@ class TokenContentMedication extends StatelessWidget {
     );
   }
 }
+

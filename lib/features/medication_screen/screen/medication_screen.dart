@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
-import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
-import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/meal_log_screen/widgets/calorie_consumption_card.dart'
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/calorie_consumption_card.dart'
     hide IconPath;
+import 'package:velvet_iron/features/medication_screen/controller/medication_controller.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/log_container.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/meal_tab_switcher_medication.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/schedule_content_medication.dart';
@@ -14,7 +14,7 @@ import 'package:velvet_iron/features/medication_screen/widgets/token_content_med
 class MedicationScreen extends StatelessWidget {
   const MedicationScreen({super.key});
 
-  DailyLogController get controller => Get.put(DailyLogController());
+  MedicationController get controller => Get.put(MedicationController());
   BottomNavController get bottomNavController =>
       Get.find<BottomNavController>();
 
@@ -150,3 +150,4 @@ class MedicationScreen extends StatelessWidget {
     );
   }
 }
+

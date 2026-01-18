@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/gradient_option_button.dart';
+import 'package:velvet_iron/features/medication_screen/controller/medication_controller.dart';
 
 class MealTabSwitcherMedication extends StatelessWidget {
-  final DailyLogController controller;
+  final MedicationController controller;
   final Widget? tokenContent;
   final Widget? scheduleContent;
 

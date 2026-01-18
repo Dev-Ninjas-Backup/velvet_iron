@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
-import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
-import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/meal_log_screen/widgets/date_and_time_picker.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/date_and_time_picker.dart';
+import 'package:velvet_iron/features/medication_screen/controller/medication_controller.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/custom_drop_down.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/dose_history.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/dose_name_textfield.dart';
@@ -12,7 +12,7 @@ import 'package:velvet_iron/features/medication_screen/widgets/dose_name_textfie
 class ScheduleContentMedication extends StatelessWidget {
   const ScheduleContentMedication({super.key, required this.controller});
 
-  final DailyLogController controller;
+  final MedicationController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,6 @@ class ScheduleContentMedication extends StatelessWidget {
           style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
         ),
         SizedBox(height: 11),
-
         CustomDropdown(iconPath: IconPath.todo2),
         SizedBox(height: 10),
         Text(
@@ -74,7 +73,12 @@ class ScheduleContentMedication extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        DateAndTimePicker(),
+        DateAndTimePicker(
+          onDateChanged: (p0) {},
+          onTimeChanged: (p0) {},
+          selectedDate: DateTime.now(),
+          selectedTime: TimeOfDay.now(),
+        ),
         SizedBox(height: 20),
         CustomButton(label: "Log Meal (+10 XP)", onPressed: () {}),
         const SizedBox(height: 14),
@@ -101,3 +105,4 @@ class ScheduleContentMedication extends StatelessWidget {
     );
   }
 }
+
