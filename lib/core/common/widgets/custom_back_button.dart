@@ -6,8 +6,12 @@ class FigmaBackButton extends StatelessWidget {
   final double size;
   final String? appBarTitle;
 
-  const FigmaBackButton(
-      {super.key, this.onPressed, this.size = 40, this.appBarTitle});
+  const FigmaBackButton({
+    super.key,
+    this.onPressed,
+    this.size = 40,
+    this.appBarTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +29,7 @@ class FigmaBackButton extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.35),
+              color: Colors.black.withValues(alpha: .35),
               blurRadius: 6,
               offset: const Offset(0, 3),
             ),
