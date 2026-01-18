@@ -14,6 +14,7 @@ import 'package:velvet_iron/features/onboarding_screens/onboarding6/screen/onboa
 import 'package:velvet_iron/features/onboarding_screens/onboarding7/screen/onboarding7_screen.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding8/screen/onboarding8_screen.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding9/screen/onboarding9_screen.dart';
+import 'package:velvet_iron/features/profile/screens/profile_screen.dart';
 import 'package:velvet_iron/features/settings/screen/setting_screen.dart';
 import 'package:velvet_iron/features/quests/screen/quests_screen.dart';
 import 'package:velvet_iron/features/splash/screen/splash_screen.dart';
@@ -43,6 +44,7 @@ class AppRoute {
   static String onboardingScreen9 = '/onboardingScreen9';
   static String questsScreen = '/questsScreen';
   static String settingScreen = '/settingScreen';
+  static String profileScreen = '/profileScreen';
 
   static String getSplashScreen() => splashScreen;
   static String getLoginScreen() => loginScreen;
@@ -66,6 +68,7 @@ class AppRoute {
   static String getonboardingScreen9() => onboardingScreen9;
   static String getquestsScreen() => questsScreen;
   static String getsettingScreen() => settingScreen;
+  static String getprofileScreen() => profileScreen;
 
   static List<GetPage> routes = [
     GetPage(name: splashScreen, page: () => SplashScreen()),
@@ -89,6 +92,6 @@ class AppRoute {
     GetPage(name: onboardingScreen9, page: () => OnboardingScreen9()),
     GetPage(name: settingScreen, page: () => SettingScreen()),
     GetPage(name: questsScreen, page: () => QuestsScreen()),
-    // GetPage(name: settingScreen, page: () => SettingScreen()),
+    GetPage(name: profileScreen, page: () => ProfileScreen()),
   ];
 }

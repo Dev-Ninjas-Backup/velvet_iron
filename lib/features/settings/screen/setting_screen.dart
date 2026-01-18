@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/widgets/custom_background_withimage.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
+import 'package:velvet_iron/features/home/widgets/weight_progress.dart';
 import 'package:velvet_iron/features/settings/controller/setting_controller.dart';
 import 'package:velvet_iron/features/settings/widgets/setting_widget.dart';
 
@@ -24,7 +25,6 @@ class SettingScreen extends StatelessWidget {
               ),
               Expanded(
                 child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.only(
                     left: 10,
                     right: 10,
@@ -36,7 +36,9 @@ class SettingScreen extends StatelessWidget {
                       const UserProfileWidget(),
                       const SizedBox(height: 20),
                       const UpcomingLogWidget(),
-                      const SizedBox(height: 188),
+                      const SizedBox(height: 20),
+                      const WeightProgress(),
+                      const SizedBox(height: 20),
                       const GeneralSettingsWidget(),
                       const SizedBox(height: 22),
                       const LogoutWidget(),
