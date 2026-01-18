@@ -5,7 +5,7 @@ import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/exercise/controller/exercise_controller.dart';
 import 'package:velvet_iron/features/exercise/widgets/excercise_dropdown.dart';
 import 'package:velvet_iron/features/exercise/widgets/intensity_and_duration.dart';
-import 'package:velvet_iron/features/medication_screen/widgets/excercise_name_textfield.dart';
+import 'package:velvet_iron/features/exercise/widgets/exercise_name_textfield.dart';
 
 class CompletedTabContent extends StatelessWidget {
   const CompletedTabContent({super.key, required this.controller});
@@ -29,7 +29,7 @@ class CompletedTabContent extends StatelessWidget {
           style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
         ),
         const SizedBox(height: 10),
-        excerciseNameTextField(),
+        const ExerciseNameTextField(),
         SizedBox(height: 16),
         IntensityAndDuration(),
         SizedBox(height: 14),

@@ -7,15 +7,21 @@ import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/gradient_option_button.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/meal_tab_switcher.dart';
-import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/meal_log_screen/widgets/calorie_consumption_card.dart';
-import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/meal_log_screen/widgets/nutrition_loading_card.dart';
-import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/meal_log_screen/widgets/schedule_content.dart';
-import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/meal_log_screen/widgets/token_content.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/controller/meal_log_controller.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/calorie_consumption_card.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/nutrition_loading_card.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/schedule_content.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/token_content.dart';
 
 class MealLog extends StatelessWidget {
-  const MealLog({super.key, required this.controller});
+  const MealLog({
+    super.key,
+    required this.dailyLogController,
+    required this.mealLogController,
+  });
 
-  final DailyLogController controller;
+  final DailyLogController dailyLogController;
+  final MealLogController mealLogController;
 
   @override
   Widget build(BuildContext context) {
@@ -84,24 +90,27 @@ class MealLog extends StatelessWidget {
                           Obx(
                             () => CustomGradientOptionButton(
                               text: "Weight Log",
-                              isSelected: controller.selectedTab.value == 0,
-                              onPressed: () => controller.setTab(0),
+                              isSelected:
+                                  dailyLogController.selectedTab.value == 0,
+                              onPressed: () => dailyLogController.setTab(0),
                             ),
                           ),
                           const SizedBox(width: 10),
                           Obx(
                             () => CustomGradientOptionButton(
                               text: "Mood Log",
-                              isSelected: controller.selectedTab.value == 1,
-                              onPressed: () => controller.setTab(1),
+                              isSelected:
+                                  dailyLogController.selectedTab.value == 1,
+                              onPressed: () => dailyLogController.setTab(1),
                             ),
                           ),
                           const SizedBox(width: 10),
                           Obx(
                             () => CustomGradientOptionButton(
                               text: "Meal Log",
-                              isSelected: controller.selectedTab.value == 2,
-                              onPressed: () => controller.setTab(2),
+                              isSelected:
+                                  dailyLogController.selectedTab.value == 2,
+                              onPressed: () => dailyLogController.setTab(2),
                             ),
                           ),
                         ],
@@ -109,7 +118,6 @@ class MealLog extends StatelessWidget {
                       SizedBox(height: 20),
                       CalorieConsumptionCard(),
                       SizedBox(height: 15),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: const [
@@ -130,7 +138,6 @@ class MealLog extends StatelessWidget {
                           ),
                         ],
                       ),
-
                       Text(
                         "Log a Meal",
                         style: getTextStyle(
@@ -145,12 +152,13 @@ class MealLog extends StatelessWidget {
                           color: const Color(0xFF521212),
                           borderRadius: BorderRadius.circular(10),
                         ),
-
                         child: MealTabSwitcher(
-                          controller: controller,
-                          tokenContent: TokenContent(controller: controller),
+                          controller: mealLogController,
+                          tokenContent: TokenContent(
+                            controller: mealLogController,
+                          ),
                           scheduleContent: ScheduleContent(
-                            controller: controller,
+                            controller: mealLogController,
                           ),
                         ),
                       ),

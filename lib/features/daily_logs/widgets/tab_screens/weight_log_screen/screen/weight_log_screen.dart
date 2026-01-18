@@ -7,19 +7,22 @@ import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.
 import 'package:velvet_iron/features/daily_logs/widgets/gradient_option_button.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/log_history_item.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/log_your_weight.dart';
-import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/weight_log_screen/widgets/drop_down.dart';
-import 'package:velvet_iron/features/daily_logs/widgets/tab_screens.dart/weight_log_screen/widgets/graph.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/weight_log_screen/controller/weight_log_controller.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/weight_log_screen/widgets/drop_down.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/weight_log_screen/widgets/graph.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/weight_status_card.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 
 class WeightLog extends StatelessWidget {
   const WeightLog({
     super.key,
-    required this.controller,
+    required this.dailyLogController,
     required this.navController,
+    required this.weightLogController,
   });
-  final DailyLogController controller;
+  final DailyLogController dailyLogController;
   final BottomNavController navController;
+  final WeightLogController weightLogController;
   @override
   Widget build(BuildContext context) {
     return NestedScrollView(
@@ -90,24 +93,27 @@ class WeightLog extends StatelessWidget {
                           Obx(
                             () => CustomGradientOptionButton(
                               text: "Weight Log",
-                              isSelected: controller.selectedTab.value == 0,
-                              onPressed: () => controller.setTab(0),
+                              isSelected:
+                                  dailyLogController.selectedTab.value == 0,
+                              onPressed: () => dailyLogController.setTab(0),
                             ),
                           ),
                           const SizedBox(width: 10),
                           Obx(
                             () => CustomGradientOptionButton(
                               text: "Mood Log",
-                              isSelected: controller.selectedTab.value == 1,
-                              onPressed: () => controller.setTab(1),
+                              isSelected:
+                                  dailyLogController.selectedTab.value == 1,
+                              onPressed: () => dailyLogController.setTab(1),
                             ),
                           ),
                           const SizedBox(width: 10),
                           Obx(
                             () => CustomGradientOptionButton(
                               text: "Meal Log",
-                              isSelected: controller.selectedTab.value == 2,
-                              onPressed: () => controller.setTab(2),
+                              isSelected:
+                                  dailyLogController.selectedTab.value == 2,
+                              onPressed: () => dailyLogController.setTab(2),
                             ),
                           ),
                         ],
@@ -116,29 +122,35 @@ class WeightLog extends StatelessWidget {
                       Row(
                         children: [
                           Expanded(
-                            child: WeightStatusCard(
-                              iconPath: IconPath.steelyard,
-                              weightValue: "72 lbs",
-                              label: "Current Weight",
+                            child: Obx(
+                              () => WeightStatusCard(
+                                iconPath: IconPath.steelyard,
+                                weightValue:
+                                    "${weightLogController.currentWeight.value} lbs",
+                                label: "Current Weight",
+                              ),
                             ),
                           ),
                           const SizedBox(width: 10),
                           Expanded(
-                            child: WeightStatusCard(
-                              iconPath: IconPath.updown,
-
-                              weightValue: "1.54 lbs",
-
-                              label: "Total Change",
+                            child: Obx(
+                              () => WeightStatusCard(
+                                iconPath: IconPath.updown,
+                                weightValue:
+                                    "${weightLogController.totalChange.value} lbs",
+                                label: "Total Change",
+                              ),
                             ),
                           ),
-
                           const SizedBox(width: 10),
                           Expanded(
-                            child: WeightStatusCard(
-                              iconPath: IconPath.clock,
-                              weightValue: "12",
-                              label: "Entries Logged",
+                            child: Obx(
+                              () => WeightStatusCard(
+                                iconPath: IconPath.clock,
+                                weightValue:
+                                    weightLogController.entriesLogged.value,
+                                label: "Entries Logged",
+                              ),
                             ),
                           ),
                         ],
@@ -156,9 +168,12 @@ class WeightLog extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 10),
-                      LogYourWeightCard(),
+                      LogYourWeightCard(
+                        weightController: weightLogController.weightController,
+                        noteController: weightLogController.noteController,
+                        onPressed: () {},
+                      ),
                       SizedBox(height: 20),
-
                       Text(
                         "Log History",
                         style: getTextStyle(
@@ -175,7 +190,6 @@ class WeightLog extends StatelessWidget {
                         thirdText: "Feeling good today...",
                         dateTimeText: "15 Dec, Wed - 09:30 AM",
                       ),
-
                       SizedBox(height: 10),
                       LogHistoryItem(
                         title: "16.1 lbs",
@@ -196,3 +210,4 @@ class WeightLog extends StatelessWidget {
     );
   }
 }
+
