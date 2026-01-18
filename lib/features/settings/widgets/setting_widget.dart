@@ -4,6 +4,7 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/settings/controller/setting_controller.dart';
+import 'package:velvet_iron/routes/app_routes.dart';
 
 class SettingsAppBar extends StatelessWidget {
   final VoidCallback? onNotificationTap;
@@ -26,8 +27,7 @@ class SettingsAppBar extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Row(
-          children: [
-            // Back Button
+          children: [            
             GestureDetector(
               onTap: () => Get.back(),
               child: Container(
@@ -42,7 +42,7 @@ class SettingsAppBar extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.35),
+                      color: Colors.black.withValues(alpha: 0.35),
                       blurRadius: 6,
                       offset: const Offset(0, 3),
                     ),
@@ -59,8 +59,7 @@ class SettingsAppBar extends StatelessWidget {
             ),
 
             const SizedBox(width: 6),
-
-            // Title
+           
             Expanded(
               child: Text(
                 'Settings',
@@ -68,7 +67,6 @@ class SettingsAppBar extends StatelessWidget {
               ),
             ),
 
-            // Notification Icon
             GestureDetector(
               onTap: onNotificationTap ?? () {},
               child: Container(
@@ -81,10 +79,8 @@ class SettingsAppBar extends StatelessWidget {
                 child: Image.asset(IconPath.quillpen),
               ),
             ),
-
             const SizedBox(width: 12),
 
-            // Profile Image
             GestureDetector(
               onTap: onProfileTap ?? () {},
               child: Container(
@@ -117,8 +113,7 @@ class UserProfileWidget extends GetView<SettingsController> {
     return Container(
       padding: const EdgeInsets.all(16),
       child: Row(
-        children: [
-          // Profile Image with Gradient Border
+        children: [         
           Container(
             width: 64,
             height: 64,
@@ -154,8 +149,7 @@ class UserProfileWidget extends GetView<SettingsController> {
             ),
           ),
           const SizedBox(width: 16),
-
-          // User Info
+          
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,7 +196,6 @@ class UserProfileWidget extends GetView<SettingsController> {
                 ),
                 const SizedBox(height: 9),
 
-                // Progress Bar with Gradient
                 Obx(
                   () => ClipRRect(
                     borderRadius: BorderRadius.circular(4),
@@ -238,7 +231,7 @@ class UserProfileWidget extends GetView<SettingsController> {
                 ),
 
                 const SizedBox(height: 8),
-                // Progress Text and XP
+                
                 Row(
                   children: [
                     Expanded(
@@ -288,8 +281,7 @@ class UpcomingLogWidget extends GetView<SettingsController> {
         color: Color(0xFF521212),
       ),
       child: Column(
-        children: [
-          // First Row - Header
+        children: [          
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
@@ -330,34 +322,28 @@ class UpcomingLogWidget extends GetView<SettingsController> {
                 ),
               ],
             ),
-          ),
-
-          // Divider
+          ),          
           Container(
             height: 1,
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  const Color(0xFF3A1919).withOpacity(0.3),
+                  const Color(0xFF3A1919).withValues(alpha: 0.3),
                   const Color(0xFF3A1919),
-                  const Color(0xFF3A1919).withOpacity(0.3),
+                  const Color(0xFF3A1919).withValues(alpha: 0.3),
                 ],
               ),
             ),
-          ),
-
-          // Second Row - Log Details
+          ),          
           Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
-              children: [
-                // Food Emoji Icon
+              children: [               
                 Center(child: Image.asset(IconPath.todo)),
 
                 const SizedBox(width: 12),
-
-                // Breakfast Info
+              
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -383,9 +369,7 @@ class UpcomingLogWidget extends GetView<SettingsController> {
                       ),
                     ],
                   ),
-                ),
-
-                // XP and Time
+                ),              
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -426,7 +410,6 @@ class UpcomingLogWidget extends GetView<SettingsController> {
     );
   }
 }
-
 // general settings widget
 class GeneralSettingsWidget extends GetView<SettingsController> {
   const GeneralSettingsWidget({super.key});
@@ -450,7 +433,7 @@ class GeneralSettingsWidget extends GetView<SettingsController> {
         _buildSettingsItem(
           iconPath: IconPath.myprofile,
           title: 'My Profile',
-          onTap: controller.navigateToProfile,
+          onTap: () => Get.toNamed(AppRoute.getprofileScreen()),
         ),
         const SizedBox(height: 12),
 

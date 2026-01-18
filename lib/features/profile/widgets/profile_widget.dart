@@ -31,7 +31,7 @@ class ProfileAppBar extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.35),
+                      color: Colors.black.withValues(alpha: 0.35),
                       blurRadius: 6,
                       offset: const Offset(0, 3),
                     ),
