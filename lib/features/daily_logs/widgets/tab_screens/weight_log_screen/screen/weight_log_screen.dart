@@ -156,7 +156,7 @@ class WeightLog extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 20),
-                      DropDown(),
+                      DropDown(text: 'Weight Chart (kg)'),
                       SizedBox(height: 8),
                       Graph(),
                       SizedBox(height: 20),
@@ -210,4 +210,3 @@ class WeightLog extends StatelessWidget {
     );
   }
 }
-

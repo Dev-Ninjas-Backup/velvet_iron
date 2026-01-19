@@ -9,6 +9,7 @@ import 'package:velvet_iron/features/daily_logs/widgets/selectable_option_row.da
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/controller/meal_log_controller.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/date_and_time_picker.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/nutrition_input_field.dart';
+import 'package:velvet_iron/routes/app_routes.dart';
 
 class ScheduleContent extends StatelessWidget {
   const ScheduleContent({super.key, required this.controller});
@@ -133,7 +134,9 @@ class ScheduleContent extends StatelessWidget {
           ),
         ),
         SizedBox(height: 20),
-        ScanCodeButton(onPressed: () {}),
+        ScanCodeButton(onPressed: () {
+          Get.toNamed(AppRoute.qrcodeScanScreen);
+        }),
         SizedBox(height: 18),
         CustomButton(label: "Log Meal (+10 XP)", onPressed: () {}),
         const SizedBox(height: 14),

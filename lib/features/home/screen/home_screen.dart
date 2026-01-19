@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
 import 'package:velvet_iron/features/home/widgets/mood_selector.dart';
 import 'package:velvet_iron/features/home/widgets/todo_list.dart';
 import '../widgets/header_section.dart';
@@ -15,6 +16,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(BottomNavController());
+    Get.put(HomeController());
 
     return Scaffold(
       backgroundColor: AppColors.bg,

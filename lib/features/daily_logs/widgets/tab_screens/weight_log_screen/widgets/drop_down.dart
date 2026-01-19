@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 class DropDown extends StatelessWidget {
+  final String text;
   const DropDown({
     super.key,
+    required this.text,
   });
 
   @override
@@ -10,7 +12,7 @@ class DropDown extends StatelessWidget {
     return Row(
       children: [
         Text(
-          "Weight Chart",
+          text,
           style: getTextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,

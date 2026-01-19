@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
+import 'package:velvet_iron/routes/app_routes.dart';
 
 class ScanCodeButton extends StatelessWidget {
-  final VoidCallback? onPressed;
-
-  const ScanCodeButton({super.key, required this.onPressed});
+  const ScanCodeButton({super.key, required Null Function() onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +13,9 @@ class ScanCodeButton extends StatelessWidget {
       width: Get.width,
       height: 50,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: () {
+          Get.toNamed(AppRoute.qrcodeScanScreen);
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
