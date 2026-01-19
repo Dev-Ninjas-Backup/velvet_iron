@@ -37,7 +37,7 @@ class SettingScreen extends StatelessWidget {
                       const SizedBox(height: 20),
                       const UpcomingLogWidget(),
                       const SizedBox(height: 20),
-                      const WeightProgress(),
+                      const WeightProgress(title: 'Weekly Activity',),
                       const SizedBox(height: 20),
                       const GeneralSettingsWidget(),
                       const SizedBox(height: 22),
