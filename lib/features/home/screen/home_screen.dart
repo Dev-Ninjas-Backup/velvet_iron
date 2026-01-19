@@ -72,7 +72,7 @@ class HomeScreenContent extends StatelessWidget {
             SizedBox(height: 20),
             WelcomeCard(),
             SizedBox(height: 26),
-            WeightProgress(),
+            WeightProgress(title: 'Weekly Activity'),
             SizedBox(height: 26),
             MoodSelector(),
             SizedBox(height: 26),
