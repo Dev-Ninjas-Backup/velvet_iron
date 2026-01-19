@@ -51,6 +51,7 @@ class AppRoute {
   static String profileScreen = '/profileScreen';
   static String qrcodeScanScreen = '/qrcodeScanScreen';
   static String redGoldenPopupScreen = '/redGoldenPopupScreen';
+  static String themeScreen = '/themeScreen';
   static String dailyGoalScreen = '/dailyGoalScreen';
   static String feedbackScreen() => '/feedbackScreen';
 
@@ -79,6 +80,7 @@ class AppRoute {
   static String getprofileScreen() => profileScreen;
   static String getqrcodeScanScreen() => qrcodeScanScreen;
   static String getredGoldenPopupScreen() => redGoldenPopupScreen;
+  static String getthemeScreen() => themeScreen;
   static String getdailyGoalScreen() => dailyGoalScreen;
   static String getfeedbackScreen() => feedbackScreen(); 
 
