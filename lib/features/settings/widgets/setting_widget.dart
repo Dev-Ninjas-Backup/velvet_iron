@@ -450,7 +450,7 @@ class GeneralSettingsWidget extends GetView<SettingsController> {
         _buildSettingsItem(
           iconPath: IconPath.themes,
           title: 'Themes & Preference',
-          onTap: controller.navigateToThemes,
+          onTap: () => Get.toNamed(AppRoute.getthemeScreen()),
         ),
         const SizedBox(height: 12),
 

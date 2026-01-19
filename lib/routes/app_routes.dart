@@ -24,6 +24,7 @@ import 'package:velvet_iron/features/quests/screen/quests_screen.dart';
 import 'package:velvet_iron/features/splash/screen/splash_screen.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding1/screen/onboading1_screen.dart';
 import 'package:velvet_iron/features/onboarding_screens/welcome_boarding/screen/user_boarding_screen.dart';
+import 'package:velvet_iron/features/themes_and_preference/screen/theme_screen.dart';
 
 class AppRoute {
   static String splashScreen = "/splashScreen";
@@ -53,7 +54,7 @@ class AppRoute {
   static String redGoldenPopupScreen = '/redGoldenPopupScreen';
   static String themeScreen = '/themeScreen';
   static String dailyGoalScreen = '/dailyGoalScreen';
-  static String feedbackScreen() => '/feedbackScreen';
+  static String feedbackScreen = '/feedbackScreen';
 
   static String getSplashScreen() => splashScreen;
   static String getLoginScreen() => loginScreen;
@@ -82,7 +83,7 @@ class AppRoute {
   static String getredGoldenPopupScreen() => redGoldenPopupScreen;
   static String getthemeScreen() => themeScreen;
   static String getdailyGoalScreen() => dailyGoalScreen;
-  static String getfeedbackScreen() => feedbackScreen(); 
+  static String getfeedbackScreen() => feedbackScreen;
 
   static List<GetPage> routes = [
     GetPage(name: splashScreen, page: () => SplashScreen()),
@@ -110,6 +111,7 @@ class AppRoute {
     GetPage(name: qrcodeScanScreen, page: () => QrcodeScanScreen()),
     GetPage(name: redGoldenPopupScreen, page: () => RedGoldenPopupScreen()),
     GetPage(name: dailyGoalScreen, page: () => DailyGoalScreen()),
-    GetPage(name: feedbackScreen(), page: () => const FeedbackScreen()),
+    GetPage(name: feedbackScreen, page: () => FeedbackScreen()),
+    GetPage(name: themeScreen, page: () => ThemeScreen()),
   ];
 }
