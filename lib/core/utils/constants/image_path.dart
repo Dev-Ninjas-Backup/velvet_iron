@@ -13,4 +13,5 @@ class ImagePath {
   static const String redFrame = 'assets/images/red_frame.png';
   static const String charecterOne = 'assets/images/charecter_one.png';
   static const String diamond = 'assets/images/diamond.png';
+  static const String velvetbook = 'assets/images/velvetbook.png';
 }
