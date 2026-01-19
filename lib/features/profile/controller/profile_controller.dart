@@ -1,4 +1,3 @@
-// profile_controller.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -6,12 +5,14 @@ import 'package:velvet_iron/core/utils/constants/image_path.dart';
 
 class ProfileController extends GetxController {
   final fullName = 'Jamie Friddle'.obs;
-  final username = 'jamiefriddle123@gmail.com'.obs;
+  final username = 'jamie'.obs;
+  final email = 'jamiefriddle123@gmail.com'.obs;
   final password = '************'.obs;
   final profileImage = ImagePath.profile.obs;
 
   late TextEditingController fullNameController;
   late TextEditingController usernameController;
+  late TextEditingController emailController;
   late TextEditingController passwordController;
 
   final ImagePicker _picker = ImagePicker();
@@ -23,6 +24,7 @@ class ProfileController extends GetxController {
     fullNameController = TextEditingController(text: fullName.value);
     usernameController = TextEditingController(text: username.value);
     passwordController = TextEditingController(text: password.value);
+    emailController = TextEditingController(text: email.value);
 
     fullNameController.addListener(() {
       fullName.value = fullNameController.text;
@@ -33,6 +35,9 @@ class ProfileController extends GetxController {
     passwordController.addListener(() {
       password.value = passwordController.text;
     });
+    emailController.addListener(() {
+      email.value = emailController.text;
+    });
   }
 
   @override
@@ -40,6 +45,7 @@ class ProfileController extends GetxController {
     fullNameController.dispose();
     usernameController.dispose();
     passwordController.dispose();
+    emailController.dispose();
     super.onClose();
   }
 
@@ -92,6 +98,18 @@ class ProfileController extends GetxController {
       Get.snackbar(
         'Error',
         'Please enter your username',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.withValues(alpha: 0.8),
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
+      return;
+    }
+
+    if (emailController.text.trim().isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please enter your email address',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red.withValues(alpha: 0.8),
         colorText: Colors.white,

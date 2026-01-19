@@ -27,7 +27,7 @@ class SettingsAppBar extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Row(
-          children: [            
+          children: [
             GestureDetector(
               onTap: () => Get.back(),
               child: Container(
@@ -59,7 +59,7 @@ class SettingsAppBar extends StatelessWidget {
             ),
 
             const SizedBox(width: 6),
-           
+
             Expanded(
               child: Text(
                 'Settings',
@@ -113,7 +113,7 @@ class UserProfileWidget extends GetView<SettingsController> {
     return Container(
       padding: const EdgeInsets.all(16),
       child: Row(
-        children: [         
+        children: [
           Container(
             width: 64,
             height: 64,
@@ -149,7 +149,7 @@ class UserProfileWidget extends GetView<SettingsController> {
             ),
           ),
           const SizedBox(width: 16),
-          
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,7 +231,7 @@ class UserProfileWidget extends GetView<SettingsController> {
                 ),
 
                 const SizedBox(height: 8),
-                
+
                 Row(
                   children: [
                     Expanded(
@@ -281,7 +281,7 @@ class UpcomingLogWidget extends GetView<SettingsController> {
         color: Color(0xFF521212),
       ),
       child: Column(
-        children: [          
+        children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
@@ -322,7 +322,7 @@ class UpcomingLogWidget extends GetView<SettingsController> {
                 ),
               ],
             ),
-          ),          
+          ),
           Container(
             height: 1,
             margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -335,15 +335,15 @@ class UpcomingLogWidget extends GetView<SettingsController> {
                 ],
               ),
             ),
-          ),          
+          ),
           Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
-              children: [               
+              children: [
                 Center(child: Image.asset(IconPath.todo)),
 
                 const SizedBox(width: 12),
-              
+
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -369,7 +369,7 @@ class UpcomingLogWidget extends GetView<SettingsController> {
                       ),
                     ],
                   ),
-                ),              
+                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -410,6 +410,7 @@ class UpcomingLogWidget extends GetView<SettingsController> {
     );
   }
 }
+
 // general settings widget
 class GeneralSettingsWidget extends GetView<SettingsController> {
   const GeneralSettingsWidget({super.key});
@@ -441,7 +442,7 @@ class GeneralSettingsWidget extends GetView<SettingsController> {
         _buildSettingsItem(
           iconPath: IconPath.trophy,
           title: 'Daily Macro Goal',
-          onTap: controller.navigateToDailyMacroGoal,
+          onTap: () => Get.toNamed(AppRoute.getdailyGoalScreen()),
         ),
         const SizedBox(height: 12),
 
@@ -457,7 +458,7 @@ class GeneralSettingsWidget extends GetView<SettingsController> {
         _buildSettingsItem(
           iconPath: IconPath.feedback,
           title: 'Feedback & Support',
-          onTap: controller.navigateToFeedback,
+          onTap: () => Get.toNamed(AppRoute.getfeedbackScreen()),
         ),
         const SizedBox(height: 12),
 

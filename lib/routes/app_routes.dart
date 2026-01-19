@@ -3,7 +3,9 @@ import 'package:velvet_iron/features/auth/login/screen/login_screen.dart';
 import 'package:velvet_iron/features/auth/set_password/screen/set_password_screen.dart';
 import 'package:velvet_iron/features/auth/sign_up/screen/sign_up_screen.dart';
 import 'package:velvet_iron/features/daily_logs/screen/daily_log_screen.dart';
+import 'package:velvet_iron/features/daily_macro_goal/screens/daily_goal_screen.dart';
 import 'package:velvet_iron/features/exercise/screen/exercise_screen.dart';
+import 'package:velvet_iron/features/feedback/screen/feedback_screen.dart';
 import 'package:velvet_iron/features/home/screen/home_screen.dart';
 import 'package:velvet_iron/features/medication_screen/screen/medication_screen.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding2/screen/onboarding_screen.dart';
@@ -49,6 +51,8 @@ class AppRoute {
   static String profileScreen = '/profileScreen';
   static String qrcodeScanScreen = '/qrcodeScanScreen';
   static String redGoldenPopupScreen = '/redGoldenPopupScreen';
+  static String dailyGoalScreen = '/dailyGoalScreen';
+  static String feedbackScreen() => '/feedbackScreen';
 
   static String getSplashScreen() => splashScreen;
   static String getLoginScreen() => loginScreen;
@@ -75,6 +79,8 @@ class AppRoute {
   static String getprofileScreen() => profileScreen;
   static String getqrcodeScanScreen() => qrcodeScanScreen;
   static String getredGoldenPopupScreen() => redGoldenPopupScreen;
+  static String getdailyGoalScreen() => dailyGoalScreen;
+  static String getfeedbackScreen() => feedbackScreen(); 
 
   static List<GetPage> routes = [
     GetPage(name: splashScreen, page: () => SplashScreen()),
@@ -101,5 +107,7 @@ class AppRoute {
     GetPage(name: profileScreen, page: () => ProfileScreen()),
     GetPage(name: qrcodeScanScreen, page: () => QrcodeScanScreen()),
     GetPage(name: redGoldenPopupScreen, page: () => RedGoldenPopupScreen()),
+    GetPage(name: dailyGoalScreen, page: () => DailyGoalScreen()),
+    GetPage(name: feedbackScreen(), page: () => const FeedbackScreen()),
   ];
 }
