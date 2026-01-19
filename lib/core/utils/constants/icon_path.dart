@@ -58,4 +58,5 @@ class IconPath {
   static const String grass = 'assets/icons/grass.png';
   static const String ratings = 'assets/icons/ratings.png';
   static const String discordwhite = 'assets/icons/discordwhite.png';
+  static const String eye = 'assets/icons/eye.png';
 }
