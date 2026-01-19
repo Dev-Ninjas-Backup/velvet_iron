@@ -8,7 +8,6 @@ import 'package:velvet_iron/features/daily_logs/widgets/gradient_option_button.d
 import 'package:velvet_iron/features/daily_logs/widgets/log_history_item.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/log_your_weight.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/weight_log_screen/controller/weight_log_controller.dart';
-import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/weight_log_screen/widgets/drop_down.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/weight_log_screen/widgets/graph.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/weight_status_card.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
@@ -156,10 +155,8 @@ class WeightLog extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 20),
-                      DropDown(text: 'Weight Chart (kg)'),
-                      SizedBox(height: 8),
                       Graph(),
-                      SizedBox(height: 20),
+                      SizedBox(height: 8),
                       Text(
                         "Log Your Weight",
                         style: getTextStyle(
