@@ -150,10 +150,11 @@ class ProfileWidget extends StatelessWidget {
             ),
           ),
         ),
+
         const SizedBox(height: 8),
         Obx(
           () => Text(
-            '@${controller.username.value.split('@')[0]}',
+            '@${controller.email.value}',
             style: getTextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w400,
@@ -236,6 +237,28 @@ class UpdateInformationWidget extends StatelessWidget {
               hintText: 'Enter username/email',
 
               value: controller.username.value,
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // Username Field
+          Text(
+            'Email Address:',
+            style: getTextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+          Obx(
+            () => _buildTextField(
+              controller: controller.emailController,
+              hintText: 'Enter email address',
+
+              value: controller.email.value,
             ),
           ),
           const SizedBox(height: 20),
