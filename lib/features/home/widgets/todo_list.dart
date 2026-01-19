@@ -3,13 +3,14 @@ import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
 
 class TodoSection extends StatelessWidget {
   const TodoSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(TodoController());
+    final controller = Get.put<HomeController>(HomeController());
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -110,12 +111,12 @@ class _TodoTile extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style:  getTextStyle(color: Colors.white),
+                    style: getTextStyle(color: Colors.white),
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
                     sub,
-                    style:  getTextStyle(color:  Color.fromARGB(255, 149, 4, 4)),
+                    style: getTextStyle(color: Color.fromARGB(255, 149, 4, 4)),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
@@ -124,9 +125,22 @@ class _TodoTile extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text("+10 XP⭐", style: getTextStyle(color: Colors.white),),
-                 SizedBox(height: 4),
-                Text(time, style: getTextStyle(color: Color(0xFF914C4C))),
+                Row(
+                  mainAxisSize:
+                      MainAxisSize.min, // Keeps content aligned to the right
+                  children: [
+                    Text("+10 XP", style: getTextStyle(color: Colors.white)),
+                    const SizedBox(width: 4),
+                    Image.asset(
+                      IconPath.star,
+                      width: 12,
+                      height: 12,
+                      fit: BoxFit.contain,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(time, style: getTextStyle(color: const Color(0xFF914C4C))),
               ],
             ),
           ],
@@ -134,34 +148,4 @@ class _TodoTile extends StatelessWidget {
       ),
     );
   }
-}
-
-class TodoController extends GetxController {
-  final todos = <TodoModel>[
-    TodoModel(
-      title: "Breakfast",
-      sub: "350 kcal",
-      time: "Wed - 8:30 AM",
-      iconPath: IconPath.todo,
-    ),
-    TodoModel(
-      title: "Ozempic (4mg)",
-      sub: "1 Injection",
-      time: "Wed - 09:30 AM",
-      iconPath: IconPath.todo2,
-    ),
-  ];
-}
-
-class TodoModel {
-  final String title, sub, time;
-  final String iconPath;
-  final RxBool isChecked = false.obs;
-
-  TodoModel({
-    required this.title,
-    required this.sub,
-    required this.time,
-    required this.iconPath,
-  });
 }

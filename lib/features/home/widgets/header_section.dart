@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
+import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 
 class HeaderSection extends StatelessWidget {
   const HeaderSection({super.key});
@@ -24,9 +25,21 @@ class HeaderSection extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              "Adventurer | 550 xp ⭐",
-              style: getTextStyle(color: Colors.white, fontSize: 12),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  IconPath.trophy,
+                  width: 14,
+                  height: 14,
+                  fit: BoxFit.contain,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  "Unbound | 220 xp",
+                  style: getTextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ],
             ),
           ],
         ),
@@ -37,12 +50,7 @@ class HeaderSection extends StatelessWidget {
             color: Color(0xCC521212),
             shape: BoxShape.circle,
           ),
-          child: Image.asset(
-            "assets/icons/action1.png",
-            width: 24,
-            height: 24,
-            color: Colors.white,
-          ),
+          child: Image.asset("assets/icons/action1.png", width: 24, height: 24),
         ),
         const SizedBox(width: 12),
         Container(
@@ -52,10 +60,9 @@ class HeaderSection extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: Image.asset(
-            "assets/icons/action2.png",
+            "assets/icons/progress.png",
             width: 24,
             height: 24,
-            color: Colors.white,
           ),
         ),
       ],

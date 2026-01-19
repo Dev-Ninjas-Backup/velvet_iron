@@ -25,41 +25,53 @@ class BottomNav extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _buildNavItem(
-              "assets/icons/btmBar1.png",
-              "Home",
-              controller.tabIndex.value == 0,
-              () => controller.changeTabIndex(0),
+            Expanded(
+              child: _buildNavItem(
+                "assets/icons/btmBar1.png",
+                "Home",
+                controller.tabIndex.value == 0,
+                () => controller.changeTabIndex(0),
+              ),
             ),
-            _buildNavItem(
-              "assets/icons/btmBar2.png",
-              "Daily Log",
-              controller.tabIndex.value == 1,
-              () => controller.changeTabIndex(1),
+            Expanded(
+              child: _buildNavItem(
+                "assets/icons/btmBar2.png",
+                "Daily Log",
+                controller.tabIndex.value == 1,
+                () => controller.changeTabIndex(1),
+              ),
             ),
-            _buildNavItem(
-              "assets/icons/btmBar3.png",
-              "Medication",
-              controller.tabIndex.value == 2,
-              () => controller.changeTabIndex(2),
+            Expanded(
+              child: _buildNavItem(
+                "assets/icons/btmBar3.png",
+                "Medication",
+                controller.tabIndex.value == 2,
+                () => controller.changeTabIndex(2),
+              ),
             ),
-            _buildNavItem(
-              "assets/icons/btmBar4.png",
-              "Exercise",
-              controller.tabIndex.value == 3,
-              () => controller.changeTabIndex(3),
+            Expanded(
+              child: _buildNavItem(
+                "assets/icons/btmBar4.png",
+                "Exercise",
+                controller.tabIndex.value == 3,
+                () => controller.changeTabIndex(3),
+              ),
             ),
-            _buildNavItem(
-              "assets/icons/btmBar5.png",
-              "Quests",
-              controller.tabIndex.value == 4,
-              () => controller.changeTabIndex(4),
+            Expanded(
+              child: _buildNavItem(
+                "assets/icons/btmBar5.png",
+                "Quests",
+                controller.tabIndex.value == 4,
+                () => controller.changeTabIndex(4),
+              ),
             ),
-            _buildNavItem(
-              "assets/icons/btmBar6.png",
-              "Settings",
-              controller.tabIndex.value == 5,
-              () => controller.changeTabIndex(5),
+            Expanded(
+              child: _buildNavItem(
+                "assets/icons/btmBar6.png",
+                "Settings",
+                controller.tabIndex.value == 5,
+                () => controller.changeTabIndex(5),
+              ),
             ),
           ],
         ),
@@ -88,6 +100,8 @@ class BottomNav extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: getTextStyle(
               fontSize: 12,
               color: isSelected ? AppColors.gold : Colors.white54,

@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/weight_log_screen/widgets/drop_down.dart';
 
 class WeightProgress extends StatelessWidget {
   const WeightProgress({super.key});
@@ -26,10 +27,7 @@ class WeightProgress extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Weight Progress (kg)",
-          style: getTextStyle(color: Colors.white, fontSize: 18),
-        ),
+        DropDown(text: 'Weekly Activity'),
         const SizedBox(height: 12),
 
         SizedBox(
