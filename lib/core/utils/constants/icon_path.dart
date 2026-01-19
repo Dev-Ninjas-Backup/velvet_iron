@@ -56,4 +56,5 @@ class IconPath {
   static const String progress = 'assets/icons/progress.png';
   static const String moon = 'assets/icons/moon.png';
   static const String grass = 'assets/icons/grass.png';
+  static const String eye = 'assets/icons/eye.png';
 }

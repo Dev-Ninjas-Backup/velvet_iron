@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
+import 'package:velvet_iron/features/auth/otp/controller/otp_controller.dart';
+import 'package:velvet_iron/features/auth/otp/widgets/otp_field.dart';
 
 class OtpScreen extends StatelessWidget {
   final String previousPage;
@@ -12,6 +13,7 @@ class OtpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final OtpController controller = Get.put(OtpController());
     return Scaffold(
       body: Container(
         padding: EdgeInsets.only(top: 82, left: 16, right: 16),
@@ -76,16 +78,12 @@ class OtpScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 12),
-            OtpTextField(),
+            const OtpField(),
             SizedBox(height: 30),
             CustomButton(
               label: 'Verify',
               onPressed: () {
-                if (previousPage == 'SignUpScreen') {
-                  Get.offAllNamed('/loginScreen');
-                } else {
-                  Get.offAllNamed('/setPasswordScreen');
-                }
+                controller.verifyOtp(previousPage);
               },
             ),
             SizedBox(height: 30),
@@ -100,14 +98,19 @@ class OtpScreen extends StatelessWidget {
                     color: AppColors.textColor,
                   ),
                 ),
-                Text(
-                  '2:00',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    color: AppColors.textColor,
-                  ),
-                ),
+                Obx(() {
+                  final int secs = controller.remainingSeconds.value;
+                  final String minutes = (secs ~/ 60).toString();
+                  final String seconds = (secs % 60).toString().padLeft(2, '0');
+                  return Text(
+                    '$minutes:$seconds',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      color: AppColors.textColor,
+                    ),
+                  );
+                }),
               ],
             ),
           ],

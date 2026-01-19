@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/common/widgets/custom_text_field.dart';
+import 'package:velvet_iron/features/auth/set_password/controller/set_password_controller.dart';
+import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 
@@ -11,6 +13,8 @@ class SetPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final SetPasswordController controller = Get.put(SetPasswordController());
+
     return Scaffold(
       body: Container(
         padding: EdgeInsets.only(top: 82, left: 16, right: 16),
@@ -65,18 +69,64 @@ class SetPasswordScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 8),
-            CustomTextField(hintText: '********', obscureText: true),
-            SizedBox(height: 12),
-            Text(
-              'Confirm New Password:',
-              style: getTextStyle(
-                fontSize: 14,
-                color: AppColors.textColor,
-                fontWeight: FontWeight.w500,
+            Form(
+              key: controller.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Obx(
+                    () => CustomTextField(
+                      hintText: '********',
+                      obscureText: controller.passwordObscured.value,
+                      controller: controller.passwordController,
+                      validator: controller.passwordValidator,
+                      suffixIcon: GestureDetector(
+                        onTap: controller.togglePasswordVisibility,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Image.asset(
+                            IconPath.eye,
+                            height: 20,
+                            width: 20,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  Text(
+                    'Confirm New Password:',
+                    style: getTextStyle(
+                      fontSize: 14,
+                      color: AppColors.textColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Obx(
+                    () => CustomTextField(
+                      hintText: '********',
+                      obscureText: controller.confirmPasswordObscured.value,
+                      controller: controller.confirmPasswordController,
+                      validator: controller.confirmPasswordValidator,
+                      suffixIcon: GestureDetector(
+                        onTap: controller.toggleConfirmPasswordVisibility,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Image.asset(
+                            IconPath.eye,
+                            height: 20,
+                            width: 20,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 8),
-            CustomTextField(hintText: '********', obscureText: true),
             SizedBox(height: 12),
             Text(
               '* Password must be minimum 8 character',
@@ -90,7 +140,7 @@ class SetPasswordScreen extends StatelessWidget {
             CustomButton(
               label: 'Update Password',
               onPressed: () {
-                Get.offNamed('/loginScreen');
+                controller.updatePassword();
               },
             ),
           ],
