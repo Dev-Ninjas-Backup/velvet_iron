@@ -5,13 +5,15 @@ import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/common/widgets/custom_text_field.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
-import 'package:velvet_iron/features/auth/otp/screen/otp_screen.dart';
+import 'package:velvet_iron/features/auth/forgot_pass/controller/forgot_pass_controller.dart';
 
 class ForgotScreen extends StatelessWidget {
   const ForgotScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ForgotPassController controller = Get.put(ForgotPassController());
+
     return Scaffold(
       body: Container(
         padding: EdgeInsets.only(top: 82, left: 16, right: 16),
@@ -66,12 +68,20 @@ class ForgotScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 8),
-            CustomTextField(hintText: 'yourmail@example.com'),
+            Form(
+              key: controller.formKey,
+              child: CustomTextField(
+                hintText: 'yourmail@example.com',
+                controller: controller.emailController,
+                keyboardType: TextInputType.emailAddress,
+                validator: controller.validateEmail,
+              ),
+            ),
             SizedBox(height: 30),
             CustomButton(
               label: 'Send Code',
               onPressed: () {
-                Get.to(OtpScreen(previousPage: 'ForgotScreen'));
+                controller.submitForgotPassword();
               },
             ),
           ],
