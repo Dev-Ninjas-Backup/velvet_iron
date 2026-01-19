@@ -49,6 +49,7 @@ class AppRoute {
   static String profileScreen = '/profileScreen';
   static String qrcodeScanScreen = '/qrcodeScanScreen';
   static String redGoldenPopupScreen = '/redGoldenPopupScreen';
+  static String themeScreen = '/themeScreen';
 
   static String getSplashScreen() => splashScreen;
   static String getLoginScreen() => loginScreen;
@@ -75,6 +76,7 @@ class AppRoute {
   static String getprofileScreen() => profileScreen;
   static String getqrcodeScanScreen() => qrcodeScanScreen;
   static String getredGoldenPopupScreen() => redGoldenPopupScreen;
+  static String getthemeScreen() => themeScreen;
 
   static List<GetPage> routes = [
     GetPage(name: splashScreen, page: () => SplashScreen()),
@@ -101,5 +103,6 @@ class AppRoute {
     GetPage(name: profileScreen, page: () => ProfileScreen()),
     GetPage(name: qrcodeScanScreen, page: () => QrcodeScanScreen()),
     GetPage(name: redGoldenPopupScreen, page: () => RedGoldenPopupScreen()),
+    // GetPage(name: themeScreen, page: () => ThemeScreen()),
   ];
 }
