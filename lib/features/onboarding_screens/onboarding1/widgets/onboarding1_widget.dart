@@ -142,18 +142,16 @@ class CompanionCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
-        padding: isSelected ? const EdgeInsets.all(2) : EdgeInsets.zero,
+        padding: const EdgeInsets.all(2),
         decoration: BoxDecoration(
-          gradient: isSelected
-              ? const LinearGradient(
-                  colors: [
-                    Color(0xFFFDE7BB),
-                    Color(0xFF9E6D38),
-                    Color(0xFFE9B86E),
-                    Color(0xFFE5B46B),
-                  ],
-                )
-              : null,
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xFFFDE7BB),
+              Color(0xFF9E6D38),
+              Color(0xFFE9B86E),
+              Color(0xFFE5B46B),
+            ],
+          ),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Container(
@@ -161,12 +159,6 @@ class CompanionCard extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: companion.bgGradient,
             borderRadius: BorderRadius.circular(16),
-            border: !isSelected
-                ? Border.all(
-                    color: Colors.white.withValues(alpha: 0.7),
-                    width: 1,
-                  )
-                : null,
           ),
           child: _buildCardContent(),
         ),

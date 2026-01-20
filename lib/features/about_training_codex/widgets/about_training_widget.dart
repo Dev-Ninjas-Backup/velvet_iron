@@ -78,7 +78,7 @@ class IntroWidget extends StatelessWidget {
             style: getTextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFFD4AF37),
+              color: Colors.white,
             ),
           ),
           const SizedBox(height: 12),
@@ -296,7 +296,6 @@ class _ExpandableSectionWidgetState extends State<ExpandableSectionWidget>
 
           const SizedBox(height: 12),
 
-          // Expandable Content
           SizeTransition(
             sizeFactor: _expandAnimation,
             child: Column(
@@ -347,28 +346,41 @@ class _ExpandableSectionWidgetState extends State<ExpandableSectionWidget>
           const SizedBox(width: 12),
           // Content
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: getTextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                ),
-                if (description.isNotEmpty) ...[
-                  const SizedBox(height: 6),
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  if (isSelected) {
+                    _selectedIndices.remove(index);
+                  } else {
+                    _selectedIndices.add(index);
+                  }
+                });
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    description,
+                    title,
                     style: getTextStyle(
-                      fontSize: 12,
-                      color: Colors.white.withValues(alpha: 0.85),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: isSelected
+                          ? const Color(0xFFD4AF37)
+                          : Colors.white,
                     ),
                   ),
+                  if (description.isNotEmpty) ...[
+                    const SizedBox(height: 6),
+                    Text(
+                      description,
+                      style: getTextStyle(
+                        fontSize: 12,
+                        color: Colors.white.withValues(alpha: 0.85),
+                      ),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ],

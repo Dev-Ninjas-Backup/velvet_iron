@@ -19,7 +19,7 @@ class OnboardingController1 extends GetxController {
       theme: 'Active Theme & Companion',
       unlockXp: null,
       imagePath: ImagePath.serkael,
-      bgImage: IconPath.pyrIcon,
+      bgImage: IconPath.serIcon,
       isActive: true,
       bgGradient: const LinearGradient(
         begin: Alignment.topLeft,
@@ -41,10 +41,17 @@ class OnboardingController1 extends GetxController {
       theme: '',
       unlockXp: 250,
       imagePath: ImagePath.riven,
-      bgImage: IconPath.rivIcon,
+      bgImage: IconPath.serIcon,
       isActive: false,
       bgGradient: const LinearGradient(
-        colors: [Color(0xFF1B0033), Color(0xFF35065E), Color(0xFF1B0033)],
+        colors: [
+          Color(0xFF310101),
+          Color(0xFF550606),
+          Color(0xFF550606),
+          Color(0xFF310101),
+          Color(0xFF550606),
+          Color(0xFF310101),
+        ],
       ),
     ),
     CompanionModel(
@@ -57,7 +64,14 @@ class OnboardingController1 extends GetxController {
       bgImage: IconPath.serIcon,
       isActive: false,
       bgGradient: const LinearGradient(
-        colors: [Color(0xFF0F0E11), Color(0xFF201C23), Color(0xFF0F0E11)],
+        colors: [
+          Color(0xFF310101),
+          Color(0xFF550606),
+          Color(0xFF550606),
+          Color(0xFF310101),
+          Color(0xFF550606),
+          Color(0xFF310101),
+        ],
       ),
     ),
     CompanionModel(
@@ -67,10 +81,17 @@ class OnboardingController1 extends GetxController {
       theme: '',
       unlockXp: 250,
       imagePath: ImagePath.bram,
-      bgImage: IconPath.bramIcon,
+      bgImage: IconPath.serIcon,
       isActive: false,
       bgGradient: const LinearGradient(
-        colors: [Color(0xFF111C18), Color(0xFF1E332C), Color(0xFF111C18)],
+        colors: [
+          Color(0xFF310101),
+          Color(0xFF550606),
+          Color(0xFF550606),
+          Color(0xFF310101),
+          Color(0xFF550606),
+          Color(0xFF310101),
+        ],
       ),
     ),
   ].obs;
