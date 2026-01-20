@@ -4,21 +4,27 @@ import 'package:velvet_iron/features/auth/login/validation/login_validation.dart
 import 'package:velvet_iron/routes/app_routes.dart';
 
 class LoginController extends GetxController {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
-  final TextEditingController userIdentifierController =
-      TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  late final TextEditingController userIdentifierController;
+  late final TextEditingController passwordController;
 
-  var rememberMe = false.obs;
-  var passwordObscured = true.obs;
+  final rememberMe = false.obs;
+  final passwordObscured = true.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    userIdentifierController = TextEditingController();
+    passwordController = TextEditingController();
+  }
 
   void toggleRememberMe(bool? value) {
     rememberMe.value = value ?? false;
   }
 
   void togglePasswordVisibility() {
-    passwordObscured.value = !passwordObscured.value;
+    passwordObscured.toggle();
   }
 
   String? userIdentifierValidator(String? value) {
@@ -30,15 +36,16 @@ class LoginController extends GetxController {
   }
 
   void login() {
-    if (formKey.currentState!.validate()) {
-      Get.toNamed(AppRoute.getwelcomeScreen());
-    }
+    if (!formKey.currentState!.validate()) return;
+
+    // Remove login screen completely (IMPORTANT)
+    Get.offNamed(AppRoute.welcomeScreen);
   }
 
   @override
   void onClose() {
-    userIdentifierController.dispose();
-    passwordController.dispose();
+    // Avoid disposing controllers here to prevent 'used after dispose'
+    // errors when the controller lifecycle is managed by GetX navigation.
     super.onClose();
   }
 }
