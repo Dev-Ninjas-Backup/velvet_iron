@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:velvet_iron/features/about_training_codex/screens/about_training_screen.dart';
 import 'package:velvet_iron/features/auth/login/screen/login_screen.dart';
 import 'package:velvet_iron/features/auth/set_password/screen/set_password_screen.dart';
 import 'package:velvet_iron/features/auth/sign_up/screen/sign_up_screen.dart';
@@ -55,6 +56,7 @@ class AppRoute {
   static String themeScreen = '/themeScreen';
   static String dailyGoalScreen = '/dailyGoalScreen';
   static String feedbackScreen = '/feedbackScreen';
+  static String aboutTrainingScreen = '/aboutTrainingScreen';
 
   static String getSplashScreen() => splashScreen;
   static String getLoginScreen() => loginScreen;
@@ -84,6 +86,7 @@ class AppRoute {
   static String getthemeScreen() => themeScreen;
   static String getdailyGoalScreen() => dailyGoalScreen;
   static String getfeedbackScreen() => feedbackScreen;
+  static String getaboutTrainingScreen() => aboutTrainingScreen;
 
   static List<GetPage> routes = [
     GetPage(name: splashScreen, page: () => SplashScreen()),
@@ -113,5 +116,6 @@ class AppRoute {
     GetPage(name: dailyGoalScreen, page: () => DailyGoalScreen()),
     GetPage(name: feedbackScreen, page: () => FeedbackScreen()),
     GetPage(name: themeScreen, page: () => ThemeScreen()),
+    GetPage(name: aboutTrainingScreen, page: () => AboutTrainingScreen()),
   ];
 }

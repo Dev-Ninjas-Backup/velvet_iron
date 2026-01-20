@@ -466,8 +466,9 @@ class GeneralSettingsWidget extends GetView<SettingsController> {
         _buildSettingsItem(
           iconPath: IconPath.taining,
           title: 'About Training Codex',
-          onTap: controller.navigateToAbout,
+          onTap: () => Get.toNamed(AppRoute.getaboutTrainingScreen()),
         ),
+        const SizedBox(height: 12),
       ],
     );
   }
