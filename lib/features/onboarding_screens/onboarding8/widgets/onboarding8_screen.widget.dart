@@ -95,7 +95,7 @@ class OnboardingHeaderWidget8 extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Text(
-        "Which meal you have taken so far today?",
+        "Which meals have you had so far today?",
         textAlign: TextAlign.center,
         style: getTextStyle(
           fontSize: 24,
@@ -128,36 +128,39 @@ class MealSelectionWidget8 extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              _buildMealOption(
-                iconPath: IconPath.breakfast,
-                label: 'Breakfast',
-                value: 'Breakfast',
-                controller: controller,
-              ),
-              const SizedBox(width: 8),
-              _buildMealOption(
-                iconPath: IconPath.lunch,
-                label: 'Lunch',
-                value: 'Lunch',
-                controller: controller,
-              ),
-              const SizedBox(width: 8),
-              _buildMealOption(
-                iconPath: IconPath.dinner,
-                label: 'Dinner',
-                value: 'Dinner',
-                controller: controller,
-              ),
-              const SizedBox(width: 8),
-              _buildMealOption(
-                iconPath: IconPath.snack,
-                label: 'Snack',
-                value: 'Snack',
-                controller: controller,
-              ),
-            ],
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _buildMealOption(
+                  iconPath: IconPath.breakfast,
+                  label: 'Breakfast',
+                  value: 'Breakfast',
+                  controller: controller,
+                ),
+                const SizedBox(width: 8),
+                _buildMealOption(
+                  iconPath: IconPath.lunch,
+                  label: 'Lunch',
+                  value: 'Lunch',
+                  controller: controller,
+                ),
+                const SizedBox(width: 8),
+                _buildMealOption(
+                  iconPath: IconPath.dinner,
+                  label: 'Dinner',
+                  value: 'Dinner',
+                  controller: controller,
+                ),
+                const SizedBox(width: 8),
+                _buildMealOption(
+                  iconPath: IconPath.snack,
+                  label: 'Snack',
+                  value: 'Snack',
+                  controller: controller,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -193,12 +196,7 @@ class MealSelectionWidget8 extends StatelessWidget {
                 : null,
             color: isSelected ? null : const Color(0xFF3A0303),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: isSelected
-                  ? Colors.transparent
-                  : Colors.white.withValues(alpha: 0.3),
-              width: 1.5,
-            ),
+            border: Border.all(color: Color(0xFF5D2B2B), width: 1.5),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -248,10 +246,7 @@ class FoodInputWidget8 extends StatelessWidget {
             decoration: BoxDecoration(
               color: const Color(0xFF3A0303).withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.2),
-                width: 1,
-              ),
+              border: Border.all(color: Color(0xFF6B1717), width: 1),
             ),
             child: TextField(
               controller: controller.foodController,
@@ -259,7 +254,7 @@ class FoodInputWidget8 extends StatelessWidget {
               style: getTextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
-                color: Colors.white.withValues(alpha: 0.8),
+                color: Color(0xFF914C4C),
               ),
               decoration: InputDecoration(
                 hintText: 'Grilled chicken salad with olive oil dressing...',
@@ -339,7 +334,7 @@ class CalorieInputWidget8 extends StatelessWidget {
                   style: getTextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
-                    color: Colors.white.withValues(alpha: 0.6),
+                    color: Colors.white,
                   ),
                 ),
               ],

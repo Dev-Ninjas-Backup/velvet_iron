@@ -6,14 +6,14 @@ class OnboardingController8 extends GetxController {
   final totalSteps = 9.obs;
   final xpPoints = 10.obs;
 
-  final selectedMeal = ''.obs;
+  final selectedMeal = 'Dinner'.obs;
   final foodController = TextEditingController();
   final calorieController = TextEditingController();
 
   double get progressValue => currentStep.value / totalSteps.value;
 
-  void selectMeal(String meal) {
-    selectedMeal.value = meal;
+  void selectMeal(String value) {
+    selectedMeal.value = value;
   }
 
   void onContinue() {

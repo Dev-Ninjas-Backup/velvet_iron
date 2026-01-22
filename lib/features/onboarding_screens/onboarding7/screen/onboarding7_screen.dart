@@ -22,7 +22,7 @@ class OnboardingScreen7 extends StatelessWidget {
           children: [
             SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 5),
                 child: Column(
                   children: [
                     const SizedBox(height: 60),

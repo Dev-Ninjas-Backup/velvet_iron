@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/routes/app_routes.dart';
 
 class SettingsController extends GetxController {
   final userName = 'Unbound'.obs;
@@ -48,7 +49,7 @@ class SettingsController extends GetxController {
             onPressed: () {
               Get.back();
 
-              Get.offAllNamed('/login');
+              Get.toNamed(AppRoute.getLoginScreen());
             },
             child: const Text('Logout'),
           ),

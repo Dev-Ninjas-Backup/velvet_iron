@@ -137,23 +137,16 @@ class WeightSelectionWidget extends StatelessWidget {
           const SizedBox(height: 20),
 
           Container(
-            height: 44,
+            height: 50,
             width: 343,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             decoration: BoxDecoration(
-              color: const Color(0xFF5C2B2B).withValues(alpha: 0.5),
+              color: const Color(0xFF3A0303),
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.2),
-                width: 1,
-              ),
+              border: Border.all(color: Color(0xFF6B1717)),
             ),
             child: TextField(
               controller: controller.weightController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-              ],
               decoration: InputDecoration(
                 hintText: 'Enter current weight',
                 hintStyle: getTextStyle(
@@ -182,6 +175,7 @@ class WeightSelectionWidget extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
           decoration: BoxDecoration(
+            color: Color(0xFF3A0303),
             gradient: selected
                 ? const LinearGradient(
                     colors: [
@@ -196,7 +190,6 @@ class WeightSelectionWidget extends StatelessWidget {
                     end: Alignment.bottomRight,
                   )
                 : null,
-            color: selected ? null : Colors.transparent,
             borderRadius: BorderRadius.circular(50),
             border: Border.all(
               color: selected

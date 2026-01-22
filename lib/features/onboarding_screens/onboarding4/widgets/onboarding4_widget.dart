@@ -133,9 +133,8 @@ class GenderSelectionWidget extends StatelessWidget {
                     color: const Color(0xFF521212).withValues(alpha: 0.8),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: isSelected
-                          ? const Color(0xFF6B1717)
-                          : Colors.white.withValues(alpha: 0.1),
+                      color: const Color(0xFF6B1717),
+
                       width: 1.5,
                     ),
                   ),

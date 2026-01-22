@@ -5,22 +5,22 @@ class OnboardingController7 extends GetxController {
   final totalSteps = 9.obs;
   final xpPoints = 10.obs;
 
-  final selectedMood = ''.obs;
-  final selectedEnergyLevel = ''.obs;
-  final selectedHungerLevel = ''.obs;
+  final selectedMood = 'Good'.obs;
+  final selectedEnergyLevel = 'Moderate'.obs;
+  final selectedHungerLevel = 'Hungry'.obs;
 
   double get progressValue => currentStep.value / totalSteps.value;
 
-  void selectMood(String mood) {
-    selectedMood.value = mood;
+  void selectMood(String value) {
+    selectedMood.value = value;
   }
 
-  void selectEnergyLevel(String level) {
-    selectedEnergyLevel.value = level;
+  void selectEnergyLevel(String value) {
+    selectedEnergyLevel.value = value;
   }
 
-  void selectHungerLevel(String level) {
-    selectedHungerLevel.value = level;
+  void selectHungerLevel(String value) {
+    selectedHungerLevel.value = value;
   }
 
   void onContinue() {

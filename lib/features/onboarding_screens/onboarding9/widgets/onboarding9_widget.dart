@@ -95,7 +95,7 @@ class OnboardingHeaderWidget9 extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Text(
-        "Which medicine you have taken so far today?",
+        "Have you taken your medication today",
         textAlign: TextAlign.center,
         style: getTextStyle(
           fontSize: 24,
@@ -132,19 +132,13 @@ class MedicineFormWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: const Color(0xFF521212).withValues(alpha: 0.5),
+              color: const Color(0xFF3A0303),
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.2),
-                width: 1,
-              ),
+              border: Border.all(color: Color(0xFF6B1717), width: 1),
             ),
             child: TextField(
               controller: controller.doseNameController,
-              style: getTextStyle(
-                fontSize: 14,
-                color: Colors.white.withValues(alpha: 0.8),
-              ),
+              style: getTextStyle(fontSize: 14, color: Color(0xFF914C4C)),
               decoration: InputDecoration(
                 hintText: 'Enter medicine name',
                 hintStyle: getTextStyle(
@@ -182,20 +176,19 @@ class MedicineFormWidget extends StatelessWidget {
           const SizedBox(height: 10),
           Obx(
             () => Container(
+              height: 50,
+              width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                color: const Color(0xFF521212).withValues(alpha: 0.5),
+                color: const Color(0xFF3A0303),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  width: 1,
-                ),
+                border: Border.all(color: Color(0xFF6B1717), width: 1),
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: controller.selectedMedicineType.value,
                   isExpanded: true,
-                  dropdownColor: const Color(0xFF521212),
+                  dropdownColor: const Color(0xFF3A0303),
                   icon: const Icon(
                     Icons.keyboard_arrow_down,
                     color: Colors.white,
@@ -242,12 +235,9 @@ class MedicineFormWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: const Color(0xFF521212).withValues(alpha: 0.5),
+              color: const Color(0xFF3A0303),
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.2),
-                width: 1,
-              ),
+              border: Border.all(color: Color(0xFF6B1717), width: 1),
             ),
             child: Row(
               children: [
@@ -281,7 +271,7 @@ class MedicineFormWidget extends StatelessWidget {
                   style: getTextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
-                    color: Colors.white.withValues(alpha: 0.6),
+                    color: Colors.white,
                   ),
                 ),
               ],

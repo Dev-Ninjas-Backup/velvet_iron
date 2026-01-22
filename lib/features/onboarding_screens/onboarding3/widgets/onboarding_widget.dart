@@ -5,7 +5,6 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding3/controller/onboarding3_controller.dart';
 
-
 class StepsTextWidget3 extends StatelessWidget {
   const StepsTextWidget3({super.key});
 
@@ -133,14 +132,9 @@ class FitnessGoalsWidget extends StatelessWidget {
                     vertical: 16,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF521212).withValues(alpha: 0.8),
+                    color: const Color(0xFF521212),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: isSelected
-                          ? const Color(0xFF6B1717)
-                          : Colors.white.withValues(alpha: 0.1),
-                      width: 1.5,
-                    ),
+                    border: Border.all(color: Color(0xFF6B1717), width: 1),
                   ),
                   child: Row(
                     children: [

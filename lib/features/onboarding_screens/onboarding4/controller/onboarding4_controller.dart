@@ -8,7 +8,7 @@ class OnboardingController4 extends GetxController {
 
   final selectedGender = RxnInt();
 
-  final List<String> genders = ['Male', 'Female'];
+  final List<String> genders = ['Male', 'Female', 'Non-binary'];
 
   void selectGender(int index) {
     selectedGender.value = index;
