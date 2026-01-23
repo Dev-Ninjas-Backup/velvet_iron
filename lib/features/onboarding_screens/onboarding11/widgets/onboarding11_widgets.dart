@@ -176,20 +176,38 @@ class PackageSelectionWidget extends StatelessWidget {
                   Text(
                     'Free Trail',
                     style: getTextStyle(
-                      fontSize: 15,
+                      fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
                     ),
                   ),
                   Spacer(),
-                  Text(
-                    'Free Trail',
-                    style: getTextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFD4AF7A),
-                    ),
-                  ),
+                  controller.selectedPackage.value == PackageType.free
+                      ? ShaderMask(
+                          blendMode: BlendMode.srcIn,
+                          shaderCallback: (bounds) => LinearGradient(
+                            colors: [
+                              Color.fromRGBO(253, 231, 187, 1),
+                              Color.fromRGBO(158, 109, 56, 1),
+                            ],
+                          ).createShader(bounds),
+                          child: Text(
+                            'Free Trail',
+                            style: getTextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      : Text(
+                          'Free Trail',
+                          style: getTextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 249, 248, 246),
+                          ),
+                        ),
                   SizedBox(width: 4),
                   Text(
                     '/3 days',
@@ -203,7 +221,7 @@ class PackageSelectionWidget extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 12),
+          SizedBox(height: 16),
           // Premium Option
           GestureDetector(
             onTap: () => controller.selectPackage(PackageType.premium),
@@ -457,6 +475,7 @@ class MembershipBenefitsWidget extends StatelessWidget {
         Row(
           children: [
             Image.asset(IconPath.membershipIcon, height: 20, width: 20),
+            SizedBox(width: 8),
             Text(
               'Membership Benefits',
               style: getTextStyle(
@@ -470,7 +489,7 @@ class MembershipBenefitsWidget extends StatelessWidget {
         SizedBox(height: 16),
         ...controller.benefits.map(
           (benefit) => Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: 10),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
