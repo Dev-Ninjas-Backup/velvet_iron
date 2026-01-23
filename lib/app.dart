@@ -19,7 +19,7 @@ class VelvetIron extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           translations: AppTranslations(),
-          initialRoute: AppRoute.getthemeOnboardingScreen(),
+          initialRoute: AppRoute.getSplashScreen(),
           getPages: AppRoute.routes,
           initialBinding: ControllerBinder(),
           themeMode: ThemeMode.system,
