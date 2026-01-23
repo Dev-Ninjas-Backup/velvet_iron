@@ -37,18 +37,11 @@ class AboutTrainingScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 10),
-
-                          // Intro Section
-                          const IntroWidget(),
-
-                          const SizedBox(height: 16),
-
-                          // Founder Info
-                          const FounderInfoWidget(),
-
                           const SizedBox(height: 20),
-
+                          const IntroWidget(),
+                          const SizedBox(height: 18),
+                          const FounderInfoWidget(),
+                          const SizedBox(height: 18),
                           Obx(
                             () => ExpandableSectionsContainer(
                               selectedSection: controller.selectedSection.value,
@@ -57,11 +50,8 @@ class AboutTrainingScreen extends StatelessWidget {
                               partnerFeatures: controller.partnerFeatures,
                             ),
                           ),
-
                           const SizedBox(height: 20),
-
                           const IntroSectionWidget(),
-
                           const SizedBox(height: 40),
                         ],
                       ),

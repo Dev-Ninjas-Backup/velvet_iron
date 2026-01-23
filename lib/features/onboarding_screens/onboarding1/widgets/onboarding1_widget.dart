@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
@@ -96,7 +98,7 @@ class TitleSection extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Choose a theme companion',
+            'Choose a companion',
             textAlign: TextAlign.center,
             style: getTextStyle(
               fontSize: 24,
@@ -106,7 +108,7 @@ class TitleSection extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'It is kind of your personal assistant who keep you mobilize everything. Still you can changes it later from settings.',
+            'Your companion is your chosen ally, guiding and encouraging you as you forge stronger habits.',
             textAlign: TextAlign.center,
             style: getTextStyle(
               fontSize: 12,
@@ -155,7 +157,7 @@ class CompanionCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
         ),
         child: Container(
-          height: 168,
+          constraints: const BoxConstraints(minHeight: 168),
           decoration: BoxDecoration(
             gradient: companion.bgGradient,
             borderRadius: BorderRadius.circular(16),
@@ -167,62 +169,74 @@ class CompanionCard extends StatelessWidget {
   }
 
   Widget _buildCardContent() {
-    return Row(
-      children: [
-        Expanded(
-          flex: 5,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            flex: 6,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSelectionIndicator(),
+                  const SizedBox(height: 8),
+                  Text(
+                    companion.name,
+                    style: getTextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: const Color(0xFFFFFFFF),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    companion.title,
+                    style: getTextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: const Color(0xFFFFD700),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    companion.description,
+                    style: getTextStyle(
+                      fontSize: 9,
+                      fontWeight: FontWeight.w400,
+                      color: const Color(0xFFFFFFFF),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  if (companion.isActive && companion.theme.isNotEmpty)
+                    _buildActiveBadge()
+                  else if (!isUnlocked && companion.unlockXp != null)
+                    _buildUnlockButton(),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 4,
+            child: Stack(
               children: [
-                _buildSelectionIndicator(),
-                const SizedBox(height: 8),
-                Text(
-                  companion.name,
-                  style: getTextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFFFFFFFF),
+                Positioned.fill(
+                  child: Image.asset(companion.bgImage, fit: BoxFit.cover),
+                ),
+                Center(
+                  child: Image.asset(
+                    companion.imagePath,
+                    width: 102,
+                    height: 143,
+                    fit: BoxFit.contain,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  companion.title,
-                  style: getTextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFFFFFFFF),
-                  ),
-                ),
-                const Spacer(),
-                if (companion.isActive && companion.theme.isNotEmpty)
-                  _buildActiveBadge()
-                else if (!isUnlocked && companion.unlockXp != null)
-                  _buildUnlockButton(),
               ],
             ),
           ),
-        ),
-        Expanded(
-          flex: 4,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: Image.asset(companion.bgImage, fit: BoxFit.cover),
-              ),
-              Center(
-                child: Image.asset(
-                  companion.imagePath,
-                  width: 102,
-                  height: 143,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

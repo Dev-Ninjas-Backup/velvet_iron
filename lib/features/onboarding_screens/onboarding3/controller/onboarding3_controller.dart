@@ -10,10 +10,10 @@ class Onboarding3Controller extends GetxController {
   final selectedGoal = RxnInt();
 
   final List<String> goals = [
-    'I wanna lose weight',
-    'I wanna track activity & my GLP-1 Medicine',
-    'I wanna build a good habit',
-    'Just trying out the app!',
+    'Transform my body and grow stronger',
+    'Track my training and medication',
+    'Forge stronger daily habits',
+    'Explore the Codex',
   ];
 
   double get progressValue => currentStep.value / totalSteps.value;

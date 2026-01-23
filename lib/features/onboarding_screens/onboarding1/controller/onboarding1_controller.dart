@@ -16,6 +16,7 @@ class OnboardingController1 extends GetxController {
       id: 0,
       name: 'Ser Kael Thornwatch',
       title: 'The Unknown',
+      description: 'Stand tall. We finish what we start — together.',
       theme: 'Active Theme & Companion',
       unlockXp: null,
       imagePath: ImagePath.serkael,
@@ -39,6 +40,8 @@ class OnboardingController1 extends GetxController {
       name: 'Riven Ashcroft',
       title: 'High Lord of the Fall',
       theme: '',
+      description:
+          '“Try not to disappoint me… I was just starting to enjoy your potential.”',
       unlockXp: 250,
       imagePath: ImagePath.riven,
       bgImage: IconPath.serIcon,
@@ -58,6 +61,8 @@ class OnboardingController1 extends GetxController {
       id: 2,
       name: 'Pyraxis',
       title: 'The Emberhound',
+      description:
+          '“Rise, little warrior. I don’t guard the weak — I forge the strong.”',
       theme: '',
       unlockXp: 250,
       imagePath: ImagePath.pyrax,
@@ -79,6 +84,8 @@ class OnboardingController1 extends GetxController {
       name: 'Bram Ironledger',
       title: 'Keeper of the Codex',
       theme: '',
+      description:
+          '“Every hero stumbles, child. What matters is that you rise wiser.”',
       unlockXp: 250,
       imagePath: ImagePath.bram,
       bgImage: IconPath.serIcon,
@@ -184,6 +191,7 @@ class CompanionModel {
   final int id;
   final String name;
   final String title;
+  final String description;
   final String theme;
   final int? unlockXp;
   final String imagePath;
@@ -195,6 +203,7 @@ class CompanionModel {
     required this.id,
     required this.name,
     required this.title,
+    this.description = '',
     required this.theme,
     this.unlockXp,
     required this.imagePath,

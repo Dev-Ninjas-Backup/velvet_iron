@@ -95,7 +95,7 @@ class OnboardingHeaderWidget7 extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
       child: Text(
-        "How are You Feeling Today?",
+        "How are you feeling Today?",
         textAlign: TextAlign.center,
         style: getTextStyle(
           fontSize: 24,
@@ -117,23 +117,18 @@ class MoodSelectionWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Select Mood Section
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Text(
-            'Select Mood:',
-            style: getTextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-            ),
+        Text(
+          'Select Mood:',
+          style: getTextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
           ),
         ),
+
         const SizedBox(height: 12),
-        // Mood Options
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Row(
             children: [
               _buildMoodOption(
@@ -142,28 +137,28 @@ class MoodSelectionWidget extends StatelessWidget {
                 value: 'Tired',
                 controller: controller,
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 6),
               _buildMoodOption(
                 iconPath: IconPath.good,
                 label: 'Good',
                 value: 'Good',
                 controller: controller,
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 6),
               _buildMoodOption(
                 iconPath: IconPath.pissed,
                 label: 'Pissed',
                 value: 'Pissed',
                 controller: controller,
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 6),
               _buildMoodOption(
                 iconPath: IconPath.great,
                 label: 'Great',
                 value: 'Great',
                 controller: controller,
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 6),
               _buildMoodOption(
                 iconPath: IconPath.poor,
                 label: 'Poor',
@@ -175,24 +170,19 @@ class MoodSelectionWidget extends StatelessWidget {
         ),
         const SizedBox(height: 20),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Text(
-            'Energy Level:',
-            style: getTextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-            ),
+        Text(
+          'Energy Level:',
+          style: getTextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
           ),
         ),
         const SizedBox(height: 12),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Wrap(
-            spacing: 10,
-            runSpacing: 10,
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
             children: [
               _buildPillOption(
                 label: 'Exhausted',
@@ -200,24 +190,28 @@ class MoodSelectionWidget extends StatelessWidget {
                 selectedValue: controller.selectedEnergyLevel,
                 onTap: () => controller.selectEnergyLevel('Exhausted'),
               ),
+              const SizedBox(width: 8),
               _buildPillOption(
                 label: 'Low',
                 value: 'Low',
                 selectedValue: controller.selectedEnergyLevel,
                 onTap: () => controller.selectEnergyLevel('Low'),
               ),
+              const SizedBox(width: 8),
               _buildPillOption(
                 label: 'Moderate',
                 value: 'Moderate',
                 selectedValue: controller.selectedEnergyLevel,
                 onTap: () => controller.selectEnergyLevel('Moderate'),
               ),
+              const SizedBox(width: 8),
               _buildPillOption(
                 label: 'Energized',
                 value: 'Energized',
                 selectedValue: controller.selectedEnergyLevel,
                 onTap: () => controller.selectEnergyLevel('Energized'),
               ),
+              const SizedBox(width: 8),
               _buildPillOption(
                 label: 'High',
                 value: 'High',
@@ -229,24 +223,18 @@ class MoodSelectionWidget extends StatelessWidget {
         ),
 
         const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Text(
-            'Hunger Level:',
-            style: getTextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-            ),
+        Text(
+          'Hunger Level:',
+          style: getTextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
           ),
         ),
         const SizedBox(height: 12),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Wrap(
-            spacing: 10,
-            runSpacing: 10,
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
             children: [
               _buildPillOption(
                 label: 'Not Hungry',
@@ -254,12 +242,14 @@ class MoodSelectionWidget extends StatelessWidget {
                 selectedValue: controller.selectedHungerLevel,
                 onTap: () => controller.selectHungerLevel('Not Hungry'),
               ),
+              const SizedBox(width: 8),
               _buildPillOption(
                 label: 'Hungry',
                 value: 'Hungry',
                 selectedValue: controller.selectedHungerLevel,
                 onTap: () => controller.selectHungerLevel('Hungry'),
               ),
+              const SizedBox(width: 8),
               _buildPillOption(
                 label: 'Very Hungry',
                 value: 'Very Hungry',
@@ -284,8 +274,8 @@ class MoodSelectionWidget extends StatelessWidget {
       return GestureDetector(
         onTap: () => controller.selectMood(value),
         child: Container(
-          width: 60.6,
-          height: 80,
+          width: 70,
+          height: 85,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
             gradient: isSelected
@@ -350,7 +340,7 @@ class MoodSelectionWidget extends StatelessWidget {
       return GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           decoration: BoxDecoration(
             gradient: isSelected
                 ? const LinearGradient(
@@ -367,7 +357,7 @@ class MoodSelectionWidget extends StatelessWidget {
                   )
                 : null,
             color: isSelected ? null : const Color(0xFF3A0303),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(50),
             border: Border.all(
               color: isSelected
                   ? Color(0xFF5D2B2B)

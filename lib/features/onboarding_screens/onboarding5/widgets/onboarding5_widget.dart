@@ -7,7 +7,6 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding5/controller/onboarding5_controller.dart';
 
-
 class StepsTextWidget5 extends StatelessWidget {
   const StepsTextWidget5({super.key});
   @override
@@ -165,12 +164,9 @@ class DateSelectionWidget extends StatelessWidget {
           () => Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
-              color: const Color(0xFF512212),
+              color: const Color(0xFF3A0303),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.2),
-                width: 1,
-              ),
+              border: Border.all(color: Color(0xFF6B1717), width: 1.5),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(

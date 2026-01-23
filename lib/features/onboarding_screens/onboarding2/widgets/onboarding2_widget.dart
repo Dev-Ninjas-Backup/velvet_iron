@@ -220,8 +220,10 @@ class ProfileSetupWidget extends StatelessWidget {
 
           const SizedBox(height: 12),
           Container(
+            height: 44,
+            width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.1),
+              color: Color(0xFF3A0303),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
                 color: Colors.white.withValues(alpha: 0.2),

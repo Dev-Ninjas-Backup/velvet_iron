@@ -33,7 +33,7 @@ class AboutTrainingAppBar extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.35),
+                      color: Colors.black.withValues(alpha: 0.35),
                       blurRadius: 6,
                       offset: const Offset(0, 3),
                     ),
@@ -69,7 +69,7 @@ class IntroWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(17),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -77,7 +77,7 @@ class IntroWidget extends StatelessWidget {
             'Intro',
             style: getTextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
               color: Colors.white,
             ),
           ),
@@ -85,14 +85,15 @@ class IntroWidget extends StatelessWidget {
           Text(
             'Velvet & Iron Training Codex is a progress-driven wellness experience designed for those who refuse to stay small. Instead of traditional tracking, the Codex transforms daily effort into momentum through XP, levels, and unlockable progression — turning consistency into a meaningful journey.',
             style: getTextStyle(
-              fontSize: 13,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
               color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           Center(
             child: Container(
-              height: 200,
+              height: 203,
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(17),
@@ -103,11 +104,12 @@ class IntroWidget extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           Text(
             '“Train as if you’ve just fallen through a portal and need to outrun a dragon.”',
             style: getTextStyle(
               fontSize: 12,
+              fontWeight: FontWeight.w400,
               color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
@@ -149,7 +151,7 @@ class FounderCardWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(3),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 10),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,7 +160,7 @@ class FounderCardWidget extends StatelessWidget {
                 name,
                 style: getTextStyle(
                   fontSize: 16,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                   color: Colors.white,
                 ),
               ),
@@ -167,6 +169,7 @@ class FounderCardWidget extends StatelessWidget {
                 title,
                 style: getTextStyle(
                   fontSize: 12,
+                  fontWeight: FontWeight.w400,
                   color: Colors.white.withValues(alpha: 0.7),
                 ),
               ),
@@ -201,6 +204,9 @@ class FounderInfoWidget extends StatelessWidget {
             description:
                 'Jamie Friddle is the architect behind the Velvet & Iron vision, forging a space where growth isn\'t linear, it\'s earned. Through a Velvet & Iron Training Codex, Jamie invites others to mark the weight of their resolve, where dedication defines the Codex, and accountability is woven into every entry.',
           ),
+
+          SizedBox(height: 18),
+
           FounderCardWidget(
             name: 'Robert Fox',
             title: 'Marketing Coordinator',
@@ -286,8 +292,8 @@ class _ExpandableSectionWidgetState extends State<ExpandableSectionWidget>
               child: Text(
                 widget.sectionTitle,
                 style: getTextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
                   color: Colors.white,
                 ),
               ),
@@ -303,11 +309,17 @@ class _ExpandableSectionWidgetState extends State<ExpandableSectionWidget>
                   .asMap()
                   .entries
                   .map(
-                    (entry) => _buildFeatureItem(
-                      entry.key,
-                      entry.value.title,
-                      entry.value.description,
-                    ),
+                    (entry) => widget.sectionTitle == 'Why to be a partner?'
+                        ? _buildPartnerFeatureItem(
+                            entry.key,
+                            entry.value.title,
+                            entry.value.description,
+                          )
+                        : _buildFeatureItem(
+                            entry.key,
+                            entry.value.title,
+                            entry.value.description,
+                          ),
                   )
                   .toList(),
             ),
@@ -356,30 +368,99 @@ class _ExpandableSectionWidgetState extends State<ExpandableSectionWidget>
                   }
                 });
               },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: getTextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: isSelected
-                          ? const Color(0xFFD4AF37)
-                          : Colors.white,
-                    ),
-                  ),
-                  if (description.isNotEmpty) ...[
-                    const SizedBox(height: 6),
-                    Text(
-                      description,
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '$title ',
                       style: getTextStyle(
                         fontSize: 12,
-                        color: Colors.white.withValues(alpha: 0.85),
+                        fontWeight: FontWeight.w500,
+                        color: isSelected
+                            ? const Color(0xFFD4AF37)
+                            : Colors.white,
                       ),
                     ),
+                    if (description.isNotEmpty)
+                      TextSpan(
+                        text: description,
+                        style: getTextStyle(
+                          fontSize: 12,
+                          color: Colors.white.withValues(alpha: 0.85),
+                        ),
+                      ),
                   ],
-                ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPartnerFeatureItem(int index, String title, String description) {
+    final isSelected = _selectedIndices.contains(index);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                if (isSelected) {
+                  _selectedIndices.remove(index);
+                } else {
+                  _selectedIndices.add(index);
+                }
+              });
+            },
+            child: Container(
+              width: 24,
+              height: 24,
+              margin: const EdgeInsets.only(top: 2),
+              child: Image.asset(
+                isSelected ? IconPath.goldencircle : IconPath.whitecircle,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          // Content
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  if (isSelected) {
+                    _selectedIndices.remove(index);
+                  } else {
+                    _selectedIndices.add(index);
+                  }
+                });
+              },
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '$title ',
+                      style: getTextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: isSelected
+                            ? const Color(0xFFD4AF37)
+                            : Colors.white,
+                      ),
+                    ),
+                    if (description.isNotEmpty)
+                      TextSpan(
+                        text: description,
+                        style: getTextStyle(
+                          fontSize: 12,
+                          color: Colors.white.withValues(alpha: 0.85),
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -389,7 +470,7 @@ class _ExpandableSectionWidgetState extends State<ExpandableSectionWidget>
   }
 }
 
-class ExpandableSectionsContainer extends StatelessWidget {
+class ExpandableSectionsContainer extends StatefulWidget {
   final int selectedSection;
   final Function(int) onSectionChanged;
   final List<AboutTrainingModel> features;
@@ -404,21 +485,42 @@ class ExpandableSectionsContainer extends StatelessWidget {
   });
 
   @override
+  State<ExpandableSectionsContainer> createState() =>
+      _ExpandableSectionsContainerState();
+}
+
+class _ExpandableSectionsContainerState
+    extends State<ExpandableSectionsContainer> {
+  final Set<int> _expandedSections = {0, 1};
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ExpandableSectionWidget(
           sectionTitle: 'Why to use Velvet & Iron Training Codex?',
-          features: features,
-          isExpanded: selectedSection == 0,
-          onToggle: () => onSectionChanged(selectedSection == 0 ? -1 : 0),
+          features: widget.features,
+          isExpanded: _expandedSections.contains(0),
+          onToggle: () => setState(() {
+            if (_expandedSections.contains(0)) {
+              _expandedSections.remove(0);
+            } else {
+              _expandedSections.add(0);
+            }
+          }),
         ),
         const SizedBox(height: 8),
         ExpandableSectionWidget(
           sectionTitle: 'Why to be a partner?',
-          features: partnerFeatures,
-          isExpanded: selectedSection == 1,
-          onToggle: () => onSectionChanged(selectedSection == 1 ? -1 : 1),
+          features: widget.partnerFeatures,
+          isExpanded: _expandedSections.contains(1),
+          onToggle: () => setState(() {
+            if (_expandedSections.contains(1)) {
+              _expandedSections.remove(1);
+            } else {
+              _expandedSections.add(1);
+            }
+          }),
         ),
       ],
     );
