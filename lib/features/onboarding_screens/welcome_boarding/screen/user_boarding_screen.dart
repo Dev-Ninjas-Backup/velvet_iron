@@ -37,7 +37,8 @@ class WelcomeScreen extends StatelessWidget {
                 // Button
                 CustomButton(
                   label: "Continue Journey",
-                  onPressed: () => Get.toNamed(AppRoute.getonboadingScreen1()),
+                  onPressed: () =>
+                      Get.toNamed(AppRoute.getthemeOnboardingScreen()),
                 ),
 
                 const Spacer(flex: 3),

@@ -32,7 +32,7 @@ class OnboardingScreen11 extends StatelessWidget {
                     OnboardingHeaderWidget11(),
                     SizedBox(height: 40),
                     PackageSelectionWidget(),
-                    SizedBox(height: 20),
+                    SizedBox(height: 30),
                     MembershipBenefitsWidget(),
                     SizedBox(height: 40),
                     Padding(
