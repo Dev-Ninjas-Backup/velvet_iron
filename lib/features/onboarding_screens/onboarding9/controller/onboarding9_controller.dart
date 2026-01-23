@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class OnboardingController9 extends GetxController {
-  final currentStep = 9.obs;
-  final totalSteps = 9.obs;
+  final currentStep = 10.obs;
+  final totalSteps = 11.obs;
   final xpPoints = 10.obs;
 
   final doseNameController = TextEditingController();

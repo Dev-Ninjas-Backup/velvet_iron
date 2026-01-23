@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 
 class OnboardingController7 extends GetxController {
-  final currentStep = 7.obs;
-  final totalSteps = 9.obs;
+  final currentStep = 8.obs;
+  final totalSteps = 11.obs;
   final xpPoints = 10.obs;
 
   final selectedMood = 'Good'.obs;

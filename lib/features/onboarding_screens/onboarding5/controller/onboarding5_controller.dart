@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 
 class OnboardingController5 extends GetxController {
-  final currentStep = 5.obs;
-  final totalSteps = 9.obs;
+  final currentStep = 6.obs;
+  final totalSteps = 11.obs;
   final xpPoints = 10.obs;
 
   double get progressValue => currentStep.value / totalSteps.value;

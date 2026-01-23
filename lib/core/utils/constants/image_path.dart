@@ -18,4 +18,5 @@ class ImagePath {
   static const String charecterThree = 'assets/images/charecter_three.png';
   static const String charecterFour = 'assets/images/charecter_four.png';
   static const String circlebg = 'assets/images/circlebg.png';
+  static const String premiumprofile = 'assets/images/premiumprofile.png';
 }

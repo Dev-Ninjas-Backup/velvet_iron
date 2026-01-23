@@ -5,8 +5,8 @@ import 'package:velvet_iron/core/utils/constants/image_path.dart';
 
 class OnboardingController1 extends GetxController {
   final selectedIndex = Rxn<int>();
-  final currentStep = 1.obs;
-  final totalSteps = 9.obs;
+  final currentStep = 2.obs;
+  final totalSteps = 11.obs;
   final xpPoints = 10.obs;
 
   double get progressValue => currentStep.value / totalSteps.value;

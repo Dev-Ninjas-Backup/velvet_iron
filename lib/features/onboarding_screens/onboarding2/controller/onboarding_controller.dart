@@ -5,8 +5,8 @@ import 'package:image_picker/image_picker.dart';
 
 class Onboarding2Controller extends GetxController {
   final selectedIndex = Rxn<int>();  
-  final currentStep = 2.obs;
-  final totalSteps = 9.obs;  
+  final currentStep = 3.obs;
+  final totalSteps = 11.obs;  
   final xpPoints = 10.obs; 
   final Rxn<File> profileImage = Rxn<File>();  
   final nameController = TextEditingController();
