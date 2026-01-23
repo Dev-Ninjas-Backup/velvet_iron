@@ -4,16 +4,16 @@ import 'package:velvet_iron/core/common/widgets/custom_back_button.dart';
 import 'package:velvet_iron/core/common/widgets/custom_background_withimage.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
-import 'package:velvet_iron/features/onboarding_screens/onboarding8/controller/onboarding8_controller.dart';
-import 'package:velvet_iron/features/onboarding_screens/onboarding9/widgets/onboarding9_widget.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding11/controller/onboarding11_controller.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding11/widgets/onboarding11_widgets.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
-class OnboardingScreen9 extends StatelessWidget {
-  const OnboardingScreen9({super.key});
+class OnboardingScreen11 extends StatelessWidget {
+  const OnboardingScreen11({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Get.put(OnboardingController8());
+    Get.put(OnboardingController11());
     return Scaffold(
       body: CustomBackgroundWithImage(
         imageAsset: ImagePath.magicImage,
@@ -25,20 +25,21 @@ class OnboardingScreen9 extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(height: 60),
-                    StepsTextWidget9(),
+                    StepsTextWidget11(),
                     SizedBox(height: 8),
-                    ProgressBarWidget9(),
+                    ProgressBarWidget11(),
                     SizedBox(height: 40),
-                    OnboardingHeaderWidget9(),
+                    OnboardingHeaderWidget11(),
                     SizedBox(height: 40),
-                    MedicineFormWidget(),
+                    PackageSelectionWidget(),
                     SizedBox(height: 20),
+                    MembershipBenefitsWidget(),
+                    SizedBox(height: 40),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: CustomButton(
-                        label: 'Continue (+10 XP)',
-                        onPressed: () =>
-                            Get.toNamed(AppRoute.getonboardingScreen11()),
+                        label: 'Continue Subscription (\$9.00)',
+                        onPressed: () => Get.toNamed(AppRoute.getHomeScreen()),
                       ),
                     ),
                   ],

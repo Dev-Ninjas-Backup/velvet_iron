@@ -60,4 +60,5 @@ class IconPath {
   static const String discordwhite = 'assets/icons/discordwhite.png';
   static const String eye = 'assets/icons/eye.png';
   static const String lock = 'assets/icons/lock.png';
+  static const String membershipIcon = 'assets/icons/membershipicon.png';
 }

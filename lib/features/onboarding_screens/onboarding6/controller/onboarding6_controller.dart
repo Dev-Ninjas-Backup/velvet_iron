@@ -5,8 +5,8 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
 class OnboardingController6 extends GetxController {
-  final currentStep = 6.obs;
-  final totalSteps = 9.obs;
+  final currentStep = 7.obs;
+  final totalSteps = 11.obs;
   final xpPoints = 10.obs;
 
   final selectedUnit = 'lbs'.obs;

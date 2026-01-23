@@ -18,7 +18,7 @@ class StepsTextWidget5 extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Steps 5 / 9',
+            'Steps 6 / 11',
             style: getTextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
