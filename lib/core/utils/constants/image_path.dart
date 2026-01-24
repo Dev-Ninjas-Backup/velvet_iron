@@ -19,4 +19,13 @@ class ImagePath {
   static const String charecterFour = 'assets/images/charecter_four.png';
   static const String circlebg = 'assets/images/circlebg.png';
   static const String premiumprofile = 'assets/images/premiumprofile.png';
+  static const String bottle = 'assets/images/bottle.png';
+  static const String blueBook = 'assets/images/blue_book.png';
+  static const String greenBook = 'assets/images/green_book.png';
+  static const String sword = 'assets/images/sword.png';
+  static const String chain = 'assets/images/chain.png';
+  static const String threeCristal= 'assets/images/three_cristal.png';
+  static const String blueBG = 'assets/icons/blueBG.png';
+  static const String greenBG = 'assets/icons/greenBG.png';
+  static const String purpleBG = 'assets/icons/purpleBG.png';
 }

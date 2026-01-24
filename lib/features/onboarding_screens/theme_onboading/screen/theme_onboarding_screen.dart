@@ -6,8 +6,10 @@ import 'package:velvet_iron/core/common/widgets/custom_back_button.dart';
 import 'package:velvet_iron/core/common/widgets/custom_background_withimage.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
+import 'package:velvet_iron/features/home/controller/theme_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/theme_onboading/controller/theme_onboarding_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/theme_onboading/widgets/progress_and_step_widget.dart';
+import 'package:velvet_iron/features/onboarding_screens/theme_onboading/widgets/themes_list_widget.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
 class ThemeOnboardingScreen extends StatelessWidget {
@@ -16,6 +18,7 @@ class ThemeOnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(ThemeOnboardingController());
+    Get.put(ThemeController());
     return Scaffold(
       body: CustomBackgroundWithImage(
         imageAsset: ImagePath.magicImage,
@@ -26,13 +29,17 @@ class ThemeOnboardingScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
                   children: [
-                    SizedBox(height: 60),
-                    StepsTextWidgetThemes(),
-                    SizedBox(height: 6),
-                    ProgressBarWidgetThemes(),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 60),
+                    const StepsTextWidgetThemes(),
+                    const SizedBox(height: 6),
+                    const ProgressBarWidgetThemes(),
+                    const SizedBox(height: 40),
                     const ThemesTitleSection(),
-                    SizedBox(height: 40),
+
+                    const SizedBox(height: 24),
+                    const ThemesListWidget(),
+
+                    const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: CustomButton(
@@ -41,6 +48,7 @@ class ThemeOnboardingScreen extends StatelessWidget {
                             Get.toNamed(AppRoute.getonboadingScreen1()),
                       ),
                     ),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),

@@ -25,7 +25,7 @@ class MealTabSwitcherMedication extends StatelessWidget {
           Row(
             children: [
               CustomGradientOptionButton(
-                text: "Token",
+                text: "Taken",
                 isSelected: controller.selectedMealTab.value == 0,
                 onPressed: () => controller.setMealTab(0),
               ),

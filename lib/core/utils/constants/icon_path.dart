@@ -61,4 +61,22 @@ class IconPath {
   static const String eye = 'assets/icons/eye.png';
   static const String lock = 'assets/icons/lock.png';
   static const String membershipIcon = 'assets/icons/membershipicon.png';
+  //white emojis:
+  static const String tiredEmojiWhite = 'assets/icons/tiredEmojiWhite.png';
+  static const String goodEmojiWhite = 'assets/icons/goodEmojiWhite.png';
+  static const String pissedEmojiWhite = 'assets/icons/pissedEmojiWhite.png';
+  static const String greatEmojiWhite = 'assets/icons/greatEmojiWhite.png';
+  static const String poorEmojiWhite = 'assets/icons/poorEmojiWhite.png';
+  //green emojis:
+  static const String tiredEmojiGreen = 'assets/icons/tiredEmojiGreen.png';
+  static const String goodEmojiGreen = 'assets/icons/goodEmojiGreen.png';
+  static const String pissedEmojiGreen = 'assets/icons/pissedEmojiGreen.png';
+  static const String greatEmojiGreen = 'assets/icons/greatEmojiGreen.png';
+  static const String poorEmojiGreen = 'assets/icons/poorEmojiGreen.png';
+  //purple emojis:
+  static const String tiredEmojiPurple = 'assets/icons/tiredEmojiPurple.png';
+  static const String goodEmojiPurple = 'assets/icons/goodEmojiPurple.png';
+  static const String pissedEmojiPurple = 'assets/icons/pissedEmojiPurple.png';
+  static const String greatEmojiPurple = 'assets/icons/greatEmojiPurple.png';
+  static const String poorEmojiPurple = 'assets/icons/poorEmojiPurple.png';
 }
