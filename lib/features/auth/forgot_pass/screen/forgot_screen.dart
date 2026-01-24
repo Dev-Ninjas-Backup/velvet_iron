@@ -15,17 +15,22 @@ class ForgotScreen extends StatelessWidget {
     final ForgotPassController controller = Get.put(ForgotPassController());
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Container(
-        padding: EdgeInsets.only(top: 82, left: 16, right: 16),
-        height: double.infinity,
-        width: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(ImagePath.authBackground),
             fit: BoxFit.cover,
           ),
         ),
-        child: Column(
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height,
+            ),
+            child: Container(
+              padding: EdgeInsets.only(top: 82, left: 16, right: 16, bottom: 30),
+              child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             InkWell(
@@ -86,6 +91,9 @@ class ForgotScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      ),
+      ),
       ),
     );
   }

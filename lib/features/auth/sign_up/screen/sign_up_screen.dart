@@ -16,17 +16,22 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final SignUpController controller = Get.put(SignUpController());
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Container(
-        padding: const EdgeInsets.only(top: 82, left: 16, right: 16),
-        height: double.infinity,
-        width: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage(ImagePath.authBackground),
             fit: BoxFit.cover,
           ),
         ),
-        child: Form(
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height,
+            ),
+            child: Container(
+              padding: const EdgeInsets.only(top: 82, left: 16, right: 16, bottom: 30),
+              child: Form(
           key: controller.formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,6 +177,10 @@ class SignUpScreen extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+
+    )
         ),
       ),
     );
