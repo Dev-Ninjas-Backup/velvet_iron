@@ -568,37 +568,45 @@ class PopUpDialogue extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+
+    const double baseWidth = 411.42857142857144;
+    const double baseHeight = 923.4285714285714;
+
+    double w(double value) => value * size.width / baseWidth;
+    double h(double value) => value * size.height / baseHeight;
+
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Stack(
         children: [
           Positioned(
-            top: 75,
+            top: h(75),
             left: 0,
             right: 0,
             child: Image.asset('assets/images/top.png'),
           ),
           Positioned(
-            top: 450,
-            left: 42,
-            right: 42,
+            top: h(450),
+            left: w(42),
+            right: w(42),
             child: Image.asset('assets/images/bottom.png'),
           ),
           Positioned(
-            top: 220,
-            left: 5,
-            right: 5,
+            top: h(220),
+            left: w(5),
+            right: w(5),
             child: Container(
-              height: 380,
-              width: 320,
+              height: h(380),
+              width: w(320),
               padding: EdgeInsets.only(
-                top: 102,
-                right: 24,
-                bottom: 25,
-                left: 24,
+                top: h(102),
+                right: w(24),
+                bottom: h(25),
+                left: w(24),
               ),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
@@ -609,77 +617,74 @@ class PopUpDialogue extends StatelessWidget {
                     Color.fromRGBO(85, 6, 6, 1),
                   ],
                 ),
-                borderRadius: BorderRadius.circular(40),
+                borderRadius: BorderRadius.circular(w(40)),
                 border: Border.all(
-                  color: Color.fromRGBO(233, 184, 110, 1),
-                  width: 4,
+                  color: const Color.fromRGBO(233, 184, 110, 1),
+                  width: w(4),
                 ),
               ),
             ),
           ),
-
           Positioned(
-            top: 220,
+            top: h(220),
             left: 0,
             right: 0,
             child: Image.asset('assets/images/jwellery.png'),
           ),
-
           Positioned(
-            top: 135,
+            top: h(135),
             left: 0,
             right: 0,
             child: Image.asset('assets/images/topframe.png'),
           ),
+          ////
           Positioned(
-            top: 190,
-            left: 0,
-            right: 0,
-            child: Image.asset('assets/images/middleframe.png'),
-          ),
-          Positioned(
-            top: 360,
-            left: 0,
-            right: 0,
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                "Congratulations!",
-                style: getTextStyle(fontSize: 26, fontWeight: FontWeight.w400),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 415,
-            left: 0,
-            right: 0,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "Your subscription is activated and will expire at Sept 15,2025. You can renew or cancel anytime from your profile settings ",
-                  textAlign: TextAlign.center,
-                  style: getTextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
+            top: h(220),
+            left: w(5),
+            right: w(5),
+            child: SizedBox(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: h(45)),
+                  Image.asset('assets/images/middleframe.png'),
+                  SizedBox(height: h(12)),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Congratulations!",
+                      style: getTextStyle(
+                        fontSize: w(26),
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                   ),
-                ),
+                  SizedBox(height: h(12)),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: w(16)),
+                    child: Text(
+                      "Your subscription is activated and will expire at Sept 15,2025. You can renew or cancel anytime from your profile settings",
+                      textAlign: TextAlign.center,
+                      style: getTextStyle(
+                        fontSize: w(12),
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: h(40)),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: w(30)),
+                    child: CustomButton(
+                      label: 'Finish & Claim ( 25XP)',
+                      onPressed: () => Get.toNamed(AppRoute.getHomeScreen()),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 225,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: CustomButton(
-                label: 'Finish & Claim ( 25XP)',
-                onPressed: () => Get.toNamed(AppRoute.getHomeScreen()),
-              ),
-            ),
-          ),
+          ////
         ],
       ),
     );
