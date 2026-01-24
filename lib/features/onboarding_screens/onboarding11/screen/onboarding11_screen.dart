@@ -6,7 +6,6 @@ import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding11/controller/onboarding11_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding11/widgets/onboarding11_widgets.dart';
-import 'package:velvet_iron/routes/app_routes.dart';
 
 class OnboardingScreen11 extends StatelessWidget {
   const OnboardingScreen11({super.key});
@@ -14,38 +13,48 @@ class OnboardingScreen11 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(OnboardingController11());
+
     return Scaffold(
       body: CustomBackgroundWithImage(
         imageAsset: ImagePath.magicImage,
         child: Stack(
           children: [
             SafeArea(
-              child: Padding(
+              child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(height: 60),
+                    const SizedBox(height: 50),
                     StepsTextWidget11(),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 6),
                     ProgressBarWidget11(),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     OnboardingHeaderWidget11(),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     PackageSelectionWidget(),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 20),
                     MembershipBenefitsWidget(),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 30),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: CustomButton(
                         label: 'Continue Subscription (\$9.00)',
-                        onPressed: () => Get.toNamed(AppRoute.getHomeScreen()),
+                        onPressed: () => Get.dialog(
+                          const PopUpDialogue(),
+                          barrierDismissible:false, // Prevents closing by tapping outside
+                          transitionDuration: const Duration(milliseconds: 500),
+                          transitionCurve: Curves.easeInOut,
+                        ),
                       ),
                     ),
+                    const SizedBox(height: 30),
                   ],
                 ),
               ),
             ),
+
+            /// Back Button
             Positioned(
               top: MediaQuery.of(context).padding.top + 12,
               left: 24,
