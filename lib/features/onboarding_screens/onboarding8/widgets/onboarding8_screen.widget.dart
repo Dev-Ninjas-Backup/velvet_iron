@@ -254,7 +254,7 @@ class FoodInputWidget8 extends StatelessWidget {
               style: getTextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
-                color: Color(0xFF914C4C),
+                color: Color.fromARGB(255, 249, 248, 248),
               ),
               decoration: InputDecoration(
                 hintText: 'Grilled chicken salad with olive oil dressing...',

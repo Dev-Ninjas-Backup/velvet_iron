@@ -112,7 +112,7 @@ class ProfileSetupWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<Onboarding2Controller>();
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -21,37 +21,50 @@ class OnboardingScreen5 extends StatelessWidget {
         child: Stack(
           children: [
             SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 60),
-                    const StepsTextWidget5(),
-                    const SizedBox(height: 16),
-                    const ProgressBarWidget5(),
-                    const SizedBox(height: 32),
-                    const OnboardingHeader5Widget(),
-                    const SizedBox(height: 32),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24),
-                      child: DateSelectionWidget(),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight:
+                          MediaQuery.of(context).size.height -
+                          MediaQuery.of(context).padding.top,
                     ),
-                    const SizedBox(height: 20),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 60),
+                        const StepsTextWidget5(),
+                        const SizedBox(height: 16),
+                        const ProgressBarWidget5(),
+                        const SizedBox(height: 32),
+                        const OnboardingHeader5Widget(),
+                        const SizedBox(height: 24),
 
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: CustomButton(
-                        label: 'Continue (+10 XP)',
-                        onPressed: () =>
-                            Get.toNamed(AppRoute.getonboardingScreen6()),
-                      ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 24),
+                          child: DateSelectionWidget(),
+                        ),
+
+                        const SizedBox(height: 32),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: CustomButton(
+                            label: 'Continue (+10 XP)',
+                            onPressed: () =>
+                                Get.toNamed(AppRoute.getonboardingScreen6()),
+                          ),
+                        ),
+
+                        const SizedBox(height: 40),
+                      ],
                     ),
-
-                    const SizedBox(height: 24),
-                  ],
+                  ),
                 ),
               ),
             ),
+
+            /// Fixed Back Button
             Positioned(
               top: MediaQuery.of(context).padding.top + 12,
               left: 24,

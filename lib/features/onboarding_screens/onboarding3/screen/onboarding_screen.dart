@@ -21,34 +21,46 @@ class OnboardingScreen3 extends StatelessWidget {
         child: Stack(
           children: [
             SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 60),
-                    const StepsTextWidget3(),
-                    const SizedBox(height: 16),
-                    const ProgressBarWidget3(),
-                    const SizedBox(height: 32),
-                    const OnboardingHeader3Widget(),
-                    const SizedBox(height: 32),
-                    const FitnessGoalsWidget(),
-                    const SizedBox(height: 32),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: CustomButton(
-                        label: 'Continue (+10 XP)',
-                        onPressed: () =>
-                            Get.toNamed(AppRoute.getonboardingScreen4()),
-                      ),
+              child: SingleChildScrollView(
+                // physics: const BouncingScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight:
+                          MediaQuery.of(context).size.height -
+                          MediaQuery.of(context).padding.top,
                     ),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 60),
+                        const StepsTextWidget3(),
+                        const SizedBox(height: 16),
+                        const ProgressBarWidget3(),
+                        const SizedBox(height: 32),
+                        const OnboardingHeader3Widget(),
+                        const SizedBox(height: 24),
+                        const FitnessGoalsWidget(),
+                        const SizedBox(height: 32),
 
-                    const Spacer(flex: 3),
-                  ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: CustomButton(
+                            label: 'Continue (+10 XP)',
+                            onPressed: () =>
+                                Get.toNamed(AppRoute.getonboardingScreen4()),
+                          ),
+                        ),
+
+                        const SizedBox(height: 40),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
+
+            /// Fixed Back Button (does not scroll)
             Positioned(
               top: MediaQuery.of(context).padding.top + 12,
               left: 24,

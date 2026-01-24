@@ -116,90 +116,53 @@ class PackageSelectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<OnboardingController11>();
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Obx(
       () => Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Color.fromRGBO(92, 8, 8, 0.4),
+          color: const Color.fromRGBO(92, 8, 8, 0.4),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
           children: [
+            // Free Trial Package
             GestureDetector(
               onTap: () => controller.selectPackage(PackageType.free),
               child: Container(
                 height: 57,
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(53, 4, 4, 0.9),
-                  borderRadius: BorderRadius.circular(16),
-                ),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 12,
                 ),
+                decoration: BoxDecoration(
+                  color: const Color.fromRGBO(53, 4, 4, 0.9),
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 child: Row(
                   children: [
-                    controller.selectedPackage.value == PackageType.free
-                        ? CustomPaint(
-                            size: Size(20, 20),
-                            painter: GradientBorderPainter(
-                              strokeWidth: 1.5,
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xFFFDE7BB),
-                                  Color(0xFF9E6D38),
-                                  Color(0xFFE9B86E),
-                                  Color(0xFFE5B46B),
-                                ],
-                              ),
-                            ),
-                            child: Center(
-                              child: Container(
-                                width: 10,
-                                height: 10,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Color(0xFFFDE7BB),
-                                      Color(0xFF9E6D38),
-                                      Color(0xFFE9B86E),
-                                      Color(0xFFE5B46B),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                        : Container(
-                            width: 20,
-                            height: 20,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.6),
-                                width: 1.5,
-                              ),
-                            ),
-                          ),
-                    SizedBox(width: 12),
+                    _buildSelectionCircle(
+                      selected:
+                          controller.selectedPackage.value == PackageType.free,
+                    ),
+                    const SizedBox(width: 12),
                     Text(
-                      'Free Trail',
+                      'Free Trial',
                       style: getTextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     ShaderMask(
                       blendMode: BlendMode.srcIn,
-                      shaderCallback: (bounds) => LinearGradient(
+                      shaderCallback: (bounds) => const LinearGradient(
                         colors: [Color(0xFFFDE7BB), Color(0xFF9E6D38)],
                       ).createShader(bounds),
                       child: Text(
-                        'Free Trail',
+                        'Free Trial',
                         style: getTextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
@@ -207,7 +170,7 @@ class PackageSelectionWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Text(
                       '/3 days',
                       style: getTextStyle(
@@ -220,28 +183,28 @@ class PackageSelectionWidget extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-            // Second Row - Premium with Background Image
+            // Premium Package
             GestureDetector(
               onTap: () => controller.selectPackage(PackageType.premium),
               child: Container(
-                height: 170,
-                width: double.infinity,
                 decoration: BoxDecoration(
-                  image: DecorationImage(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: const Color(0xFFD4AF7A).withValues(alpha: 0.3),
+                    width: 1,
+                  ),
+                  image: const DecorationImage(
                     image: AssetImage(IconPath.serIcon),
                     fit: BoxFit.cover,
                   ),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: Color(0xFFD4AF7A).withValues(alpha: 0.3),
-                    width: 1,
-                  ),
                 ),
                 child: Container(
+                  // padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    borderRadius: BorderRadius.circular(16),
+                    gradient: const LinearGradient(
                       colors: [
                         Color.fromRGBO(49, 1, 1, 0.85),
                         Color.fromRGBO(85, 6, 6, 0.85),
@@ -250,228 +213,150 @@ class PackageSelectionWidget extends StatelessWidget {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
-                    borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(17.5),
-
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                controller.selectedPackage.value ==
-                                        PackageType.premium
-                                    ? CustomPaint(
-                                        size: Size(20, 20),
-                                        painter: GradientBorderPainter(
-                                          strokeWidth: 1.5,
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              Color(0xFFFDE7BB),
-                                              Color(0xFF9E6D38),
-                                              Color(0xFFE9B86E),
-                                              Color(0xFFE5B46B),
-                                            ],
-                                          ),
-                                        ),
-                                        child: Center(
-                                          child: Container(
-                                            width: 10,
-                                            height: 10,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              gradient: LinearGradient(
-                                                colors: [
-                                                  Color(0xFFFDE7BB),
-                                                  Color(0xFF9E6D38),
-                                                  Color(0xFFE9B86E),
-                                                  Color(0xFFE5B46B),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : Container(
-                                        width: 20,
-                                        height: 20,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color: Colors.white.withValues(
-                                              alpha: 0.6,
-                                            ),
-                                            width: 1.5,
-                                          ),
-                                        ),
-                                      ),
-                                SizedBox(width: 10),
-                                Text(
-                                  'Premium',
-                                  style: getTextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
+                      // Info Column
+                      Expanded(
+                        flex: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  _buildSelectionCircle(
+                                    selected:
+                                        controller.selectedPackage.value ==
+                                        PackageType.premium,
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 12),
-                            Row(
-                              children: [
-                                ShaderMask(
-                                  blendMode: BlendMode.srcIn,
-                                  shaderCallback: (bounds) => LinearGradient(
-                                    colors: [
-                                      Color(0xFFFDE7BB),
-                                      Color(0xFF9E6D38),
-                                    ],
-                                  ).createShader(bounds),
-                                  child: Text(
-                                    'USD \$9.00',
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    'Premium',
                                     style: getTextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
                                       color: Colors.white,
                                     ),
                                   ),
-                                ),
-                                SizedBox(width: 6),
-                                Text(
-                                  'per monthly',
-                                  style: getTextStyle(
-                                    fontSize: 9,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.white.withValues(alpha: 0.7),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 12),
-                            Row(
-                              children: [
-                                Text(
-                                  'Billing:',
-                                  style: getTextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white.withValues(alpha: 0.8),
-                                  ),
-                                ),
-                                SizedBox(width: 2),
-                                Obx(
-                                  () => GestureDetector(
-                                    onTap: () => controller.selectBilling(
-                                      BillingType.monthly,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Monthly',
-                                          style: getTextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
-                                            color:
-                                                controller
-                                                        .selectedBilling
-                                                        .value ==
-                                                    BillingType.monthly
-                                                ? Color(0xFFD4AF7A)
-                                                : Colors.white.withValues(
-                                                    alpha: 0.5,
-                                                  ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 6),
-                                        Container(
-                                          width: 14,
-                                          height: 14,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color:
-                                                controller
-                                                        .selectedBilling
-                                                        .value ==
-                                                    BillingType.monthly
-                                                ? Color(0xFFD4AF7A)
-                                                : Colors.white.withValues(
-                                                    alpha: 0.3,
-                                                  ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 16),
-                                Obx(
-                                  () => GestureDetector(
-                                    onTap: () => controller.selectBilling(
-                                      BillingType.annually,
-                                    ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  ShaderMask(
+                                    blendMode: BlendMode.srcIn,
+                                    shaderCallback: (bounds) =>
+                                        const LinearGradient(
+                                          colors: [
+                                            Color(0xFFFDE7BB),
+                                            Color(0xFF9E6D38),
+                                          ],
+                                        ).createShader(bounds),
                                     child: Text(
-                                      'Annually',
+                                      'USD \$9.00',
                                       style: getTextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400,
-                                        color:
-                                            controller.selectedBilling.value ==
-                                                BillingType.annually
-                                            ? Color(0xFFD4AF7A)
-                                            : Colors.white.withValues(
-                                                alpha: 0.5,
-                                              ),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'per month',
+                                    style: getTextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white.withValues(
+                                        alpha: 0.7,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Billing:',
+                                    style: getTextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white.withValues(
+                                        alpha: 0.8,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  _buildBillingOption(
+                                    controller: controller,
+                                    type: BillingType.monthly,
+                                    label: 'Monthly',
+                                  ),
+                                  const SizedBox(width: 16),
+                                  _buildBillingOption(
+                                    controller: controller,
+                                    type: BillingType.annually,
+                                    label: 'Annually',
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      SizedBox(
-                        width: 120,
-                        height: 168,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Image.asset(
-                              IconPath.serIcon,
-                              width: 156,
-                              height: 168,
-                              fit: BoxFit.fill,
-                            ),
-                            Positioned(
-                              child: Container(
-                                width: 85,
-                                height: 87,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Color(0xFFD4AF7A),
-                                    width: 2,
-                                  ),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Color(0xFFFDE7BB),
-                                      Color(0xFF9E6D38),
-                                    ],
-                                  ),
-                                ),
 
-                                child: ClipOval(
-                                  child: Image.asset(
-                                    ImagePath.premiumprofile,
-                                    fit: BoxFit.cover,
+                      // Image Column
+                      Expanded(
+                        flex: 1,
+                        child: SizedBox(
+                          height: screenWidth * 0.35,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              ClipRRect(
+                                clipBehavior: Clip.hardEdge,
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(16),
+                                  bottomRight: Radius.circular(16),
+                                ),
+                                child: Image.asset(
+                                  IconPath.serIcon,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                              Positioned(
+                                child: Container(
+                                  width: screenWidth * 0.22,
+                                  height: screenWidth * 0.22,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: const Color(0xFFD4AF7A),
+                                      width: 2,
+                                    ),
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color(0xFFFDE7BB),
+                                        Color(0xFF9E6D38),
+                                      ],
+                                    ),
+                                  ),
+                                  child: ClipOval(
+                                    child: Image.asset(
+                                      ImagePath.premiumprofile,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -479,6 +364,95 @@ class PackageSelectionWidget extends StatelessWidget {
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSelectionCircle({required bool selected}) {
+    if (selected) {
+      return CustomPaint(
+        size: const Size(20, 20),
+        painter: GradientBorderPainter(
+          strokeWidth: 1.5,
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xFFFDE7BB),
+              Color(0xFF9E6D38),
+              Color(0xFFE9B86E),
+              Color(0xFFE5B46B),
+            ],
+          ),
+        ),
+        child: Center(
+          child: Container(
+            width: 10,
+            height: 10,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFFFDE7BB),
+                  Color(0xFF9E6D38),
+                  Color(0xFFE9B86E),
+                  Color(0xFFE5B46B),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Container(
+        width: 20,
+        height: 20,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.6),
+            width: 1.5,
+          ),
+        ),
+      );
+    }
+  }
+
+  Widget _buildBillingOption({
+    required OnboardingController11 controller,
+    required BillingType type,
+    required String label,
+  }) {
+    return Obx(
+      () => GestureDetector(
+        onTap: () => controller.selectBilling(type),
+        child: Row(
+          children: [
+            Text(
+              label,
+              style: getTextStyle(
+                fontSize: 10,
+                fontWeight: type == BillingType.monthly
+                    ? FontWeight.w500
+                    : FontWeight.w400,
+                color: controller.selectedBilling.value == type
+                    ? const Color(0xFFD4AF7A)
+                    : Colors.white.withValues(alpha: 0.5),
+              ),
+            ),
+            if (type == BillingType.monthly) ...[
+              const SizedBox(width: 6),
+              Container(
+                width: 14,
+                height: 14,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: controller.selectedBilling.value == type
+                      ? const Color(0xFFD4AF7A)
+                      : Colors.white.withValues(alpha: 0.3),
+                ),
+              ),
+            ],
           ],
         ),
       ),

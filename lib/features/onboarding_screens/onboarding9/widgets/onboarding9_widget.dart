@@ -138,7 +138,7 @@ class MedicineFormWidget extends StatelessWidget {
             ),
             child: TextField(
               controller: controller.doseNameController,
-              style: getTextStyle(fontSize: 14, color: Color(0xFF914C4C)),
+              style: getTextStyle(fontSize: 14, color: Colors.white),
               decoration: InputDecoration(
                 hintText: 'Enter medicine name',
                 hintStyle: getTextStyle(

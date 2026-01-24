@@ -14,42 +14,56 @@ class OnboardingScreen8 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(OnboardingController8());
+
     return Scaffold(
       body: CustomBackgroundWithImage(
         imageAsset: ImagePath.magicImage,
         child: Stack(
           children: [
             SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  children: [
-                    SizedBox(height: 60),
-                    StepsTextWidget8(),
-                    SizedBox(height: 8),
-                    ProgressBarWidget8(),
-                    SizedBox(height: 40),
-                    OnboardingHeaderWidget8(),
-                    SizedBox(height: 40),
-                    MealSelectionWidget8(),
-                    SizedBox(height: 20),
-                    FoodInputWidget8(),
-                    SizedBox(height: 20),
-                    CalorieInputWidget8(),
-                    SizedBox(height: 20),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: CustomButton(
-                        label: 'Continue (+10 XP)',
-                        onPressed: () =>
-                            Get.toNamed(AppRoute.getonboardingScreen9()),
-                      ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight:
+                          MediaQuery.of(context).size.height -
+                          MediaQuery.of(context).padding.top,
                     ),
-                  ],
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 60),
+                        const StepsTextWidget8(),
+                        const SizedBox(height: 8),
+                        const ProgressBarWidget8(),
+                        const SizedBox(height: 32),
+                        const OnboardingHeaderWidget8(),
+                        const SizedBox(height: 24),
+                        const MealSelectionWidget8(),
+                        const SizedBox(height: 20),
+                        const FoodInputWidget8(),
+                        const SizedBox(height: 20),
+                        const CalorieInputWidget8(),
+                        const SizedBox(height: 32),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: CustomButton(
+                            label: 'Continue (+10 XP)',
+                            onPressed: () =>
+                                Get.toNamed(AppRoute.getonboardingScreen9()),
+                          ),
+                        ),
+
+                        const SizedBox(height: 40),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
+
+            /// Fixed Back Button
             Positioned(
               top: MediaQuery.of(context).padding.top + 12,
               left: 24,

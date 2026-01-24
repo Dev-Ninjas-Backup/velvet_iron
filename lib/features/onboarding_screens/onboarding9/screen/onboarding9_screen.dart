@@ -4,7 +4,7 @@ import 'package:velvet_iron/core/common/widgets/custom_back_button.dart';
 import 'package:velvet_iron/core/common/widgets/custom_background_withimage.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
-import 'package:velvet_iron/features/onboarding_screens/onboarding8/controller/onboarding8_controller.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding9/controller/onboarding9_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding9/widgets/onboarding9_widget.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
@@ -13,38 +13,51 @@ class OnboardingScreen9 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(OnboardingController8());
+    Get.put(OnboardingController9());
+
     return Scaffold(
       body: CustomBackgroundWithImage(
         imageAsset: ImagePath.magicImage,
         child: Stack(
           children: [
             SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  children: [
-                    SizedBox(height: 60),
-                    StepsTextWidget9(),
-                    SizedBox(height: 8),
-                    ProgressBarWidget9(),
-                    SizedBox(height: 40),
-                    OnboardingHeaderWidget9(),
-                    SizedBox(height: 40),
-                    MedicineFormWidget(),
-                    SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: CustomButton(
-                        label: 'Continue (+10 XP)',
-                        onPressed: () =>
-                            Get.toNamed(AppRoute.getonboardingScreen11()),
-                      ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight:
+                          MediaQuery.of(context).size.height -
+                          MediaQuery.of(context).padding.top,
                     ),
-                  ],
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 60),
+                        const StepsTextWidget9(),
+                        const SizedBox(height: 8),
+                        const ProgressBarWidget9(),
+                        const SizedBox(height: 32),
+                        const OnboardingHeaderWidget9(),
+                        const SizedBox(height: 24),
+                        const MedicineFormWidget(),
+                        const SizedBox(height: 32),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: CustomButton(
+                            label: 'Continue (+10 XP)',
+                            onPressed: () =>
+                                Get.toNamed(AppRoute.getonboardingScreen11()),
+                          ),
+                        ),
+
+                        const SizedBox(height: 40),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
+
             Positioned(
               top: MediaQuery.of(context).padding.top + 12,
               left: 24,
