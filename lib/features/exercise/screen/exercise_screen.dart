@@ -4,6 +4,7 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_back_button.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
+import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/exercise/controller/exercise_controller.dart';
 import 'package:velvet_iron/features/exercise/widgets/completed_tab_content.dart';
 import 'package:velvet_iron/features/exercise/widgets/excercise_switcher.dart';
@@ -20,102 +21,137 @@ class ExerciseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final navController = bottomNavController;
-    return NestedScrollView(
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        return <Widget>[
-          SliverAppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            floating: true,
-            snap: true,
-            automaticallyImplyLeading: false,
-            titleSpacing: 16,
-            title: FigmaBackButton(
-              onPressed: () {
-                navController.changeTabIndex(1);
-              },
-              appBarTitle: 'Exercise',
+    return Scaffold(
+      backgroundColor: const Color(0xFF1A0101),
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF1E0000), Color(0xFF680B0B)],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
             ),
           ),
-        ];
-      },
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Obx(
-              () => Row(
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Image.asset(ImagePath.magicImage, width: 378, height: 411),
+          ),
+          NestedScrollView(
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+                  return <Widget>[
+                    SliverAppBar(
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      floating: true,
+                      snap: true,
+                      automaticallyImplyLeading: false,
+                      titleSpacing: 16,
+                      title: FigmaBackButton(
+                        onPressed: () {
+                          navController.changeTabIndex(1);
+                        },
+                        appBarTitle: 'Exercise',
+                      ),
+                    ),
+                  ];
+                },
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: CustomLogContainer(
-                      iconPath: IconPath.letter,
-                      title: "Logged Exercise",
-                      value: controller.exerciseStats.value.loggedExercises
-                          .toString(),
-                      rewardAmount: "150",
+                  Obx(
+                    () => Row(
+                      children: [
+                        Expanded(
+                          child: CustomLogContainer(
+                            iconPath: IconPath.letter,
+                            title: "Logged Exercise",
+                            value: controller
+                                .exerciseStats
+                                .value
+                                .loggedExercises
+                                .toString(),
+                            rewardAmount: "150",
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: CustomLogContainer(
+                            iconPath: IconPath.time,
+                            title: "Time Exercise ",
+                            value:
+                                "${controller.exerciseStats.value.timeExercises} min",
+                            rewardAmount: "15+",
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: CustomLogContainer(
-                      iconPath: IconPath.time,
-                      title: "Time Exercise ",
-                      value:
-                          "${controller.exerciseStats.value.timeExercises} min",
-                      rewardAmount: "15+",
+                  SizedBox(height: 20),
+                  Text(
+                    "Log a Exercise",
+                    style: getTextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF521212),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ExcerciseSwitcher(
+                      controller: controller,
+                      completedContent: CompletedTabContent(
+                        controller: controller,
+                      ),
+                      scheduleContent: ScheduleTabContent(
+                        controller: controller,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    "Exercise History",
+                    style: getTextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Obx(
+                    () => ListView.builder(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: controller.exercises.length,
+                      itemBuilder: (context, index) {
+                        final exercise = controller.exercises[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 7.0),
+                          child: ExcersiseHistory(
+                            title: exercise.name,
+                            sub: "${exercise.type} - ${exercise.duration} min",
+                            time:
+                                "Wed - ${exercise.dateTime.hour}:${exercise.dateTime.minute}",
+                            iconPath: _getIconPath(exercise.type),
+                            isSelected: RxBool(false),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 20),
-            Text(
-              "Log a Exercise",
-              style: getTextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-            ),
-            SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color(0xFF521212),
-                borderRadius: BorderRadius.circular(10),
-              ),
-
-              child: ExcerciseSwitcher(
-                controller: controller,
-                completedContent: CompletedTabContent(controller: controller),
-                scheduleContent: ScheduleTabContent(controller: controller),
-              ),
-            ),
-            Text(
-              "Exercise History",
-              style: getTextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-            ),
-            Obx(
-              () => ListView.builder(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: controller.exercises.length,
-                itemBuilder: (context, index) {
-                  final exercise = controller.exercises[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 7.0),
-                    child: ExcersiseHistory(
-                      title: exercise.name,
-                      sub: "${exercise.type} - ${exercise.duration} min",
-                      time:
-                          "Wed - ${exercise.dateTime.hour}:${exercise.dateTime.minute}",
-                      iconPath: _getIconPath(exercise.type),
-                      isSelected: RxBool(false),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

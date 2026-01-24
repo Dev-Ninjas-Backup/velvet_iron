@@ -1,8 +1,10 @@
 import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
-import 'package:velvet_iron/core/utils/constants/colors.dart';
+import 'package:velvet_iron/features/home/controller/theme_controller.dart';
+import 'package:velvet_iron/features/home/models/home_theme_model.dart';
 
 class WeightProgress extends StatefulWidget {
   final String title;
@@ -25,6 +27,10 @@ class _WeightProgressState extends State<WeightProgress> {
 
   @override
   Widget build(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
+    final activeTheme =
+        themeController.currentTheme.value ?? HomeThemeModel.adventurerTheme;
+
     final Random random = Random();
     final List<double> weeklyData = List.generate(
       7,
@@ -46,7 +52,7 @@ class _WeightProgressState extends State<WeightProgress> {
               padding: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(21),
-                border: Border.all(color: const Color(0xFF992929)),
+                border: Border.all(color: activeTheme.borderColor),
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
@@ -57,7 +63,7 @@ class _WeightProgressState extends State<WeightProgress> {
                     color: Colors.white,
                   ),
                   style: getTextStyle(fontSize: 10, color: Colors.white),
-                  dropdownColor: const Color(0xFF3A0303),
+                  dropdownColor: activeTheme.dropdownBackgroundColor,
                   items: ['this week', 'last week', 'this month']
                       .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                       .toList(),
@@ -72,10 +78,8 @@ class _WeightProgressState extends State<WeightProgress> {
           ],
         ),
         const SizedBox(height: 12),
-
         SizedBox(
           height: 150,
-
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -117,13 +121,10 @@ class _WeightProgressState extends State<WeightProgress> {
 
                             return FittedBox(
                               fit: BoxFit.scaleDown,
-
                               child: Text(
                                 days[value.toInt()],
-
                                 style: getTextStyle(
                                   color: Colors.white,
-
                                   fontSize: 10,
                                 ),
                               ),
@@ -142,11 +143,7 @@ class _WeightProgressState extends State<WeightProgress> {
                             toY: e.value,
                             width: 29,
                             borderRadius: BorderRadius.circular(6),
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF683E23), Color(0xFFE9B86E)],
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.topCenter,
-                            ),
+                            gradient: activeTheme.progressBarGradient,
                           ),
                         ],
                       );
@@ -154,25 +151,17 @@ class _WeightProgressState extends State<WeightProgress> {
                   ),
                 ),
               ),
-
               const SizedBox(width: 12),
-
               SizedBox(
                 width: 30,
-
                 height: 114,
-
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                   children: xpLabels.map((xp) {
                     return Container(
                       alignment: Alignment.center,
-
                       decoration: BoxDecoration(
-                        border: Border.all(
-                          color: AppColors.textFieldBorderColor,
-                        ),
+                        border: Border.all(color: activeTheme.borderColor),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: FittedBox(

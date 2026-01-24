@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
+import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
 import 'package:velvet_iron/features/home/controller/home_controller.dart';
+import 'package:velvet_iron/features/home/controller/theme_controller.dart';
+import 'package:velvet_iron/features/home/models/home_theme_model.dart';
 import 'package:velvet_iron/features/home/widgets/mood_selector.dart';
 import 'package:velvet_iron/features/home/widgets/todo_list.dart';
 import '../widgets/header_section.dart';
@@ -17,42 +20,84 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.put(BottomNavController());
     Get.put(HomeController());
+    Get.put(ThemeController());
+
+    final bottomNavController = Get.find<BottomNavController>();
 
     return Scaffold(
       backgroundColor: AppColors.bg,
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFF1E0000), Color(0xFF680B0B)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-          ),
+      body: Obx(() {
+        final isHomeScreen = bottomNavController.tabIndex.value == 0;
 
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Image.asset(
-              'assets/images/magicImage.png',
-              width: 378,
-              height: 411,
+        return Stack(
+          children: [
+            // Background - only show theme gradient on home screen
+            GetBuilder<ThemeController>(
+              builder: (themeController) {
+                final activeTheme =
+                    themeController.currentTheme.value ??
+                    HomeThemeModel.adventurerTheme;
+                return Container(
+                  decoration: BoxDecoration(
+                    gradient: isHomeScreen
+                        ? activeTheme.backgroundGradient
+                        : const LinearGradient(
+                            colors: [Color(0xFF1E0000), Color(0xFF680B0B)],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                  ),
+                );
+              },
             ),
-          ),
 
-          Obx(() {
-            final controller = Get.find<BottomNavController>();
-            return Padding(
+            // Magic image - theme specific
+            GetBuilder<ThemeController>(
+              builder: (themeController) {
+                final activeTheme =
+                    themeController.currentTheme.value ??
+                    HomeThemeModel.adventurerTheme;
+
+                String backgroundImage = ImagePath.magicImage; // Default
+
+                if (isHomeScreen) {
+                  switch (activeTheme.id) {
+                    case 'mage':
+                      backgroundImage = ImagePath.blueBG;
+                      break;
+                    case 'reader':
+                      backgroundImage = ImagePath.greenBG;
+                      break;
+                    case 'gamer':
+                      backgroundImage = ImagePath.purpleBG;
+                      break;
+                    default:
+                      backgroundImage = ImagePath.magicImage;
+                  }
+                } else {
+                  backgroundImage = ImagePath.magicImage;
+                }
+
+                return Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Image.asset(backgroundImage, width: 378, height: 411),
+                );
+              },
+            ),
+
+            // Content
+            Padding(
               padding: const EdgeInsets.only(bottom: 115),
-              child: controller.getCurrentScreen(),
-            );
-          }),
-          const Positioned(bottom: 20, left: 0, right: 0, child: BottomNav()),
-        ],
-      ),
+              child: bottomNavController.getCurrentScreen(),
+            ),
+
+            // Bottom nav
+            const Positioned(bottom: 20, left: 0, right: 0, child: BottomNav()),
+          ],
+        );
+      }),
     );
   }
 }
