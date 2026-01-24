@@ -146,12 +146,15 @@ class WeightSelectionWidget extends StatelessWidget {
             ),
             child: TextField(
               controller: controller.weightController,
+              style: getTextStyle(
+                fontSize: 12,
+                color: Colors.white,
+              ).copyWith(letterSpacing: 1.5),
+              textAlign: TextAlign.center,
               decoration: InputDecoration(
                 hintText: 'Enter current weight',
-                hintStyle: getTextStyle(
-                  fontSize: 12,
-                  color: Colors.white.withValues(alpha: 0.4),
-                ),
+                labelStyle: getTextStyle(fontSize: 12, color: Colors.white),
+                hintStyle: getTextStyle(fontSize: 12, color: Colors.white),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(vertical: 14),
               ),

@@ -13,6 +13,8 @@ class OnboardingScreen11 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(OnboardingController11());
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: CustomBackgroundWithImage(
@@ -21,34 +23,36 @@ class OnboardingScreen11 extends StatelessWidget {
           children: [
             SafeArea(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const SizedBox(height: 50),
-                    StepsTextWidget11(),
-                    const SizedBox(height: 6),
-                    ProgressBarWidget11(),
-                    const SizedBox(height: 40),
-                    OnboardingHeaderWidget11(),
-                    const SizedBox(height: 40),
-                    PackageSelectionWidget(),
-                    const SizedBox(height: 20),
-                    MembershipBenefitsWidget(),
-                    const SizedBox(height: 30),
+                    SizedBox(height: screenHeight * 0.06),
+                    const StepsTextWidget11(),
+                    SizedBox(height: screenHeight * 0.01),
+                    const ProgressBarWidget11(),
+                    SizedBox(height: screenHeight * 0.05),
+                    const OnboardingHeaderWidget11(),
+                    SizedBox(height: screenHeight * 0.05),
+                    const PackageSelectionWidget(),
+                    SizedBox(height: screenHeight * 0.03),
+                    const MembershipBenefitsWidget(),
+                    SizedBox(height: screenHeight * 0.04),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.06,
+                      ),
                       child: CustomButton(
                         label: 'Continue Subscription (\$9.00)',
                         onPressed: () => Get.dialog(
                           const PopUpDialogue(),
-                          barrierDismissible:false, // Prevents closing by tapping outside
+                          barrierDismissible: false,
                           transitionDuration: const Duration(milliseconds: 500),
                           transitionCurve: Curves.easeInOut,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    SizedBox(height: screenHeight * 0.04),
                   ],
                 ),
               ),
@@ -57,7 +61,7 @@ class OnboardingScreen11 extends StatelessWidget {
             /// Back Button
             Positioned(
               top: MediaQuery.of(context).padding.top + 12,
-              left: 24,
+              left: screenWidth * 0.06,
               child: FigmaBackButton(onPressed: () => Get.back()),
             ),
           ],

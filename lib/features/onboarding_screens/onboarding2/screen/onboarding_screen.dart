@@ -14,35 +14,49 @@ class OnboardingScreen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(Onboarding2Controller());
+
     return Scaffold(
       body: CustomBackgroundWithImage(
         imageAsset: ImagePath.magicImage,
         child: Stack(
           children: [
             SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 60),
-                    const StepsTextWidget2(),
-                    const SizedBox(height: 16),
-                    const ProgressBarWidget2(),
-                    const SizedBox(height: 24),
-                    const SetupTextWidget(),
-                    const SizedBox(height: 8),
-                    const ProfileSetupWidget(),
-                    const SizedBox(height: 24),
-
-                    CustomButton(
-                      label: 'Continue (+${controller.xpPoints.value} XP)',
-                      onPressed: () =>
-                          Get.toNamed(AppRoute.getonboardingScreen3()),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight:
+                          MediaQuery.of(context).size.height -
+                          MediaQuery.of(context).padding.top,
                     ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 60),
+                        const StepsTextWidget2(),
+                        const SizedBox(height: 16),
+                        const ProgressBarWidget2(),
+                        const SizedBox(height: 24),
+                        const SetupTextWidget(),
+                        const SizedBox(height: 8),
+                        const ProfileSetupWidget(),
+                        const SizedBox(height: 24),
 
-                    const Spacer(flex: 3),
-                  ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: CustomButton(
+                            label:
+                                'Continue (+${controller.xpPoints.value} XP)',
+                            onPressed: () =>
+                                Get.toNamed(AppRoute.getonboardingScreen3()),
+                          ),
+                        ),
+
+                        const SizedBox(height: 40),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),

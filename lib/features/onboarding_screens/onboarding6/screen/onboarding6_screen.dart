@@ -21,31 +21,45 @@ class OnboardingScreen6 extends StatelessWidget {
         child: Stack(
           children: [
             SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 60),
-                    const StepsTextWidget6(),
-                    const SizedBox(height: 10),
-                    const ProgressBarWidget6(),
-                    const SizedBox(height: 40),
-                    const OnboardingHeaderWidget6(),
-                    const SizedBox(height: 40),
-                    const WeightSelectionWidget(),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: CustomButton(
-                        label: 'Continue (+10 XP)',
-                        onPressed: () =>
-                            Get.toNamed(AppRoute.getonboardingScreen7()),
-                      ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight:
+                          MediaQuery.of(context).size.height -
+                          MediaQuery.of(context).padding.top,
                     ),
-                  ],
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 60),
+                        const StepsTextWidget6(),
+                        const SizedBox(height: 10),
+                        const ProgressBarWidget6(),
+                        const SizedBox(height: 32),
+                        const OnboardingHeaderWidget6(),
+                        const SizedBox(height: 24),
+                        const WeightSelectionWidget(),
+                        const SizedBox(height: 32),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: CustomButton(
+                            label: 'Continue (+10 XP)',
+                            onPressed: () =>
+                                Get.toNamed(AppRoute.getonboardingScreen7()),
+                          ),
+                        ),
+
+                        const SizedBox(height: 40),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
+
+            /// Fixed Back Button
             Positioned(
               top: MediaQuery.of(context).padding.top + 12,
               left: 24,
