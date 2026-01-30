@@ -4,7 +4,7 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 class NutritionLoadingCard extends StatelessWidget {
   final String amount;
   final String label;
-  final double progress; 
+  final double progress;
 
   const NutritionLoadingCard({
     super.key,
@@ -20,7 +20,7 @@ class NutritionLoadingCard extends StatelessWidget {
       constraints: const BoxConstraints(minHeight: 68),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: const Color(0xFF521212),
+        color: const Color(0xFF521212).withValues(alpha: .4),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -43,7 +43,7 @@ class NutritionLoadingCard extends StatelessWidget {
                 width: double.infinity,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF380404), 
+                  color: const Color(0xFF380404),
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),

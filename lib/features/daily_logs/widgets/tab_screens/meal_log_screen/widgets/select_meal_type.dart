@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
-import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 
 class SelectMealType extends StatelessWidget {
@@ -26,7 +25,7 @@ class SelectMealType extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: AppColors.card,
+          color: const Color(0xFF521212).withValues(alpha: .4),
           borderRadius: BorderRadius.circular(18),
         ),
         child: Row(

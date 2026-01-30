@@ -25,7 +25,7 @@ class ExcersiseHistory extends StatelessWidget {
       () => Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: AppColors.card,
+          color: AppColors.card.withValues(alpha: .5),
           borderRadius: BorderRadius.circular(18),
         ),
         child: Row(

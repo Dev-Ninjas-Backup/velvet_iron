@@ -3,13 +3,13 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 
 class LogHistoryItem extends StatelessWidget {
-  final String title; 
-  final String xpText; 
-  final String iconPath; 
-  final String secondText; 
-  final String thirdText; 
+  final String title;
+  final String xpText;
+  final String iconPath;
+  final String secondText;
+  final String thirdText;
 
-  final String dateTimeText; 
+  final String dateTimeText;
 
   const LogHistoryItem({
     super.key,
@@ -26,7 +26,7 @@ class LogHistoryItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF521212),
+        color: const Color(0xFF521212).withValues(alpha: .5),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -72,10 +72,7 @@ class LogHistoryItem extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               thirdText,
-              style: getTextStyle(
-                fontSize: 12,
-                color: const Color(0xFFDCAA64), 
-              ),
+              style: getTextStyle(fontSize: 12, color: const Color(0xFFDCAA64)),
             ),
           ],
         ],

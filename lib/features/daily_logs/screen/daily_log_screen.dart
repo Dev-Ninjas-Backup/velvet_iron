@@ -24,23 +24,23 @@ class DailyLogScreen extends StatelessWidget {
       backgroundColor: const Color(0xFF1A0101),
       body: Stack(
         children: [
-          Container(
+        Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFF1E0000), Color(0xFF680B0B)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
+                colors: [Color(0xFF611313), Color(0xFF1A0101)],
               ),
             ),
           ),
+
           Positioned(
             top: 0,
             left: 0,
             right: 0,
-            child: Image.asset(
-              'assets/images/magicImage.png',
-              width: 378,
-              height: 411,
+            child: Opacity(
+              opacity: 0.2,
+              child: Image.asset('assets/images/backgroundOne.png'),
             ),
           ),
           Obx(() {

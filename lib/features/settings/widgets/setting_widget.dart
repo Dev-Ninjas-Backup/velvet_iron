@@ -278,7 +278,7 @@ class UpcomingLogWidget extends GetView<SettingsController> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Color(0xFF521212),
+        color: Color(0xFF521212).withValues(alpha: .5),
       ),
       child: Column(
         children: [
@@ -484,7 +484,7 @@ class GeneralSettingsWidget extends GetView<SettingsController> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFF521212),
+          color: const Color(0xFF521212).withValues(alpha: .5),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -543,7 +543,7 @@ class LogoutWidget extends GetView<SettingsController> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFF4A1919),
+          color: const Color(0xFF4A1919).withValues(alpha: .5),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(

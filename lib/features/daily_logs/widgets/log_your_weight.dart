@@ -20,7 +20,7 @@ class LogYourWeightCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF521212),
+        color: const Color(0xFF521212).withValues(alpha: .5),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
