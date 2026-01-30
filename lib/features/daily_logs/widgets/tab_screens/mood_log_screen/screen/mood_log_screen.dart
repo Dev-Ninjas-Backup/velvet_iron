@@ -16,10 +16,11 @@ import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_scr
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_screen/widgets/note_textfield.dart';
 
 class MoodLog extends StatelessWidget {
-  const MoodLog(
-      {super.key,
-      required this.dailyLogController,
-      required this.moodLogController});
+  const MoodLog({
+    super.key,
+    required this.dailyLogController,
+    required this.moodLogController,
+  });
 
   final DailyLogController dailyLogController;
   final MoodLogController moodLogController;
@@ -137,7 +138,7 @@ class MoodLog extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF521212),
+                          color: const Color(0xFF521212).withValues(alpha: .4),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         clipBehavior: Clip.antiAlias,
@@ -161,9 +162,12 @@ class MoodLog extends StatelessWidget {
                                         icon:
                                             moodLogController.moods[index].icon,
                                         title: moodLogController
-                                            .moods[index].title,
-                                        isSelected: moodLogController
-                                                .selectedMood.value ==
+                                            .moods[index]
+                                            .title,
+                                        isSelected:
+                                            moodLogController
+                                                .selectedMood
+                                                .value ==
                                             index,
                                         onTap: () =>
                                             moodLogController.selectMood(index),
@@ -207,9 +211,7 @@ class MoodLog extends StatelessWidget {
                               style: getTextStyle(fontSize: 14),
                             ),
                             const SizedBox(height: 10),
-                            NoteTextField(
-                              onChanged: moodLogController.setNote,
-                            ),
+                            NoteTextField(onChanged: moodLogController.setNote),
                             const SizedBox(height: 14),
                             CustomButton(
                               label: "Log Entry (+10 XP)",

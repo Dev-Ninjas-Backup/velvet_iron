@@ -23,7 +23,7 @@ class QuestTips extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF521212),
+        color: const Color(0xFF521212).withValues(alpha: .6),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -49,18 +49,18 @@ class QuestTips extends StatelessWidget {
           _buildTipRow(
             "Complete all daily quests to maintain your streak and earn bonus XP",
           ),
-          const SizedBox(height: 16),
-          _buildTipRow(
-            "Quests reset daily at midnight, so check back tomorrow for new challenges",
-          ),
-          const SizedBox(height: 16),
-          _buildTipRow(
-            "Building a streak helps establish healthy habits and keeps you motivated",
-          ),
-          const SizedBox(height: 16),
-          _buildTipRow(
-            "Use the tracking features in other tabs to complete your quests",
-          ),
+          // const SizedBox(height: 16),
+          // _buildTipRow(
+          //   "Quests reset daily at midnight, so check back tomorrow for new challenges",
+          // ),
+          // const SizedBox(height: 16),
+          // _buildTipRow(
+          //   "Building a streak helps establish healthy habits and keeps you motivated",
+          // ),
+          // const SizedBox(height: 16),
+          // _buildTipRow(
+          //   "Use the tracking features in other tabs to complete your quests",
+          // ),
         ],
       ),
     );

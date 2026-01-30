@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/widgets/custom_back_button.dart';
+import 'package:velvet_iron/core/common/widgets/custom_small_button.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
-import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/quests/controller/quest_controller.dart';
 import 'package:velvet_iron/features/quests/widgets/progress_card.dart';
 import 'package:velvet_iron/features/quests/widgets/quest_tips.dart';
@@ -30,11 +30,9 @@ class QuestsScreen extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Image.asset(ImagePath.magicImage, width: 378, height: 411),
+          Opacity(
+            opacity: 0.2,
+            child: Image.asset('assets/images/backgroundOne.png'),
           ),
           NestedScrollView(
             headerSliverBuilder:
@@ -85,7 +83,6 @@ class QuestsScreen extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 20),
-                      // Dynamically generate TodaysQuestItem widgets
                       ...questsData.todaysQuests.map(
                         (quest) => Padding(
                           padding: const EdgeInsets.only(bottom: 7),
@@ -100,6 +97,21 @@ class QuestsScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       QuestTips(),
+                      CustomSmallButton(
+                        width: 108,
+                        text: "Read Article",
+                        onPressed: () {},
+                        gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xFFFDE7BB),
+                            Color(0xFF9D6933),
+                            Color(0xFFFEE9BF),
+                          ],
+                        ),
+                        fontColor: Colors.white,
+                      ),
                     ],
                   ),
                 );

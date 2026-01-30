@@ -32,21 +32,15 @@ class MedicationScreen extends StatelessWidget {
             ),
           ),
         ),
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: Image.asset(
-            'assets/images/magicImage.png',
-            width: 378,
-            height: 411,
-          ),
+        Opacity(
+          opacity: 0.2,
+          child: Image.asset('assets/images/backgroundOne.png'),
         ),
         NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
-                backgroundColor: Colors.transparent,
+                backgroundColor: const Color(0xFF521212).withValues(alpha: .5),
                 elevation: 0,
                 floating: true,
                 snap: true,
@@ -57,7 +51,6 @@ class MedicationScreen extends StatelessWidget {
                     const SizedBox(width: 16),
                     GestureDetector(
                       onTap: () {
-                        // Navigate to previous bottom tab (Daily Log)
                         navController.changeTabIndex(1);
                       },
                       child: Container(
@@ -128,7 +121,7 @@ class MedicationScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF521212),
+                    color: const Color(0xFF521212).withValues(alpha: .5),
                     borderRadius: BorderRadius.circular(10),
                   ),
 
@@ -150,4 +143,3 @@ class MedicationScreen extends StatelessWidget {
     );
   }
 }
-

@@ -19,7 +19,7 @@ class WeightStatusCard extends StatelessWidget {
       width: 109,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: const Color(0xFF521212),
+        color: const Color(0xFF521212).withValues(alpha: .5),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(

@@ -28,4 +28,6 @@ class ImagePath {
   static const String blueBG = 'assets/icons/blueBG.png';
   static const String greenBG = 'assets/icons/greenBG.png';
   static const String purpleBG = 'assets/icons/purpleBG.png';
+  static const String backgroundOne = 'assets/images/backgroundOne.png';
+
 }

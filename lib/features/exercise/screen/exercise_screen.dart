@@ -4,7 +4,6 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_back_button.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
-import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/exercise/controller/exercise_controller.dart';
 import 'package:velvet_iron/features/exercise/widgets/completed_tab_content.dart';
 import 'package:velvet_iron/features/exercise/widgets/excercise_switcher.dart';
@@ -34,11 +33,9 @@ class ExerciseScreen extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Image.asset(ImagePath.magicImage, width: 378, height: 411),
+          Opacity(
+            opacity: 0.2,
+            child: Image.asset('assets/images/backgroundOne.png'),
           ),
           NestedScrollView(
             headerSliverBuilder:
@@ -105,7 +102,7 @@ class ExerciseScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF521212),
+                      color: const Color(0xFF521212).withValues(alpha: .5),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: ExcerciseSwitcher(

@@ -31,7 +31,7 @@ class _TodaysQuestItemState extends State<TodaysQuestItem> {
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
       decoration: BoxDecoration(
-        color: const Color(0xFF521212),
+        color: const Color(0xFF521212).withValues(alpha: .5),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.white.withValues(alpha: .2)),
       ),
