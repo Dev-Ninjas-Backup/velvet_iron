@@ -1,4 +1,3 @@
-// profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/widgets/custom_background_withimage.dart';
@@ -7,6 +6,7 @@ import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/bottom_nav/screen/bottom_nav.dart';
 import 'package:velvet_iron/features/profile/controller/profile_controller.dart';
 import 'package:velvet_iron/features/profile/widgets/profile_widget.dart';
+import 'package:velvet_iron/features/profile/widgets/update_Information_widgets.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -39,9 +39,9 @@ class ProfileScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           const ProfileWidget(),
-                          const SizedBox(height: 30),
-                          const UpdateInformationWidget(),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 20),
+                          UpdateInformationWidget(),
+                          const SizedBox(height: 20),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 24),
                             child: CustomButton(
@@ -49,7 +49,6 @@ class ProfileScreen extends StatelessWidget {
                               onPressed: () {},
                             ),
                           ),
-                          const SizedBox(height: 20),
                         ],
                       ),
                     ),
@@ -59,7 +58,7 @@ class ProfileScreen extends StatelessWidget {
               Positioned(
                 left: 0,
                 right: 0,
-                bottom: 0,
+                bottom: -20,
                 child: const BottomNav(),
               ),
             ],
