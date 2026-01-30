@@ -5,17 +5,55 @@ import 'package:velvet_iron/core/utils/constants/image_path.dart';
 
 class ProfileController extends GetxController {
   final fullName = 'Jamie Friddle'.obs;
-  final username = 'jamie'.obs;
-  final email = 'jamiefriddle123@gmail.com'.obs;
-  final password = '************'.obs;
+  final username = 'jamiefriddle123@gmail.com'.obs;
+  final usernameHandle = 'jamiefriddle123'.obs;
   final profileImage = ImagePath.profile.obs;
 
   late TextEditingController fullNameController;
   late TextEditingController usernameController;
-  late TextEditingController emailController;
-  late TextEditingController passwordController;
 
   final ImagePicker _picker = ImagePicker();
+
+  // gender selection
+
+  final selectedGender = RxnInt();
+
+  final List<String> genders = ['Male', 'Female', 'Non-binary'];
+
+  void selectGender(int index) {
+    selectedGender.value = index;
+  }
+
+  // date of birth selection
+
+  final selectedDay = '08'.obs;
+  final selectedMonth = 'January'.obs;
+  final selectedYear = '1999'.obs;
+
+  final List<String> days = List.generate(
+    31,
+    (index) => (index + 1).toString().padLeft(2, '0'),
+  );
+
+  final List<String> months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  final List<String> years = List.generate(
+    100,
+    (index) => (DateTime.now().year - index).toString(),
+  );
 
   @override
   void onInit() {
@@ -23,8 +61,6 @@ class ProfileController extends GetxController {
 
     fullNameController = TextEditingController(text: fullName.value);
     usernameController = TextEditingController(text: username.value);
-    passwordController = TextEditingController(text: password.value);
-    emailController = TextEditingController(text: email.value);
 
     fullNameController.addListener(() {
       fullName.value = fullNameController.text;
@@ -32,20 +68,12 @@ class ProfileController extends GetxController {
     usernameController.addListener(() {
       username.value = usernameController.text;
     });
-    passwordController.addListener(() {
-      password.value = passwordController.text;
-    });
-    emailController.addListener(() {
-      email.value = emailController.text;
-    });
   }
 
   @override
   void onClose() {
     fullNameController.dispose();
     usernameController.dispose();
-    passwordController.dispose();
-    emailController.dispose();
     super.onClose();
   }
 
@@ -106,34 +134,9 @@ class ProfileController extends GetxController {
       return;
     }
 
-    if (emailController.text.trim().isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please enter your email address',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withValues(alpha: 0.8),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 2),
-      );
-      return;
-    }
-
-    if (passwordController.text.trim().isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please enter your password',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withValues(alpha: 0.8),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 2),
-      );
-      return;
-    }
-
     // Update observable values
     fullName.value = fullNameController.text;
     username.value = usernameController.text;
-    password.value = passwordController.text;
 
     Get.snackbar(
       'Success',
@@ -142,6 +145,29 @@ class ProfileController extends GetxController {
       backgroundColor: Colors.green.withValues(alpha: 0.8),
       colorText: Colors.white,
       duration: const Duration(seconds: 2),
+    );
+  }
+
+  // gender selection
+
+  void onContinue() {
+    if (selectedGender.value == null) {
+      Get.snackbar(
+        'Required',
+        'Please select your gender',
+        backgroundColor: Colors.orange.withValues(alpha: 0.7),
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    Get.snackbar(
+      'Success',
+      'Gender selected',
+      backgroundColor: Colors.green.withValues(alpha: 0.7),
+      colorText: Colors.white,
+      snackPosition: SnackPosition.BOTTOM,
     );
   }
 }

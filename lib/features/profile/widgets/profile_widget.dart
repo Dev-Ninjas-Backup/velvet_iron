@@ -150,175 +150,26 @@ class ProfileWidget extends StatelessWidget {
             ),
           ),
         ),
-
-        const SizedBox(height: 8),
         Obx(
           () => Text(
-            '@${controller.email.value}',
+            '@${controller.usernameHandle.value}',
             style: getTextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w400,
-              color: Colors.white.withValues(alpha: 0.7),
+              color: Colors.white,
             ),
           ),
         ),
+        const SizedBox(height: 20),
+
+        const SizedBox(height: 8),
+
         const SizedBox(height: 20),
         Container(
           height: 1,
           color: const Color(0xFF723737).withValues(alpha: 0.5),
         ),
       ],
-    );
-  }
-}
-
-// update information widget
-
-class UpdateInformationWidget extends StatelessWidget {
-  const UpdateInformationWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = Get.find<ProfileController>();
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Update Information:',
-            style: getTextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Container(
-            height: 1,
-            color: const Color(0xFF723737).withValues(alpha: 0.5),
-          ),
-          const SizedBox(height: 12),
-
-          Text(
-            'Full Name:',
-            style: getTextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Obx(
-            () => _buildTextField(
-              controller: controller.fullNameController,
-              hintText: 'Enter full name',
-
-              value: controller.fullName.value,
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          // Username Field
-          Text(
-            'Username:',
-            style: getTextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Obx(
-            () => _buildTextField(
-              controller: controller.usernameController,
-              hintText: 'Enter username/email',
-
-              value: controller.username.value,
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // Username Field
-          Text(
-            'Email Address:',
-            style: getTextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
-            ),
-          ),
-
-          const SizedBox(height: 8),
-          Obx(
-            () => _buildTextField(
-              controller: controller.emailController,
-              hintText: 'Enter email address',
-
-              value: controller.email.value,
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          Text(
-            'Password:',
-            style: getTextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Obx(
-            () => _buildTextField(
-              controller: controller.passwordController,
-              hintText: 'Enter password',
-
-              isPassword: true,
-              value: controller.password.value,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hintText,
-
-    required String value,
-    bool isPassword = false,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF3A0303).withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: const Color(0xFF6B1717).withValues(alpha: 0.5),
-          width: 1,
-        ),
-      ),
-      child: TextField(
-        controller: controller,
-        obscureText: isPassword,
-        style: getTextStyle(fontSize: 14, color: Colors.white),
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: getTextStyle(
-            fontSize: 12,
-            color: Colors.white.withValues(alpha: 0.5),
-          ),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 14,
-          ),
-        ),
-      ),
     );
   }
 }
