@@ -21,11 +21,11 @@ class CustomBackground2 extends StatelessWidget {
           if (imageAsset != null)
             Positioned.fill(
               child: Opacity(
-                opacity: 0.5,
+                opacity: 0.2,
                 child: Image.asset(
                   imageAsset!,
                   fit: BoxFit.cover,
-                  color: const Color(0xFF680B0B).withValues(alpha: 0.5),
+                  color: const Color(0xFF680B0B).withValues(alpha: 0.2),
                   colorBlendMode: BlendMode.multiply,
                 ),
               ),

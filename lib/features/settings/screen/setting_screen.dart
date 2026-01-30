@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:velvet_iron/core/common/widgets/custom_background_withimage.dart';
+import 'package:velvet_iron/core/common/widgets/custom_background2.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/settings/controller/setting_controller.dart';
 import 'package:velvet_iron/features/settings/widgets/setting_widget.dart';
@@ -14,8 +14,8 @@ class SettingScreen extends StatelessWidget {
     Get.put(SettingsController());
 
     return Scaffold(
-      body: CustomBackgroundWithImage(
-        imageAsset: ImagePath.magicImage,
+      body: CustomBackground2(
+        imageAsset: ImagePath.backgroundOne,
         child: SafeArea(
           child: Column(
             children: [
