@@ -28,6 +28,7 @@ import 'package:velvet_iron/features/splash/screen/splash_screen.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding1/screen/onboading1_screen.dart';
 import 'package:velvet_iron/features/onboarding_screens/welcome_boarding/screen/user_boarding_screen.dart';
 import 'package:velvet_iron/features/themes_and_preference/screen/theme_screen.dart';
+import 'package:velvet_iron/features/update_password/screen/update_password_screen.dart';
 
 class AppRoute {
   static String splashScreen = "/splashScreen";
@@ -61,6 +62,7 @@ class AppRoute {
   static String aboutTrainingScreen = '/aboutTrainingScreen';
   static String onboardingScreen11 = '/onboardingScreen11';
   static String themeOnboardingScreen = '/themeOnboardingScreen';
+  static String updatePasswordScreen = '/updatePasswordScreen';
 
   static String getSplashScreen() => splashScreen;
   static String getLoginScreen() => loginScreen;
@@ -93,6 +95,7 @@ class AppRoute {
   static String getaboutTrainingScreen() => aboutTrainingScreen;
   static String getonboardingScreen11() => onboardingScreen11;
   static String getthemeOnboardingScreen() => themeOnboardingScreen;
+  static String getupdatePasswordScreen() => updatePasswordScreen;
 
   static List<GetPage> routes = [
     GetPage(name: splashScreen, page: () => SplashScreen()),
@@ -125,5 +128,6 @@ class AppRoute {
     GetPage(name: aboutTrainingScreen, page: () => AboutTrainingScreen()),
     GetPage(name: onboardingScreen11, page: () => OnboardingScreen11()),
     GetPage(name: themeOnboardingScreen, page: () => ThemeOnboardingScreen()),
+    GetPage(name: updatePasswordScreen, page: () => UpdatePasswordScreen()),
   ];
 }

@@ -250,10 +250,7 @@ class MedicineFormWidget extends StatelessWidget {
                         RegExp(r'^\d+\.?\d{0,2}'),
                       ),
                     ],
-                    style: getTextStyle(
-                      fontSize: 14,
-                      color: Colors.white.withValues(alpha: 0.8),
-                    ),
+                    style: getTextStyle(fontSize: 14, color: Colors.white),
                     decoration: InputDecoration(
                       hintText: 'e.g., 5',
                       hintStyle: getTextStyle(

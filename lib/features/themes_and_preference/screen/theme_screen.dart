@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
-import 'package:velvet_iron/core/common/widgets/custom_background_withimage.dart';
+import 'package:velvet_iron/core/common/widgets/custom_background2.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/bottom_nav/screen/bottom_nav.dart';
 import 'package:velvet_iron/features/profile/controller/profile_controller.dart';
@@ -54,8 +54,8 @@ class ThemeScreen extends StatelessWidget {
     Get.put(ProfileController());
 
     return Scaffold(
-      body: CustomBackgroundWithImage(
-        imageAsset: ImagePath.magicImage,
+      body: CustomBackground2(
+        imageAsset: ImagePath.backgroundOne,
         child: SafeArea(
           child: Stack(
             children: [
