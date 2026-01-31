@@ -38,10 +38,13 @@ class HomeThemeModel {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
     ),
-    cardBackgroundColor: const Color(0xFF5A1515),
+    cardBackgroundColor: const Color(0xFF5A1515).withValues(alpha: .5),
     headerIconBackgroundColor: const Color(0xCC521212),
     progressBarGradient: const LinearGradient(
-      colors: [Color(0xFF683E23), Color(0xFFE9B86E)],
+      colors: [
+        Color.fromARGB(104, 41, 41, 18), // dark red
+        Color.fromARGB(255, 171, 117, 34), // gold
+      ],
       begin: Alignment.bottomCenter,
       end: Alignment.topCenter,
     ),

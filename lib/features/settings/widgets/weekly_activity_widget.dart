@@ -143,7 +143,10 @@ class _WeightProgressState extends State<WeeklyActivityProgress> {
                             width: 29,
                             borderRadius: BorderRadius.circular(6),
                             gradient: const LinearGradient(
-                              colors: [Color(0xFF683E23), Color(0xFFE9B86E)],
+                              colors: [
+                                Color.fromARGB(104, 41, 41, 18), // dark red
+                                Color.fromARGB(255, 171, 117, 34), // gold
+                              ],
                               begin: Alignment.bottomCenter,
                               end: Alignment.topCenter,
                             ),

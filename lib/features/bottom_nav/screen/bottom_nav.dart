@@ -19,7 +19,6 @@ class BottomNav extends StatelessWidget {
             themeController.currentTheme.value ??
             HomeThemeModel.adventurerTheme;
 
-        // Only show theme border and background color when on home screen (tab 0)
         return Obx(() {
           final isHomeScreen = controller.tabIndex.value == 0;
           final borderColor = isHomeScreen
