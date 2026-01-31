@@ -233,7 +233,7 @@ class PackageSelectionWidget extends StatelessWidget {
                                                       .value ==
                                                   BillingType.monthly
                                               ? const Color(0xFFDCAA64)
-                                              : Colors.white54,
+                                              : Colors.white,
                                         ),
                                       ),
                                       const SizedBox(width: 8),
@@ -249,7 +249,7 @@ class PackageSelectionWidget extends StatelessWidget {
                                                       .value ==
                                                   BillingType.annually
                                               ? const Color(0xFFDCAA64)
-                                              : Colors.white54,
+                                              : Colors.white,
                                         ),
                                       ),
                                     ],
@@ -263,8 +263,7 @@ class PackageSelectionWidget extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    flex:
-                        1, 
+                    flex: 1,
                     child: Container(
                       height: 160,
                       decoration: const BoxDecoration(

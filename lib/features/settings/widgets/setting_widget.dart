@@ -454,6 +454,14 @@ class GeneralSettingsWidget extends GetView<SettingsController> {
         ),
         const SizedBox(height: 12),
 
+        // My Subscriptions
+        _buildSettingsItem(
+          iconPath: ImagePath.diamond,
+          title: 'My Subscriptions',
+          onTap: () => Get.toNamed(AppRoute.mySubscriptionScreen),
+        ),
+        const SizedBox(height: 12),
+
         // Feedback & Support
         _buildSettingsItem(
           iconPath: IconPath.feedback,
@@ -467,13 +475,6 @@ class GeneralSettingsWidget extends GetView<SettingsController> {
           iconPath: IconPath.taining,
           title: 'About Training Codex',
           onTap: () => Get.toNamed(AppRoute.getaboutTrainingScreen()),
-        ),
-        const SizedBox(height: 12),
-
-        _buildSettingsItem(
-          iconPath: IconPath.taining,
-          title: 'My Subscriptions',
-          onTap: () => Get.toNamed(AppRoute.mySubscriptionScreen),
         ),
       ],
     );
