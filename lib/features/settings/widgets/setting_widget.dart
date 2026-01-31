@@ -469,6 +469,12 @@ class GeneralSettingsWidget extends GetView<SettingsController> {
           onTap: () => Get.toNamed(AppRoute.getaboutTrainingScreen()),
         ),
         const SizedBox(height: 12),
+
+        _buildSettingsItem(
+          iconPath: IconPath.taining,
+          title: 'My Subscriptions',
+          onTap: () => Get.toNamed(AppRoute.mySubscriptionScreen),
+        ),
       ],
     );
   }
