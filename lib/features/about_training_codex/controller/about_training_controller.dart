@@ -1,4 +1,3 @@
-// controllers/about_training_controller.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/features/about_training_codex/model/about_training_model.dart';

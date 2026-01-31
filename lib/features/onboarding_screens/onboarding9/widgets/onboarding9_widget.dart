@@ -153,8 +153,6 @@ class MedicineFormWidget extends StatelessWidget {
           ),
 
           const SizedBox(height: 12),
-
-          // Medicine Type
           Row(
             children: [
               Text(
@@ -221,8 +219,6 @@ class MedicineFormWidget extends StatelessWidget {
           ),
 
           const SizedBox(height: 12),
-
-          // Dose (mg)
           Text(
             'Dose (mg):',
             style: getTextStyle(

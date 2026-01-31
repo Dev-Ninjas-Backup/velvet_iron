@@ -57,8 +57,6 @@ class OnboardingScreen11 extends StatelessWidget {
                 ),
               ),
             ),
-
-            /// Back Button
             Positioned(
               top: MediaQuery.of(context).padding.top + 12,
               left: screenWidth * 0.06,

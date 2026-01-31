@@ -14,7 +14,6 @@ class UpdateInformationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ProfileController>();
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(

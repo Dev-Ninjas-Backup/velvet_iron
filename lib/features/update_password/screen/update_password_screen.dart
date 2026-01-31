@@ -14,7 +14,6 @@ class UpdatePasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(UpdatePasswordController());
-
     return Scaffold(
       body: CustomBackground2(
         imageAsset: ImagePath.backgroundOne,

@@ -58,8 +58,6 @@ class OnboardingScreen6 extends StatelessWidget {
                 ),
               ),
             ),
-
-            /// Fixed Back Button
             Positioned(
               top: MediaQuery.of(context).padding.top + 12,
               left: 24,

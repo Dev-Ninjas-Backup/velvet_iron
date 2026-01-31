@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 class FeedbackController extends GetxController {
   var rating = 5.obs;
-
   final feedbackTextController = TextEditingController();
 
   void updateRating(int index) {
@@ -21,6 +20,6 @@ class FeedbackController extends GetxController {
   }
 
   void joinDiscord() {
-    // print("Joining Discord...");
+    
   }
 }

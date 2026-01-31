@@ -120,7 +120,6 @@ class PackageSelectionWidget extends StatelessWidget {
     return Obx(
       () => Column(
         children: [
-          // --- Free Trial Package ---
           GestureDetector(
             onTap: () => controller.selectPackage(PackageType.free),
             child: Container(
@@ -155,8 +154,6 @@ class PackageSelectionWidget extends StatelessWidget {
           ),
 
           const SizedBox(height: 16),
-
-          // --- Premium Package ---
           GestureDetector(
             onTap: () => controller.selectPackage(PackageType.premium),
             child: Container(
@@ -265,13 +262,11 @@ class PackageSelectionWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-
-                  // Premium Package এর ইমেজ সেকশন অংশটুকু নিচের মতো পরিবর্তন করুন:
                   Expanded(
                     flex:
-                        1, // বাম পাশের কন্টেন্টকে বেশি জায়গা দিতে এটাকে ১ রাখা হয়েছে
+                        1, 
                     child: Container(
-                      height: 160, // ফিগমা অনুযায়ী উচ্চতা সমন্বয়
+                      height: 160,
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
                           topRight: Radius.circular(24),

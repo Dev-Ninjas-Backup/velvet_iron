@@ -14,7 +14,6 @@ class OnboardingScreen9 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(OnboardingController9());
-
     return Scaffold(
       body: CustomBackgroundWithImage(
         imageAsset: ImagePath.magicImage,
@@ -49,7 +48,6 @@ class OnboardingScreen9 extends StatelessWidget {
                                 Get.toNamed(AppRoute.getonboardingScreen11()),
                           ),
                         ),
-
                         const SizedBox(height: 40),
                       ],
                     ),
@@ -57,7 +55,6 @@ class OnboardingScreen9 extends StatelessWidget {
                 ),
               ),
             ),
-
             Positioned(
               top: MediaQuery.of(context).padding.top + 12,
               left: 24,

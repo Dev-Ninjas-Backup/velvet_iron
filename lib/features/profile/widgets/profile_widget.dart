@@ -50,7 +50,6 @@ class ProfileAppBar extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 6),
-            // Title
             Expanded(
               child: Text(
                 'Profile',
@@ -63,7 +62,6 @@ class ProfileAppBar extends StatelessWidget {
     );
   }
 }
-// profile widget
 
 class ProfileWidget extends StatelessWidget {
   const ProfileWidget({super.key});
@@ -71,7 +69,6 @@ class ProfileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ProfileController>();
-
     return Column(
       children: [
         Stack(
@@ -160,10 +157,6 @@ class ProfileWidget extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 20),
-
-        const SizedBox(height: 8),
-
         const SizedBox(height: 20),
         Container(
           height: 1,

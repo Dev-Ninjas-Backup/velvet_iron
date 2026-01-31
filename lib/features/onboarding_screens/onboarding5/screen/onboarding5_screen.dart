@@ -44,7 +44,6 @@ class OnboardingScreen5 extends StatelessWidget {
                           padding: EdgeInsets.symmetric(horizontal: 24),
                           child: DateSelectionWidget(),
                         ),
-
                         const SizedBox(height: 32),
 
                         Padding(
@@ -63,7 +62,6 @@ class OnboardingScreen5 extends StatelessWidget {
                 ),
               ),
             ),
-
             /// Fixed Back Button
             Positioned(
               top: MediaQuery.of(context).padding.top + 12,

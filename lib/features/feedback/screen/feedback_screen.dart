@@ -14,7 +14,6 @@ class FeedbackScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(FeedbackController());
-
     return Scaffold(
       body: CustomBackground2(
         imageAsset: ImagePath.backgroundOne,

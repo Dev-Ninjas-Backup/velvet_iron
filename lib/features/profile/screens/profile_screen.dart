@@ -13,9 +13,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Initialize Profile Controller
     Get.put(ProfileController());
-
     return Scaffold(
       body: CustomBackground2(
         imageAsset: ImagePath.backgroundOne,

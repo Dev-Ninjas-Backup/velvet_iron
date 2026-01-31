@@ -113,7 +113,6 @@ class MoodSelectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<OnboardingController7>();
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
