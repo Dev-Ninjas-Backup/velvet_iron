@@ -1,19 +1,19 @@
-// profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/widgets/custom_background2.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/bottom_nav/screen/bottom_nav.dart';
-import 'package:velvet_iron/features/feedback/controller/feedback_controller.dart';
-import 'package:velvet_iron/features/feedback/widgets/feedback_widgets.dart';
+import 'package:velvet_iron/features/update_password/controller/update_password_controller.dart';
+import 'package:velvet_iron/features/update_password/widgets/update_password_form.dart';
+import 'package:velvet_iron/features/update_password/widgets/update_password_widget.dart';
 
-class FeedbackScreen extends StatelessWidget {
-  const FeedbackScreen({super.key});
+class UpdatePasswordScreen extends StatelessWidget {
+  const UpdatePasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Get.put(FeedbackController());
+    Get.put(UpdatePasswordController());
 
     return Scaffold(
       body: CustomBackground2(
@@ -25,30 +25,29 @@ class FeedbackScreen extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: const FeedbackAppBar(),
+                    child: const UpdatePasswordAppBar(),
                   ),
                   Expanded(
                     child: SingleChildScrollView(
                       padding: const EdgeInsets.only(
                         left: 10,
                         right: 10,
+                        top: 20,
                         bottom: 120,
                       ),
                       child: Column(
                         children: [
+                          UpdatePasswordWidgetHeaderWidget(),
                           const SizedBox(height: 20),
-                          const FeedbackWidget(),
-                          const SizedBox(height: 20),
+                          const UpdatePasswordFormWidget(),
+                          const SizedBox(height: 40),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 24),
                             child: CustomButton(
-                              label: 'Send Feedback',
-                              onPressed: () {},
+                              label: 'Update Password',
+                              onPressed: () => Get.back(),
                             ),
                           ),
-                          const SizedBox(height: 20),
-                          const HelpAndSupportWidget(),
-                          const SizedBox(height: 20),
                         ],
                       ),
                     ),
@@ -58,7 +57,7 @@ class FeedbackScreen extends StatelessWidget {
               Positioned(
                 left: 0,
                 right: 0,
-                bottom: 0,
+                bottom: -20,
                 child: const BottomNav(),
               ),
             ],

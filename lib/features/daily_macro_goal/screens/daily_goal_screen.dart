@@ -1,7 +1,7 @@
 // profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:velvet_iron/core/common/widgets/custom_background_withimage.dart';
+import 'package:velvet_iron/core/common/widgets/custom_background2.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/bottom_nav/screen/bottom_nav.dart';
@@ -16,8 +16,8 @@ class DailyGoalScreen extends StatelessWidget {
     Get.put(DailyGoalController());
 
     return Scaffold(
-      body: CustomBackgroundWithImage(
-        imageAsset: ImagePath.magicImage,
+      body: CustomBackground2(
+        imageAsset: ImagePath.backgroundOne,
         child: SafeArea(
           child: Stack(
             children: [

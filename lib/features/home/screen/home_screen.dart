@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
 import 'package:velvet_iron/features/home/controller/home_controller.dart';
@@ -25,13 +24,12 @@ class HomeScreen extends StatelessWidget {
     final bottomNavController = Get.find<BottomNavController>();
 
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: const Color(0xFF1A0101).withValues(alpha: .5),
       body: Obx(() {
         final isHomeScreen = bottomNavController.tabIndex.value == 0;
 
         return Stack(
           children: [
-            // Background - only show theme gradient on home screen
             GetBuilder<ThemeController>(
               builder: (themeController) {
                 final activeTheme =
@@ -57,32 +55,24 @@ class HomeScreen extends StatelessWidget {
                 final activeTheme =
                     themeController.currentTheme.value ??
                     HomeThemeModel.adventurerTheme;
-
-                String backgroundImage = ImagePath.magicImage; // Default
-
                 if (isHomeScreen) {
                   switch (activeTheme.id) {
                     case 'mage':
-                      backgroundImage = ImagePath.blueBG;
                       break;
                     case 'reader':
-                      backgroundImage = ImagePath.greenBG;
                       break;
                     case 'gamer':
-                      backgroundImage = ImagePath.purpleBG;
                       break;
                     default:
-                      backgroundImage = ImagePath.magicImage;
                   }
                 } else {
-                  backgroundImage = ImagePath.magicImage;
                 }
 
                 return Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: Image.asset(backgroundImage, width: 378, height: 411),
+                  child: Opacity(
+                    opacity: 0.2, // 0.0 - 1.0
+                    child: Image.asset(ImagePath.backgroundOne),
+                  ),
                 );
               },
             ),

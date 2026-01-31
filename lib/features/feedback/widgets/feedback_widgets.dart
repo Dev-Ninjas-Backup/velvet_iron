@@ -148,7 +148,7 @@ class FeedbackWidget extends StatelessWidget {
           Container(
             height: 120,
             decoration: BoxDecoration(
-              color: const Color(0xFF521212).withValues(alpha: 0.6),
+              color: const Color(0xFF3A0303).withValues(alpha: 1.0),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: const Color(0xFF6B1717), width: 1),
             ),
@@ -162,9 +162,7 @@ class FeedbackWidget extends StatelessWidget {
               ),
               decoration: InputDecoration(
                 hintText: "Describe your opinion...",
-                hintStyle: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.8),
-                ),
+                hintStyle: TextStyle(color: Colors.white),
                 contentPadding: const EdgeInsets.all(16),
                 border: InputBorder.none,
               ),

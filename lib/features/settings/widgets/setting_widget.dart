@@ -324,14 +324,14 @@ class UpcomingLogWidget extends GetView<SettingsController> {
             ),
           ),
           Container(
-            height: 1,
+            height: 3,
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  const Color(0xFF3A1919).withValues(alpha: 0.3),
-                  const Color(0xFF3A1919),
-                  const Color(0xFF3A1919).withValues(alpha: 0.3),
+                  const Color(0xFF992929).withValues(alpha: 0.6),
+                  const Color(0xFF992929).withValues(alpha: 0.6),
+                  const Color(0xFF992929).withValues(alpha: 0.6),
                 ],
               ),
             ),

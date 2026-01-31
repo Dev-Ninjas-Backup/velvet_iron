@@ -94,7 +94,7 @@ class _TodoTile extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: theme.cardBackgroundColor,
+          color: theme.cardBackgroundColor.withValues(alpha: .7),
           borderRadius: BorderRadius.circular(18),
         ),
         child: Row(

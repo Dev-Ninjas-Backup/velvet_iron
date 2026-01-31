@@ -39,7 +39,6 @@ class WelcomeCard extends StatelessWidget {
         }
 
         return Container(
-          height: 150,
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: activeTheme.id == 'mage'

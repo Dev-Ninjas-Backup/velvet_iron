@@ -84,77 +84,98 @@ class DailyMacroGoalWidget extends StatelessWidget {
             height: 1,
             color: const Color(0xFF723737).withValues(alpha: 0.5),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
+
+          // --- Daily Calories Goal Box ---
+          _buildCaloriesGoalBox(),
+
+          const SizedBox(height: 20),
+
+          // --- Carbs, Protein, Fats Container (According to Figma) ---
           Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF310101),
-                  Color(0xFF550606),
-                  Color(0xFF550606),
-                  Color(0xFF310101),
-                  Color(0xFF550606),
-                  Color(0xFF310101),
-                ],
-              ),
+              color: Colors.black.withValues(
+                alpha: 0.2,
+              ), // ফিগমা স্টাইল ব্যাকগ্রাউন্ড
+              borderRadius: BorderRadius.circular(15),
               border: Border.all(
-                color: const Color(0xFFC69C56).withValues(alpha: 0.6),
-                width: 1.5,
+                color: const Color(0xFF6B1717).withValues(alpha: 0.5),
+                width: 1,
               ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Daily Calories Goal:",
-                  style: getTextStyle(
-                    fontSize: 14,
-                    color: Colors.white.withValues(alpha: 0.9),
-                  ),
+                // Carbs Input
+                _buildInputLabel("Carbs"),
+                _buildInputField(
+                  initialValue: controller.carbs.value.toString(),
+                  onChanged: (val) =>
+                      controller.carbs.value = int.tryParse(val) ?? 0,
                 ),
-                Text(
-                  "729 kcal",
-                  style: getTextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+
+                const SizedBox(height: 16),
+
+                // Protein Input
+                _buildInputLabel("Protein"),
+                _buildInputField(
+                  initialValue: controller.protein.value.toString(),
+                  onChanged: (val) =>
+                      controller.protein.value = int.tryParse(val) ?? 0,
+                ),
+
+                const SizedBox(height: 16),
+
+                // Fats Input
+                _buildInputLabel("Fats"),
+                _buildInputField(
+                  initialValue: controller.fats.value.toString(),
+                  onChanged: (val) =>
+                      controller.fats.value = int.tryParse(val) ?? 0,
                 ),
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
 
-          const SizedBox(height: 12),
-
-          // Carbs Input
-          _buildInputLabel("Carbs"),
-          _buildInputField(
-            initialValue: controller.carbs.value.toString(),
-            onChanged: (val) => controller.carbs.value = int.tryParse(val) ?? 0,
+  // Calories Goal Box UI
+  Widget _buildCaloriesGoalBox() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF310101), Color(0xFF550606), Color(0xFF310101)],
+        ),
+        border: Border.all(
+          color: const Color(0xFFC69C56).withValues(alpha: 0.6),
+          width: 1.5,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "Daily Calories Goal:",
+            style: getTextStyle(
+              fontSize: 14,
+              color: Colors.white.withValues(alpha: 0.9),
+            ),
           ),
-
-          const SizedBox(height: 20),
-
-          // Protein Input
-          _buildInputLabel("Protein"),
-          _buildInputField(
-            initialValue: controller.protein.value.toString(),
-            onChanged: (val) =>
-                controller.protein.value = int.tryParse(val) ?? 0,
-          ),
-
-          const SizedBox(height: 20),
-
-          // Fats Input
-          _buildInputLabel("Fats"),
-          _buildInputField(
-            initialValue: controller.fats.value.toString(),
-            onChanged: (val) => controller.fats.value = int.tryParse(val) ?? 0,
+          Text(
+            "729 kcal",
+            style: getTextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
         ],
       ),
@@ -169,7 +190,7 @@ class DailyMacroGoalWidget extends StatelessWidget {
         style: getTextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          color: Colors.white70,
+          color: Colors.white, // ফিগমা অনুযায়ী পিওর হোয়াইট রাখা হয়েছে
         ),
       ),
     );
@@ -181,28 +202,26 @@ class DailyMacroGoalWidget extends StatelessWidget {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF3A0303),
+        color: const Color(0xFF3A0303).withValues(alpha: 1.0),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF512212), width: 1.2),
+        border: Border.all(
+          color: const Color(0xFF6B1717).withValues(alpha: 1.0),
+          width: 1.2,
+        ),
       ),
       child: TextFormField(
         initialValue: initialValue,
         onChanged: onChanged,
         keyboardType: TextInputType.number,
-        style: getTextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w400,
-          color: Colors.white,
-        ),
+        style: getTextStyle(fontSize: 14, color: Colors.white),
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
           border: InputBorder.none,
           suffixText: 'g',
-          suffixStyle: getTextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-            color: Colors.white,
-          ),
+          suffixStyle: getTextStyle(fontSize: 14, color: Colors.white),
         ),
       ),
     );
