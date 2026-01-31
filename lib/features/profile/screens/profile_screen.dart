@@ -6,7 +6,7 @@ import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/bottom_nav/screen/bottom_nav.dart';
 import 'package:velvet_iron/features/profile/controller/profile_controller.dart';
 import 'package:velvet_iron/features/profile/widgets/profile_widget.dart';
-import 'package:velvet_iron/features/profile/widgets/update_Information_widgets.dart';
+import 'package:velvet_iron/features/profile/widgets/profile_update_information.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});

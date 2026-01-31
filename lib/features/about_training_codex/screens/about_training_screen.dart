@@ -1,7 +1,6 @@
-// screens/about_training_screen.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:velvet_iron/core/common/widgets/custom_background_withimage.dart';
+import 'package:velvet_iron/core/common/widgets/custom_background2.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/about_training_codex/controller/about_training_controller.dart';
 import 'package:velvet_iron/features/about_training_codex/widgets/about_training_widget.dart';
@@ -15,8 +14,8 @@ class AboutTrainingScreen extends StatelessWidget {
     final controller = Get.put(AboutTrainingController());
 
     return Scaffold(
-      body: CustomBackgroundWithImage(
-        imageAsset: ImagePath.magicImage,
+      body: CustomBackground2(
+        imageAsset: ImagePath.backgroundOne,
         child: SafeArea(
           child: Stack(
             children: [

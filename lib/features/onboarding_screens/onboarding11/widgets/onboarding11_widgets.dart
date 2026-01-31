@@ -116,344 +116,289 @@ class PackageSelectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<OnboardingController11>();
-    final screenWidth = MediaQuery.of(context).size.width;
 
     return Obx(
-      () => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color.fromRGBO(92, 8, 8, 0.4),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          children: [
-            // Free Trial Package
-            GestureDetector(
-              onTap: () => controller.selectPackage(PackageType.free),
-              child: Container(
-                height: 57,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color.fromRGBO(53, 4, 4, 0.9),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    _buildSelectionCircle(
-                      selected:
-                          controller.selectedPackage.value == PackageType.free,
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      'Free Trial',
-                      style: getTextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const Spacer(),
-                    ShaderMask(
-                      blendMode: BlendMode.srcIn,
-                      shaderCallback: (bounds) => const LinearGradient(
-                        colors: [Color(0xFFFDE7BB), Color(0xFF9E6D38)],
-                      ).createShader(bounds),
-                      child: Text(
-                        'Free Trial',
-                        style: getTextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '/3 days',
-                      style: getTextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white.withValues(alpha: 0.5),
-                      ),
-                    ),
-                  ],
-                ),
+      () => Column(
+        children: [
+          // --- Free Trial Package ---
+          GestureDetector(
+            onTap: () => controller.selectPackage(PackageType.free),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+              decoration: BoxDecoration(
+                color: const Color(0xFF350404).withValues(alpha: 0.9),
+                borderRadius: BorderRadius.circular(20),
+                border: controller.selectedPackage.value == PackageType.free
+                    ? Border.all(color: const Color(0xFFDCAA64), width: 1.5)
+                    : null,
+              ),
+              child: Row(
+                children: [
+                  _buildFigmaRadioButton(
+                    selected:
+                        controller.selectedPackage.value == PackageType.free,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Free Trial',
+                    style: getTextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                  const Spacer(),
+                  _buildGradientText('Free Trial', fontSize: 20),
+                  Text(
+                    ' / 3 days',
+                    style: getTextStyle(fontSize: 12, color: Colors.white54),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 16),
+          ),
 
-            // Premium Package
-            GestureDetector(
-              onTap: () => controller.selectPackage(PackageType.premium),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: const Color(0xFFD4AF7A).withValues(alpha: 0.3),
-                    width: 1,
-                  ),
-                  image: const DecorationImage(
-                    image: AssetImage(IconPath.serIcon),
-                    fit: BoxFit.cover,
-                  ),
+          const SizedBox(height: 16),
+
+          // --- Premium Package ---
+          GestureDetector(
+            onTap: () => controller.selectPackage(PackageType.premium),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF4E0101), Color(0xFF2A0101)],
                 ),
-                child: Container(
-                  // padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color.fromRGBO(49, 1, 1, 0.85),
-                        Color.fromRGBO(85, 6, 6, 0.85),
-                        Color.fromRGBO(49, 1, 1, 0.85),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Info Column
-                      Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                border: Border.all(
+                  color: const Color(0xFFDCAA64).withValues(alpha: 0.5),
+                  width: 1.5,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
                             children: [
-                              Row(
-                                children: [
-                                  _buildSelectionCircle(
-                                    selected:
-                                        controller.selectedPackage.value ==
-                                        PackageType.premium,
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    'Premium',
-                                    style: getTextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
+                              _buildFigmaRadioButton(
+                                selected:
+                                    controller.selectedPackage.value ==
+                                    PackageType.premium,
                               ),
-                              const SizedBox(height: 12),
-                              Row(
-                                children: [
-                                  ShaderMask(
-                                    blendMode: BlendMode.srcIn,
-                                    shaderCallback: (bounds) =>
-                                        const LinearGradient(
-                                          colors: [
-                                            Color(0xFFFDE7BB),
-                                            Color(0xFF9E6D38),
-                                          ],
-                                        ).createShader(bounds),
-                                    child: Text(
-                                      'USD \$9.00',
-                                      style: getTextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    'per month',
-                                    style: getTextStyle(
-                                      fontSize: 9,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.white.withValues(
-                                        alpha: 0.7,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-                              Row(
-                                children: [
-                                  Text(
-                                    'Billing:',
-                                    style: getTextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white.withValues(
-                                        alpha: 0.8,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  _buildBillingOption(
-                                    controller: controller,
-                                    type: BillingType.monthly,
-                                    label: 'Monthly',
-                                  ),
-                                  const SizedBox(width: 16),
-                                  _buildBillingOption(
-                                    controller: controller,
-                                    type: BillingType.annually,
-                                    label: 'Annually',
-                                  ),
-                                ],
+                              const SizedBox(width: 10),
+                              Text(
+                                'Premium',
+                                style: getTextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ],
                           ),
+                          const SizedBox(height: 12),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline.alphabetic,
+                            children: [
+                              _buildGradientText('USD \$9.00', fontSize: 24),
+                              const SizedBox(width: 4),
+                              Text(
+                                '/ per months',
+                                style: getTextStyle(
+                                  fontSize: 10,
+                                  color: Colors.white38,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+
+                          Row(
+                            children: [
+                              Text(
+                                'Billing: ',
+                                style: getTextStyle(fontSize: 14),
+                              ),
+                              Expanded(
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'Monthly',
+                                        style: getTextStyle(
+                                          fontSize: 13,
+                                          color:
+                                              controller
+                                                      .selectedBilling
+                                                      .value ==
+                                                  BillingType.monthly
+                                              ? const Color(0xFFDCAA64)
+                                              : Colors.white54,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      _buildFigmaToggle(controller),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'Annually',
+                                        style: getTextStyle(
+                                          fontSize: 13,
+                                          color:
+                                              controller
+                                                      .selectedBilling
+                                                      .value ==
+                                                  BillingType.annually
+                                              ? const Color(0xFFDCAA64)
+                                              : Colors.white54,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Premium Package এর ইমেজ সেকশন অংশটুকু নিচের মতো পরিবর্তন করুন:
+                  Expanded(
+                    flex:
+                        1, // বাম পাশের কন্টেন্টকে বেশি জায়গা দিতে এটাকে ১ রাখা হয়েছে
+                    child: Container(
+                      height: 160, // ফিগমা অনুযায়ী উচ্চতা সমন্বয়
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(24),
+                          bottomRight: Radius.circular(24),
+                        ),
+                        image: DecorationImage(
+                          image: AssetImage(IconPath.serIcon),
+                          fit: BoxFit.fill,
                         ),
                       ),
-
-                      // Image Column
-                      Expanded(
-                        flex: 1,
-                        child: SizedBox(
-                          height: screenWidth * 0.35,
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              ClipRRect(
-                                clipBehavior: Clip.hardEdge,
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(16),
-                                  bottomRight: Radius.circular(16),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Positioned(
+                            right: 10,
+                            child: Container(
+                              height: 95,
+                              width: 95,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: const Color(0xFFDCAA64),
+                                  width: 1,
                                 ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.5),
+                                    blurRadius: 10,
+                                  ),
+                                ],
+                              ),
+                              child: ClipOval(
                                 child: Image.asset(
-                                  IconPath.serIcon,
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  fit: BoxFit.fill,
+                                  ImagePath.premiumprofile,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                              Positioned(
-                                child: Container(
-                                  width: screenWidth * 0.22,
-                                  height: screenWidth * 0.22,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: const Color(0xFFD4AF7A),
-                                      width: 2,
-                                    ),
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        Color(0xFFFDE7BB),
-                                        Color(0xFF9E6D38),
-                                      ],
-                                    ),
-                                  ),
-                                  child: ClipOval(
-                                    child: Image.asset(
-                                      ImagePath.premiumprofile,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
-          ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFigmaRadioButton({required bool selected}) {
+    return Container(
+      width: 22,
+      height: 22,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: selected ? const Color(0xFFDCAA64) : Colors.white,
+          width: 2,
+        ),
+      ),
+      child: Center(
+        child: Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: selected ? const Color(0xFFDCAA64) : Colors.transparent,
+            gradient: selected
+                ? const LinearGradient(
+                    colors: [Color(0xFFFDE7BB), Color(0xFF9E6D38)],
+                  )
+                : null,
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildSelectionCircle({required bool selected}) {
-    if (selected) {
-      return CustomPaint(
-        size: const Size(20, 20),
-        painter: GradientBorderPainter(
-          strokeWidth: 1.5,
-          gradient: const LinearGradient(
-            colors: [
-              Color(0xFFFDE7BB),
-              Color(0xFF9E6D38),
-              Color(0xFFE9B86E),
-              Color(0xFFE5B46B),
-            ],
-          ),
+  Widget _buildFigmaToggle(OnboardingController11 controller) {
+    bool isAnnually = controller.selectedBilling.value == BillingType.annually;
+    return GestureDetector(
+      onTap: () {
+        controller.selectBilling(
+          isAnnually ? BillingType.monthly : BillingType.annually,
+        );
+      },
+      child: Container(
+        width: 40,
+        height: 20,
+        padding: const EdgeInsets.all(3),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: const Color(0xFF350404),
+          border: Border.all(color: Colors.white24),
         ),
-        child: Center(
+        child: AnimatedAlign(
+          duration: const Duration(milliseconds: 200),
+          alignment: isAnnually ? Alignment.centerRight : Alignment.centerLeft,
           child: Container(
-            width: 10,
-            height: 10,
+            width: 14,
+            height: 14,
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               gradient: LinearGradient(
-                colors: [
-                  Color(0xFFFDE7BB),
-                  Color(0xFF9E6D38),
-                  Color(0xFFE9B86E),
-                  Color(0xFFE5B46B),
-                ],
+                colors: [Color(0xFFFDE7BB), Color(0xFF9E6D38)],
               ),
             ),
           ),
         ),
-      );
-    } else {
-      return Container(
-        width: 20,
-        height: 20,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.6),
-            width: 1.5,
-          ),
-        ),
-      );
-    }
+      ),
+    );
   }
 
-  Widget _buildBillingOption({
-    required OnboardingController11 controller,
-    required BillingType type,
-    required String label,
-  }) {
-    return Obx(
-      () => GestureDetector(
-        onTap: () => controller.selectBilling(type),
-        child: Row(
-          children: [
-            Text(
-              label,
-              style: getTextStyle(
-                fontSize: 10,
-                fontWeight: type == BillingType.monthly
-                    ? FontWeight.w500
-                    : FontWeight.w400,
-                color: controller.selectedBilling.value == type
-                    ? const Color(0xFFD4AF7A)
-                    : Colors.white.withValues(alpha: 0.5),
-              ),
-            ),
-            if (type == BillingType.monthly) ...[
-              const SizedBox(width: 6),
-              Container(
-                width: 14,
-                height: 14,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: controller.selectedBilling.value == type
-                      ? const Color(0xFFD4AF7A)
-                      : Colors.white.withValues(alpha: 0.3),
-                ),
-              ),
-            ],
-          ],
+  Widget _buildGradientText(String text, {required double fontSize}) {
+    return ShaderMask(
+      shaderCallback: (bounds) => const LinearGradient(
+        colors: [Color(0xFFFDE7BB), Color(0xFF9E6D38)],
+      ).createShader(bounds),
+      child: Text(
+        text,
+        style: getTextStyle(
+          fontSize: fontSize,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
       ),
     );
