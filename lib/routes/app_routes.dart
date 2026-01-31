@@ -133,5 +133,6 @@ class AppRoute {
     GetPage(name: onboardingScreen11, page: () => OnboardingScreen11()),
     GetPage(name: themeOnboardingScreen, page: () => ThemeOnboardingScreen()),
     GetPage(name: updatePasswordScreen, page: () => UpdatePasswordScreen()),
+    GetPage(name: mySubscriptionScreen, page: () => MySubscriptionScreen()),
   ];
 }
