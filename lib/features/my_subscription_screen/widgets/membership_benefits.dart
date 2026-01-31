@@ -9,9 +9,9 @@ class MembershipBenefits extends StatelessWidget {
   Widget build(BuildContext context) {
     final benefits = [
       "Full advance health tracking features",
-      "Playful & gamified personalized theme",
+      "Playful & gamified personalized theme and companions ",
       "Daily quote and health tips",
-      "Free access to advance discord community",
+      "Free access in advance discord community for  more advance activity ",
     ];
 
     return Column(
@@ -36,7 +36,7 @@ class MembershipBenefits extends StatelessWidget {
           (e) => Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
+                padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Row(
                   children: [
                     const Icon(Icons.check, color: Colors.white, size: 18),

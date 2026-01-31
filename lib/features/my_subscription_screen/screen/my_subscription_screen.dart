@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
+import 'package:velvet_iron/core/common/widgets/custom_background2.dart'; 
+import 'package:velvet_iron/core/utils/constants/image_path.dart'; 
 import '../controller/my_subscription_controller.dart';
 import '../widgets/membership_benefits.dart';
 import '../widgets/subscription_card.dart';
@@ -14,28 +16,40 @@ class MySubscriptionScreen extends StatelessWidget {
     final controller = Get.put(MySubscriptionController());
 
     return Scaffold(
-      backgroundColor: const Color(0xff3B0A0A),
-      body: SafeArea(
-        child: Column(
-          children: [
-            _header(),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    SubscriptionCard(controller: controller),
-                    const SizedBox(height: 25),
-                    const MembershipBenefits(),
-                    const SizedBox(height: 50),
-                    // _renewButton(controller),
-                    CustomButton(label: "Renew Subscription", onPressed: () {}),
-                  ],
+      body: CustomBackground2(
+        imageAsset: ImagePath
+            .backgroundOne, 
+        child: SafeArea(
+          child: Column(
+            children: [
+              _header(),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+                  child: Column(
+                    children: [
+                      SubscriptionCard(controller: controller),
+                      const SizedBox(height: 30),
+                      const MembershipBenefits(),
+                      const SizedBox(height: 50),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: CustomButton(
+                          label: "Renew Subscription",
+                          onPressed: () {
+                            // রিনিউ লজিক
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            // const BottomNav(),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -60,7 +74,7 @@ class MySubscriptionScreen extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.35),
+                    color: Colors.black.withOpacity(0.35),
                     blurRadius: 6,
                     offset: const Offset(0, 3),
                   ),
@@ -75,7 +89,7 @@ class MySubscriptionScreen extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 12),
           Text(
             "My Subscriptions",
             style: getTextStyle(
