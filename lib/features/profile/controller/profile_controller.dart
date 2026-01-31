@@ -109,7 +109,6 @@ class ProfileController extends GetxController {
 
   // Save changes
   void saveChanges() {
-    // Validate inputs
     if (fullNameController.text.trim().isEmpty) {
       Get.snackbar(
         'Error',

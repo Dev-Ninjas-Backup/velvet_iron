@@ -50,7 +50,6 @@ class FeedbackAppBar extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 6),
-            // Title
             Expanded(
               child: Text(
                 'Feedback & Support',
@@ -71,7 +70,6 @@ class FeedbackWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<FeedbackController>();
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Column(
@@ -144,7 +142,6 @@ class FeedbackWidget extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          // Feedback Text Input
           Container(
             height: 120,
             decoration: BoxDecoration(
@@ -180,7 +177,6 @@ class HelpAndSupportWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<FeedbackController>();
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Column(
@@ -200,7 +196,6 @@ class HelpAndSupportWidget extends StatelessWidget {
             style: getTextStyle(fontSize: 12, color: Colors.white),
           ),
           const SizedBox(height: 18),
-
           GestureDetector(
             onTap: () => controller.joinDiscord(),
             child: Container(

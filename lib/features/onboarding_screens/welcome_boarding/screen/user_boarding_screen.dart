@@ -25,16 +25,10 @@ class WelcomeScreen extends StatelessWidget {
             child: Column(
               children: [
                 const SizedBox(height: 285),
-
                 const WelcomeTitle(),
-
                 const SizedBox(height: 24),
-
                 const WelcomeDescription(),
-
                 const SizedBox(height: 40),
-
-                // Button
                 CustomButton(
                   label: "Continue Journey",
                   onPressed: () =>

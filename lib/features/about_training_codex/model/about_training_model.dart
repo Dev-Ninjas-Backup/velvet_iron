@@ -1,5 +1,3 @@
-// models/about_training_model.dart
-
 class AboutTrainingModel {
   final String title;
   final String description;

@@ -110,7 +110,6 @@ class GenderSelectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<OnboardingController4>();
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(

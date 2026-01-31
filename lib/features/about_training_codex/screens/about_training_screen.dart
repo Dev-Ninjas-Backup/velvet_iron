@@ -12,7 +12,6 @@ class AboutTrainingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(AboutTrainingController());
-
     return Scaffold(
       body: CustomBackground2(
         imageAsset: ImagePath.backgroundOne,

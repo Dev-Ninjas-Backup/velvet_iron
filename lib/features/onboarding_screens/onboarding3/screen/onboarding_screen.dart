@@ -22,7 +22,6 @@ class OnboardingScreen3 extends StatelessWidget {
           children: [
             SafeArea(
               child: SingleChildScrollView(
-                // physics: const BouncingScrollPhysics(),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: ConstrainedBox(
@@ -59,8 +58,6 @@ class OnboardingScreen3 extends StatelessWidget {
                 ),
               ),
             ),
-
-            /// Fixed Back Button (does not scroll)
             Positioned(
               top: MediaQuery.of(context).padding.top + 12,
               left: 24,

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
-import 'package:velvet_iron/core/common/widgets/custom_background2.dart'; 
-import 'package:velvet_iron/core/utils/constants/image_path.dart'; 
+import 'package:velvet_iron/core/common/widgets/custom_background2.dart';
+import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import '../controller/my_subscription_controller.dart';
 import '../widgets/membership_benefits.dart';
 import '../widgets/subscription_card.dart';
@@ -14,11 +14,9 @@ class MySubscriptionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(MySubscriptionController());
-
     return Scaffold(
       body: CustomBackground2(
-        imageAsset: ImagePath
-            .backgroundOne, 
+        imageAsset: ImagePath.backgroundOne,
         child: SafeArea(
           child: Column(
             children: [
@@ -39,9 +37,7 @@ class MySubscriptionScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: CustomButton(
                           label: "Renew Subscription",
-                          onPressed: () {
-                            // রিনিউ লজিক
-                          },
+                          onPressed: () {},
                         ),
                       ),
                     ],
@@ -74,7 +70,7 @@ class MySubscriptionScreen extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.35),
+                    color: Colors.black.withValues(alpha: 0.35),
                     blurRadius: 6,
                     offset: const Offset(0, 3),
                   ),

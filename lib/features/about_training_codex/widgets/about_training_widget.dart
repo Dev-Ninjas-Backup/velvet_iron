@@ -118,7 +118,6 @@ class IntroWidget extends StatelessWidget {
     );
   }
 }
-
 class FounderCardWidget extends StatelessWidget {
   final String name;
   final String title;
@@ -206,7 +205,6 @@ class FounderInfoWidget extends StatelessWidget {
           ),
 
           SizedBox(height: 18),
-
           FounderCardWidget(
             name: 'Robert Fox',
             title: 'Marketing Coordinator',
@@ -301,7 +299,6 @@ class _ExpandableSectionWidgetState extends State<ExpandableSectionWidget>
           ),
 
           const SizedBox(height: 12),
-
           SizeTransition(
             sizeFactor: _expandAnimation,
             child: Column(
@@ -356,7 +353,6 @@ class _ExpandableSectionWidgetState extends State<ExpandableSectionWidget>
             ),
           ),
           const SizedBox(width: 12),
-          // Content
           Expanded(
             child: GestureDetector(
               onTap: () {
@@ -426,7 +422,6 @@ class _ExpandableSectionWidgetState extends State<ExpandableSectionWidget>
             ),
           ),
           const SizedBox(width: 12),
-          // Content
           Expanded(
             child: GestureDetector(
               onTap: () {

@@ -134,7 +134,6 @@ class WeightSelectionWidget extends StatelessWidget {
           ),
 
           const SizedBox(height: 20),
-
           Container(
             height: 50,
             width: 343,

@@ -11,7 +11,6 @@ class WeeklyActivityProgress extends StatefulWidget {
   @override
   State<WeeklyActivityProgress> createState() => _WeightProgressState();
 }
-
 class _WeightProgressState extends State<WeeklyActivityProgress> {
   String _selectedValue = "this week";
 
@@ -30,7 +29,6 @@ class _WeightProgressState extends State<WeeklyActivityProgress> {
       7,
       (index) => 20 + random.nextDouble() * 80,
     );
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -72,10 +70,8 @@ class _WeightProgressState extends State<WeeklyActivityProgress> {
           ],
         ),
         const SizedBox(height: 12),
-
         SizedBox(
           height: 150,
-
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -114,7 +110,6 @@ class _WeightProgressState extends State<WeeklyActivityProgress> {
                             if (value.toInt() > 6) {
                               return const SizedBox.shrink();
                             }
-
                             return FittedBox(
                               fit: BoxFit.scaleDown,
 
@@ -144,8 +139,8 @@ class _WeightProgressState extends State<WeeklyActivityProgress> {
                             borderRadius: BorderRadius.circular(6),
                             gradient: const LinearGradient(
                               colors: [
-                                Color.fromARGB(104, 41, 41, 18), // dark red
-                                Color.fromARGB(255, 171, 117, 34), // gold
+                                Color.fromARGB(104, 41, 41, 18), 
+                                Color.fromARGB(255, 171, 117, 34), 
                               ],
                               begin: Alignment.bottomCenter,
                               end: Alignment.topCenter,
@@ -159,19 +154,14 @@ class _WeightProgressState extends State<WeeklyActivityProgress> {
               ),
 
               const SizedBox(width: 12),
-
               SizedBox(
                 width: 30,
-
                 height: 114,
-
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                   children: xpLabels.map((xp) {
                     return Container(
                       alignment: Alignment.center,
-
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: AppColors.textFieldBorderColor,

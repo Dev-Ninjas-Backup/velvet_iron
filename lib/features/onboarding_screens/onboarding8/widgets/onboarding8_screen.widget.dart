@@ -225,7 +225,6 @@ class FoodInputWidget8 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<OnboardingController8>();
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
@@ -276,11 +275,9 @@ class FoodInputWidget8 extends StatelessWidget {
 
 class CalorieInputWidget8 extends StatelessWidget {
   const CalorieInputWidget8({super.key});
-
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<OnboardingController8>();
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(

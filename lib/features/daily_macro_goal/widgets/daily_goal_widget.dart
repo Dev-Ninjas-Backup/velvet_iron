@@ -61,7 +61,6 @@ class DailyGoalAppBar extends StatelessWidget {
 
 class DailyMacroGoalWidget extends StatelessWidget {
   const DailyMacroGoalWidget({super.key});
-
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<DailyGoalController>();
@@ -85,19 +84,15 @@ class DailyMacroGoalWidget extends StatelessWidget {
             color: const Color(0xFF723737).withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
-
-          // --- Daily Calories Goal Box ---
           _buildCaloriesGoalBox(),
 
           const SizedBox(height: 20),
-
-          // --- Carbs, Protein, Fats Container (According to Figma) ---
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.black.withValues(
                 alpha: 0.2,
-              ), // ফিগমা স্টাইল ব্যাকগ্রাউন্ড
+              ), 
               borderRadius: BorderRadius.circular(15),
               border: Border.all(
                 color: const Color(0xFF6B1717).withValues(alpha: 0.5),
@@ -107,17 +102,13 @@ class DailyMacroGoalWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Carbs Input
                 _buildInputLabel("Carbs"),
                 _buildInputField(
                   initialValue: controller.carbs.value.toString(),
                   onChanged: (val) =>
                       controller.carbs.value = int.tryParse(val) ?? 0,
                 ),
-
                 const SizedBox(height: 16),
-
-                // Protein Input
                 _buildInputLabel("Protein"),
                 _buildInputField(
                   initialValue: controller.protein.value.toString(),
@@ -126,8 +117,6 @@ class DailyMacroGoalWidget extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 16),
-
-                // Fats Input
                 _buildInputLabel("Fats"),
                 _buildInputField(
                   initialValue: controller.fats.value.toString(),
@@ -142,7 +131,6 @@ class DailyMacroGoalWidget extends StatelessWidget {
     );
   }
 
-  // Calories Goal Box UI
   Widget _buildCaloriesGoalBox() {
     return Container(
       width: double.infinity,
@@ -190,7 +178,7 @@ class DailyMacroGoalWidget extends StatelessWidget {
         style: getTextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          color: Colors.white, // ফিগমা অনুযায়ী পিওর হোয়াইট রাখা হয়েছে
+          color: Colors.white, 
         ),
       ),
     );

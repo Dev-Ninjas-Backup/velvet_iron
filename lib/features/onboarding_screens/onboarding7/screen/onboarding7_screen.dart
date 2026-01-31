@@ -14,7 +14,6 @@ class OnboardingScreen7 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(OnboardingController7());
-
     return Scaffold(
       body: CustomBackgroundWithImage(
         imageAsset: ImagePath.magicImage,
@@ -58,8 +57,6 @@ class OnboardingScreen7 extends StatelessWidget {
                 ),
               ),
             ),
-
-            /// Fixed Back Button
             Positioned(
               top: MediaQuery.of(context).padding.top + 12,
               left: 24,
