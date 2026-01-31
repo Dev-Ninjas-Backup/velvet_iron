@@ -30,6 +30,8 @@ import 'package:velvet_iron/features/onboarding_screens/welcome_boarding/screen/
 import 'package:velvet_iron/features/themes_and_preference/screen/theme_screen.dart';
 import 'package:velvet_iron/features/update_password/screen/update_password_screen.dart';
 
+import '../features/my_subscription_screen/screen/my_subscription_screen.dart';
+
 class AppRoute {
   static String splashScreen = "/splashScreen";
   static String loginScreen = "/loginScreen";
@@ -62,6 +64,7 @@ class AppRoute {
   static String aboutTrainingScreen = '/aboutTrainingScreen';
   static String onboardingScreen11 = '/onboardingScreen11';
   static String themeOnboardingScreen = '/themeOnboardingScreen';
+  static String mySubscriptionScreen = '/mySubscriptionScreen';
   static String updatePasswordScreen = '/updatePasswordScreen';
 
   static String getSplashScreen() => splashScreen;
@@ -95,6 +98,7 @@ class AppRoute {
   static String getaboutTrainingScreen() => aboutTrainingScreen;
   static String getonboardingScreen11() => onboardingScreen11;
   static String getthemeOnboardingScreen() => themeOnboardingScreen;
+  static String getmySubscriptionScreen() => mySubscriptionScreen;
   static String getupdatePasswordScreen() => updatePasswordScreen;
 
   static List<GetPage> routes = [
