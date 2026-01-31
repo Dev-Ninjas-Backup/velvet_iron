@@ -7,7 +7,6 @@ class UpdatePasswordAppBar extends StatelessWidget {
   final double size;
 
   const UpdatePasswordAppBar({this.size = 40, super.key});
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(

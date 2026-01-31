@@ -13,7 +13,6 @@ class UpdatePasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Initialize Profile Controller
     Get.put(UpdatePasswordController());
 
     return Scaffold(
@@ -45,8 +44,8 @@ class UpdatePasswordScreen extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 24),
                             child: CustomButton(
-                              label: 'Save Changes',
-                              onPressed: () {},
+                              label: 'Update Password',
+                              onPressed: () => Get.back(),
                             ),
                           ),
                         ],
