@@ -10,7 +10,6 @@ class UpdatePasswordFormWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(UpdatePasswordController());
-
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
