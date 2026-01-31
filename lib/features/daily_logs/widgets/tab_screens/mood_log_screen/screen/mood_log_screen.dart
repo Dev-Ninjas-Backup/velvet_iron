@@ -130,7 +130,7 @@ class MoodLog extends StatelessWidget {
                 ),
                 Container(
                   width: double.infinity,
-                  color: AppColors.textFieldFillColor,
+                  color: AppColors.textFieldFillColor.withValues(alpha: .2),
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
