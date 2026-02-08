@@ -4,7 +4,7 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
-import 'package:velvet_iron/core/common/widgets/custom_button.dart';
+import 'package:velvet_iron/core/common/widgets/custom_button_two.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding11/controller/onboarding11_controller.dart';
@@ -588,7 +588,7 @@ class PopUpDialogue extends StatelessWidget {
                   SizedBox(height: h(40)),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: w(30)),
-                    child: CustomButton(
+                    child: CustomButtonTwo(
                       label: 'Finish & Claim ( 25XP)',
                       onPressed: () => Get.toNamed(AppRoute.getHomeScreen()),
                     ),

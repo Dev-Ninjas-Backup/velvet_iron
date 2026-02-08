@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/widgets/custom_back_button.dart';
 import 'package:velvet_iron/core/common/widgets/custom_background_withimage.dart';
-import 'package:velvet_iron/core/common/widgets/custom_button.dart';
+import 'package:velvet_iron/core/common/widgets/custom_button_two.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding1/controller/onboarding1_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding1/widgets/onboarding1_widget.dart';
@@ -52,7 +52,7 @@ class OnboadingScreen1 extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: Obx(
-                        () => CustomButton(
+                        () => CustomButtonTwo(
                           label: 'Continue (+${controller.xpPoints.value} XP)',
                           onPressed: () =>
                               Get.toNamed(AppRoute.getonboadingScreen2()),

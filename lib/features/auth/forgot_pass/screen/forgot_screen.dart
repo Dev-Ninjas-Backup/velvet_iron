@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
-import 'package:velvet_iron/core/common/widgets/custom_button.dart';
+import 'package:velvet_iron/core/common/widgets/custom_button_two.dart';
 import 'package:velvet_iron/core/common/widgets/custom_text_field.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
@@ -83,7 +83,7 @@ class ForgotScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 30),
-            CustomButton(
+            CustomButtonTwo(
               label: 'Send Code',
               onPressed: () {
                 controller.submitForgotPassword();

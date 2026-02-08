@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/widgets/custom_back_button.dart';
 import 'package:velvet_iron/core/common/widgets/custom_background_withimage.dart';
-import 'package:velvet_iron/core/common/widgets/custom_button.dart';
+import 'package:velvet_iron/core/common/widgets/custom_button_two.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding2/controller/onboarding_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding2/widgets/onboarding2_widget.dart';
@@ -45,7 +45,7 @@ class OnboardingScreen2 extends StatelessWidget {
 
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: CustomButton(
+                          child: CustomButtonTwo(
                             label:
                                 'Continue (+${controller.xpPoints.value} XP)',
                             onPressed: () =>

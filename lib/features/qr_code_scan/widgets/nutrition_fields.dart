@@ -1,26 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 
 class NutritionFields extends StatelessWidget {
   const NutritionFields({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return GetBuilder<AppThemeController>(
+      builder: (themeController) {
+        return Column(
           children: [
-            _buildLabel("Carbs"),
-            _buildLabel("Protein"),
-            _buildLabel("Fats"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildLabel("Carbs"),
+                _buildLabel("Protein"),
+                _buildLabel("Fats"),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildTextField(themeController),
+                _buildTextField(themeController),
+                _buildTextField(themeController),
+              ],
+            ),
           ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [_buildTextField(), _buildTextField(), _buildTextField()],
-        ),
-      ],
+        );
+      },
     );
   }
 
@@ -34,16 +44,18 @@ class NutritionFields extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField() {
+  Widget _buildTextField(AppThemeController themeController) {
     return Container(
       width: 89,
       height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFF6B1717),
+        color: themeController.activeTheme.cardBackgroundColor,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: const Color(0xFFE9B86E).withValues(alpha: .5),
+          color: themeController.activeTheme.accentGoldColor.withValues(
+            alpha: .5,
+          ),
           width: 1,
         ),
       ),

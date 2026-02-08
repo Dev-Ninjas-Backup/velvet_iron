@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
-import 'package:velvet_iron/core/common/widgets/custom_button.dart';
+import 'package:velvet_iron/core/common/widgets/custom_button_two.dart';
 import 'package:velvet_iron/core/common/widgets/custom_text_field.dart';
 import 'package:velvet_iron/features/auth/set_password/controller/set_password_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
@@ -142,7 +142,7 @@ class SetPasswordScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 30),
-            CustomButton(
+            CustomButtonTwo(
               label: 'Update Password',
               onPressed: () {
                 controller.updatePassword();

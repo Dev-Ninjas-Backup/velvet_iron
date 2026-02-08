@@ -3,7 +3,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:velvet_iron/core/common/widgets/custom_background_withimage.dart';
-import 'package:velvet_iron/core/common/widgets/custom_button.dart';
+import 'package:velvet_iron/core/common/widgets/custom_button_two.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/welcome_boarding/controller/user_boarding_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/welcome_boarding/widgets/user_boarding_widget.dart';
@@ -29,7 +29,7 @@ class WelcomeScreen extends StatelessWidget {
                 const SizedBox(height: 24),
                 const WelcomeDescription(),
                 const SizedBox(height: 40),
-                CustomButton(
+                CustomButtonTwo(
                   label: "Continue Journey",
                   onPressed: () =>
                       Get.toNamed(AppRoute.getthemeOnboardingScreen()),

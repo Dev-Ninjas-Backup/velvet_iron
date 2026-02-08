@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
-import 'package:velvet_iron/core/common/widgets/custom_button.dart';
+import 'package:velvet_iron/core/common/widgets/custom_button_two.dart';
 import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/auth/otp/controller/otp_controller.dart';
@@ -90,7 +90,7 @@ class OtpScreen extends StatelessWidget {
                   SizedBox(height: 12),
                   const OtpField(),
                   SizedBox(height: 30),
-                  CustomButton(
+                  CustomButtonTwo(
                     label: 'Verify',
                     onPressed: () {
                       controller.verifyOtp(previousPage);
