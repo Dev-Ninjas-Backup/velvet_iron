@@ -3,8 +3,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
-import 'package:velvet_iron/features/home/controller/theme_controller.dart';
-import 'package:velvet_iron/features/home/models/home_theme_model.dart';
+import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
+import 'package:velvet_iron/core/utils/app_theme/model/app_theme_model.dart';
 
 class WeightProgress extends StatefulWidget {
   final String title;
@@ -27,9 +27,9 @@ class _WeightProgressState extends State<WeightProgress> {
 
   @override
   Widget build(BuildContext context) {
-    final themeController = Get.find<ThemeController>();
+    final themeController = Get.find<AppThemeController>();
     final activeTheme =
-        themeController.currentTheme.value ?? HomeThemeModel.adventurerTheme;
+        themeController.currentTheme.value ?? AppThemeModel.adventurerTheme;
 
     final Random random = Random();
     final List<double> weeklyData = List.generate(

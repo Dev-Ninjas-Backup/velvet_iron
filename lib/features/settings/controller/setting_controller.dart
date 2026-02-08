@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
+import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
 class SettingsController extends GetxController {
@@ -40,24 +41,19 @@ class SettingsController extends GetxController {
   }
 
   void logout() {
+    final themeController = Get.find<AppThemeController>();
     Get.dialog(
       Dialog(
         backgroundColor: Colors.transparent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color.fromRGBO(30, 0, 0, 1),
-                Color.fromRGBO(104, 11, 11, 0.5),
-                Color.fromRGBO(30, 0, 0, 1),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            gradient: themeController.activeTheme.backgroundGradient,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: Color(0xFFD4AF7A).withValues(alpha: 0.3),
+              color: themeController.activeTheme.accentGoldColor.withValues(
+                alpha: 0.3,
+              ),
               width: 1.5,
             ),
           ),
@@ -69,11 +65,8 @@ class SettingsController extends GetxController {
               ShaderMask(
                 blendMode: BlendMode.srcIn,
                 shaderCallback: (bounds) => LinearGradient(
-                  colors: [
-                    Color(0xFFFDE7BB),
-                    Color(0xFF9E6D38),
-                    Color(0xFFE9B86E),
-                  ],
+                  colors:
+                      themeController.activeTheme.progressBarGradient.colors,
                 ).createShader(bounds),
                 child: Text(
                   'Logout',
@@ -84,7 +77,7 @@ class SettingsController extends GetxController {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Content
               Text(
@@ -96,7 +89,7 @@ class SettingsController extends GetxController {
                   color: Colors.white.withValues(alpha: 0.9),
                 ),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Buttons
               Row(
@@ -107,10 +100,14 @@ class SettingsController extends GetxController {
                       child: Container(
                         height: 48,
                         decoration: BoxDecoration(
-                          color: Color.fromRGBO(53, 4, 4, 0.9),
+                          color: themeController
+                              .activeTheme
+                              .dropdownBackgroundColor
+                              .withValues(alpha: 0.9),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: Color(0xFFD4AF7A).withValues(alpha: 0.3),
+                            color: themeController.activeTheme.accentGoldColor
+                                .withValues(alpha: 0.3),
                             width: 1,
                           ),
                         ),
@@ -127,7 +124,7 @@ class SettingsController extends GetxController {
                       ),
                     ),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
@@ -137,22 +134,15 @@ class SettingsController extends GetxController {
                       child: Container(
                         height: 48,
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color(0xFFFDE7BB),
-                              Color(0xFF9E6D38),
-                              Color(0xFFE9B86E),
-                              Color(0xFFE5B46B),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
+                          gradient:
+                              themeController.activeTheme.progressBarGradient,
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: Color(0xFFD4AF7A).withValues(alpha: 0.3),
+                              color: themeController.activeTheme.accentGoldColor
+                                  .withValues(alpha: 0.3),
                               blurRadius: 8,
-                              offset: Offset(0, 4),
+                              offset: const Offset(0, 4),
                             ),
                           ],
                         ),
@@ -162,7 +152,7 @@ class SettingsController extends GetxController {
                             style: getTextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E0000),
+                              color: Colors.white,
                             ),
                           ),
                         ),

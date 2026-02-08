@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
-import 'package:velvet_iron/features/home/controller/theme_controller.dart';
+import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/theme_onboading/widgets/select_theme.dart';
 
 class ThemesListWidget extends StatelessWidget {
@@ -9,10 +9,10 @@ class ThemesListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeController = Get.find<ThemeController>();
+    final themeController = Get.find<AppThemeController>();
 
     return Expanded(
-      child: GetBuilder<ThemeController>(
+      child: GetBuilder<AppThemeController>(
         builder: (_) => ListView.builder(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           itemCount: themeController.themes.length,

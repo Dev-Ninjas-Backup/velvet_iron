@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
+import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/about_training_codex/model/about_training_model.dart';
@@ -13,52 +14,62 @@ class AboutTrainingAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 60,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Row(
-          children: [
-            GestureDetector(
-              onTap: () => Get.back(),
-              child: Container(
-                width: size,
-                height: size,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Color(0xFF512212), Color(0xFF512212)],
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.35),
-                      blurRadius: 6,
-                      offset: const Offset(0, 3),
+    return GetBuilder<AppThemeController>(
+      builder: (themeController) {
+        return SizedBox(
+          height: 60,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: () => Get.back(),
+                  child: Container(
+                    width: size,
+                    height: size,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          themeController.activeTheme.todoSubtitleColor,
+                          themeController.activeTheme.todoSubtitleColor,
+                        ],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.35),
+                          blurRadius: 6,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.arrow_back_ios_new,
-                    color: Colors.white,
-                    size: size * 0.4,
+                    child: Center(
+                      child: Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white,
+                        size: size * 0.4,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    'About Training Codex',
+                    style: getTextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 20),
+              ],
             ),
-            const SizedBox(width: 6),
-            Expanded(
-              child: Text(
-                'About Training Codex',
-                style: getTextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-              ),
-            ),
-            const SizedBox(width: 20),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -118,15 +129,18 @@ class IntroWidget extends StatelessWidget {
     );
   }
 }
+
 class FounderCardWidget extends StatelessWidget {
   final String name;
   final String title;
   final String description;
+  final AppThemeController themeController;
 
   const FounderCardWidget({
     required this.name,
     required this.title,
     required this.description,
+    required this.themeController,
     super.key,
   });
 
@@ -139,14 +153,7 @@ class FounderCardWidget extends StatelessWidget {
           width: 5,
           height: 60,
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [
-                Color(0xFFFDE7BB),
-                Color(0xFF9E6D38),
-                Color(0xFFE9B86E),
-                Color(0xFFE5B46B),
-              ],
-            ),
+            gradient: themeController.activeTheme.progressBarGradient,
             borderRadius: BorderRadius.circular(3),
           ),
         ),
@@ -193,26 +200,31 @@ class FounderInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        children: [
-          FounderCardWidget(
-            name: 'Jamie Friddle',
-            title: 'Founder & Creator, Velvet & Iron Training Codex',
-            description:
-                'Jamie Friddle is the architect behind the Velvet & Iron vision, forging a space where growth isn\'t linear, it\'s earned. Through a Velvet & Iron Training Codex, Jamie invites others to mark the weight of their resolve, where dedication defines the Codex, and accountability is woven into every entry.',
+    return GetBuilder<AppThemeController>(
+      builder: (themeController) {
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              FounderCardWidget(
+                name: 'Jamie Friddle',
+                title: 'Founder & Creator, Velvet & Iron Training Codex',
+                description:
+                    'Jamie Friddle is the architect behind the Velvet & Iron vision, forging a space where growth isn\'t linear, it\'s earned. Through a Velvet & Iron Training Codex, Jamie invites others to mark the weight of their resolve, where dedication defines the Codex, and accountability is woven into every entry.',
+                themeController: themeController,
+              ),
+              const SizedBox(height: 18),
+              FounderCardWidget(
+                name: 'Robert Fox',
+                title: 'Marketing Coordinator',
+                description:
+                    'Developed in collaboration with Robert Fox, a highly vetted product designer with over two decades of experience. Fox partnered with Jamie to build the system architecture that transforms your aspirations into a metric-based progression journey.',
+                themeController: themeController,
+              ),
+            ],
           ),
-
-          SizedBox(height: 18),
-          FounderCardWidget(
-            name: 'Robert Fox',
-            title: 'Marketing Coordinator',
-            description:
-                'Developed in collaboration with Robert Fox, a highly vetted product designer with over two decades of experience. Fox partnered with Jamie to build the system architecture that transforms your aspirations into a metric-based progression journey.',
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -328,139 +340,147 @@ class _ExpandableSectionWidgetState extends State<ExpandableSectionWidget>
 
   Widget _buildFeatureItem(int index, String title, String description) {
     final isSelected = _selectedIndices.contains(index);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                if (isSelected) {
-                  _selectedIndices.remove(index);
-                } else {
-                  _selectedIndices.add(index);
-                }
-              });
-            },
-            child: Container(
-              width: 24,
-              height: 24,
-              margin: const EdgeInsets.only(top: 2),
-              child: Image.asset(
-                isSelected ? IconPath.goldencircle : IconPath.whitecircle,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  if (isSelected) {
-                    _selectedIndices.remove(index);
-                  } else {
-                    _selectedIndices.add(index);
-                  }
-                });
-              },
-              child: Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '$title ',
-                      style: getTextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: isSelected
-                            ? const Color(0xFFD4AF37)
-                            : Colors.white,
-                      ),
-                    ),
-                    if (description.isNotEmpty)
-                      TextSpan(
-                        text: description,
-                        style: getTextStyle(
-                          fontSize: 12,
-                          color: Colors.white.withValues(alpha: 0.85),
-                        ),
-                      ),
-                  ],
+    return GetBuilder<AppThemeController>(
+      builder: (themeController) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    if (isSelected) {
+                      _selectedIndices.remove(index);
+                    } else {
+                      _selectedIndices.add(index);
+                    }
+                  });
+                },
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  margin: const EdgeInsets.only(top: 2),
+                  child: Image.asset(
+                    isSelected ? IconPath.goldencircle : IconPath.whitecircle,
+                  ),
                 ),
               ),
-            ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (isSelected) {
+                        _selectedIndices.remove(index);
+                      } else {
+                        _selectedIndices.add(index);
+                      }
+                    });
+                  },
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '$title ',
+                          style: getTextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: isSelected
+                                ? themeController.activeTheme.accentGoldColor
+                                : Colors.white,
+                          ),
+                        ),
+                        if (description.isNotEmpty)
+                          TextSpan(
+                            text: description,
+                            style: getTextStyle(
+                              fontSize: 12,
+                              color: Colors.white.withValues(alpha: 0.85),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
   Widget _buildPartnerFeatureItem(int index, String title, String description) {
     final isSelected = _selectedIndices.contains(index);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                if (isSelected) {
-                  _selectedIndices.remove(index);
-                } else {
-                  _selectedIndices.add(index);
-                }
-              });
-            },
-            child: Container(
-              width: 24,
-              height: 24,
-              margin: const EdgeInsets.only(top: 2),
-              child: Image.asset(
-                isSelected ? IconPath.goldencircle : IconPath.whitecircle,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  if (isSelected) {
-                    _selectedIndices.remove(index);
-                  } else {
-                    _selectedIndices.add(index);
-                  }
-                });
-              },
-              child: Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '$title ',
-                      style: getTextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: isSelected
-                            ? const Color(0xFFD4AF37)
-                            : Colors.white,
-                      ),
-                    ),
-                    if (description.isNotEmpty)
-                      TextSpan(
-                        text: description,
-                        style: getTextStyle(
-                          fontSize: 12,
-                          color: Colors.white.withValues(alpha: 0.85),
-                        ),
-                      ),
-                  ],
+    return GetBuilder<AppThemeController>(
+      builder: (themeController) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    if (isSelected) {
+                      _selectedIndices.remove(index);
+                    } else {
+                      _selectedIndices.add(index);
+                    }
+                  });
+                },
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  margin: const EdgeInsets.only(top: 2),
+                  child: Image.asset(
+                    isSelected ? IconPath.goldencircle : IconPath.whitecircle,
+                  ),
                 ),
               ),
-            ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (isSelected) {
+                        _selectedIndices.remove(index);
+                      } else {
+                        _selectedIndices.add(index);
+                      }
+                    });
+                  },
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '$title ',
+                          style: getTextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: isSelected
+                                ? themeController.activeTheme.accentGoldColor
+                                : Colors.white,
+                          ),
+                        ),
+                        if (description.isNotEmpty)
+                          TextSpan(
+                            text: description,
+                            style: getTextStyle(
+                              fontSize: 12,
+                              color: Colors.white.withValues(alpha: 0.85),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
