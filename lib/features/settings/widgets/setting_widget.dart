@@ -631,7 +631,7 @@ class AppVersionWidget extends GetView<SettingsController> {
           children: [
             Obx(
               () => Text(
-                'App Version - ${controller.appVersion.value}',
+                'App Version + ${controller.appVersion.value}',
                 style: getTextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w400,

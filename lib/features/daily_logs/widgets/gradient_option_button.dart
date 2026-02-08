@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
+import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 
 class CustomGradientOptionButton extends StatelessWidget {
   final String text;
@@ -15,45 +17,37 @@ class CustomGradientOptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: AnimatedContainer(
-        key: ValueKey(text),
-        duration: const Duration(milliseconds: 150),
-        curve: Curves.easeInOut,
-        width: 85,
-        height: 32,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(21),
-          border: Border.all(
-            color: isSelected ? Colors.transparent : Colors.grey.shade300,
-            width: 1,
+    return GetBuilder<AppThemeController>(
+      builder: (themeController) {
+        return GestureDetector(
+          onTap: onPressed,
+          child: AnimatedContainer(
+            key: ValueKey(text),
+            duration: const Duration(milliseconds: 150),
+            curve: Curves.easeInOut,
+            width: 85,
+            height: 32,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(21),
+              border: Border.all(
+                color: isSelected ? Colors.transparent : Colors.grey.shade300,
+                width: 1,
+              ),
+              gradient: isSelected
+                  ? themeController.activeTheme.progressBarGradient
+                  : null,
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              text,
+              style: getTextStyle(
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+              ),
+            ),
           ),
-          gradient: isSelected
-              ? const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0xFFFDE7BB),
-                    Color(0xFF9E6D38),
-                    Color(0xFFE9B86E),
-                    Color(0xFF9D6933),
-                    Color(0xFFFEE9BF),
-                    Color(0xFF683E23),
-                  ],
-                  stops: [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
-                )
-              : null,
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          text,
-          style: getTextStyle(
-            fontSize: 12,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

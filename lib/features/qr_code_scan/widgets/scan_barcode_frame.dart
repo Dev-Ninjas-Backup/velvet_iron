@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'camera_box.dart';
 import 'nutrition_fields.dart';
 import 'scan_action_buttons.dart';
@@ -8,38 +10,50 @@ class ScanBarcodeFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(40),
-        border: Border.all(width: 4, color: const Color(0xFFE9B86E)),
-      ),
-      padding: const EdgeInsets.only(top: 20, right: 24, bottom: 25, left: 24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return GetBuilder<AppThemeController>(
+      builder: (themeController) {
+        return Container(
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(horizontal: 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40),
+            border: Border.all(
+              width: 4,
+              color: themeController.activeTheme.accentGoldColor,
+            ),
+          ),
+          padding: const EdgeInsets.only(
+            top: 20,
+            right: 24,
+            bottom: 25,
+            left: 24,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                "Scan Barcode",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Scan Barcode",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
               ),
+              const SizedBox(height: 20),
+              const CameraBox(),
+              const SizedBox(height: 24),
+              const NutritionFields(),
+              const SizedBox(height: 24),
+              const ScanActionButtons(),
             ],
           ),
-          const SizedBox(height: 20),
-          const CameraBox(),
-          const SizedBox(height: 24),
-          const NutritionFields(),
-          const SizedBox(height: 24),
-          const ScanActionButtons(),
-        ],
-      ),
+        );
+      },
     );
   }
 }
