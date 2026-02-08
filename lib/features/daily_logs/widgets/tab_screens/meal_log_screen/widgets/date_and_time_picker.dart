@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
+import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 
 class DateAndTimePicker extends StatelessWidget {
@@ -41,46 +43,58 @@ class DateAndTimePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Date",
-                style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+    return GetBuilder<AppThemeController>(
+      builder: (themeController) {
+        return Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Date",
+                    style: getTextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildPickerField(
+                    value: DateFormat('yyyy-MM-dd').format(selectedDate),
+                    hint: "Choose",
+                    iconPath: IconPath.calendar,
+                    onTap: () => _selectDate(context),
+                    themeController: themeController,
+                  ),
+                ],
               ),
-              const SizedBox(height: 8),
-              _buildPickerField(
-                value: DateFormat('yyyy-MM-dd').format(selectedDate),
-                hint: "Choose",
-                iconPath: IconPath.calendar,
-                onTap: () => _selectDate(context),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Time",
+                    style: getTextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildPickerField(
+                    value: selectedTime.format(context),
+                    hint: "Choose",
+                    iconPath: IconPath.clock,
+                    onTap: () => _selectTime(context),
+                    themeController: themeController,
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Time",
-                style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-              ),
-              const SizedBox(height: 8),
-              _buildPickerField(
-                value: selectedTime.format(context),
-                hint: "Choose",
-                iconPath: IconPath.clock,
-                onTap: () => _selectTime(context),
-              ),
-            ],
-          ),
-        ),
-      ],
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -89,6 +103,7 @@ class DateAndTimePicker extends StatelessWidget {
     required String hint,
     required String iconPath,
     required VoidCallback onTap,
+    required AppThemeController themeController,
   }) {
     return SizedBox(
       height: 40,
@@ -102,10 +117,10 @@ class DateAndTimePicker extends StatelessWidget {
           hintStyle: getTextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w400,
-            color: const Color(0xFF723737),
+            color: themeController.activeTheme.todoSubtitleColor,
           ),
           filled: true,
-          fillColor: const Color(0xFF3A0303),
+          fillColor: themeController.activeTheme.dropdownBackgroundColor,
           contentPadding: const EdgeInsets.only(
             left: 12,
             right: 12,
@@ -127,11 +142,13 @@ class DateAndTimePicker extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(50),
-            borderSide: const BorderSide(color: Color(0xFFDCAA64), width: 1.11),
+            borderSide: BorderSide(
+              color: themeController.activeTheme.accentGoldColor,
+              width: 1.11,
+            ),
           ),
         ),
       ),
     );
   }
 }
-

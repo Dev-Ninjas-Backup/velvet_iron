@@ -90,9 +90,7 @@ class DailyMacroGoalWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.black.withValues(
-                alpha: 0.2,
-              ), 
+              color: Colors.black.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(15),
               border: Border.all(
                 color: const Color(0xFF6B1717).withValues(alpha: 0.5),
@@ -178,7 +176,7 @@ class DailyMacroGoalWidget extends StatelessWidget {
         style: getTextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          color: Colors.white, 
+          color: Colors.white,
         ),
       ),
     );

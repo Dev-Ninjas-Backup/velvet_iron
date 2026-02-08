@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/home/controller/home_controller.dart';
-import 'package:velvet_iron/features/home/controller/theme_controller.dart';
-import 'package:velvet_iron/features/home/models/home_theme_model.dart';
+import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
+import 'package:velvet_iron/core/utils/app_theme/model/app_theme_model.dart';
 
 class TodoSection extends StatelessWidget {
   const TodoSection({super.key});
@@ -12,13 +12,12 @@ class TodoSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeController = Get.put<HomeController>(HomeController());
-    final themeController = Get.find<ThemeController>();
+    final themeController = Get.find<AppThemeController>();
 
-    return GetBuilder<ThemeController>(
+    return GetBuilder<AppThemeController>(
       builder: (_) {
         final activeTheme =
-            themeController.currentTheme.value ??
-            HomeThemeModel.adventurerTheme;
+            themeController.currentTheme.value ?? AppThemeModel.adventurerTheme;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
