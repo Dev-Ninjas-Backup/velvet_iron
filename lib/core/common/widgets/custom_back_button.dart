@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
+import 'package:velvet_iron/core/utils/constants/colors.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 
 class FigmaBackButton extends StatelessWidget {
@@ -23,7 +24,7 @@ class FigmaBackButton extends StatelessWidget {
       builder: (themeController) {
         final buttonColor = applyTheme
             ? themeController.activeTheme.todoSubtitleColor
-            : const Color(0xFF5A5A5A);
+            : AppColors.textFieldFillColor;
 
         final backButton = GestureDetector(
           onTap: onPressed ?? () => Navigator.pop(context),

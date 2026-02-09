@@ -60,7 +60,10 @@ class OnboardingScreen7 extends StatelessWidget {
             Positioned(
               top: MediaQuery.of(context).padding.top + 12,
               left: 24,
-              child: FigmaBackButton(onPressed: () => Get.back()),
+              child: FigmaBackButton(
+                onPressed: () => Get.back(),
+                applyTheme: false,
+              ),
             ),
           ],
         ),
