@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/routes/app_routes.dart';
 
 class Onboarding3Controller extends GetxController {
   final currentStep = 4.obs;
@@ -17,6 +18,12 @@ class Onboarding3Controller extends GetxController {
 
   double get progressValue => currentStep.value / totalSteps.value;
 
+  @override
+  void onInit() {
+    super.onInit();
+    selectedGoal.value = 0;
+  }
+
   void onBackPressed() {
     Get.back();
   }
@@ -25,23 +32,15 @@ class Onboarding3Controller extends GetxController {
     selectedGoal.value = index;
   }
 
-  void onContinue() {
+  void onContinue() async {
     if (selectedGoal.value == null) {
-      Get.snackbar(
-        'Required',
-        'Please select a fitness goal',
-        backgroundColor: Colors.orange.withValues(alpha: 0.7),
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      EasyLoading.showInfo('Please select a fitness goal');
       return;
     }
-    Get.snackbar(
-      'Success',
-      'Goal selected! +${xpPoints.value} XP',
-      backgroundColor: Colors.green.withValues(alpha: 0.7),
-      colorText: Colors.white,
-      snackPosition: SnackPosition.BOTTOM,
-    );
+    EasyLoading.show(status: 'Setting your destiny...');
+    await Future.delayed(const Duration(milliseconds: 1000));
+    EasyLoading.showSuccess('Goal selected! +${xpPoints.value} XP');
+
+    Get.toNamed(AppRoute.getonboardingScreen4());
   }
 }

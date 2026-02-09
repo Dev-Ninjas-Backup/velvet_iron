@@ -44,6 +44,7 @@ dependencies:
   fl_chart: ^1.1.1
   camera: ^0.10.5+5
   mobile_scanner: ^5.1.0
+  flutter_easyloading: ^3.0.5
 
 dev_dependencies:
   flutter_test:

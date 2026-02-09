@@ -1,4 +1,6 @@
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/routes/app_routes.dart';
 
 class OnboardingController7 extends GetxController {
   final currentStep = 8.obs;
@@ -23,12 +25,22 @@ class OnboardingController7 extends GetxController {
     selectedHungerLevel.value = value;
   }
 
-  void onContinue() {
+  Future<void> onContinue() async {
     if (selectedMood.isEmpty ||
         selectedEnergyLevel.isEmpty ||
         selectedHungerLevel.isEmpty) {
-      Get.snackbar('Error', 'Please select all options');
+      EasyLoading.showInfo('Please select all options');
       return;
     }
+
+    EasyLoading.show(status: 'Analyzing your vitals...');
+    await Future.delayed(const Duration(milliseconds: 1000));
+    EasyLoading.showSuccess('Condition Recorded! +${xpPoints.value} XP');
+
+    Get.toNamed(AppRoute.getonboardingScreen8());
+  }
+
+  void onBackPressed() {
+    Get.back();
   }
 }

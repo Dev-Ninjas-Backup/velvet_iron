@@ -6,14 +6,13 @@ import 'package:velvet_iron/core/common/widgets/custom_button_two.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding5/controller/onboarding5_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding5/widgets/onboarding5_widget.dart';
-import 'package:velvet_iron/routes/app_routes.dart';
 
 class OnboardingScreen5 extends StatelessWidget {
   const OnboardingScreen5({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Get.put(OnboardingController5());
+    final controller = Get.put(OnboardingController5());
 
     return Scaffold(
       body: CustomBackgroundWithImage(
@@ -50,8 +49,7 @@ class OnboardingScreen5 extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 24),
                           child: CustomButtonTwo(
                             label: 'Continue (+10 XP)',
-                            onPressed: () =>
-                                Get.toNamed(AppRoute.getonboardingScreen6()),
+                            onPressed: controller.onContinue,
                           ),
                         ),
 
@@ -62,6 +60,7 @@ class OnboardingScreen5 extends StatelessWidget {
                 ),
               ),
             ),
+
             /// Fixed Back Button
             Positioned(
               top: MediaQuery.of(context).padding.top + 12,
