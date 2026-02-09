@@ -20,10 +20,12 @@ class WeightStatusCard extends StatelessWidget {
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
         return Container(
-          width: 109,
+          // width: 109,
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: themeController.activeTheme.cardBackgroundColor,
+            color: themeController.activeTheme.cardBackgroundColor.withValues(
+              alpha: 0.5,
+            ),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(

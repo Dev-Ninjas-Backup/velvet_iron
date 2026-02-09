@@ -79,5 +79,6 @@ class IconPath {
   static const String pissedEmojiPurple = 'assets/icons/pissedEmojiPurple.png';
   static const String greatEmojiPurple = 'assets/icons/greatEmojiPurple.png';
   static const String poorEmojiPurple = 'assets/icons/poorEmojiPurple.png';
+  
   static const String doticon = 'assets/icons/doticon.png';
 }

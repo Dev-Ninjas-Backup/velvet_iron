@@ -85,7 +85,7 @@ class _GraphState extends State<Graph> {
             ),
             const SizedBox(height: 12),
             SizedBox(
-              width: double.infinity, // Use full available width
+              width: double.infinity, 
               height: 150,
               child: LineChart(
                 LineChartData(

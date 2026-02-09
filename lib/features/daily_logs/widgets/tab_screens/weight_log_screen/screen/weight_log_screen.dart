@@ -46,10 +46,11 @@ class WeightLog extends StatelessWidget {
                         navController.changeTabIndex(0);
                       },
                       child: Container(
-                        width: 32,
-                        height: 32,
+                        // width: 32,
+                        // height: 32,
                         decoration: BoxDecoration(
-                          color: themeController.activeTheme.todoSubtitleColor,
+                          color: themeController.activeTheme.todoSubtitleColor
+                              .withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(50),
                         ),
                         child: const Icon(
