@@ -1,9 +1,10 @@
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/routes/app_routes.dart';
 
 class OnboardingController5 extends GetxController {
   final currentStep = 6.obs;
   final totalSteps = 11.obs;
-  final xpPoints = 10.obs;
 
   double get progressValue => currentStep.value / totalSteps.value;
 
@@ -35,4 +36,22 @@ class OnboardingController5 extends GetxController {
     100,
     (index) => (DateTime.now().year - index).toString(),
   );
+
+  Future<void> onContinue() async {
+    try {
+      EasyLoading.show(status: 'Recording your birth in the Codex...');
+
+      await Future.delayed(const Duration(seconds: 1));
+
+      EasyLoading.showSuccess('Date of Birth saved Successfully');
+
+      Get.toNamed(AppRoute.getonboardingScreen6());
+    } catch (e) {
+      EasyLoading.showError('Failed to save date');
+    }
+  }
+
+  void onBackPressed() {
+    Get.back();
+  }
 }

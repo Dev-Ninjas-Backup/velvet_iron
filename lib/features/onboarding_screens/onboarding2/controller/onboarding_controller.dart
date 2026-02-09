@@ -1,16 +1,18 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:velvet_iron/routes/app_routes.dart';
 
 class Onboarding2Controller extends GetxController {
-  final selectedIndex = Rxn<int>();  
+  final selectedIndex = Rxn<int>();
   final currentStep = 3.obs;
-  final totalSteps = 11.obs;  
-  final xpPoints = 10.obs; 
-  final Rxn<File> profileImage = Rxn<File>();  
+  final totalSteps = 11.obs;
+  final xpPoints = 10.obs;
+  final Rxn<File> profileImage = Rxn<File>();
   final nameController = TextEditingController();
-  final ImagePicker _picker = ImagePicker(); 
+  final ImagePicker _picker = ImagePicker();
   double get progressValue => currentStep.value / totalSteps.value;
 
   void onBackPressed() {
@@ -28,39 +30,24 @@ class Onboarding2Controller extends GetxController {
 
       if (pickedFile != null) {
         profileImage.value = File(pickedFile.path);
+
+        EasyLoading.showSuccess('Image uploaded!');
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to pick image: $e',
-        backgroundColor: Colors.red.withValues(alpha: 0.7),
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      EasyLoading.showError('Failed to pick image');
     }
   }
 
-  void onContinue() {
-   
+  void onContinue() async {
     if (nameController.text.trim().isEmpty) {
-      Get.snackbar(
-        'Required',
-        'Please enter your name',
-        backgroundColor: Colors.orange.withValues(alpha: 0.7),
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 2),
-      );
+      EasyLoading.showInfo('Please enter your name');
       return;
     }
-    Get.snackbar(
-      'Success',
-      'Profile saved! +${xpPoints.value} XP',
-      backgroundColor: Colors.green.withValues(alpha: 0.7),
-      colorText: Colors.white,
-      snackPosition: SnackPosition.BOTTOM,
-      duration: const Duration(seconds: 2),
-    );
+    EasyLoading.show(status: 'Recording your legend...');
+    await Future.delayed(const Duration(milliseconds: 1200));
+    EasyLoading.showSuccess('Profile saved Successfully');
+
+    Get.toNamed(AppRoute.getonboardingScreen3());
   }
 
   @override

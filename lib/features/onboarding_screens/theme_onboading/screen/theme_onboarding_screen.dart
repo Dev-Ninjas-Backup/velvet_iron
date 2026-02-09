@@ -9,14 +9,13 @@ import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/theme_onboading/controller/theme_onboarding_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/theme_onboading/widgets/progress_and_step_widget.dart';
 import 'package:velvet_iron/features/onboarding_screens/theme_onboading/widgets/themes_list_widget.dart';
-import 'package:velvet_iron/routes/app_routes.dart';
 
 class ThemeOnboardingScreen extends StatelessWidget {
   const ThemeOnboardingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ThemeOnboardingController());
+    final controller = Get.put(ThemeOnboardingController());
     return Scaffold(
       body: CustomBackgroundWithImage(
         imageAsset: ImagePath.magicImage,
@@ -42,8 +41,7 @@ class ThemeOnboardingScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: CustomButtonTwo(
                         label: 'Continue (+10 XP)',
-                        onPressed: () =>
-                            Get.toNamed(AppRoute.getonboadingScreen1()),
+                        onPressed: controller.onContinuePressed,
                       ),
                     ),
                     const SizedBox(height: 20),

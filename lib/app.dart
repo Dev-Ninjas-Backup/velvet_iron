@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
@@ -13,16 +14,18 @@ class VelvetIron extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
+      designSize: const Size(360, 690),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_, child) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           translations: AppTranslations(),
-          initialRoute: AppRoute.getwelcomeScreen(),
+          initialRoute: AppRoute.getSplashScreen(),
           getPages: AppRoute.routes,
           initialBinding: ControllerBinder(),
           themeMode: ThemeMode.system,
+          builder: EasyLoading.init(),
         );
       },
     );

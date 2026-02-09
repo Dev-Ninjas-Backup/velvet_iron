@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
+import 'package:velvet_iron/routes/app_routes.dart';
 
 class OnboardingController1 extends GetxController {
   final selectedIndex = Rxn<int>();
@@ -114,14 +116,7 @@ class OnboardingController1 extends GetxController {
     if (isCompanionUnlocked(index)) {
       selectedIndex.value = index;
     } else {
-      Get.snackbar(
-        'Locked',
-        'This companion requires ${companions[index].unlockXp} XP to unlock',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withValues(alpha: 0.7),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 2),
-      );
+      EasyLoading.showInfo('Requires ${companions[index].unlockXp} XP');
     }
   }
 
@@ -131,52 +126,33 @@ class OnboardingController1 extends GetxController {
     return companion.isActive || xpPoints.value >= companion.unlockXp!;
   }
 
-  void onContinue() {
+  Future<void> onContinue() async {
     if (selectedIndex.value != null) {
       final selected = companions[selectedIndex.value!];
 
-      Get.snackbar(
-        'Companion Selected',
-        'You have chosen ${selected.name}!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.withValues(alpha: 0.7),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 2),
-      );
+      EasyLoading.show(status: 'Binding soul with ${selected.name}...');
+      await Future.delayed(const Duration(milliseconds: 1000));
+
+      EasyLoading.dismiss();
+
+      Get.toNamed(AppRoute.getonboadingScreen2());
     } else {
-      Get.snackbar(
-        'No Selection',
-        'Please select a companion first',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange.withValues(alpha: 0.7),
-        colorText: Colors.white,
-      );
+      EasyLoading.showInfo('Please select a companion');
     }
   }
 
   void unlockCompanion(int index) {
     final companion = companions[index];
     if (companion.unlockXp != null && xpPoints.value >= companion.unlockXp!) {
+      EasyLoading.show(status: 'Unlocking...');
+
       xpPoints.value -= companion.unlockXp!;
       companion.isActive = true;
       companions.refresh();
-
-      Get.snackbar(
-        'Unlocked!',
-        '${companion.name} is now unlocked',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.withValues(alpha: 0.7),
-        colorText: Colors.white,
-      );
+      EasyLoading.showSuccess('${companion.name} Unlocked!');
       selectCompanion(index);
     } else {
-      Get.snackbar(
-        'Insufficient XP',
-        'You need ${companion.unlockXp} XP to unlock this companion',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withValues(alpha: 0.7),
-        colorText: Colors.white,
-      );
+      EasyLoading.showError('Insufficient XP');
     }
   }
 

@@ -6,7 +6,6 @@ import 'package:velvet_iron/core/common/widgets/custom_button_two.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding1/controller/onboarding1_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding1/widgets/onboarding1_widget.dart';
-import 'package:velvet_iron/routes/app_routes.dart';
 
 class OnboadingScreen1 extends StatelessWidget {
   const OnboadingScreen1({super.key});
@@ -54,8 +53,7 @@ class OnboadingScreen1 extends StatelessWidget {
                       child: Obx(
                         () => CustomButtonTwo(
                           label: 'Continue (+${controller.xpPoints.value} XP)',
-                          onPressed: () =>
-                              Get.toNamed(AppRoute.getonboadingScreen2()),
+                          onPressed: controller.onContinue,
                         ),
                       ),
                     ),
