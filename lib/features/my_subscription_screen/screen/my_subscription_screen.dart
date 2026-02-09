@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
-import 'package:velvet_iron/core/common/widgets/custom_background2.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import '../controller/my_subscription_controller.dart';
 import '../widgets/membership_benefits.dart';
@@ -18,38 +17,55 @@ class MySubscriptionScreen extends StatelessWidget {
     return Scaffold(
       body: GetBuilder<AppThemeController>(
         builder: (themeController) {
-          return CustomBackground2(
-            imageAsset: themeController.activeTheme.backgroundImage,
-            child: SafeArea(
-              child: Column(
-                children: [
-                  _header(themeController),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 10,
-                      ),
-                      child: Column(
-                        children: [
-                          SubscriptionCard(controller: controller),
-                          const SizedBox(height: 30),
-                          const MembershipBenefits(),
-                          const SizedBox(height: 50),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: CustomButton(
-                              label: "Renew Subscription",
-                              onPressed: () {},
+          return Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  gradient: themeController.activeTheme.backgroundGradient,
+                ),
+              ),
+              Opacity(
+                opacity: 0.2,
+                child: Image.asset(
+                  themeController.activeTheme.backgroundImage,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                ),
+              ),
+              SafeArea(
+                child: Column(
+                  children: [
+                    _header(themeController),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                        child: Column(
+                          children: [
+                            SubscriptionCard(controller: controller),
+                            const SizedBox(height: 30),
+                            const MembershipBenefits(),
+                            const SizedBox(height: 50),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                              ),
+                              child: CustomButton(
+                                label: "Renew Subscription",
+                                onPressed: () {},
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+            ],
           );
         },
       ),

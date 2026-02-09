@@ -142,7 +142,7 @@ class MoodLog extends StatelessWidget {
                               color: themeController
                                   .activeTheme
                                   .cardBackgroundColor
-                                  .withValues(alpha: .8),
+                                  .withValues(alpha: .4),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             clipBehavior: Clip.antiAlias,

@@ -33,7 +33,12 @@ class MedicationScreen extends StatelessWidget {
             ),
             Opacity(
               opacity: 0.2,
-              child: Image.asset(themeController.activeTheme.backgroundImage),
+              child: Image.asset(
+                themeController.activeTheme.backgroundImage,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+              ),
             ),
             NestedScrollView(
               headerSliverBuilder:
@@ -126,8 +131,8 @@ class MedicationScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: themeController.activeTheme.todoSubtitleColor
-                            .withValues(alpha: .5),
+                        color: themeController.activeTheme.cardBackgroundColor
+                            .withValues(alpha: .7),
                         borderRadius: BorderRadius.circular(10),
                       ),
 

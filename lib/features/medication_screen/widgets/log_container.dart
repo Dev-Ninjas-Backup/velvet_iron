@@ -22,10 +22,11 @@ class CustomLogContainer extends StatelessWidget {
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
         return Container(
-          width: 167.5,
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: themeController.activeTheme.cardBackgroundColor,
+            color: themeController.activeTheme.cardBackgroundColor.withValues(
+              alpha: 0.4,
+            ),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -69,10 +70,7 @@ class CustomLogContainer extends StatelessWidget {
                 children: [
                   Text(
                     "Total Rewards:",
-                    style: getTextStyle(
-                      color: themeController.activeTheme.todoSubtitleColor,
-                      fontSize: 10,
-                    ),
+                    style: getTextStyle(color: Colors.white, fontSize: 10),
                   ),
 
                   const Spacer(),

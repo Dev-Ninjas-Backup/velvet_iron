@@ -25,7 +25,12 @@ class SettingScreen extends StatelessWidget {
               ),
               Opacity(
                 opacity: 0.2,
-                child: Image.asset(themeController.activeTheme.backgroundImage),
+                child: Image.asset(
+                  themeController.activeTheme.backgroundImage,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                ),
               ),
               SafeArea(
                 child: Column(
