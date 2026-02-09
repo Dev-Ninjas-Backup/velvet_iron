@@ -70,7 +70,7 @@ class AppThemeModel {
       end: Alignment.bottomCenter,
     ),
     backgroundImage: ImagePath.backgroundTwo,
-    cardBackgroundColor: const Color(0xFF0F2E5F),
+    cardBackgroundColor: const Color(0xFF292DA9),
     headerIconBackgroundColor: const Color(0xCC0A1F47),
     progressBarGradient: const LinearGradient(
       colors: [Color(0xFF001A47), Color(0xFF4FA3D1)],
@@ -81,7 +81,7 @@ class AppThemeModel {
     borderColor: const Color(0xFF1C1E8F),
     accentGoldColor: const Color(0xFF5FB3E5),
     moodBorderColor: const Color(0xFF1C1E8F),
-    todoSubtitleColor: const Color(0xFF0D5A8A),
+    todoSubtitleColor: const Color(0xFF292DA9),
     todoTimeColor: const Color(0xFF2A7AAD),
   );
 

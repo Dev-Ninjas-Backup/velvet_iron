@@ -27,7 +27,9 @@ class DoseHistory extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: themeController.activeTheme.cardBackgroundColor,
+              color: themeController.activeTheme.cardBackgroundColor.withValues(
+                alpha: 0.4,
+              ),
               borderRadius: BorderRadius.circular(18),
             ),
             child: Row(

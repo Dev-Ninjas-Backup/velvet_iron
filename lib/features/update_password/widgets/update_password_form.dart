@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
+import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/update_password/controller/update_password_controller.dart';
 
@@ -13,7 +14,8 @@ class UpdatePasswordFormWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF410707).withValues(alpha: 0.6),
+        color: Get.find<AppThemeController>().activeTheme.cardBackgroundColor
+            .withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: const Color(0xFFDCAA64).withValues(alpha: 0.3),
@@ -45,7 +47,7 @@ class UpdatePasswordFormWidget extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             "* Password must be minimum 8 characters",
-            style: getTextStyle(fontSize: 12, color: const Color(0xFFDCAA64)),
+            style: getTextStyle(fontSize: 12, color: Colors.white),
           ),
         ],
       ),
@@ -70,7 +72,10 @@ class UpdatePasswordFormWidget extends StatelessWidget {
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
               filled: true,
-              fillColor: const Color(0xFF3A0303).withValues(alpha: 1.0),
+              fillColor: Get.find<AppThemeController>()
+                  .activeTheme
+                  .dropdownBackgroundColor
+                  .withValues(alpha: 0.3),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 14,

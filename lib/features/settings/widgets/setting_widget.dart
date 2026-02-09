@@ -288,7 +288,9 @@ class UpcomingLogWidget extends GetView<SettingsController> {
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: themeController.activeTheme.todoSubtitleColor,
+            color: themeController.activeTheme.todoSubtitleColor.withValues(
+              alpha: 0.3,
+            ),
           ),
           child: Column(
             children: [

@@ -51,7 +51,7 @@ class _CalorieConsumptionCardState extends State<CalorieConsumptionCard> {
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: themeController.activeTheme.cardBackgroundColor.withValues(
-              alpha: .8,
+              alpha: .7,
             ),
             borderRadius: BorderRadius.circular(12),
           ),

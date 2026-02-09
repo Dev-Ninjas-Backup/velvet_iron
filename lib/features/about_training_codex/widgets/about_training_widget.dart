@@ -33,8 +33,8 @@ class AboutTrainingAppBar extends StatelessWidget {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          themeController.activeTheme.todoSubtitleColor,
-                          themeController.activeTheme.todoSubtitleColor,
+                          themeController.activeTheme.headerIconBackgroundColor,
+                          themeController.activeTheme.headerIconBackgroundColor,
                         ],
                       ),
                       boxShadow: [
