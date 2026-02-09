@@ -100,11 +100,12 @@ class LogYourWeightCard extends StatelessWidget {
                     hintText: "Feeling good today...",
                     hintStyle: getTextStyle(
                       fontSize: 12,
-                      color: themeController.activeTheme.dropdownBackgroundColor
-                          .withValues(alpha: 0.7),
+                      color: Colors.white70,
                     ),
                     filled: true,
-                    fillColor: themeController.activeTheme.todoSubtitleColor
+                    fillColor: themeController
+                        .activeTheme
+                        .dropdownBackgroundColor
                         .withValues(alpha: 0.3),
                     contentPadding: const EdgeInsets.all(12),
                     enabledBorder: OutlineInputBorder(

@@ -46,11 +46,13 @@ class AppThemeModel {
     headerIconBackgroundColor: const Color(0xCC521212),
     progressBarGradient: const LinearGradient(
       colors: [
-        Color.fromARGB(104, 41, 41, 18), // dark red
-        Color.fromARGB(255, 171, 117, 34), // gold
+        Color(0xFF9E6D38),
+        Color(0xFFE9B86E),
+        Color(0xFF9D6933),
+        Color(0xFF683E23),
       ],
-      begin: Alignment.bottomCenter,
-      end: Alignment.topCenter,
+      begin: Alignment.bottomLeft,
+      end: Alignment.topRight,
     ),
     dropdownBackgroundColor: const Color(0xFF3A0303),
     borderColor: const Color(0xFF6B1717),
@@ -73,7 +75,7 @@ class AppThemeModel {
     cardBackgroundColor: const Color(0xFF292DA9),
     headerIconBackgroundColor: const Color(0xCC0A1F47),
     progressBarGradient: const LinearGradient(
-      colors: [Color(0xFF001A47), Color(0xFF4FA3D1)],
+      colors: [Color(0xFF001A47), Color(0xFFFFFFFF)],
       begin: Alignment.bottomCenter,
       end: Alignment.topCenter,
     ),

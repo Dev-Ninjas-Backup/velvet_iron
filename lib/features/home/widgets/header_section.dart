@@ -4,6 +4,7 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/app_theme/model/app_theme_model.dart';
+import 'package:velvet_iron/routes/app_routes.dart';
 
 class HeaderSection extends StatelessWidget {
   const HeaderSection({super.key});
@@ -69,20 +70,23 @@ class HeaderSection extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: activeTheme.headerIconBackgroundColor,
-                shape: BoxShape.circle,
-              ),
-              child: Image.asset(
-                "assets/icons/progress.png",
-                width: 24,
-                height: 24,
-                color: activeTheme.id == 'mage' ? Colors.white : null,
-                colorBlendMode: activeTheme.id == 'mage'
-                    ? BlendMode.srcIn
-                    : null,
+            GestureDetector(
+              onTap: () => Get.toNamed(AppRoute.getsettingScreen()),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: activeTheme.headerIconBackgroundColor,
+                  shape: BoxShape.circle,
+                ),
+                child: Image.asset(
+                  "assets/icons/progress.png",
+                  width: 24,
+                  height: 24,
+                  color: activeTheme.id == 'mage' ? Colors.white : null,
+                  colorBlendMode: activeTheme.id == 'mage'
+                      ? BlendMode.srcIn
+                      : null,
+                ),
               ),
             ),
           ],

@@ -42,10 +42,11 @@ class MealLog extends StatelessWidget {
                     GestureDetector(
                       onTap: () => Get.back(),
                       child: Container(
-                        width: 32,
-                        height: 32,
+                        // width: 32,
+                        // height: 32,
                         decoration: BoxDecoration(
-                          color: themeController.activeTheme.todoSubtitleColor,
+                          color: themeController.activeTheme.todoSubtitleColor
+                              .withValues(alpha: .2),
                           borderRadius: BorderRadius.circular(50),
                         ),
                         child: const Icon(

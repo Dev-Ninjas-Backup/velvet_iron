@@ -7,18 +7,24 @@ class FigmaBackButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final double size;
   final String? appBarTitle;
+  final bool applyTheme;
 
   const FigmaBackButton({
     super.key,
     this.onPressed,
     this.size = 40,
     this.appBarTitle,
+    this.applyTheme = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
+        final buttonColor = applyTheme
+            ? themeController.activeTheme.todoSubtitleColor
+            : const Color(0xFF5A5A5A);
+
         final backButton = GestureDetector(
           onTap: onPressed ?? () => Navigator.pop(context),
           child: Container(
@@ -29,10 +35,7 @@ class FigmaBackButton extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
-                  themeController.activeTheme.todoSubtitleColor,
-                  themeController.activeTheme.todoSubtitleColor,
-                ],
+                colors: [buttonColor, buttonColor.withValues(alpha: 0.2)],
               ),
               boxShadow: [
                 BoxShadow(

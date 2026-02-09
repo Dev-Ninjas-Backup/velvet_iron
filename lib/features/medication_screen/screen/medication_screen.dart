@@ -48,7 +48,7 @@ class MedicationScreen extends StatelessWidget {
                         backgroundColor: themeController
                             .activeTheme
                             .todoSubtitleColor
-                            .withValues(alpha: .5),
+                            .withValues(alpha: 0.0),
                         elevation: 0,
                         floating: true,
                         snap: true,
@@ -62,12 +62,13 @@ class MedicationScreen extends StatelessWidget {
                                 navController.changeTabIndex(1);
                               },
                               child: Container(
-                                width: 32,
-                                height: 32,
+                                // width: 32,
+                                // height: 32,
                                 decoration: BoxDecoration(
                                   color: themeController
                                       .activeTheme
-                                      .todoSubtitleColor,
+                                      .todoSubtitleColor
+                                      .withValues(alpha: .2),
                                   borderRadius: BorderRadius.circular(50),
                                 ),
                                 child: const Icon(
