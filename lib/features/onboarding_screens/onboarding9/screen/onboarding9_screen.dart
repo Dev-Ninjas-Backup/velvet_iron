@@ -5,6 +5,7 @@ import 'package:velvet_iron/core/common/widgets/custom_background_withimage.dart
 import 'package:velvet_iron/core/common/widgets/custom_button_two.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding9/controller/onboarding9_controller.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding9/widgets/medicine_formate.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding9/widgets/onboarding9_widget.dart';
 
 class OnboardingScreen9 extends StatelessWidget {

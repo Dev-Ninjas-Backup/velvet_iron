@@ -6,6 +6,7 @@ import 'package:velvet_iron/core/common/widgets/custom_button_two.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding6/controller/onboarding6_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding6/widgets/onboarding6_widget.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding6/widgets/weigth_input.dart';
 
 class OnboardingScreen6 extends StatelessWidget {
   const OnboardingScreen6({super.key});

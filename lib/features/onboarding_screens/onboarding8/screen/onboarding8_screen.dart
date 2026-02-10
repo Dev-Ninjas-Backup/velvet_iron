@@ -5,6 +5,9 @@ import 'package:velvet_iron/core/common/widgets/custom_background_withimage.dart
 import 'package:velvet_iron/core/common/widgets/custom_button_two.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding8/controller/onboarding8_controller.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding8/widgets/calori_input.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding8/widgets/food_input.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding8/widgets/meal_selection.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding8/widgets/onboarding8_screen.widget.dart';
 
 class OnboardingScreen8 extends StatelessWidget {

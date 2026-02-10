@@ -47,7 +47,10 @@ class UpdatePasswordFormWidget extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             "* Password must be minimum 8 characters",
-            style: getTextStyle(fontSize: 12, color: Colors.white),
+            style: getTextStyle(
+              fontSize: 12,
+              color: Color.fromRGBO(220, 170, 100, 1),
+            ),
           ),
         ],
       ),

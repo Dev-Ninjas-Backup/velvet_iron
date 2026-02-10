@@ -50,7 +50,7 @@ class UpdatePasswordScreen extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                            const UpdatePasswordAppBar(),
+                            const UpdatePasswordWidgetHeaderWidget(),
                             const SizedBox(height: 20),
                             const UpdatePasswordFormWidget(),
                             const SizedBox(height: 40),
