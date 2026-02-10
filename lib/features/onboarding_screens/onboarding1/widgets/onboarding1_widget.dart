@@ -110,7 +110,7 @@ class TitleSection extends StatelessWidget {
             textAlign: TextAlign.center,
             style: getTextStyle(
               fontSize: 12,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w400,
               color: const Color.fromARGB(255, 255, 255, 255),
             ),
           ),
