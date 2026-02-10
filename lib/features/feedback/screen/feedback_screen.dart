@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/feedback/controller/feedback_controller.dart';
+import 'package:velvet_iron/features/feedback/widgets/feedback_star.dart';
 import 'package:velvet_iron/features/feedback/widgets/feedback_widgets.dart';
 
 class FeedbackScreen extends StatelessWidget {

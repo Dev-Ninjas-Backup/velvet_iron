@@ -4,6 +4,7 @@ import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/daily_macro_goal/controller/daily_goal_controller.dart';
 import 'package:velvet_iron/features/daily_macro_goal/widgets/daily_goal_widget.dart';
+import 'package:velvet_iron/features/daily_macro_goal/widgets/daily_marco_goal.dart';
 
 class DailyGoalScreen extends StatelessWidget {
   const DailyGoalScreen({super.key});

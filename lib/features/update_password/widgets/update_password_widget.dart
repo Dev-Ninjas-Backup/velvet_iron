@@ -70,7 +70,7 @@ class UpdatePasswordWidgetHeaderWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 14),
       child: Text(
         "Setup New Password",
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.start,
         style: getTextStyle(
           fontSize: 24,
           fontWeight: FontWeight.w700,
