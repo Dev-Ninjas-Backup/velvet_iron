@@ -95,7 +95,7 @@ class OnboardingHeaderWidget9 extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Text(
-        "Have you taken your medication today",
+        "Have you taken your medication today?",
         textAlign: TextAlign.center,
         style: getTextStyle(
           fontSize: 24,
@@ -106,5 +106,3 @@ class OnboardingHeaderWidget9 extends StatelessWidget {
     );
   }
 }
-
-

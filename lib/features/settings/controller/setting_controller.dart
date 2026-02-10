@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
@@ -127,9 +128,14 @@ class SettingsController extends GetxController {
                   const SizedBox(width: 12),
                   Expanded(
                     child: GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         Get.back();
-                        Get.toNamed(AppRoute.getLoginScreen());
+                        EasyLoading.show(status: 'Leaving the Codex...');
+                        await Future.delayed(
+                          const Duration(milliseconds: 1200),
+                        );
+                        EasyLoading.dismiss();
+                        Get.offAllNamed(AppRoute.getLoginScreen());
                       },
                       child: Container(
                         height: 48,
@@ -168,7 +174,11 @@ class SettingsController extends GetxController {
     );
   }
 
-  void skipUpcomingLog() {
-    Get.snackbar('Skipped', 'Log skipped successfully');
+  Future<void> skipUpcomingLog() async {
+    EasyLoading.show(status: 'Skipping log...');
+
+    await Future.delayed(const Duration(milliseconds: 800));
+
+    EasyLoading.showSuccess('Log skipped successfully');
   }
 }

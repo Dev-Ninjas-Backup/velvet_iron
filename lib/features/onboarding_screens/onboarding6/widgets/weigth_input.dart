@@ -50,11 +50,14 @@ class WeightSelectionWidget extends StatelessWidget {
                 fontSize: 12,
                 color: Colors.white,
               ).copyWith(letterSpacing: 1.5),
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.start,
               decoration: InputDecoration(
                 hintText: 'Enter current weight',
                 labelStyle: getTextStyle(fontSize: 12, color: Colors.white),
-                hintStyle: getTextStyle(fontSize: 12, color: Colors.white),
+                hintStyle: getTextStyle(
+                  fontSize: 12,
+                  color: Color.fromRGBO(145, 76, 76, 1),
+                ),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(vertical: 14),
               ),

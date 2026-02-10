@@ -13,7 +13,7 @@ class FitnessGoalsWidget extends StatelessWidget {
     final controller = Get.find<Onboarding3Controller>();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: List.generate(
           controller.goals.length,
@@ -21,12 +21,10 @@ class FitnessGoalsWidget extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 16),
             child: Obx(() {
               final isSelected = controller.selectedGoal.value == index;
-
               return GestureDetector(
                 onTap: () => controller.selectGoal(index),
                 child: Container(
-                  width: 343,
-                  height: 52,
+                  width: double.infinity,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
                     vertical: 16,

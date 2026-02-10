@@ -11,7 +11,7 @@ class UpdatePasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(UpdatePasswordController());
+    final controller = Get.put(UpdatePasswordController());
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -60,7 +60,7 @@ class UpdatePasswordScreen extends StatelessWidget {
                               ),
                               child: CustomButton(
                                 label: 'Update Password',
-                                onPressed: () => Get.back(),
+                                onPressed: controller.updatePassword,
                               ),
                             ),
                           ],
