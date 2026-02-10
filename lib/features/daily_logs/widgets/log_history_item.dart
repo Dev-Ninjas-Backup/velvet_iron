@@ -10,8 +10,8 @@ class LogHistoryItem extends StatelessWidget {
   final String iconPath;
   final String secondText;
   final String thirdText;
-
   final String dateTimeText;
+  final String? moodType; // 'tired', 'good', 'pissed', 'great', 'poor'
 
   const LogHistoryItem({
     super.key,
@@ -21,12 +21,21 @@ class LogHistoryItem extends StatelessWidget {
     required this.secondText,
     this.thirdText = '',
     this.dateTimeText = '',
+    this.moodType,
   });
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
+        // Get the emoji path based on theme if moodType is provided
+        final displayIconPath = moodType != null
+            ? _getEmojiForTheme(
+                themeController.currentTheme.value?.id ?? 'adventurer',
+                moodType!,
+              )
+            : iconPath;
+
         return Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -38,7 +47,7 @@ class LogHistoryItem extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Image.asset(iconPath, width: 25, height: 30),
+                  Image.asset(displayIconPath, width: 25, height: 30),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(title, style: getTextStyle(fontSize: 14)),
@@ -86,5 +95,86 @@ class LogHistoryItem extends StatelessWidget {
         );
       },
     );
+  }
+
+  String _getEmojiForTheme(String themeId, String moodType) {
+    switch (themeId) {
+      case 'mage':
+        return _getWhiteEmoji(moodType);
+      case 'reader':
+        return _getGreenEmoji(moodType);
+      case 'gamer':
+        return _getPurpleEmoji(moodType);
+      default:
+        return _getDefaultEmoji(moodType);
+    }
+  }
+
+  String _getDefaultEmoji(String moodType) {
+    switch (moodType) {
+      case 'tired':
+        return IconPath.tiredEmoji;
+      case 'good':
+        return IconPath.goodEmoji;
+      case 'pissed':
+        return IconPath.pissedEmoji;
+      case 'great':
+        return IconPath.greatEmoji;
+      case 'poor':
+        return IconPath.poorEmoji;
+      default:
+        return IconPath.tiredEmoji;
+    }
+  }
+
+  String _getWhiteEmoji(String moodType) {
+    switch (moodType) {
+      case 'tired':
+        return IconPath.tiredEmojiWhite;
+      case 'good':
+        return IconPath.goodEmojiWhite;
+      case 'pissed':
+        return IconPath.pissedEmojiWhite;
+      case 'great':
+        return IconPath.greatEmojiWhite;
+      case 'poor':
+        return IconPath.poorEmojiWhite;
+      default:
+        return IconPath.tiredEmojiWhite;
+    }
+  }
+
+  String _getGreenEmoji(String moodType) {
+    switch (moodType) {
+      case 'tired':
+        return IconPath.tiredEmojiGreen;
+      case 'good':
+        return IconPath.goodEmojiGreen;
+      case 'pissed':
+        return IconPath.pissedEmojiGreen;
+      case 'great':
+        return IconPath.greatEmojiGreen;
+      case 'poor':
+        return IconPath.poorEmojiGreen;
+      default:
+        return IconPath.tiredEmojiGreen;
+    }
+  }
+
+  String _getPurpleEmoji(String moodType) {
+    switch (moodType) {
+      case 'tired':
+        return IconPath.tiredEmojiPurple;
+      case 'good':
+        return IconPath.goodEmojiPurple;
+      case 'pissed':
+        return IconPath.pissedEmojiPurple;
+      case 'great':
+        return IconPath.greatEmojiPurple;
+      case 'poor':
+        return IconPath.poorEmojiPurple;
+      default:
+        return IconPath.tiredEmojiPurple;
+    }
   }
 }

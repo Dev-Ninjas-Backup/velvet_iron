@@ -5,13 +5,14 @@ import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/home/controller/home_controller.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/app_theme/model/app_theme_model.dart';
+import 'package:velvet_iron/features/home/models/home_screen_model.dart';
 
 class TodoSection extends StatelessWidget {
   const TodoSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final homeController = Get.put<HomeController>(HomeController());
+    final homeController = Get.find<HomeController>();
     final themeController = Get.find<AppThemeController>();
 
     return GetBuilder<AppThemeController>(
@@ -54,14 +55,16 @@ class TodoSection extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            ...homeController.todos.map(
-              (todo) => _TodoTile(
-                title: todo.title,
-                sub: todo.sub,
-                time: todo.time,
-                iconPath: todo.iconPath,
-                isChecked: todo.isChecked,
-                theme: activeTheme,
+            Obx(
+              () => Column(
+                children: homeController.todos
+                    .map(
+                      (todo) => _TodoTile(
+                        todo: todo,
+                        theme: activeTheme,
+                      ),
+                    )
+                    .toList(),
               ),
             ),
           ],
@@ -72,17 +75,11 @@ class TodoSection extends StatelessWidget {
 }
 
 class _TodoTile extends StatelessWidget {
-  final String title, sub, time;
-  final String iconPath;
-  final RxBool isChecked;
+  final HomeScreenModel todo;
   final dynamic theme;
 
   const _TodoTile({
-    required this.title,
-    required this.sub,
-    required this.time,
-    required this.iconPath,
-    required this.isChecked,
+    required this.todo,
     required this.theme,
   });
 
@@ -99,9 +96,9 @@ class _TodoTile extends StatelessWidget {
         child: Row(
           children: [
             Checkbox(
-              value: isChecked.value,
+              value: todo.isChecked.value,
               onChanged: (bool? value) {
-                isChecked.value = value ?? false;
+                todo.isChecked.value = value ?? false;
               },
               shape: const CircleBorder(),
               activeColor: theme.accentGoldColor,
@@ -110,7 +107,7 @@ class _TodoTile extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Image.asset(
-              iconPath,
+              todo.iconPath,
               width: 24,
               height: 24,
               color: Colors.white,
@@ -126,12 +123,12 @@ class _TodoTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    todo.title,
                     style: getTextStyle(color: Colors.white),
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    sub,
+                    todo.sub,
                     style: getTextStyle(
                       color: theme.id == 'mage'
                           ? const Color(0xFF4FA3D1)
@@ -152,7 +149,8 @@ class _TodoTile extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text("+10 XP", style: getTextStyle(color: Colors.white)),
+                    Text("+${todo.xp} XP",
+                        style: getTextStyle(color: Colors.white)),
                     const SizedBox(width: 4),
                     Image.asset(
                       IconPath.star,
@@ -163,7 +161,7 @@ class _TodoTile extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(time, style: getTextStyle(color: theme.todoTimeColor)),
+                Text(todo.time, style: getTextStyle(color: theme.todoTimeColor)),
               ],
             ),
           ],

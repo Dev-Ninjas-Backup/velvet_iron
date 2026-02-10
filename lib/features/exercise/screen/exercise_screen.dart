@@ -61,22 +61,25 @@ class ExerciseScreen extends StatelessWidget {
                         ),
                       ];
                     },
-                body: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Obx(
-                        () => Row(
+                body: Obx(() {
+                  if (controller.isLoading.value) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           children: [
                             Expanded(
                               child: CustomLogContainer(
                                 iconPath: IconPath.letter,
                                 title: "Logged Exercise",
                                 value: controller
-                                    .exerciseStats
-                                    .value
-                                    .loggedExercises
+                                    .exerciseStats.value.loggedExercises
                                     .toString(),
                                 rewardAmount: "150",
                               ),
@@ -93,42 +96,41 @@ class ExerciseScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        "Log a Exercise",
-                        style: getTextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: themeController.activeTheme.cardBackgroundColor
-                              .withValues(alpha: .8),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: ExcerciseSwitcher(
-                          controller: controller,
-                          completedContent: CompletedTabContent(
-                            controller: controller,
-                          ),
-                          scheduleContent: ScheduleTabContent(
-                            controller: controller,
+                        const SizedBox(height: 20),
+                        Text(
+                          "Log a Exercise",
+                          style: getTextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                      ),
-                      Text(
-                        "Exercise History",
-                        style: getTextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                        const SizedBox(height: 20),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: themeController
+                                .activeTheme.cardBackgroundColor
+                                .withValues(alpha: .8),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: ExcerciseSwitcher(
+                            controller: controller,
+                            completedContent: CompletedTabContent(
+                              controller: controller,
+                            ),
+                            scheduleContent: ScheduleTabContent(
+                              controller: controller,
+                            ),
+                          ),
                         ),
-                      ),
-                      Obx(
-                        () => ListView.builder(
+                        Text(
+                          "Exercise History",
+                          style: getTextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        ListView.builder(
                           padding: EdgeInsets.zero,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -149,10 +151,10 @@ class ExerciseScreen extends StatelessWidget {
                             );
                           },
                         ),
-                      ),
-                    ],
-                  ),
-                ),
+                      ],
+                    ),
+                  );
+                }),
               ),
             ],
           );

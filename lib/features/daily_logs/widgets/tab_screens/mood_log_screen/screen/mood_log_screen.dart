@@ -246,6 +246,7 @@ class MoodLog extends StatelessWidget {
                             secondText: "0.5 lbs increased",
                             thirdText: "",
                             dateTimeText: "15 Dec, Wed - 09:30 AM",
+                            moodType: 'good',
                           ),
                           const SizedBox(height: 6),
                           LogHistoryItem(
@@ -255,6 +256,7 @@ class MoodLog extends StatelessWidget {
                             secondText: "0.5 lbs increased",
                             thirdText: "",
                             dateTimeText: "15 Dec, Wed - 09:30 AM",
+                            moodType: 'pissed',
                           ),
                         ],
                       ),

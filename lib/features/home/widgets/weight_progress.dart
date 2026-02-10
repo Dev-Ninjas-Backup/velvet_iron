@@ -1,10 +1,10 @@
-import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/app_theme/model/app_theme_model.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
 
 class WeightProgress extends StatefulWidget {
   final String title;
@@ -30,12 +30,7 @@ class _WeightProgressState extends State<WeightProgress> {
     final themeController = Get.find<AppThemeController>();
     final activeTheme =
         themeController.currentTheme.value ?? AppThemeModel.adventurerTheme;
-
-    final Random random = Random();
-    final List<double> weeklyData = List.generate(
-      7,
-      (index) => 20 + random.nextDouble() * 80,
-    );
+    final controller = Get.find<HomeController>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,106 +75,118 @@ class _WeightProgressState extends State<WeightProgress> {
         const SizedBox(height: 12),
         SizedBox(
           height: 150,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: BarChart(
-                  BarChartData(
-                    minY: 0,
-                    maxY: 100,
-                    alignment: BarChartAlignment.spaceBetween,
-                    barTouchData: BarTouchData(enabled: false),
-                    titlesData: FlTitlesData(
-                      leftTitles: AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      rightTitles: AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      topTitles: AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 28,
-                          getTitlesWidget: (value, meta) {
-                            const days = [
-                              'Sun',
-                              'Mon',
-                              'Tue',
-                              'Wed',
-                              'Thu',
-                              'Fri',
-                              'Sat',
-                            ];
+          child: Obx(() {
+            if (controller.isLoading.value) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-                            if (value.toInt() > 6) {
-                              return const SizedBox.shrink();
-                            }
+            if (controller.activity.value == null) {
+              return const Center(child: Text("No data"));
+            }
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: BarChart(
+                    BarChartData(
+                      minY: 0,
+                      maxY: 100,
+                      alignment: BarChartAlignment.spaceBetween,
+                      barTouchData: BarTouchData(enabled: false),
+                      titlesData: FlTitlesData(
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        rightTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        topTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 28,
+                            getTitlesWidget: (value, meta) {
+                              const days = [
+                                'Sun',
+                                'Mon',
+                                'Tue',
+                                'Wed',
+                                'Thu',
+                                'Fri',
+                                'Sat',
+                              ];
 
-                            return FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                days[value.toInt()],
-                                style: getTextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
+                              if (value.toInt() > 6) {
+                                return const SizedBox.shrink();
+                              }
+
+                              return FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  days[value.toInt()],
+                                  style: getTextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
                       ),
+                      gridData: const FlGridData(show: false),
+                      borderData: FlBorderData(show: false),
+                      barGroups: controller.activity.value!.weeklyData
+                          .asMap()
+                          .entries
+                          .map((e) {
+                        return BarChartGroupData(
+                          x: e.key,
+                          barRods: [
+                            BarChartRodData(
+                              toY: e.value,
+                              width: 29,
+                              borderRadius: BorderRadius.circular(6),
+                              gradient: activeTheme.progressBarGradient,
+                            ),
+                          ],
+                        );
+                      }).toList(),
                     ),
-                    gridData: const FlGridData(show: false),
-                    borderData: FlBorderData(show: false),
-                    barGroups: weeklyData.asMap().entries.map((e) {
-                      return BarChartGroupData(
-                        x: e.key,
-                        barRods: [
-                          BarChartRodData(
-                            toY: e.value,
-                            width: 29,
-                            borderRadius: BorderRadius.circular(6),
-                            gradient: activeTheme.progressBarGradient,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 30,
+                  height: 114,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: xpLabels.map((xp) {
+                      return Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: activeTheme.borderColor),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            xp,
+                            style: getTextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                            ),
                           ),
-                        ],
+                        ),
                       );
                     }).toList(),
                   ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              SizedBox(
-                width: 30,
-                height: 114,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: xpLabels.map((xp) {
-                    return Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: activeTheme.borderColor),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          xp,
-                          style: getTextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ],
-          ),
+              ],
+            );
+          }),
         ),
       ],
     );
