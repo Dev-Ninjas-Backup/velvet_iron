@@ -158,6 +158,7 @@ class ScheduleContent extends StatelessWidget {
               secondText: "Moderate & Hungry",
               thirdText: "",
               dateTimeText: "15 Dec, Wed - 09:30 AM",
+              moodType: 'good',
             ),
             const SizedBox(height: 6),
             LogHistoryItem(
@@ -167,6 +168,7 @@ class ScheduleContent extends StatelessWidget {
               secondText: "Low & Hungry",
               thirdText: "",
               dateTimeText: "15 Dec, Wed - 09:30 AM",
+              moodType: 'pissed',
             ),
           ],
         );
