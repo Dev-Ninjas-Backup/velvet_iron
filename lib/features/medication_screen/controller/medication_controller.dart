@@ -3,44 +3,72 @@ import 'package:velvet_iron/features/medication_screen/model/medication_model.da
 
 class MedicationController extends GetxController {
   var selectedMealTab = 0.obs;
-
-  void setMealTab(int index) {
-    selectedMealTab.value = index;
-  }
-  // Observables for UI updates
   var medicationHistory = <Medication>[].obs;
   var isLoading = false.obs;
+  var errorMessage = ''.obs;
 
   // Form fields
   final Rx<String> selectedMedication = ''.obs;
   final Rx<double> selectedDose = 0.0.obs;
   final Rx<DateTime> selectedDate = DateTime.now().obs;
 
+  // For dropdowns or selection
+  var availableMedications = <String>[].obs;
+  var availableDoses = <double>[].obs;
+
   @override
   void onInit() {
     super.onInit();
+    fetchAvailableMedications();
     fetchMedicationHistory();
   }
 
-  // Fetch medication history from an API
+  void setMealTab(int index) {
+    selectedMealTab.value = index;
+  }
+
   Future<void> fetchMedicationHistory() async {
     try {
       isLoading(true);
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 1));
-      
-      // Dummy data - replace with actual API response
-      medicationHistory.assignAll([
-        Medication(name: 'GLP-1', dose: 0.25, timestamp: DateTime.now().subtract(const Duration(days: 7))),
-        Medication(name: 'GLP-1', dose: 0.25, timestamp: DateTime.now().subtract(const Duration(days: 14))),
-        Medication(name: 'GLP-1', dose: 0.5, timestamp: DateTime.now().subtract(const Duration(days: 21))),
-      ]);
+      errorMessage('');
 
+      // Simulated API response
+      await Future.delayed(const Duration(seconds: 1));
+      medicationHistory.assignAll([
+        Medication(
+          id: '1',
+          name: 'GLP-1',
+          dose: 0.25,
+          timestamp: DateTime.now().subtract(const Duration(days: 7)),
+        ),
+        Medication(
+          id: '2',
+          name: 'GLP-1',
+          dose: 0.25,
+          timestamp: DateTime.now().subtract(const Duration(days: 14)),
+        ),
+        Medication(
+          id: '3',
+          name: 'GLP-1',
+          dose: 0.5,
+          timestamp: DateTime.now().subtract(const Duration(days: 21)),
+        ),
+      ]);
     } catch (e) {
-      // Handle errors, e.g., show a snackbar
-      Get.snackbar('Error', 'Failed to fetch medication history');
+      errorMessage('Failed to fetch medication history');
+      Get.snackbar('Error', errorMessage.value);
     } finally {
       isLoading(false);
+    }
+  }
+
+  Future<void> fetchAvailableMedications() async {
+    try {
+      await Future.delayed(const Duration(milliseconds: 500));
+      availableMedications.assignAll(['GLP-1', 'Metformin']);
+      availableDoses.assignAll([0.25, 0.5, 1.0]);
+    } catch (e) {
+      errorMessage('Failed to fetch available medications');
     }
   }
 
@@ -50,29 +78,30 @@ class MedicationController extends GetxController {
       Get.snackbar('Error', 'Please select a medication and dose');
       return;
     }
-
     try {
       isLoading(true);
-      // Simulate API call
+      errorMessage('');
+
       await Future.delayed(const Duration(seconds: 1));
-
-      // Add to local list (or refetch from API)
-      medicationHistory.insert(0, Medication(
-        name: selectedMedication.value,
-        dose: selectedDose.value,
-        timestamp: selectedDate.value,
-      ));
-
+      medicationHistory.insert(
+        0,
+        Medication(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          name: selectedMedication.value,
+          dose: selectedDose.value,
+          timestamp: selectedDate.value,
+        ),
+      );
       Get.snackbar('Success', 'Medication logged successfully');
-
     } catch (e) {
-      Get.snackbar('Error', 'Failed to log medication');
+      errorMessage('Failed to log medication');
+      Get.snackbar('Error', errorMessage.value);
     } finally {
       isLoading(false);
     }
   }
 
-    // Example method to update dose
+  // Example method to update dose
   void updateDose(double newDose) {
     selectedDose.value = newDose;
   }
@@ -86,7 +115,4 @@ class MedicationController extends GetxController {
   void updateDate(DateTime newDate) {
     selectedDate.value = newDate;
   }
-
-  // You can add more methods here for other functionalities like
-  // deleting a log, editing a log, etc.
 }

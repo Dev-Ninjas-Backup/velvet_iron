@@ -1,40 +1,49 @@
 import 'package:flutter/material.dart';
 
 class Quest {
+  final String id;
   final String header;
   final String title;
   final String tagText;
   final List<Color> tagGradient;
   final int xp;
+  final bool completed;
 
   Quest({
+    required this.id,
     required this.header,
     required this.title,
     required this.tagText,
     required this.tagGradient,
     required this.xp,
+    this.completed = false,
   });
 
   factory Quest.fromJson(Map<String, dynamic> json) {
     return Quest(
+      id: json['id'] ?? '',
       header: json['header'] as String,
       title: json['title'] as String,
       tagText: json['tagText'] as String,
-      tagGradient: (json['tagGradient'] as List<dynamic>)
-          .map((e) => Color(e as int))
-          .toList(),
+      tagGradient:
+          (json['tagGradient'] as List<dynamic>?)
+              ?.map((e) => Color(e as int))
+              .toList() ??
+          [],
       xp: json['xp'] as int,
+      completed: json['completed'] ?? false,
     );
   }
 
-  // Method for converting a Quest instance to a JSON map
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'header': header,
       'title': title,
       'tagText': tagText,
-      'tagGradient': tagGradient.map((e) => e).toList(),
+      'tagGradient': tagGradient.map((e) => e.value).toList(),
       'xp': xp,
+      'completed': completed,
     };
   }
 }
@@ -50,22 +59,16 @@ class QuestProgress {
     required this.iconPath,
   });
 
-  // Factory constructor for creating a new QuestProgress instance from a JSON map
   factory QuestProgress.fromJson(Map<String, dynamic> json) {
     return QuestProgress(
-      header: json['header'] as String,
-      points: json['points'] as String,
-      iconPath: json['iconPath'] as String,
+      header: json['header'] ?? '',
+      points: json['points'] ?? '',
+      iconPath: json['iconPath'] ?? '',
     );
   }
 
-  // Method for converting a QuestProgress instance to a JSON map
   Map<String, dynamic> toJson() {
-    return {
-      'header': header,
-      'points': points,
-      'iconPath': iconPath,
-    };
+    return {'header': header, 'points': points, 'iconPath': iconPath};
   }
 }
 
@@ -82,11 +85,15 @@ class QuestsData {
 
   factory QuestsData.fromJson(Map<String, dynamic> json) {
     return QuestsData(
-      progressPoints: QuestProgress.fromJson(json['progressPoints'] as Map<String, dynamic>),
+      progressPoints: QuestProgress.fromJson(
+        json['progressPoints'] as Map<String, dynamic>,
+      ),
       totalXp: QuestProgress.fromJson(json['totalXp'] as Map<String, dynamic>),
-      todaysQuests: (json['todaysQuests'] as List<dynamic>)
-          .map((e) => Quest.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      todaysQuests:
+          (json['todaysQuests'] as List<dynamic>?)
+              ?.map((e) => Quest.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 
