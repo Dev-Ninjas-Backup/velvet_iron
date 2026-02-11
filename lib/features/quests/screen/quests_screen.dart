@@ -59,9 +59,20 @@ class QuestsScreen extends StatelessWidget {
                       ];
                     },
                 body: GetX<QuestController>(
-                  init: QuestController(), // Initialize the controller here
+                  init: QuestController(),
                   builder: (controller) {
-                    final questsData = controller.questsData.value!;
+                    if (controller.isLoading.value) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (controller.errorMessage.value.isNotEmpty) {
+                      return Center(child: Text(controller.errorMessage.value));
+                    }
+                    final questsData = controller.questsData.value;
+                    if (questsData == null) {
+                      return const Center(
+                        child: Text('No quest data available.'),
+                      );
+                    }
                     return SingleChildScrollView(
                       padding: const EdgeInsets.all(16),
                       child: Column(
