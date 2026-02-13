@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding1/controller/onboarding1_controller.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding1/model/companion_model.dart';
 
 class StepsTextWidget extends StatelessWidget {
   const StepsTextWidget({super.key});
@@ -124,16 +125,12 @@ class CompanionCard extends StatelessWidget {
   final CompanionModel companion;
   final bool isSelected;
   final VoidCallback onTap;
-  final VoidCallback onUnlock;
-  final bool isUnlocked;
 
   const CompanionCard({
     super.key,
     required this.companion,
     required this.isSelected,
     required this.onTap,
-    required this.onUnlock,
-    required this.isUnlocked,
   });
 
   @override
@@ -207,10 +204,7 @@ class CompanionCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  if (companion.isActive && companion.theme.isNotEmpty)
-                    _buildActiveBadge()
-                  else if (!isUnlocked && companion.unlockXp != null)
-                    _buildUnlockButton(),
+                  if (companion.theme.isNotEmpty) _buildActiveBadge(),
                 ],
               ),
             ),
@@ -266,34 +260,6 @@ class CompanionCard extends StatelessWidget {
           fontSize: 10,
           fontWeight: FontWeight.w400,
           color: const Color(0xFFFFFFFF),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildUnlockButton() {
-    return GestureDetector(
-      onTap: onUnlock,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(
-          gradient: companion.bgGradient,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Unlock ${companion.unlockXp} xp',
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(width: 6),
-            const Icon(Icons.lock_outline, size: 14, color: Colors.white),
-          ],
         ),
       ),
     );

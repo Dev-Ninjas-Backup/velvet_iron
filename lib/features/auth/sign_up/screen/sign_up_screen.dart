@@ -72,6 +72,21 @@ class SignUpScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
+
+                    Text(
+                      'Name:',
+                      style: getTextStyle(
+                        fontSize: 14,
+                        color: AppColors.textColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+                    CustomTextField(
+                      hintText: 'Enter your name',
+                      controller: controller.nameController,
+                    ),
                     Text(
                       'Email:',
                       style: getTextStyle(
@@ -87,20 +102,7 @@ class SignUpScreen extends StatelessWidget {
                       validator: controller.emailValidator,
                     ),
                     const SizedBox(height: 12),
-                    Text(
-                      'Username:',
-                      style: getTextStyle(
-                        fontSize: 14,
-                        color: AppColors.textColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
 
-                    const SizedBox(height: 12),
-                    CustomTextField(
-                      hintText: 'Enter your username',
-                      controller: controller.nameController,
-                    ),
                     const SizedBox(height: 12),
                     Text(
                       'Password:',
