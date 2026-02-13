@@ -30,31 +30,34 @@ class OnboadingScreen1 extends StatelessWidget {
                     const SizedBox(height: 20),
                     const TitleSection(),
                     const SizedBox(height: 24),
-                    Obx(
-                      () => ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: controller.companions.length,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return CompanionCard(
-                            companion: controller.companions[index],
-                            isSelected: controller.selectedIndex.value == index,
-                            onTap: () => controller.selectCompanion(index),
-                            onUnlock: () => controller.unlockCompanion(index),
-                            isUnlocked: controller.isCompanionUnlocked(index),
-                          );
-                        },
-                      ),
-                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Obx(() {
+                        final currentSelected = controller
+                            .selectedIndex
+                            .value; // Force Obx to track this
 
+                        return ListView.builder(
+                          itemCount: controller.companions.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return CompanionCard(
+                              companion: controller.companions[index],
+                              isSelected: currentSelected == index,
+                              onTap: () {
+                                controller.selectCompanion(index);
+                              },
+                            );
+                          },
+                        );
+                      }),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(16),
-                      child: Obx(
-                        () => CustomButtonTwo(
-                          label: 'Continue (+${controller.xpPoints.value} XP)',
-                          onPressed: controller.onContinue,
-                        ),
+                      child: CustomButtonTwo(
+                        label: 'Continue(+10 xp)',
+                        onPressed: controller.onContinue,
                       ),
                     ),
                   ],
