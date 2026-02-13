@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/common/widgets/custom_small_button.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 
@@ -27,7 +28,9 @@ class QuestTips extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: themeController.activeTheme.cardBackgroundColor,
+            color: themeController.activeTheme.cardBackgroundColor.withValues(
+              alpha: 4,
+            ),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
@@ -43,8 +46,6 @@ class QuestTips extends StatelessWidget {
               ),
               const SizedBox(height: 18),
               SizedBox(
-                width: 311,
-                height: 16,
                 child: Text(
                   "Quest Tips",
                   style: getTextStyle(size: 16, weight: FontWeight.bold),
@@ -67,6 +68,33 @@ class QuestTips extends StatelessWidget {
               // _buildTipRow(
               //   "Use the tracking features in other tabs to complete your quests",
               // ),
+              const SizedBox(height: 18),
+              Row(
+                children: [
+                  CustomSmallButton(
+                    width: 108,
+                    text: "Read Article",
+                    onPressed: () {},
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xFFFDE7BB),
+                        Color(0xFF9D6933),
+                        Color(0xFFFEE9BF),
+                      ],
+                    ),
+                    fontColor: Colors.white,
+                  ),
+                  const Spacer(),
+                  Text(
+                    "Earn: +30 XP",
+                    style: getTextStyle(size: 10, weight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 5),
+                  Image.asset(IconPath.star, width: 14, height: 14),
+                ],
+              ),
             ],
           ),
         );

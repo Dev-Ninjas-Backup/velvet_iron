@@ -22,11 +22,12 @@ class CustomGradientOptionButton extends StatelessWidget {
         return GestureDetector(
           onTap: onPressed,
           child: AnimatedContainer(
+            padding: const EdgeInsets.all(6),
             key: ValueKey(text),
             duration: const Duration(milliseconds: 150),
             curve: Curves.easeInOut,
-            width: 85,
-            height: 32,
+            // width: 85,
+            // height: 32,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(21),
               border: Border.all(

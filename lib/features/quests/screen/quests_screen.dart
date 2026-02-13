@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_back_button.dart';
-import 'package:velvet_iron/core/common/widgets/custom_small_button.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
 import 'package:velvet_iron/features/quests/controller/quest_controller.dart';
@@ -98,6 +98,15 @@ class QuestsScreen extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 20),
+                          Text(
+                            "Today's Quests",
+                            style: getTextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 20),
                           ...questsData.todaysQuests.map(
                             (quest) => Padding(
                               padding: const EdgeInsets.only(bottom: 7),
@@ -112,21 +121,21 @@ class QuestsScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 20),
                           QuestTips(),
-                          CustomSmallButton(
-                            width: 108,
-                            text: "Read Article",
-                            onPressed: () {},
-                            gradient: const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Color(0xFFFDE7BB),
-                                Color(0xFF9D6933),
-                                Color(0xFFFEE9BF),
-                              ],
-                            ),
-                            fontColor: Colors.white,
-                          ),
+                          // CustomSmallButton(
+                          //   width: 108,
+                          //   text: "Read Article",
+                          //   onPressed: () {},
+                          //   gradient: const LinearGradient(
+                          //     begin: Alignment.topLeft,
+                          //     end: Alignment.bottomRight,
+                          //     colors: [
+                          //       Color(0xFFFDE7BB),
+                          //       Color(0xFF9D6933),
+                          //       Color(0xFFFEE9BF),
+                          //     ],
+                          //   ),
+                          //   fontColor: Colors.white,
+                          // ),
                         ],
                       ),
                     );

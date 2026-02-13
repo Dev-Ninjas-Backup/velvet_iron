@@ -122,7 +122,7 @@ class MedicationScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 20),
                     Text(
-                      "Log GLP-1 Dose",
+                      "Add Dose (+10 XP)",
                       style: getTextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,

@@ -29,7 +29,9 @@ class ProgressCard extends StatelessWidget {
           constraints: const BoxConstraints(minHeight: 58),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: themeController.activeTheme.cardBackgroundColor,
+            color: themeController.activeTheme.cardBackgroundColor.withValues(
+              alpha: 2,
+            ),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(

@@ -35,7 +35,9 @@ class _TodaysQuestItemState extends State<TodaysQuestItem> {
           width: double.infinity,
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
           decoration: BoxDecoration(
-            color: themeController.activeTheme.cardBackgroundColor,
+            color: themeController.activeTheme.cardBackgroundColor.withValues(
+              alpha: .4,
+            ),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: Colors.white.withValues(alpha: .2)),
           ),
@@ -63,10 +65,7 @@ class _TodaysQuestItemState extends State<TodaysQuestItem> {
                   const SizedBox(height: 4),
                   Text(
                     widget.title,
-                    style: getTextStyle(
-                      color: themeController.activeTheme.todoSubtitleColor,
-                      fontSize: 12,
-                    ),
+                    style: getTextStyle(color: Colors.white, fontSize: 12),
                   ),
                 ],
               ),

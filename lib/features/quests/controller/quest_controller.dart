@@ -8,7 +8,6 @@ class QuestController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
 
-  // TODO: Inject your repository/service here
   // final QuestService _service = QuestService();
 
   @override
@@ -21,7 +20,6 @@ class QuestController extends GetxController {
     try {
       isLoading(true);
       errorMessage('');
-      // TODO: Replace with actual API call
       // final data = await _service.getQuests();
       // questsData(data);
 
@@ -99,7 +97,6 @@ class QuestController extends GetxController {
     try {
       isLoading(true);
       errorMessage('');
-      // TODO: Replace with actual API call
       // await _service.completeQuest(questId);
 
       // Simulate local update

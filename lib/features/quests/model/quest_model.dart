@@ -41,6 +41,7 @@ class Quest {
       'header': header,
       'title': title,
       'tagText': tagText,
+      // ignore: deprecated_member_use
       'tagGradient': tagGradient.map((e) => e.value).toList(),
       'xp': xp,
       'completed': completed,
