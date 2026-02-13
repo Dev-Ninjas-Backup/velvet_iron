@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,7 +16,8 @@ class WeightProgress extends StatefulWidget {
 }
 
 class _WeightProgressState extends State<WeightProgress> {
-  String _selectedValue = "this week";
+  String _selectedValue = "All Activity";
+  List<double>? _randomData;
 
   static const List<String> xpLabels = [
     '100xp',
@@ -59,12 +61,19 @@ class _WeightProgressState extends State<WeightProgress> {
                   ),
                   style: getTextStyle(fontSize: 10, color: Colors.white),
                   dropdownColor: activeTheme.dropdownBackgroundColor,
-                  items: ['this week', 'last week', 'this month']
-                      .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                      .toList(),
+                  items:
+                      ['this week', 'last week', 'this month', 'All Activity']
+                          .map(
+                            (e) => DropdownMenuItem(value: e, child: Text(e)),
+                          )
+                          .toList(),
                   onChanged: (val) {
                     setState(() {
                       _selectedValue = val!;
+                      _randomData = List.generate(
+                        7,
+                        (index) => Random().nextDouble() * 100,
+                      );
                     });
                   },
                 ),
@@ -80,7 +89,8 @@ class _WeightProgressState extends State<WeightProgress> {
               return const Center(child: CircularProgressIndicator());
             }
 
-            if (controller.activity.value == null) {
+            final data = _randomData ?? controller.activity.value?.weeklyData;
+            if (data == null) {
               return const Center(child: Text("No data"));
             }
             return Row(
@@ -138,10 +148,7 @@ class _WeightProgressState extends State<WeightProgress> {
                       ),
                       gridData: const FlGridData(show: false),
                       borderData: FlBorderData(show: false),
-                      barGroups: controller.activity.value!.weeklyData
-                          .asMap()
-                          .entries
-                          .map((e) {
+                      barGroups: data.asMap().entries.map((e) {
                         return BarChartGroupData(
                           x: e.key,
                           barRods: [

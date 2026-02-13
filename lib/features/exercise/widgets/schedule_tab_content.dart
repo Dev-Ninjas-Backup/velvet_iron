@@ -87,7 +87,7 @@ class ScheduleTabContent extends StatelessWidget {
             ),
           ),
           SizedBox(height: 18),
-          CustomButton(label: "Log Exercise (+10 XP)", onPressed: () {}),
+          CustomButton(label: "Add Exercise (+10 XP)", onPressed: () {}),
         ],
       ),
     );

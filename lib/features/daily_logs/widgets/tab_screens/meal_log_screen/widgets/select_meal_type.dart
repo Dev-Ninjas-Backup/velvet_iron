@@ -75,7 +75,7 @@ class SelectMealType extends StatelessWidget {
                       Text(
                         sub,
                         style: getTextStyle(
-                          color: themeController.activeTheme.todoSubtitleColor,
+                          color: themeController.activeTheme.todoTimeColor,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),

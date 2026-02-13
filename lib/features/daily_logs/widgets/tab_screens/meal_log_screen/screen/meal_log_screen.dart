@@ -124,17 +124,17 @@ class MealLog extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: const [
                               NutritionLoadingCard(
-                                amount: "396 g",
+                                amount: "80/120 g",
                                 label: "Carbs",
                                 progress: 0.7,
                               ),
                               NutritionLoadingCard(
-                                amount: "211 g",
+                                amount: "180/210 g",
                                 label: "Protein",
                                 progress: 0.5,
                               ),
                               NutritionLoadingCard(
-                                amount: "141 g",
+                                amount: "110/140 g",
                                 label: "Fats",
                                 progress: 0.4,
                               ),

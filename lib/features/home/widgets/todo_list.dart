@@ -7,8 +7,15 @@ import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller
 import 'package:velvet_iron/core/utils/app_theme/model/app_theme_model.dart';
 import 'package:velvet_iron/features/home/models/home_screen_model.dart';
 
-class TodoSection extends StatelessWidget {
+class TodoSection extends StatefulWidget {
   const TodoSection({super.key});
+
+  @override
+  State<TodoSection> createState() => _TodoSectionState();
+}
+
+class _TodoSectionState extends State<TodoSection> {
+  String _selectedFilter = 'Today';
 
   @override
   Widget build(BuildContext context) {
@@ -31,25 +38,39 @@ class TodoSection extends StatelessWidget {
                   style: getTextStyle(color: Colors.white, fontSize: 18),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
                     border: Border.all(color: activeTheme.borderColor),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Row(
-                    children: [
-                      Text("Today", style: getTextStyle(color: Colors.white)),
-                      const SizedBox(width: 8),
-                      Image.asset(
-                        "assets/icons/dropdown.png",
-                        width: 22,
-                        height: 22,
-                        color: Colors.white,
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: _selectedFilter,
+                      dropdownColor: activeTheme.cardBackgroundColor,
+                      icon: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Image.asset(
+                          "assets/icons/dropdown.png",
+                          width: 22,
+                          height: 22,
+                          color: Colors.white,
+                        ),
                       ),
-                    ],
+                      style: getTextStyle(color: Colors.white),
+                      items: ['Today', 'Weekly', 'Monthly'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        if (newValue != null) {
+                          setState(() {
+                            _selectedFilter = newValue;
+                          });
+                        }
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -58,12 +79,7 @@ class TodoSection extends StatelessWidget {
             Obx(
               () => Column(
                 children: homeController.todos
-                    .map(
-                      (todo) => _TodoTile(
-                        todo: todo,
-                        theme: activeTheme,
-                      ),
-                    )
+                    .map((todo) => _TodoTile(todo: todo, theme: activeTheme))
                     .toList(),
               ),
             ),
@@ -78,10 +94,7 @@ class _TodoTile extends StatelessWidget {
   final HomeScreenModel todo;
   final dynamic theme;
 
-  const _TodoTile({
-    required this.todo,
-    required this.theme,
-  });
+  const _TodoTile({required this.todo, required this.theme});
 
   @override
   Widget build(BuildContext context) {
@@ -149,8 +162,10 @@ class _TodoTile extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text("+${todo.xp} XP",
-                        style: getTextStyle(color: Colors.white)),
+                    Text(
+                      "+${todo.xp} XP",
+                      style: getTextStyle(color: Colors.white),
+                    ),
                     const SizedBox(width: 4),
                     Image.asset(
                       IconPath.star,
@@ -161,7 +176,10 @@ class _TodoTile extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(todo.time, style: getTextStyle(color: theme.todoTimeColor)),
+                Text(
+                  todo.time,
+                  style: getTextStyle(color: theme.todoTimeColor),
+                ),
               ],
             ),
           ],

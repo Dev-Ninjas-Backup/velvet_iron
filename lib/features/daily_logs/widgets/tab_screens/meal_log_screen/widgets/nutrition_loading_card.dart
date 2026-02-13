@@ -24,7 +24,7 @@ class NutritionLoadingCard extends StatelessWidget {
           constraints: const BoxConstraints(minHeight: 68),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: themeController.activeTheme.todoSubtitleColor.withValues(
+            color: themeController.activeTheme.cardBackgroundColor.withValues(
               alpha: .4,
             ),
             borderRadius: BorderRadius.circular(12),
