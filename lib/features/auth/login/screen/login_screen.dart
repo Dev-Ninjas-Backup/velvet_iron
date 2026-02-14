@@ -31,150 +31,162 @@ class LoginScreen extends StatelessWidget {
               minHeight: MediaQuery.of(context).size.height,
             ),
             child: Container(
-              padding: EdgeInsets.only(top: 162, left: 16, right: 16, bottom: 30),
+              padding: EdgeInsets.only(
+                top: 162,
+                left: 16,
+                right: 16,
+                bottom: 30,
+              ),
               child: Form(
-            key: controller.formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Text(
-                    'Login to Velvet & Iron Training Codex',
-                    style: getTextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w700,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                SizedBox(height: 62),
-                Text(
-                  'Username/Email *',
-                  style: getTextStyle(
-                    fontSize: 14,
-                    color: AppColors.textColor,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(height: 8),
-                CustomTextField(
-                  hintText: 'Enter your username or email',
-                  controller: controller.userIdentifierController,
-                  validator: controller.userIdentifierValidator,
-                ),
-                SizedBox(height: 12),
-                Text(
-                  'Password *',
-                  style: getTextStyle(
-                    fontSize: 14,
-                    color: AppColors.textColor,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Obx(
-                  () => CustomTextField(
-                    hintText: '********',
-                    obscureText: controller.passwordObscured.value,
-                    controller: controller.passwordController,
-                    validator: controller.passwordValidator,
-                    suffixIcon: GestureDetector(
-                      onTap: controller.togglePasswordVisibility,
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Image.asset(
-                          IconPath.eye,
-                          height: 20,
-                          width: 20,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 12),
-                RememberWidget(),
-                SizedBox(height: 30),
-                CustomButtonTwo(
-                  label: 'Login',
-                  onPressed: () {
-                    controller.login();
-                  },
-                ),
-                SizedBox(height: 30),
-                Row(
+                key: controller.formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Divider(
-                        color: const Color(0xFFE9B86E),
-                        thickness: 1,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                    Center(
                       child: Text(
-                        'or continue with',
+                        'Login to Velvet & Iron Training Codex',
                         style: getTextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: AppColors.textColor,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w700,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                    Expanded(
-                      child: Divider(
-                        color: const Color(0xFFE9B86E),
-                        thickness: 1,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(IconPath.googleIcon, height: 46, width: 46),
-                    SizedBox(width: 26),
-                    Image.asset(IconPath.facebookIcon, height: 46, width: 46),
-                    SizedBox(width: 26),
-                    Image.asset(IconPath.discordIcon, height: 46, width: 46),
-                  ],
-                ),
-                SizedBox(height: 57),
-                Center(
-                  child: RichText(
-                    text: TextSpan(
+                    SizedBox(height: 62),
+                    Text(
+                      'Username/Email *',
                       style: getTextStyle(
                         fontSize: 14,
                         color: AppColors.textColor,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w500,
                       ),
-                      children: [
-                        TextSpan(text: 'New adventurer? '),
-                        TextSpan(
-                          text: 'Sign Up!',
-                          style: getTextStyle(
-                            fontSize: 14,
-                            color: AppColors.textColor,
-                            fontWeight: FontWeight.w600,
+                    ),
+                    SizedBox(height: 8),
+                    CustomTextField(
+                      hintText: 'Enter your username or email',
+                      controller: controller.userIdentifierController,
+                      validator: controller.userIdentifierValidator,
+                    ),
+                    SizedBox(height: 12),
+                    Text(
+                      'Password *',
+                      style: getTextStyle(
+                        fontSize: 14,
+                        color: AppColors.textColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Obx(
+                      () => CustomTextField(
+                        hintText: '********',
+                        obscureText: controller.passwordObscured.value,
+                        controller: controller.passwordController,
+                        validator: controller.passwordValidator,
+                        suffixIcon: GestureDetector(
+                          onTap: controller.togglePasswordVisibility,
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Image.asset(
+                              IconPath.eye,
+                              height: 20,
+                              width: 20,
+                              fit: BoxFit.contain,
+                            ),
                           ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Get.toNamed('/signUpScreen');
-                            },
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                    RememberWidget(),
+                    SizedBox(height: 30),
+                    CustomButtonTwo(
+                      label: 'Login',
+                      onPressed: () {
+                        controller.login();
+                      },
+                    ),
+                    SizedBox(height: 30),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Divider(
+                            color: const Color(0xFFE9B86E),
+                            thickness: 1,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            'or continue with',
+                            style: getTextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              color: AppColors.textColor,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            color: const Color(0xFFE9B86E),
+                            thickness: 1,
+                          ),
                         ),
                       ],
                     ),
-                  ),
+                    SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(IconPath.googleIcon, height: 46, width: 46),
+                        SizedBox(width: 26),
+                        Image.asset(
+                          IconPath.facebookIcon,
+                          height: 46,
+                          width: 46,
+                        ),
+                        SizedBox(width: 26),
+                        Image.asset(
+                          IconPath.discordIcon,
+                          height: 46,
+                          width: 46,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 57),
+                    Center(
+                      child: RichText(
+                        text: TextSpan(
+                          style: getTextStyle(
+                            fontSize: 14,
+                            color: AppColors.textColor,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          children: [
+                            TextSpan(text: 'New adventurer? '),
+                            TextSpan(
+                              text: 'Sign Up!',
+                              style: getTextStyle(
+                                fontSize: 14,
+                                color: AppColors.textColor,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Get.toNamed('/signUpScreen');
+                                },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
         ),
       ),
     );
   }
 }
- 

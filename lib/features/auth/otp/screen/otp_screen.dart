@@ -14,6 +14,7 @@ class OtpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final OtpController controller = Get.put(OtpController());
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Container(
@@ -69,14 +70,18 @@ class OtpScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 20),
-                  Text(
-                    'Please check your mail you********ple.com to see the verification code',
-                    style: getTextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                      color: AppColors.textColor,
+                  Center(
+                    child: Obx(
+                      () => Text(
+                        'Please check your mail ${controller.getMaskedEmail()} to see the verification code',
+                        style: getTextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: AppColors.textColor,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                    textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 94),
                   Text(
@@ -90,24 +95,41 @@ class OtpScreen extends StatelessWidget {
                   SizedBox(height: 12),
                   const OtpField(),
                   SizedBox(height: 30),
-                  CustomButtonTwo(
-                    label: 'Verify',
-                    onPressed: () {
-                      controller.verifyOtp(previousPage);
-                    },
+                  Obx(
+                    () => CustomButtonTwo(
+                      label: 'Verify',
+                      onPressed: controller.isLoading.value
+                          ? () {}
+                          : () {
+                              controller.verifyOtp(previousPage);
+                            },
+                    ),
                   ),
                   SizedBox(height: 30),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Resend code to',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: AppColors.textColor,
-                        ),
-                      ),
+                      Obx(() {
+                        bool canResend = controller.remainingSeconds.value == 0;
+                        return GestureDetector(
+                          onTap: canResend
+                              ? () => controller.resendOtp()
+                              : null,
+                          child: Text(
+                            'Resend code',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: canResend
+                                  ? AppColors.primaryColor
+                                  : AppColors.textColor.withValues(alpha: 0.5),
+                              decoration: canResend
+                                  ? TextDecoration.underline
+                                  : TextDecoration.none,
+                            ),
+                          ),
+                        );
+                      }),
                       Obx(() {
                         final int secs = controller.remainingSeconds.value;
                         final String minutes = (secs ~/ 60).toString();
