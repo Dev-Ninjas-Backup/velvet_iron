@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/models/response_data.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/auth/otp/otp_service.dart';
 import 'package:velvet_iron/features/auth/otp/validation/otp_validation.dart';
@@ -123,10 +124,26 @@ class OtpController extends GetxController {
       isLoading.value = true;
       EasyLoading.show(status: 'Verifying OTP...');
 
-      final response = await _otpService.verifyEmail(
-        email: userEmail.value,
-        otp: otpValue,
-      );
+      // ─────────────────────────────────────────────────────────────────────
+      // previousPage এর উপর ভিত্তি করে আলাদা API endpoint call হচ্ছে:
+      //   • SignUpScreen  → /auth/verify-email
+      //   • ForgotScreen  → /auth/verify-reset-otp
+      // ─────────────────────────────────────────────────────────────────────
+      final ResponseData response;
+
+      if (previousPage == 'ForgotScreen') {
+        print('📡 Calling verify-reset-otp endpoint...');
+        response = await _otpService.verifyResetOtp(
+          email: userEmail.value,
+          otp: otpValue,
+        );
+      } else {
+        print('📡 Calling verify-email endpoint...');
+        response = await _otpService.verifyEmail(
+          email: userEmail.value,
+          otp: otpValue,
+        );
+      }
 
       EasyLoading.dismiss();
 
@@ -136,14 +153,17 @@ class OtpController extends GetxController {
             response.responseData['message'] ?? 'Email verified successfully';
 
         EasyLoading.showSuccess(message);
+
+        // OTP fields clear করা হচ্ছে
         for (var controller in otpControllers) {
           controller.clear();
         }
 
-        // Navigate based on previous page
-        
         await Future.delayed(const Duration(milliseconds: 800));
 
+        // previousPage এর উপর ভিত্তি করে navigation:
+        //   • SignUpScreen  → Login screen
+        //   • ForgotScreen  → Set Password screen
         if (previousPage == 'SignUpScreen') {
           print('🔄 Navigating to login screen...');
           Get.offAllNamed('/loginScreen');
@@ -197,15 +217,15 @@ class OtpController extends GetxController {
 
         EasyLoading.showSuccess(message);
 
-        // Restart timer
+        // Timer restart করা হচ্ছে
         _startCountdown();
 
-        // Clear OTP fields
+        // OTP fields clear করা হচ্ছে
         for (var controller in otpControllers) {
           controller.clear();
         }
 
-        // Focus on first field
+        // First field এ focus করা হচ্ছে
         focusNodes[0].requestFocus();
       } else {
         print('❌ Failed to resend OTP!');

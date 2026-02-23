@@ -2,7 +2,7 @@ class Urls {
   static const String baseUrl = 'https://velvet.api.softvence.app';
 
   static const String register = '$baseUrl/auth/register';
-  static const String verifyOtp = '$baseUrl/auth/verify-otp';
+  static const String verifyOtp = '$baseUrl/auth/verify-email';
   static const String resendOtp = '$baseUrl/auth/resend-verification-otp';
   static const String login = '$baseUrl/auth/login';
   static const String forgetPassword = '$baseUrl/auth/forgot-password';

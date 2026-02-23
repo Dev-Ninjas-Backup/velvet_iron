@@ -127,4 +127,66 @@ class OtpService {
       );
     }
   }
+
+  // Verify Reset Password OTP
+
+  Future<ResponseData> verifyResetOtp({
+    required String email,
+    required String otp,
+  }) async {
+    try {
+      print('Verifying reset password OTP...');
+      print('Email: $email');
+      print('OTP: $otp');
+
+      final url = Uri.parse('$baseUrl/auth/verify-reset-otp');
+
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': email, 'otp': otp}),
+      );
+
+      print('Verify Reset OTP Response:');
+      print('Status Code: ${response.statusCode}');
+      print('Body: ${response.body}');
+
+      final decodedData = jsonDecode(response.body);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        bool isSuccess = decodedData['success'] ?? false;
+
+        if (isSuccess) {
+          return ResponseData(
+            isSuccess: true,
+            statusCode: response.statusCode,
+            errorMessage: '',
+            responseData: decodedData,
+          );
+        } else {
+          return ResponseData(
+            isSuccess: false,
+            statusCode: response.statusCode,
+            errorMessage: decodedData['message'] ?? 'OTP verification failed',
+            responseData: null,
+          );
+        }
+      } else {
+        return ResponseData(
+          isSuccess: false,
+          statusCode: response.statusCode,
+          errorMessage: decodedData['message'] ?? 'OTP verification failed',
+          responseData: null,
+        );
+      }
+    } catch (e) {
+      print('Verify Reset OTP Error: $e');
+      return ResponseData(
+        isSuccess: false,
+        statusCode: 500,
+        errorMessage: 'Network error: ${e.toString()}',
+        responseData: null,
+      );
+    }
+  }
 }
