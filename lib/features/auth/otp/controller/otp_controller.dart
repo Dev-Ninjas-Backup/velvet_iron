@@ -37,11 +37,11 @@ class OtpController extends GetxController {
 
     if (email != null) {
       userEmail.value = email;
-      print('📧 Loaded Email from SharedPreferences: $email');
+      print('Loaded Email from SharedPreferences: $email');
     }
     if (id != null) {
       userId.value = id;
-      print('🆔 Loaded User ID from SharedPreferences: $id');
+      print('Loaded User ID from SharedPreferences: $id');
     }
   }
 
@@ -101,21 +101,21 @@ class OtpController extends GetxController {
     final String otpValue = otp;
     final String? validationError = OtpValidation.validateOtp(otpValue);
 
-    print('🔍 Verifying OTP...');
-    print('   - OTP Value: $otpValue');
-    print('   - Is Valid: $isValid');
-    print('   - Validation Error: $validationError');
-    print('   - Email: ${userEmail.value}');
-    print('   - Previous Page: $previousPage');
+    print('Verifying OTP...');
+    print('OTP Value: $otpValue');
+    print('Is Valid: $isValid');
+    print('Validation Error: $validationError');
+    print('Email: ${userEmail.value}');
+    print('Previous Page: $previousPage');
 
     if (!isValid || validationError != null) {
-      print('❌ OTP validation failed!');
+      print('OTP validation failed!');
       Get.snackbar('Error', validationError ?? 'Please enter a valid OTP');
       return;
     }
 
     if (userEmail.value.isEmpty) {
-      print('❌ Email is empty!');
+      print('Email is empty!');
       Get.snackbar('Error', 'Email not found. Please try again.');
       return;
     }
@@ -124,21 +124,16 @@ class OtpController extends GetxController {
       isLoading.value = true;
       EasyLoading.show(status: 'Verifying OTP...');
 
-      // ─────────────────────────────────────────────────────────────────────
-      // previousPage এর উপর ভিত্তি করে আলাদা API endpoint call হচ্ছে:
-      //   • SignUpScreen  → /auth/verify-email
-      //   • ForgotScreen  → /auth/verify-reset-otp
-      // ─────────────────────────────────────────────────────────────────────
       final ResponseData response;
 
       if (previousPage == 'ForgotScreen') {
-        print('📡 Calling verify-reset-otp endpoint...');
+        print('Calling verify-reset-otp endpoint...');
         response = await _otpService.verifyResetOtp(
           email: userEmail.value,
           otp: otpValue,
         );
       } else {
-        print('📡 Calling verify-email endpoint...');
+        print('Calling verify-email endpoint...');
         response = await _otpService.verifyEmail(
           email: userEmail.value,
           otp: otpValue,
@@ -148,36 +143,32 @@ class OtpController extends GetxController {
       EasyLoading.dismiss();
 
       if (response.isSuccess) {
-        print('✅ OTP verification successful!');
+        print('OTP verification successful!');
         final message =
             response.responseData['message'] ?? 'Email verified successfully';
 
         EasyLoading.showSuccess(message);
 
-        // OTP fields clear করা হচ্ছে
         for (var controller in otpControllers) {
           controller.clear();
         }
 
         await Future.delayed(const Duration(milliseconds: 800));
 
-        // previousPage এর উপর ভিত্তি করে navigation:
-        //   • SignUpScreen  → Login screen
-        //   • ForgotScreen  → Set Password screen
         if (previousPage == 'SignUpScreen') {
-          print('🔄 Navigating to login screen...');
+          print('Navigating to login screen...');
           Get.offAllNamed('/loginScreen');
         } else {
-          print('🔄 Navigating to set password screen...');
+          print('Navigating to set password screen...');
           Get.offAllNamed('/setPasswordScreen');
         }
       } else {
-        print('❌ OTP verification failed!');
-        print('   - Error: ${response.errorMessage}');
+        print('OTP verification failed!');
+        print('Error: ${response.errorMessage}');
         EasyLoading.showError(response.errorMessage);
       }
     } catch (e) {
-      print('💥 Exception during OTP verification: $e');
+      print('Exception during OTP verification: $e');
       EasyLoading.dismiss();
       EasyLoading.showError('An error occurred: ${e.toString()}');
     } finally {
@@ -187,19 +178,19 @@ class OtpController extends GetxController {
 
   Future<void> resendOtp() async {
     if (userEmail.value.isEmpty) {
-      print('❌ Email is empty! Cannot resend OTP');
+      print('Email is empty! Cannot resend OTP');
       Get.snackbar('Error', 'Email not found. Please try again.');
       return;
     }
 
     if (remainingSeconds.value > 0) {
-      print('⏳ Timer still running. Please wait.');
+      print('Timer still running. Please wait.');
       return;
     }
 
     try {
-      print('🔄 Resending OTP...');
-      print('   - Email: ${userEmail.value}');
+      print('Resending OTP...');
+      print('Email: ${userEmail.value}');
 
       EasyLoading.show(status: 'Resending OTP...');
 
@@ -210,30 +201,27 @@ class OtpController extends GetxController {
       EasyLoading.dismiss();
 
       if (response.isSuccess) {
-        print('✅ OTP resent successfully!');
+        print('OTP resent successfully!');
         final message =
             response.responseData['message'] ??
             'OTP has been resent to your email';
 
         EasyLoading.showSuccess(message);
 
-        // Timer restart করা হচ্ছে
         _startCountdown();
 
-        // OTP fields clear করা হচ্ছে
         for (var controller in otpControllers) {
           controller.clear();
         }
 
-        // First field এ focus করা হচ্ছে
         focusNodes[0].requestFocus();
       } else {
-        print('❌ Failed to resend OTP!');
-        print('   - Error: ${response.errorMessage}');
+        print('Failed to resend OTP!');
+        print('Error: ${response.errorMessage}');
         EasyLoading.showError(response.errorMessage);
       }
     } catch (e) {
-      print('💥 Exception during resend OTP: $e');
+      print('Exception during resend OTP: $e');
       EasyLoading.dismiss();
       EasyLoading.showError('An error occurred: ${e.toString()}');
     }

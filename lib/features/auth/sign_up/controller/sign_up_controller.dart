@@ -52,15 +52,15 @@ class SignUpController extends GetxController {
 
   Future<void> signUp() async {
     if (!formKey.currentState!.validate()) {
-      print('❌ Form validation failed');
+      print('Form validation failed');
       return;
     }
 
     try {
       isLoading.value = true;
-      print('🚀 Starting signup process...');
-      print('📝 Name: ${nameController.text.trim()}');
-      print('📧 Email: ${emailController.text.trim()}');
+      print('Starting signup process...');
+      print('Name: ${nameController.text.trim()}');
+      print('Email: ${emailController.text.trim()}');
 
       EasyLoading.show(status: 'Creating account...');
 
@@ -70,38 +70,38 @@ class SignUpController extends GetxController {
         password: passwordController.text,
       );
 
-      print('📦 Response received:');
-      print('   - Success: ${response.isSuccess}');
-      print('   - Status Code: ${response.statusCode}');
-      print('   - Error Message: ${response.errorMessage}');
-      print('   - Response Data: ${response.responseData}');
+      print('Response received:');
+      print('Success: ${response.isSuccess}');
+      print('Status Code: ${response.statusCode}');
+      print('Error Message: ${response.errorMessage}');
+      print('Response Data: ${response.responseData}');
 
       EasyLoading.dismiss();
 
       if (response.isSuccess && response.responseData != null) {
         final responseBody = response.responseData;
 
-        print('✅ Registration successful!');
-        print('📄 Response Body: $responseBody');
+        print('Registration successful!');
+        print('Response Body: $responseBody');
         final message = responseBody['message'] ?? 'Registration successful';
-        print('💬 Message: $message');
+        print('Message: $message');
 
         final userData = UserData.fromJson(responseBody['data']);
 
-        print('👤 User Data:');
-        print('   - ID: ${userData.id}');
-        print('   - Email: ${userData.email}');
-        print('   - Name: ${userData.name}');
-        print('   - Username: ${userData.username}');
-        print('   - Avatar: ${userData.avatar}');
-        print('   - Role: ${userData.role}');
-        print('   - Email Verified: ${userData.emailVerified}');
-        print('   - OTP: ${userData.emailVerificationOtp}');
-        print('   - OTP Expiry: ${userData.emailVerificationExpiry}');
+        print('User Data:');
+        print('ID: ${userData.id}');
+        print('Email: ${userData.email}');
+        print('Name: ${userData.name}');
+        print('Username: ${userData.username}');
+        print('Avatar: ${userData.avatar}');
+        print('Role: ${userData.role}');
+        print('Email Verified: ${userData.emailVerified}');
+        print('OTP: ${userData.emailVerificationOtp}');
+        print('OTP Expiry: ${userData.emailVerificationExpiry}');
 
         // Save user data to shared preferences
 
-        print('💾 Saving user data to SharedPreferences...');
+        print('Saving user data to SharedPreferences...');
         await SharedPreferencesHelper.saveUserData(
           userId: userData.id,
           email: userData.email,
@@ -109,35 +109,35 @@ class SignUpController extends GetxController {
           avatar: userData.avatar,
           role: userData.role,
         );
-        print('✅ User data saved successfully!');
+        print('User data saved successfully!');
 
         EasyLoading.showSuccess(message);
 
         // Navigate to OTP screen
         
-        print('🔄 Navigating to OTP screen...');
-        print('   - Previous Page: SignUpScreen');
-        print('   - Email: ${userData.email}');
-        print('   - User ID: ${userData.id}');
+        print('Navigating to OTP screen...');
+        print('Previous Page: SignUpScreen');
+        print('Email: ${userData.email}');
+        print('User ID: ${userData.id}');
 
         Get.to(() => const OtpScreen(previousPage: 'SignUpScreen'));
 
-        print('✅ Navigation completed!');
+        print('Navigation completed!');
       } else {
-        print('❌ Registration failed!');
-        print('   - Error: ${response.errorMessage}');
+        print('Registration failed!');
+        print('Error: ${response.errorMessage}');
         EasyLoading.showError(response.errorMessage);
       }
     } catch (e, stackTrace) {
-      print('💥 Exception occurred:');
-      print('   - Error: $e');
-      print('   - Stack Trace: $stackTrace');
+      print('Exception occurred:');
+      print('Error: $e');
+      print('Stack Trace: $stackTrace');
 
       EasyLoading.dismiss();
       EasyLoading.showError('An error occurred: ${e.toString()}');
     } finally {
       isLoading.value = false;
-      print('🏁 Signup process completed!');
+      print('Signup process completed!');
     }
   }
 

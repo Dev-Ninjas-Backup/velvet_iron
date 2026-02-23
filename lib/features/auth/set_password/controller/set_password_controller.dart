@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
-import 'package:velvet_iron/features/auth/set_password/service/set_password_service.dart'; // ← service import করা হয়েছে
+import 'package:velvet_iron/features/auth/set_password/service/set_password_service.dart';
 import 'package:velvet_iron/features/auth/set_password/validation/set_password_validation.dart';
 import 'package:velvet_iron/features/auth/set_password/model/set_password_model.dart';
 
@@ -90,7 +90,6 @@ class SetPasswordController extends GetxController {
 
         EasyLoading.showSuccess(message);
 
-        // Fields clear করা হচ্ছে
         passwordController.clear();
         confirmPasswordController.clear();
 
