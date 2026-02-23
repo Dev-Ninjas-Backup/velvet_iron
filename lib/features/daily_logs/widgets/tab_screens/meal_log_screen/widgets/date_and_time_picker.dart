@@ -85,7 +85,7 @@ class DateAndTimePicker extends StatelessWidget {
                   _buildPickerField(
                     value: selectedTime.format(context),
                     hint: "Choose",
-                    iconPath: IconPath.clock,
+                    iconPath: IconPath.whiteClock,
                     onTap: () => _selectTime(context),
                     themeController: themeController,
                   ),
@@ -120,7 +120,9 @@ class DateAndTimePicker extends StatelessWidget {
             color: themeController.activeTheme.todoSubtitleColor,
           ),
           filled: true,
-          fillColor: themeController.activeTheme.dropdownBackgroundColor,
+          fillColor: themeController.activeTheme.todoSubtitleColor.withValues(
+            alpha: 0.3,
+          ),
           contentPadding: const EdgeInsets.only(
             left: 12,
             right: 12,
@@ -130,7 +132,7 @@ class DateAndTimePicker extends StatelessWidget {
           suffixIcon: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Image.asset(
-              iconPath,
+              iconPath == IconPath.whiteClock ? IconPath.whiteClock : iconPath,
               width: 20,
               height: 20,
               fit: BoxFit.contain,

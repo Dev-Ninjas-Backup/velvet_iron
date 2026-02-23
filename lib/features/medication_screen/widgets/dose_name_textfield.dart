@@ -14,11 +14,12 @@ SizedBox DoseNameTextField() {
           style: getTextStyle(fontSize: 12, color: Colors.white),
           decoration: InputDecoration(
             hintText: "Ozempic",
-            hintStyle: getTextStyle(fontSize: 12, color: Colors.white),
-            filled: true,
-            fillColor: themeController.activeTheme.todoSubtitleColor.withValues(
-              alpha: 0.3,
+            hintStyle: getTextStyle(
+              fontSize: 12,
+              color: themeController.activeTheme.todoTimeColor,
             ),
+            filled: true,
+            fillColor: themeController.activeTheme.textfieldColor,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(

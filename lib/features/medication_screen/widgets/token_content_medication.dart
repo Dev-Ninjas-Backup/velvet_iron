@@ -46,11 +46,10 @@ class TokenContentMedication extends StatelessWidget {
                 cursorColor: themeController.activeTheme.accentGoldColor,
                 style: getTextStyle(fontSize: 12, color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: "",
+                  hintText: "mg",
                   hintStyle: getTextStyle(fontSize: 12, color: Colors.white),
                   filled: true,
-                  fillColor:
-                      themeController.activeTheme.dropdownBackgroundColor,
+                  fillColor: themeController.activeTheme.textfieldColor,
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(

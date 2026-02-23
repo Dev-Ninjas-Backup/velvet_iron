@@ -17,10 +17,14 @@ class ExerciseNameTextField extends StatelessWidget {
             style: getTextStyle(fontSize: 12, color: Colors.white),
             decoration: InputDecoration(
               hintText: "e.g. push ups",
-              hintStyle: getTextStyle(fontSize: 12, color: Colors.white),
+              hintStyle: getTextStyle(
+                fontSize: 12,
+                color: themeController.activeTheme.todoTimeColor,
+              ),
               filled: true,
-              fillColor: themeController.activeTheme.todoSubtitleColor
-                  .withValues(alpha: 0.3),
+              fillColor: themeController.activeTheme.textfieldColor.withValues(
+                alpha: 0.5,
+              ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: BorderSide(

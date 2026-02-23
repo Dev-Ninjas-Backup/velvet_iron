@@ -76,9 +76,18 @@ class SettingsAppBar extends StatelessWidget {
                     height: 36,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: themeController.activeTheme.cardBackgroundColor,
+                      color: themeController.activeTheme.cardBackgroundColor
+                          .withValues(alpha: 0.5),
                     ),
-                    child: Image.asset(IconPath.quillpen),
+                    child: Image.asset(
+                      themeController.activeTheme.id == 'adventurer'
+                          ? IconPath.quillpenAdenture
+                          : themeController.activeTheme.id == 'mage'
+                          ? IconPath.quillpenMage
+                          : themeController.activeTheme.id == 'gamer'
+                          ? IconPath.quillpenGamer
+                          : IconPath.quillpenReader,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -125,8 +134,8 @@ class LogoutWidget extends GetView<SettingsController> {
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: themeController.activeTheme.cardBackgroundColor.withValues(
-                alpha: .8,
+              color: themeController.activeTheme.textfieldColor.withValues(
+                alpha: 0.8,
               ),
               borderRadius: BorderRadius.circular(12),
             ),
@@ -135,7 +144,17 @@ class LogoutWidget extends GetView<SettingsController> {
                 SizedBox(
                   width: 22,
                   height: 22,
-                  child: Image.asset(IconPath.logoutIcon),
+                  child: ShaderMask(
+                    shaderCallback: (bounds) => themeController
+                        .activeTheme
+                        .progressBarGradient
+                        .createShader(bounds),
+                    child: Image.asset(
+                      IconPath.logoutIcon,
+                      color: Colors.white,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Text(
@@ -172,7 +191,7 @@ class AppVersionWidget extends GetView<SettingsController> {
                 style: getTextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w400,
-                  color: themeController.activeTheme.todoSubtitleColor,
+                  color: themeController.activeTheme.accentGoldColor,
                 ),
               ),
             ),
@@ -182,7 +201,7 @@ class AppVersionWidget extends GetView<SettingsController> {
               style: getTextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w400,
-                color: themeController.activeTheme.todoSubtitleColor,
+                color: themeController.activeTheme.accentGoldColor,
               ),
               textAlign: TextAlign.center,
             ),

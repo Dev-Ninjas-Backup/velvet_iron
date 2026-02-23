@@ -32,10 +32,26 @@ class MoodOptionWidget extends StatelessWidget {
                   ? LinearGradient(
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
-                      colors: themeController
-                          .activeTheme
-                          .progressBarGradient
-                          .colors,
+                      colors:
+                          (themeController
+                                  .activeTheme
+                                  .selectedColors
+                                  .isNotEmpty &&
+                              themeController
+                                      .activeTheme
+                                      .selectedColors
+                                      .length >
+                                  1)
+                          ? [
+                              themeController.activeTheme.selectedColors[0],
+                              themeController.activeTheme.selectedColors[1],
+                            ]
+                          : (themeController
+                                .activeTheme
+                                .selectedColors
+                                .isNotEmpty)
+                          ? [themeController.activeTheme.selectedColors[0]]
+                          : [Colors.white],
                     )
                   : null,
               color: isSelected

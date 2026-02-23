@@ -22,7 +22,7 @@ class NutritionInputField extends StatelessWidget {
           height: 40, // Fixed height
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: themeController.activeTheme.dropdownBackgroundColor,
+            color: themeController.activeTheme.textfieldColor,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
               color: themeController.activeTheme.borderColor,

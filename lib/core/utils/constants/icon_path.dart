@@ -9,10 +9,6 @@ class IconPath {
   static const String pissedEmoji = 'assets/icons/pissedEmoji.png';
   static const String greatEmoji = 'assets/icons/greatEmoji.png';
   static const String poorEmoji = 'assets/icons/poorEmoji.png';
-  static const String star = 'assets/icons/star.png';
-  static const String steelyard = 'assets/icons/steelyard.png';
-  static const String updown = 'assets/icons/updown.png';
-  static const String clock = 'assets/icons/clock.png';
   static const String cup = 'assets/icons/cup.png';
   static const String token = 'assets/icons/token.png';
   static const String foodBall = 'assets/icons/foodBall.png';
@@ -26,7 +22,6 @@ class IconPath {
   static const String todo = 'assets/icons/ToDo1.png';
   static const String todo2 = 'assets/icons/ToDo2.png';
   static const String injection = 'assets/icons/injection.png';
-  static const String quillpen = 'assets/icons/quillpen.png';
   static const String injection2 = 'assets/icons/injection2.png';
   static const String serIcon = 'assets/icons/ser.png';
   static const String rivIcon = 'assets/icons/riv.png';
@@ -44,7 +39,6 @@ class IconPath {
   static const String letter = 'assets/icons/letter.png';
   static const String time = 'assets/icons/time.png';
   static const String heart = 'assets/icons/heart.png';
-  static const String trophy = 'assets/icons/trophy.png';
   static const String myprofile = 'assets/icons/myprofile.png';
   static const String themes = 'assets/icons/themes.png';
   static const String yoga = 'assets/icons/yoga.png';
@@ -79,6 +73,77 @@ class IconPath {
   static const String pissedEmojiPurple = 'assets/icons/pissedEmojiPurple.png';
   static const String greatEmojiPurple = 'assets/icons/greatEmojiPurple.png';
   static const String poorEmojiPurple = 'assets/icons/poorEmojiPurple.png';
-  
-  static const String doticon = 'assets/icons/doticon.png';
+
+  static const String tiredEmojiBlue = 'assets/icons/tiredemojiblue.png';
+
+  static const String whiteClock = 'assets/icons/white_clock.png';
+
+  // navbar icons
+  static const String home = 'assets/icons/home.png';
+  //quillpen icons
+  static const String quillpenAdenture = 'assets/icons/quillpen_adventure.png';
+  static const String quillpenMage = 'assets/icons/quillpen_mage.png';
+  static const String quillpenGamer = 'assets/icons/quillpen_gamer.png';
+  static const String quillpenReader = 'assets/icons/quillpen_reader.png';
+
+  //settings icons
+  static const String settingsAdventure = 'assets/icons/settings_adventure.png';
+  static const String settingsMage = 'assets/icons/settings_mage.png';
+  static const String settingsGamer = 'assets/icons/settings_gamer.png';
+  static const String settingsReader = 'assets/icons/settings_reader.png';
+
+  //star icons
+  static const String starAdventure = 'assets/icons/star_adventure.png';
+  static const String starMage = 'assets/icons/star_mage.png';
+  static const String starGamer = 'assets/icons/star_gamer.png';
+  static const String starReader = 'assets/icons/star_reader.png';
+  //steelyard icons
+  static const String steelyardAdenture =
+      'assets/icons/steelyard_adventure.png';
+  static const String steelyardMage = 'assets/icons/steelyard_mage.png';
+  static const String steelyardGamer = 'assets/icons/steelyard_gamer.png';
+  static const String steelyardReader = 'assets/icons/steelyard_reader.png';
+
+  //updown icons
+  static const String updownAdventure = 'assets/icons/updown_adventure.png';
+  static const String updownMage = 'assets/icons/updown_mage.png';
+  static const String updownGamer = 'assets/icons/updown_gamer.png';
+  static const String updownReader = 'assets/icons/updown_reader.png';
+
+  //clock icons
+  static const String clockAdventure = 'assets/icons/clock_adventure.png';
+  static const String clockMage = 'assets/icons/clock_mage.png';
+  static const String clockGamer = 'assets/icons/clock_gamer.png';
+  static const String clockReader = 'assets/icons/clock_reader.png';
+
+  //dot icons
+  static const String doticonAdventure = 'assets/icons/doticon_adventure.png';
+  static const String doticonMage = 'assets/icons/doticon_mage.png';
+  static const String doticonGamer = 'assets/icons/doticon_gamer.png';
+  static const String doticonReader = 'assets/icons/doticon_reader.png';
+
+  //trophy icons
+  static const String trophyAdventure = 'assets/icons/trophyadventure.png';
+  static const String trophyMage = 'assets/icons/trophymage.png';
+  static const String trophyGamer = 'assets/icons/trophygamer.png';
+  static const String trophyReader = 'assets/icons/trophyreader.png';
+
+  //injection icons
+  static const String injectionAdventure =
+      'assets/icons/injection_adventure.png';
+  static const String injectionMage = 'assets/icons/injection_mage.png';
+  static const String injectionGamer = 'assets/icons/injection_gamer.png';
+  static const String injectionReader = 'assets/icons/injection_reader.png';
+
+  // letters
+  static const String letterAdventure = 'assets/icons/letter_adventure.png';
+  static const String letterMage = 'assets/icons/letter_mage.png';
+  static const String letterGamer = 'assets/icons/letter_gamer.png';
+  static const String letterReader = 'assets/icons/letter_reader.png';
+
+  //time icons
+  static const String timeAdventure = 'assets/icons/time_adventure.png';
+  static const String timeMage = 'assets/icons/time_mage.png';
+  static const String timeGamer = 'assets/icons/time_gamer.png';
+  static const String timeReader = 'assets/icons/time_reader.png';
 }

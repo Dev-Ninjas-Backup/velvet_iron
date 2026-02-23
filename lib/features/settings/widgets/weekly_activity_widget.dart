@@ -150,9 +150,8 @@ class _WeightProgressState extends State<WeeklyActivityProgress> {
                                 toY: e.value,
                                 width: 29,
                                 borderRadius: BorderRadius.circular(6),
-                                gradient: themeController
-                                    .activeTheme
-                                    .progressBarGradient,
+                                color: themeController.activeTheme.graphColor
+                                    .withValues(alpha: 0.60),
                               ),
                             ],
                           );

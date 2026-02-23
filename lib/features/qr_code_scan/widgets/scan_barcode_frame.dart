@@ -19,7 +19,12 @@ class ScanBarcodeFrame extends StatelessWidget {
             borderRadius: BorderRadius.circular(40),
             border: Border.all(
               width: 4,
-              color: themeController.activeTheme.accentGoldColor,
+              color: themeController
+                  .activeTheme
+                  .progressBarGradient
+                  .colors
+                  .first
+                  .withValues(alpha: 0.5),
             ),
           ),
           padding: const EdgeInsets.only(

@@ -19,52 +19,52 @@ class MoodSelector extends StatelessWidget {
         final moods = [
           {
             'label': 'Tired',
-            'icon': activeTheme.id == 'mage'
-                ? IconPath.tiredEmojiWhite
-                : activeTheme.id == 'reader'
+            'icon': activeTheme.id == 'gamer'
                 ? IconPath.tiredEmojiGreen
-                : activeTheme.id == 'gamer'
+                : activeTheme.id == 'mage'
                 ? IconPath.tiredEmojiPurple
+                : activeTheme.id == 'reader'
+                ? IconPath.tiredEmojiWhite
                 : IconPath.tiredEmoji,
           },
           {
             'label': 'Good',
-            'icon': activeTheme.id == 'mage'
-                ? IconPath.goodEmojiWhite
-                : activeTheme.id == 'reader'
+            'icon': activeTheme.id == 'gamer'
                 ? IconPath.goodEmojiGreen
-                : activeTheme.id == 'gamer'
+                : activeTheme.id == 'mage'
                 ? IconPath.goodEmojiPurple
+                : activeTheme.id == 'reader'
+                ? IconPath.goodEmojiWhite
                 : IconPath.goodEmoji,
           },
           {
             'label': 'Pissed',
-            'icon': activeTheme.id == 'mage'
-                ? IconPath.pissedEmojiWhite
-                : activeTheme.id == 'reader'
+            'icon': activeTheme.id == 'gamer'
                 ? IconPath.pissedEmojiGreen
-                : activeTheme.id == 'gamer'
+                : activeTheme.id == 'mage'
                 ? IconPath.pissedEmojiPurple
+                : activeTheme.id == 'reader'
+                ? IconPath.pissedEmojiWhite
                 : IconPath.pissedEmoji,
           },
           {
             'label': 'Great',
-            'icon': activeTheme.id == 'mage'
-                ? IconPath.greatEmojiWhite
-                : activeTheme.id == 'reader'
+            'icon': activeTheme.id == 'gamer'
                 ? IconPath.greatEmojiGreen
-                : activeTheme.id == 'gamer'
+                : activeTheme.id == 'mage'
                 ? IconPath.greatEmojiPurple
+                : activeTheme.id == 'reader'
+                ? IconPath.greatEmojiWhite
                 : IconPath.greatEmoji,
           },
           {
             'label': 'Poor',
-            'icon': activeTheme.id == 'mage'
-                ? IconPath.poorEmojiWhite
-                : activeTheme.id == 'reader'
+            'icon': activeTheme.id == 'gamer'
                 ? IconPath.poorEmojiGreen
-                : activeTheme.id == 'gamer'
+                : activeTheme.id == 'mage'
                 ? IconPath.poorEmojiPurple
+                : activeTheme.id == 'reader'
+                ? IconPath.poorEmojiWhite
                 : IconPath.poorEmoji,
           },
         ];
@@ -115,47 +115,26 @@ class MoodSelector extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  height: 80,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    gradient: activeTheme.id == 'mage'
-                        ? const LinearGradient(
-                            begin: Alignment.bottomLeft,
-                            end: Alignment.topRight,
-                            colors: [Color(0xFFFFFFFF), Color(0x00FFF9F9)],
-                          )
-                        : activeTheme.id == 'reader'
-                        ? const LinearGradient(
-                            begin: Alignment.bottomLeft,
-                            end: Alignment.topRight,
-                            colors: [Color(0xFF0E2D22), Color(0xFF105234)],
-                          )
-                        : activeTheme.id == 'gamer'
-                        ? const LinearGradient(
-                            begin: Alignment.bottomLeft,
-                            end: Alignment.topRight,
-                            colors: [Color(0xFF1C0036), Color(0xFF360B5E)],
-                          )
-                        : const LinearGradient(
-                            begin: Alignment.bottomLeft,
-                            end: Alignment.topRight,
-                            colors: [
-                              Color(0xFFFDE7BB),
-                              Color(0xFF9E6D38),
-                              Color(0xFFE9B86E),
-                              Color(0xFF9D6933),
-                              Color(0xFFFEE9BF),
-                              Color(0xFF683E23),
-                            ],
-                          ),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "+\nAdd\n+05 xp",
-                      textAlign: TextAlign.center,
-                      style: getTextStyle(color: Colors.white, fontSize: 12),
+                GestureDetector(
+                  child: Container(
+                    height: 80,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      gradient: activeTheme.id == 'reader'
+                          ? AppThemeModel.readerTheme.progressBarGradient
+                          : activeTheme.id == 'gamer'
+                          ? AppThemeModel.gamerTheme.progressBarGradient
+                          : activeTheme.id == 'mage'
+                          ? AppThemeModel.mageTheme.progressBarGradient
+                          : AppThemeModel.adventurerTheme.progressBarGradient,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "+\nAdd\n+05 xp",
+                        textAlign: TextAlign.center,
+                        style: getTextStyle(color: Colors.white, fontSize: 12),
+                      ),
                     ),
                   ),
                 ),

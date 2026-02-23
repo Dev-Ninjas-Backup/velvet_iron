@@ -20,7 +20,6 @@ class NutritionLoadingCard extends StatelessWidget {
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
         return Container(
-          width: 125,
           constraints: const BoxConstraints(minHeight: 68),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
@@ -36,7 +35,7 @@ class NutritionLoadingCard extends StatelessWidget {
               Text(
                 amount,
                 style: getTextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
                 ),

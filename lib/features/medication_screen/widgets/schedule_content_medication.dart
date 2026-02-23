@@ -50,11 +50,13 @@ class ScheduleContentMedication extends StatelessWidget {
                   hintText: "4",
                   hintStyle: getTextStyle(
                     fontSize: 12,
-                    color: themeController.activeTheme.todoSubtitleColor,
+                    color: themeController.activeTheme.todoTimeColor.withValues(
+                      alpha: 0.9,
+                    ),
                   ),
                   filled: true,
-                  fillColor:
-                      themeController.activeTheme.dropdownBackgroundColor,
+                  fillColor: themeController.activeTheme.todoSubtitleColor
+                      .withValues(alpha: 0.3),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(

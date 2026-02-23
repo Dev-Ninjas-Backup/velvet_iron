@@ -135,12 +135,14 @@ class _LevelBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
-        color: themeController.activeTheme.cardBackgroundColor,
+        color: themeController.activeTheme.textfieldColor.withValues(
+          alpha: 0.3,
+        ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
-          Image.asset(IconPath.trophy, height: 14, width: 8),
+          Image.asset(IconPath.trophyReader, height: 14, width: 8),
           const SizedBox(width: 4),
           Obx(
             () => Text(

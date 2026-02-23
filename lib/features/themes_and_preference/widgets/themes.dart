@@ -16,8 +16,8 @@ class Themes extends StatelessWidget {
 
   final String title;
   final String badgeText;
-  final String? subtitle; // optional
-  final List<Color> gradientColors; // 4–6 colors
+  final String? subtitle;
+  final List<Color> gradientColors;
   final Widget icon;
   final Color? borderColor;
   final VoidCallback? onTap;
@@ -46,7 +46,7 @@ class Themes extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min, // HUG CONTENT
+          mainAxisSize: MainAxisSize.min,
           children: [
             // Top row
             Row(
@@ -64,9 +64,7 @@ class Themes extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-
                 const Spacer(),
-
                 Container(
                   height: 33,
                   padding: const EdgeInsets.symmetric(

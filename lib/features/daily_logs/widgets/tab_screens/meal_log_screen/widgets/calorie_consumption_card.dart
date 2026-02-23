@@ -16,7 +16,7 @@ class CalorieConsumptionCard extends StatefulWidget {
 }
 
 class _CalorieConsumptionCardState extends State<CalorieConsumptionCard> {
-  List<int> selectedDays = [0, 1, 2, 3];
+  List<bool> activeDays = [true, true, true, true, false, false, false];
   String selectedPeriod = "this week";
   bool isLoading = true;
 
@@ -51,7 +51,7 @@ class _CalorieConsumptionCardState extends State<CalorieConsumptionCard> {
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: themeController.activeTheme.cardBackgroundColor.withValues(
-              alpha: .7,
+              alpha: .4,
             ),
             borderRadius: BorderRadius.circular(12),
           ),
@@ -87,7 +87,7 @@ class _CalorieConsumptionCardState extends State<CalorieConsumptionCard> {
                         icon: Icon(
                           Icons.keyboard_arrow_down,
                           size: 14,
-                          color: themeController.activeTheme.accentGoldColor,
+                          color: Colors.white,
                         ),
                         items: ["this day", "this week", "this month"].map((
                           String value,
@@ -98,8 +98,7 @@ class _CalorieConsumptionCardState extends State<CalorieConsumptionCard> {
                               value,
                               style: getTextStyle(
                                 fontSize: 10,
-                                color:
-                                    themeController.activeTheme.accentGoldColor,
+                                color: Colors.white,
                               ),
                             ),
                           );
@@ -118,52 +117,53 @@ class _CalorieConsumptionCardState extends State<CalorieConsumptionCard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(weekDays.length, (index) {
-                  final bool isSelected = selectedDays.contains(index);
+                  final bool isActive = activeDays[index];
+                  String dotIcon = isActive
+                      ? (themeController.activeTheme.id == 'adventurer'
+                            ? 'assets/icons/doticon_adventure.png'
+                            : themeController.activeTheme.id == 'mage'
+                            ? 'assets/icons/doticon_mage.png'
+                            : themeController.activeTheme.id == 'gamer'
+                            ? 'assets/icons/doticon_gamer.png'
+                            : 'assets/icons/doticon_reader.png')
+                      : IconPath.whitecircle;
 
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (isSelected) {
-                          selectedDays.remove(index);
-                        } else {
-                          selectedDays.add(index);
-                        }
-                      });
-                    },
-                    child: Container(
-                      width: 43,
-                      height: 60,
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      decoration: BoxDecoration(
-                        color: themeController.activeTheme.todoSubtitleColor
-                            .withValues(alpha: 0.4),
-                        borderRadius: BorderRadius.circular(50),
-                        border: Border.all(
-                          color: isSelected
-                              ? themeController.activeTheme.accentGoldColor
-                              : Colors.transparent,
-                          width: 0.6,
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            isSelected
-                                ? IconPath.goldencircle
-                                : IconPath.whitecircle,
-                            width: 18,
-                            height: 18,
-                          ),
-                          Text(
-                            weekDays[index],
-                            style: getTextStyle(
-                              fontSize: 10,
-                              color: Colors.white,
+                  return Container(
+                    width: 43,
+                    height: 60,
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    decoration: BoxDecoration(
+                      color: themeController.activeTheme.todoSubtitleColor
+                          .withValues(alpha: 0.4),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              width: 24,
+                              height: 24,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                // gradient: themeController
+                                //     .activeTheme
+                                //     .progressBarGradient,
+                              ),
                             ),
+                            Image.asset(dotIcon, width: 18, height: 18),
+                          ],
+                        ),
+                        Text(
+                          weekDays[index],
+                          style: getTextStyle(
+                            fontSize: 10,
+                            color: Colors.white,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   );
                 }),
@@ -181,7 +181,7 @@ class _CalorieConsumptionCardState extends State<CalorieConsumptionCard> {
                     ),
                   ),
                   Text(
-                    "796 g",
+                    "590/796 kcal",
                     style: getTextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
@@ -197,8 +197,7 @@ class _CalorieConsumptionCardState extends State<CalorieConsumptionCard> {
                     width: double.infinity,
                     height: 6,
                     decoration: BoxDecoration(
-                      color: themeController.activeTheme.todoSubtitleColor
-                          .withValues(alpha: 0.4),
+                      color: themeController.activeTheme.textfieldColor,
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),

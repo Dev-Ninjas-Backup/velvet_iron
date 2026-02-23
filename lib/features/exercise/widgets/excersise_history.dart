@@ -26,22 +26,23 @@ class ExcersiseHistory extends StatelessWidget {
           () => Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: themeController.activeTheme.cardBackgroundColor,
+              color: themeController.activeTheme.textfieldColor.withValues(
+                alpha: isSelected.value ? 0.8 : 0.4,
+              ),
               borderRadius: BorderRadius.circular(18),
             ),
             child: Row(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    isSelected.toggle();
-                  },
-                  child: Image.asset(
-                    isSelected.value
-                        ? IconPath.goldencircle
-                        : IconPath.whitecircle,
-                    width: 22,
-                    height: 22,
-                  ),
+                Image.asset(
+                  themeController.activeTheme.id == 'adventurer'
+                      ? IconPath.doticonAdventure
+                      : themeController.activeTheme.id == 'mage'
+                      ? IconPath.doticonMage
+                      : themeController.activeTheme.id == 'gamer'
+                      ? IconPath.doticonGamer
+                      : IconPath.doticonReader,
+                  width: 22,
+                  height: 22,
                 ),
 
                 const SizedBox(width: 8),
@@ -72,7 +73,7 @@ class ExcersiseHistory extends StatelessWidget {
                       Text(
                         sub,
                         style: getTextStyle(
-                          color: themeController.activeTheme.todoSubtitleColor,
+                          color: themeController.activeTheme.accentGoldColor,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -85,7 +86,17 @@ class ExcersiseHistory extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Image.asset(IconPath.star, width: 16, height: 16),
+                        Image.asset(
+                          themeController.activeTheme.id == 'adventurer'
+                              ? IconPath.starAdventure
+                              : themeController.activeTheme.id == 'mage'
+                              ? IconPath.starMage
+                              : themeController.activeTheme.id == 'gamer'
+                              ? IconPath.starGamer
+                              : IconPath.starReader,
+                          width: 16,
+                          height: 16,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           "+10 XP",
@@ -97,7 +108,7 @@ class ExcersiseHistory extends StatelessWidget {
                     Text(
                       time,
                       style: getTextStyle(
-                        color: themeController.activeTheme.todoSubtitleColor,
+                        color: themeController.activeTheme.accentGoldColor,
                       ),
                     ),
                   ],

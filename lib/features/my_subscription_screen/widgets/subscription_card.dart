@@ -89,6 +89,10 @@ class SubscriptionCard extends StatelessWidget {
   }
 
   Widget _premiumBadge(AppThemeController themeController) {
+
+    String? selectedDotIcon =
+        IconPath.doticonAdventure; // Default or based on logic
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
@@ -102,7 +106,7 @@ class SubscriptionCard extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset(IconPath.doticon, height: 20, width: 25),
+          Image.asset(selectedDotIcon, height: 20, width: 25),
           const SizedBox(width: 4),
           Text(
             "Premium",

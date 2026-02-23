@@ -58,10 +58,11 @@ class ScheduleTabContent extends StatelessWidget {
                 hintText: "Grilled chicken salad with olive oil dressing...?",
                 hintStyle: getTextStyle(
                   fontSize: 12,
-                  color: themeController.activeTheme.todoSubtitleColor,
+                  color: themeController.activeTheme.todoTimeColor,
                 ),
                 filled: true,
-                fillColor: themeController.activeTheme.dropdownBackgroundColor,
+                fillColor: themeController.activeTheme.textfieldColor
+                    .withValues(alpha: 0.2),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(

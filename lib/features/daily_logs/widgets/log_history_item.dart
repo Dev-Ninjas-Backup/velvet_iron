@@ -30,16 +30,15 @@ class LogHistoryItem extends StatelessWidget {
       builder: (themeController) {
         // Get the emoji path based on theme if moodType is provided
         final displayIconPath = moodType != null
-            ? _getEmojiForTheme(
-                themeController.currentTheme.value?.id ?? 'adventurer',
-                moodType!,
-              )
+            ? _getEmojiForTheme(themeController.activeTheme.id, moodType!)
             : iconPath;
 
         return Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: themeController.activeTheme.cardBackgroundColor,
+            color: themeController.activeTheme.cardBackgroundColor.withValues(
+              alpha: 0.4,
+            ),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
@@ -59,7 +58,17 @@ class LogHistoryItem extends StatelessWidget {
                         style: getTextStyle(fontSize: 12, color: Colors.white),
                       ),
                       const SizedBox(width: 4),
-                      Image.asset(IconPath.star, width: 12, height: 12),
+                      Image.asset(
+                        themeController.activeTheme.id == 'adventurer'
+                            ? IconPath.starAdventure
+                            : themeController.activeTheme.id == 'mage'
+                            ? IconPath.starMage
+                            : themeController.activeTheme.id == 'gamer'
+                            ? IconPath.starGamer
+                            : IconPath.starReader,
+                        width: 12,
+                        height: 12,
+                      ),
                     ],
                   ),
                 ],
@@ -73,12 +82,18 @@ class LogHistoryItem extends StatelessWidget {
                     secondText,
                     style: getTextStyle(
                       fontSize: 12,
-                      color: themeController.activeTheme.accentGoldColor,
+                      color: themeController.activeTheme.todoTimeColor,
                     ),
                   ),
                   if (dateTimeText.isNotEmpty) ...[
                     const Spacer(),
-                    Text(dateTimeText, style: getTextStyle(fontSize: 12)),
+                    Text(
+                      dateTimeText,
+                      style: getTextStyle(
+                        fontSize: 12,
+                        color: themeController.activeTheme.todoTimeColor,
+                      ),
+                    ),
                   ],
                 ],
               ),
@@ -99,12 +114,12 @@ class LogHistoryItem extends StatelessWidget {
 
   String _getEmojiForTheme(String themeId, String moodType) {
     switch (themeId) {
-      case 'mage':
-        return _getWhiteEmoji(moodType);
-      case 'reader':
-        return _getGreenEmoji(moodType);
       case 'gamer':
+        return _getGreenEmoji(moodType);
+      case 'mage':
         return _getPurpleEmoji(moodType);
+      case 'reader':
+        return _getWhiteEmoji(moodType);
       default:
         return _getDefaultEmoji(moodType);
     }

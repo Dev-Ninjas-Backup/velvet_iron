@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
+import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding1/controller/onboarding1_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding1/model/companion_model.dart';
 
@@ -28,7 +29,7 @@ class StepsTextWidget extends StatelessWidget {
           ),
           Row(
             children: [
-              Image.asset(IconPath.trophy, width: 8, height: 14),
+              Image.asset(IconPath.trophyAdventure, width: 8, height: 14),
               SizedBox(width: 1.5),
               Text(
                 '+10 XP',
@@ -53,36 +54,34 @@ class ProgressBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<OnboardingController1>();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Obx(
-        () => ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: SizedBox(
-            height: 6,
-            child: Stack(
-              children: [
-                Container(color: Colors.white.withValues(alpha: 0.7)),
-                FractionallySizedBox(
-                  widthFactor: controller.progressValue,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(0xFFFDE7BB),
-                          Color(0xFF9E6D38),
-                          Color(0xFFE9B86E),
-                          Color(0xFFE5B46B),
-                        ],
+    return GetBuilder<AppThemeController>(
+      builder: (themeController) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Obx(
+            () => ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: SizedBox(
+                height: 6,
+                child: Stack(
+                  children: [
+                    Container(color: Colors.white.withValues(alpha: 0.7)),
+                    FractionallySizedBox(
+                      widthFactor: controller.progressValue,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient:
+                              themeController.activeTheme.progressBarGradient,
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -125,12 +124,14 @@ class CompanionCard extends StatelessWidget {
   final CompanionModel companion;
   final bool isSelected;
   final VoidCallback onTap;
+  final AppThemeController themeController;
 
   const CompanionCard({
     super.key,
     required this.companion,
     required this.isSelected,
     required this.onTap,
+    required this.themeController,
   });
 
   @override
@@ -141,20 +142,13 @@ class CompanionCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(2),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [
-              Color(0xFFFDE7BB),
-              Color(0xFF9E6D38),
-              Color(0xFFE9B86E),
-              Color(0xFFE5B46B),
-            ],
-          ),
+          gradient: themeController.activeTheme.progressBarGradient,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Container(
           constraints: const BoxConstraints(minHeight: 168),
           decoration: BoxDecoration(
-            gradient: companion.bgGradient,
+            color: themeController.activeTheme.dropdownBackgroundColor,
             borderRadius: BorderRadius.circular(16),
           ),
           child: _buildCardContent(),
@@ -239,7 +233,7 @@ class CompanionCard extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: const Color.fromARGB(179, 238, 221, 158),
+          color: themeController.activeTheme.accentGoldColor,
           width: 2,
         ),
         color: isSelected ? const Color(0xFFF9F9F9) : Colors.transparent,
@@ -251,7 +245,7 @@ class CompanionCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       decoration: BoxDecoration(
-        color: const Color(0xFF410404),
+        color: themeController.activeTheme.cardBackgroundColor,
         borderRadius: BorderRadius.circular(29),
       ),
       child: Text(

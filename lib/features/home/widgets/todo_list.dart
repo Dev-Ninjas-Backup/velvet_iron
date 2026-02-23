@@ -137,21 +137,17 @@ class _TodoTile extends StatelessWidget {
                 children: [
                   Text(
                     todo.title,
-                    style: getTextStyle(color: Colors.white),
-                    overflow: TextOverflow.ellipsis,
+                    style: getTextStyle(color: Colors.white, fontSize: 12),
+                    // overflow: TextOverflow.ellipsis,
                   ),
                   Text(
                     todo.sub,
+
                     style: getTextStyle(
-                      color: theme.id == 'mage'
-                          ? const Color(0xFF4FA3D1)
-                          : theme.id == 'reader'
-                          ? const Color(0xFF4ECC71)
-                          : theme.id == 'gamer'
-                          ? const Color(0xFFD8A5FF)
-                          : theme.todoSubtitleColor,
+                      color: theme.todoTimeColor,
+                      fontSize: 11,
                     ),
-                    overflow: TextOverflow.ellipsis,
+                    // overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
@@ -168,7 +164,13 @@ class _TodoTile extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Image.asset(
-                      IconPath.star,
+                      theme.id == 'adventurer'
+                          ? IconPath.starAdventure
+                          : theme.id == 'mage'
+                          ? IconPath.starMage
+                          : theme.id == 'gamer'
+                          ? IconPath.starGamer
+                          : IconPath.starReader,
                       width: 12,
                       height: 12,
                       fit: BoxFit.contain,

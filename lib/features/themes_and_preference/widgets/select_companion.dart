@@ -28,24 +28,29 @@ class SelectCompanion extends StatelessWidget {
           const SizedBox(width: 12),
           SizedBox(width: 40, height: 40, child: avatar),
           const SizedBox(width: 12),
-          Text(
-            name,
-            style: getTextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w400,
+          Expanded(
+            child: Text(
+              name,
+              style: getTextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
 
           const Spacer(),
-
-          // Optional badge
           if (badgeText != null)
             GetBuilder<AppThemeController>(
               builder: (themeController) {
                 return Container(
-                  height: 24,
-                  width: 98,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 11,
+                    vertical: 4,
+                  ),
+                  // height: 24,
+                  // width: 98,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50),
                     border: Border.all(width: 1, color: Colors.transparent),

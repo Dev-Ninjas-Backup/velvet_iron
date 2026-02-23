@@ -35,7 +35,28 @@ class CustomGradientOptionButton extends StatelessWidget {
                 width: 1,
               ),
               gradient: isSelected
-                  ? themeController.activeTheme.progressBarGradient
+                  ? LinearGradient(
+                      colors:
+                          (themeController
+                                  .activeTheme
+                                  .selectedColors
+                                  .isNotEmpty &&
+                              themeController
+                                      .activeTheme
+                                      .selectedColors
+                                      .length >
+                                  1)
+                          ? [
+                              themeController.activeTheme.selectedColors[0],
+                              themeController.activeTheme.selectedColors[1],
+                            ]
+                          : (themeController
+                                .activeTheme
+                                .selectedColors
+                                .isNotEmpty)
+                          ? [themeController.activeTheme.selectedColors[0]]
+                          : [Colors.white],
+                    )
                   : null,
             ),
             alignment: Alignment.center,
