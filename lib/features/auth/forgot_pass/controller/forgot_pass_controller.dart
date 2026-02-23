@@ -31,15 +31,15 @@ class ForgotPassController extends GetxController {
     final model = buildModel();
 
     if (model == null) {
-      print('❌ Form validation failed');
+      print('Form validation failed');
       Get.snackbar('Error', 'Please enter a valid email');
       return;
     }
 
     try {
       isLoading.value = true;
-      print('🚀 Starting forgot password process...');
-      print('📧 Email: ${model.email}');
+      print('Starting forgot password process...');
+      print('Email: ${model.email}');
 
       EasyLoading.show(status: 'Sending reset code...');
 
@@ -48,21 +48,21 @@ class ForgotPassController extends GetxController {
         email: model.email,
       );
 
-      print('📦 Response received:');
-      print('   - Success: ${response.isSuccess}');
-      print('   - Status Code: ${response.statusCode}');
-      print('   - Error Message: ${response.errorMessage}');
-      print('   - Response Data: ${response.responseData}');
+      print('Response received:');
+      print('Success: ${response.isSuccess}');
+      print('Status Code: ${response.statusCode}');
+      print('Error Message: ${response.errorMessage}');
+      print('Response Data: ${response.responseData}');
 
       EasyLoading.dismiss();
 
       if (response.isSuccess) {
-        print('✅ Forgot password request successful!');
+        print('Forgot password request successful!');
 
         final message =
             response.responseData['message'] ??
             'Reset code has been sent to your email';
-        print('💾 Saving email to SharedPreferences...');
+        print('Saving email to SharedPreferences...');
         await SharedPreferencesHelper.saveUserData(
           userId: '',
           email: model.email,
@@ -70,30 +70,30 @@ class ForgotPassController extends GetxController {
           avatar: '',
           role: '',
         );
-        print('✅ Email saved successfully!');
+        print('Email saved successfully!');
 
         EasyLoading.showSuccess(message);
         await Future.delayed(const Duration(milliseconds: 800));
-        print('🔄 Navigating to OTP screen...');
+        print('Navigating to OTP screen...');
 
         Get.to(() => const OtpScreen(previousPage: 'ForgotScreen'));
 
-        print('✅ Navigation completed!');
+        print('Navigation completed!');
       } else {
-        print('❌ Forgot password request failed!');
-        print('   - Error: ${response.errorMessage}');
+        print('Forgot password request failed!');
+        print('Error: ${response.errorMessage}');
         EasyLoading.showError(response.errorMessage);
       }
     } catch (e, stackTrace) {
-      print('💥 Exception occurred:');
-      print('   - Error: $e');
-      print('   - Stack Trace: $stackTrace');
+      print('Exception occurred:');
+      print('Error: $e');
+      print('Stack Trace: $stackTrace');
 
       EasyLoading.dismiss();
       EasyLoading.showError('An error occurred: ${e.toString()}');
     } finally {
       isLoading.value = false;
-      print('🏁 Forgot password process completed!');
+      print('Forgot password process completed!');
     }
   }
 

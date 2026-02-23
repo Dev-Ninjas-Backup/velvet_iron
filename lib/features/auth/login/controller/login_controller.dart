@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_print
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -31,7 +30,7 @@ class LoginController extends GetxController {
   Future<void> _loadRememberMe() async {
     final savedRememberMe = await SharedPreferencesHelper.getRememberMe();
     rememberMe.value = savedRememberMe;
-    
+
     if (savedRememberMe) {
       final email = await SharedPreferencesHelper.getEmail();
       if (email != null) {
@@ -58,15 +57,15 @@ class LoginController extends GetxController {
 
   Future<void> login() async {
     if (!formKey.currentState!.validate()) {
-      print('❌ Form validation failed');
+      print('Form validation failed');
       return;
     }
 
     try {
       isLoading.value = true;
-      print('🚀 Starting login process...');
-      print('📝 Email/Username: ${userIdentifierController.text.trim()}');
-      
+      print('Starting login process...');
+      print('Email/Username: ${userIdentifierController.text.trim()}');
+
       EasyLoading.show(status: 'Logging in...');
 
       final response = await _authService.login(
@@ -74,40 +73,41 @@ class LoginController extends GetxController {
         password: passwordController.text,
       );
 
-      print('📦 Response received:');
-      print('   - Success: ${response.isSuccess}');
-      print('   - Status Code: ${response.statusCode}');
-      print('   - Response Data: ${response.responseData}');
+      print('Response received:');
+      print('Success: ${response.isSuccess}');
+      print('Status Code: ${response.statusCode}');
+      print('Error Message: ${response.errorMessage}');
+      print('Response Data: ${response.responseData}');
 
       EasyLoading.dismiss();
 
       if (response.isSuccess && response.responseData != null) {
         final responseBody = response.responseData;
-        
-        print('✅ Login successful!');
-        
+
+        print('Login successful!');
+
         // Extract tokens and user data
 
         final accessToken = responseBody['access_token'] ?? '';
         final refreshToken = responseBody['refresh_token'] ?? '';
         final userData = responseBody['user'];
-        
-        print('🔑 Tokens:');
-        print('   - Access Token: ${accessToken.substring(0, 20)}...');
-        print('   - Refresh Token: ${refreshToken.substring(0, 20)}...');
-        
-        print('👤 User Data:');
-        print('   - ID: ${userData['id']}');
-        print('   - Email: ${userData['email']}');
-        print('   - Name: ${userData['name']}');
-        print('   - Username: ${userData['username']}');
-        print('   - Role: ${userData['role']}');
-        print('   - Email Verified: ${userData['emailVerified']}');
-        print('   - Onboarded: ${userData['onBoarded']}');
+
+        print('Tokens:');
+        print('Access Token: ${accessToken.substring(0, 20)}...');
+        print('Refresh Token: ${refreshToken.substring(0, 20)}...');
+
+        print('User Data:');
+        print('ID: ${userData['id']}');
+        print('Email: ${userData['email']}');
+        print('Name: ${userData['name']}');
+        print('Username: ${userData['username']}');
+        print('Role: ${userData['role']}');
+        print('Email Verified: ${userData['emailVerified']}');
+        print('Onboarded: ${userData['onBoarded']}');
 
         // Save login data to SharedPreferences
 
-        print('💾 Saving login data to SharedPreferences...');
+        print('Saving login data to SharedPreferences...');
         await SharedPreferencesHelper.saveLoginData(
           accessToken: accessToken,
           refreshToken: refreshToken,
@@ -118,35 +118,35 @@ class LoginController extends GetxController {
           role: userData['role'],
           rememberMe: rememberMe.value,
         );
-        print('✅ Login data saved successfully!');
+        print('Login data saved successfully!');
 
         EasyLoading.showSuccess('Login successful!');
 
         // Navigate based on onboarding status
         await Future.delayed(const Duration(milliseconds: 800));
-        
+
         if (userData['onBoarded'] == false) {
-          print('🔄 User not onboarded. Navigating to welcome screen...');
+          print('User not onboarded. Navigating to welcome screen...');
           Get.offAllNamed(AppRoute.welcomeScreen);
         } else {
-          print('🔄 User already onboarded. Navigating to home screen...');
+          print('User already onboarded. Navigating to home screen...');
           Get.offAllNamed(AppRoute.homeScreen);
         }
       } else {
-        print('❌ Login failed!');
-        print('   - Error: ${response.errorMessage}');
+        print('Login failed!');
+        print('Error: ${response.errorMessage}');
         EasyLoading.showError(response.errorMessage);
       }
     } catch (e, stackTrace) {
-      print('💥 Exception occurred:');
-      print('   - Error: $e');
-      print('   - Stack Trace: $stackTrace');
-      
+      print('Exception occurred:');
+      print('Error: $e');
+      print('Stack Trace: $stackTrace');
+
       EasyLoading.dismiss();
       EasyLoading.showError('An error occurred: ${e.toString()}');
     } finally {
       isLoading.value = false;
-      print('🏁 Login process completed!');
+      print('Login process completed!');
     }
   }
 
