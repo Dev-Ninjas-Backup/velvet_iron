@@ -15,9 +15,9 @@ class OtpService {
     required String otp,
   }) async {
     try {
-      print('📧 Verifying email OTP...');
-      print('   - Email: $email');
-      print('   - OTP: $otp');
+      print('Verifying email OTP...');
+      print('Email: $email');
+      print('OTP: $otp');
 
       final url = Uri.parse('$baseUrl/auth/verify-email');
 
@@ -27,9 +27,9 @@ class OtpService {
         body: jsonEncode({'email': email, 'otp': otp}),
       );
 
-      print('📦 Verify Email Response:');
-      print('   - Status Code: ${response.statusCode}');
-      print('   - Body: ${response.body}');
+      print('Verify Email Response:');
+      print('Status Code: ${response.statusCode}');
+      print('Body: ${response.body}');
 
       final decodedData = jsonDecode(response.body);
 
@@ -60,7 +60,7 @@ class OtpService {
         );
       }
     } catch (e) {
-      print('💥 Verify Email Error: $e');
+      print('Verify Email Error: $e');
       return ResponseData(
         isSuccess: false,
         statusCode: 500,
@@ -74,8 +74,8 @@ class OtpService {
 
   Future<ResponseData> resendVerificationOtp({required String email}) async {
     try {
-      print('🔄 Resending verification OTP...');
-      print('   - Email: $email');
+      print('Resending verification OTP...');
+      print('Email: $email');
 
       final url = Uri.parse('$baseUrl/auth/resend-verification-otp');
 
@@ -85,9 +85,9 @@ class OtpService {
         body: jsonEncode({'email': email}),
       );
 
-      print('📦 Resend OTP Response:');
-      print('   - Status Code: ${response.statusCode}');
-      print('   - Body: ${response.body}');
+      print('Resend OTP Response:');
+      print('Status Code: ${response.statusCode}');
+      print('Body: ${response.body}');
 
       final decodedData = jsonDecode(response.body);
 
@@ -118,7 +118,7 @@ class OtpService {
         );
       }
     } catch (e) {
-      print('💥 Resend OTP Error: $e');
+      print('Resend OTP Error: $e');
       return ResponseData(
         isSuccess: false,
         statusCode: 500,
