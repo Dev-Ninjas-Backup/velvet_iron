@@ -68,8 +68,8 @@ class AuthService {
     required String password,
   }) async {
     try {
-      print('🔐 Logging in...');
-      print('   - Email/Username: $emailOrUsername');
+      print('Logging in...');
+      print('Email/Username: $emailOrUsername');
 
       final url = Uri.parse('$baseUrl/auth/login');
 
@@ -82,9 +82,9 @@ class AuthService {
         }),
       );
 
-      print('📦 Login Response:');
-      print('   - Status Code: ${response.statusCode}');
-      print('   - Body: ${response.body}');
+      print('Login Response:');
+      print('Status Code: ${response.statusCode}');
+      print('Body: ${response.body}');
 
       final decodedData = jsonDecode(response.body);
 
@@ -113,7 +113,7 @@ class AuthService {
         );
       }
     } catch (e) {
-      print('💥 Login Error: $e');
+      print('Login Error: $e');
       return ResponseData(
         isSuccess: false,
         statusCode: 500,

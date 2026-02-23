@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_print
 
-
 import 'dart:convert';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
@@ -12,8 +11,8 @@ class ForgotPasswordService {
 
   Future<ResponseData> forgotPassword({required String email}) async {
     try {
-      print('📧 Sending forgot password request...');
-      print('   - Email: $email');
+      print('Sending forgot password request...');
+      print('Email: $email');
 
       final url = Uri.parse('$baseUrl/auth/forgot-password');
 
@@ -23,9 +22,9 @@ class ForgotPasswordService {
         body: jsonEncode({'email': email}),
       );
 
-      print('📦 Forgot Password Response:');
-      print('   - Status Code: ${response.statusCode}');
-      print('   - Body: ${response.body}');
+      print('Forgot Password Response:');
+      print('Status Code: ${response.statusCode}');
+      print('Body: ${response.body}');
 
       final decodedData = jsonDecode(response.body);
 
@@ -57,7 +56,7 @@ class ForgotPasswordService {
         );
       }
     } catch (e) {
-      print('💥 Forgot Password Error: $e');
+      print('Forgot Password Error: $e');
       return ResponseData(
         isSuccess: false,
         statusCode: 500,
