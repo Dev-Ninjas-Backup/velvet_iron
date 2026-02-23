@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
-import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
 import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/gradient_option_button.dart';
@@ -42,7 +41,6 @@ class WeightLog extends StatelessWidget {
                     const SizedBox(width: 16),
                     GestureDetector(
                       onTap: () {
-                        // Navigate to Home screen tab
                         navController.changeTabIndex(0);
                       },
                       child: Container(
@@ -76,18 +74,12 @@ class WeightLog extends StatelessWidget {
           },
           body: Stack(
             children: [
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Image.asset(ImagePath.magicImage, fit: BoxFit.cover),
-              ),
               SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(14),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -127,7 +119,17 @@ class WeightLog extends StatelessWidget {
                               Expanded(
                                 child: Obx(
                                   () => WeightStatusCard(
-                                    iconPath: IconPath.steelyard,
+                                    iconPath:
+                                        themeController.activeTheme.id ==
+                                            'adventurer'
+                                        ? 'assets/icons/steelyard_adventure.png'
+                                        : themeController.activeTheme.id ==
+                                              'mage'
+                                        ? 'assets/icons/steelyard_mage.png'
+                                        : themeController.activeTheme.id ==
+                                              'gamer'
+                                        ? 'assets/icons/steelyard_gamer.png'
+                                        : 'assets/icons/steelyard_reader.png',
                                     weightValue:
                                         "${weightLogController.currentWeight.value} lbs",
                                     label: "Current Weight",
@@ -138,7 +140,17 @@ class WeightLog extends StatelessWidget {
                               Expanded(
                                 child: Obx(
                                   () => WeightStatusCard(
-                                    iconPath: IconPath.updown,
+                                    iconPath:
+                                        themeController.activeTheme.id ==
+                                            'adventurer'
+                                        ? 'assets/icons/updown_adventure.png'
+                                        : themeController.activeTheme.id ==
+                                              'mage'
+                                        ? 'assets/icons/updown_mage.png'
+                                        : themeController.activeTheme.id ==
+                                              'gamer'
+                                        ? 'assets/icons/updown_gamer.png'
+                                        : 'assets/icons/updown_reader.png',
                                     weightValue:
                                         "${weightLogController.totalChange.value} lbs",
                                     label: "Total Change",
@@ -149,7 +161,17 @@ class WeightLog extends StatelessWidget {
                               Expanded(
                                 child: Obx(
                                   () => WeightStatusCard(
-                                    iconPath: IconPath.clock,
+                                    iconPath:
+                                        themeController.activeTheme.id ==
+                                            'adventurer'
+                                        ? 'assets/icons/clock_adventure.png'
+                                        : themeController.activeTheme.id ==
+                                              'mage'
+                                        ? 'assets/icons/clock_mage.png'
+                                        : themeController.activeTheme.id ==
+                                              'gamer'
+                                        ? 'assets/icons/clock_gamer.png'
+                                        : 'assets/icons/clock_reader.png',
                                     weightValue:
                                         weightLogController.entriesLogged.value,
                                     label: "Entries Logged",

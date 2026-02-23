@@ -73,70 +73,59 @@ class QuestsScreen extends StatelessWidget {
                         child: Text('No quest data available.'),
                       );
                     }
-                    return SingleChildScrollView(
+                    return Padding(
                       padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: ProgressCard(
-                                  iconPath: questsData.progressPoints.iconPath,
-                                  header: questsData.progressPoints.header,
-                                  points: questsData.progressPoints.points,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: ProgressCard(
+                                    iconPath:
+                                        questsData.progressPoints.iconPath,
+                                    header: questsData.progressPoints.header,
+                                    points: questsData.progressPoints.points,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: ProgressCard(
-                                  iconPath: questsData.totalXp.iconPath,
-                                  header: questsData.totalXp.header,
-                                  points: questsData.totalXp.points,
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: ProgressCard(
+                                    iconPath: questsData.totalXp.iconPath,
+                                    header: questsData.totalXp.header,
+                                    points: questsData.totalXp.points,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Text(
-                            "Today's Quests",
-                            style: getTextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                              ],
                             ),
-                          ),
-                          SizedBox(height: 20),
-                          ...questsData.todaysQuests.map(
-                            (quest) => Padding(
-                              padding: const EdgeInsets.only(bottom: 7),
-                              child: TodaysQuestItem(
-                                header: quest.header,
-                                title: quest.title,
-                                tagText: quest.tagText,
-                                tagGradient: quest.tagGradient,
-                                xp: quest.xp,
+                            SizedBox(height: 20),
+                            Text(
+                              "Today's Quests",
+                              style: getTextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
-                          SizedBox(height: 20),
-                          QuestTips(),
-                          // CustomSmallButton(
-                          //   width: 108,
-                          //   text: "Read Article",
-                          //   onPressed: () {},
-                          //   gradient: const LinearGradient(
-                          //     begin: Alignment.topLeft,
-                          //     end: Alignment.bottomRight,
-                          //     colors: [
-                          //       Color(0xFFFDE7BB),
-                          //       Color(0xFF9D6933),
-                          //       Color(0xFFFEE9BF),
-                          //     ],
-                          //   ),
-                          //   fontColor: Colors.white,
-                          // ),
-                        ],
+                            SizedBox(height: 20),
+                            ...questsData.todaysQuests.map(
+                              (quest) => Padding(
+                                padding: const EdgeInsets.only(bottom: 7),
+                                child: TodaysQuestItem(
+                                  header: quest.header,
+                                  title: quest.title,
+                                  tagText: quest.tagText,
+                                  tagGradient: quest.tagGradient,
+                                  xp: quest.xp,
+                                  isActive: false,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            QuestTips(),
+                          ],
+                        ),
                       ),
                     );
                   },

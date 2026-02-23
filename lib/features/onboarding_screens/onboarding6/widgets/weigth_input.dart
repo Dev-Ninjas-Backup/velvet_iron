@@ -3,7 +3,9 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
+import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding6/controller/onboarding6_controller.dart';
 
 class WeightSelectionWidget extends StatelessWidget {
@@ -13,58 +15,63 @@ class WeightSelectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<OnboardingController6>();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+    return GetBuilder<AppThemeController>(
+      builder: (themeController) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
             children: [
-              _buildUnitButton(
-                label: 'lbs',
-                isSelected: controller.selectedUnit,
-                onTap: () => controller.selectUnit('lbs'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildUnitButton(
+                    label: 'lbs',
+                    isSelected: controller.selectedUnit,
+                    onTap: () => controller.selectUnit('lbs'),
+                  ),
+                  const SizedBox(width: 6),
+                  _buildUnitButton(
+                    label: 'kg',
+                    isSelected: controller.selectedUnit,
+                    onTap: () => controller.selectUnit('kg'),
+                  ),
+                ],
               ),
-              const SizedBox(width: 6),
-              _buildUnitButton(
-                label: 'kg',
-                isSelected: controller.selectedUnit,
-                onTap: () => controller.selectUnit('kg'),
+              const SizedBox(height: 20),
+              Container(
+                height: 50,
+                width: 343,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: themeController.activeTheme.dropdownBackgroundColor,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: themeController.activeTheme.borderColor,
+                  ),
+                ),
+                child: TextField(
+                  controller: controller.weightController,
+                  style: getTextStyle(
+                    fontSize: 12,
+                    color: Colors.white,
+                  ).copyWith(letterSpacing: 1.5),
+                  textAlign: TextAlign.start,
+                  decoration: InputDecoration(
+                    hintText: 'Enter current weight',
+                    labelStyle: getTextStyle(fontSize: 12, color: Colors.white),
+                    hintStyle: getTextStyle(fontSize: 12, color: Colors.white),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                ),
               ),
             ],
           ),
-
-          const SizedBox(height: 20),
-          Container(
-            height: 50,
-            width: 343,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            decoration: BoxDecoration(
-              color: const Color(0xFF3A0303),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Color(0xFF6B1717)),
-            ),
-            child: TextField(
-              controller: controller.weightController,
-              style: getTextStyle(
-                fontSize: 12,
-                color: Colors.white,
-              ).copyWith(letterSpacing: 1.5),
-              textAlign: TextAlign.start,
-              decoration: InputDecoration(
-                hintText: 'Enter current weight',
-                labelStyle: getTextStyle(fontSize: 12, color: Colors.white),
-                hintStyle: getTextStyle(
-                  fontSize: 12,
-                  color: Color.fromRGBO(145, 76, 76, 1),
-                ),
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(vertical: 14),
-              ),
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -73,6 +80,7 @@ class WeightSelectionWidget extends StatelessWidget {
     required RxString isSelected,
     required VoidCallback onTap,
   }) {
+    final themeController = Get.find<AppThemeController>();
     return Obx(() {
       final selected = isSelected.value == label;
       return GestureDetector(
@@ -80,25 +88,16 @@ class WeightSelectionWidget extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
           decoration: BoxDecoration(
-            color: Color(0xFF3A0303),
+            color: selected
+                ? null
+                : themeController.activeTheme.cardBackgroundColor,
             gradient: selected
-                ? const LinearGradient(
-                    colors: [
-                      Color(0xFFFDE7BB),
-                      Color(0xFF9E6D38),
-                      Color(0xFFE9B86E),
-                      Color(0xFF9D6933),
-                      Color(0xFFFEE9BF),
-                      Color(0xFF683E23),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  )
+                ? themeController.activeTheme.progressBarGradient
                 : null,
             borderRadius: BorderRadius.circular(50),
             border: Border.all(
               color: selected
-                  ? Colors.transparent
+                  ? themeController.activeTheme.borderColor
                   : Colors.white.withValues(alpha: 0.5),
               width: 1.5,
             ),

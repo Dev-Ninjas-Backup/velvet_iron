@@ -48,13 +48,16 @@ class CompletedTabContent extends StatelessWidget {
               cursorColor: themeController.activeTheme.accentGoldColor,
               style: getTextStyle(fontSize: 12, color: Colors.white),
               decoration: InputDecoration(
-                hintText: "Grilled chicken salad with olive oil dressing...?",
+                hintText: "How did it feel?",
                 hintStyle: getTextStyle(
                   fontSize: 12,
-                  color: themeController.activeTheme.todoSubtitleColor,
+                  color: themeController.activeTheme.todoTimeColor.withValues(
+                    alpha: 0.9,
+                  ),
                 ),
                 filled: true,
-                fillColor: themeController.activeTheme.dropdownBackgroundColor,
+                fillColor: themeController.activeTheme.textfieldColor
+                    .withValues(alpha: 0.5),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(

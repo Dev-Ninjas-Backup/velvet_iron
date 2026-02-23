@@ -42,12 +42,12 @@ class MoodLogController extends GetxController {
 
   String _getEmojiForTheme(String themeId, String moodType) {
     switch (themeId) {
-      case 'mage':
-        return _getWhiteEmoji(moodType);
-      case 'reader':
-        return _getGreenEmoji(moodType);
       case 'gamer':
+        return _getGreenEmoji(moodType);
+      case 'mage':
         return _getPurpleEmoji(moodType);
+      case 'reader':
+        return _getWhiteEmoji(moodType);
       default:
         return _getDefaultEmoji(moodType);
     }

@@ -78,7 +78,7 @@ class SelectTheme extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: gradientColors,
+            colors: gradientColors, 
           ),
         ),
         child: Column(

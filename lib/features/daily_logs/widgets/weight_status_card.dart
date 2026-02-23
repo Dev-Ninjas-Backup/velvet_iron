@@ -32,7 +32,35 @@ class WeightStatusCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(iconPath, width: 32, height: 32),
+              Image.asset(
+                iconPath == 'steelyard'
+                    ? (themeController.activeTheme.id == 'adventurer'
+                          ? 'assets/icons/steelyard_adventure.png'
+                          : themeController.activeTheme.id == 'mage'
+                          ? 'assets/icons/steelyard_mage.png'
+                          : themeController.activeTheme.id == 'gamer'
+                          ? 'assets/icons/steelyard_gamer.png'
+                          : 'assets/icons/steelyard_reader.png')
+                    : iconPath == 'updown'
+                    ? (themeController.activeTheme.id == 'adventurer'
+                          ? 'assets/icons/updown_adventure.png'
+                          : themeController.activeTheme.id == 'mage'
+                          ? 'assets/icons/updown_mage.png'
+                          : themeController.activeTheme.id == 'gamer'
+                          ? 'assets/icons/updown_gamer.png'
+                          : 'assets/icons/updown_reader.png')
+                    : iconPath == 'clock'
+                    ? (themeController.activeTheme.id == 'adventurer'
+                          ? 'assets/icons/clock_adventure.png'
+                          : themeController.activeTheme.id == 'mage'
+                          ? 'assets/icons/clock_mage.png'
+                          : themeController.activeTheme.id == 'gamer'
+                          ? 'assets/icons/clock_gamer.png'
+                          : 'assets/icons/clock_reader.png')
+                    : iconPath,
+                width: 32,
+                height: 32,
+              ),
               const SizedBox(height: 8),
               Text(
                 weightValue,
@@ -47,7 +75,7 @@ class WeightStatusCard extends StatelessWidget {
               Text(
                 label,
                 style: getTextStyle(
-                  fontSize: 12,
+                  fontSize: 10,
                   fontWeight: FontWeight.w400,
                   color: Colors.white,
                 ),

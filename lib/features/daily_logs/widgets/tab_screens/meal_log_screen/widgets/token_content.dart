@@ -50,7 +50,7 @@ class TokenContent extends StatelessWidget {
               height: 73,
               child: TextField(
                 maxLines: 3,
-                cursorColor: themeController.activeTheme.accentGoldColor,
+                cursorColor: themeController.activeTheme.textfieldColor,
                 style: getTextStyle(fontSize: 12, color: Colors.white),
                 decoration: InputDecoration(
                   hintText: "Grilled chicken salad with olive oil dressing...?",
@@ -59,7 +59,7 @@ class TokenContent extends StatelessWidget {
                     color: themeController.activeTheme.todoTimeColor,
                   ),
                   filled: true,
-                  fillColor: themeController.activeTheme.dropdownBackgroundColor
+                  fillColor: themeController.activeTheme.textfieldColor
                       .withValues(alpha: 0.3),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),

@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart'; // Import for Color
 import 'package:velvet_iron/features/quests/model/quest_model.dart';
-import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 
 class QuestController extends GetxController {
   final Rx<QuestsData?> questsData = Rx<QuestsData?>(null);
@@ -27,12 +26,12 @@ class QuestController extends GetxController {
       await Future.delayed(const Duration(seconds: 1));
       final mockQuestsData = QuestsData(
         progressPoints: QuestProgress(
-          iconPath: IconPath.progress,
+          iconPath: 'steelyard',
           header: "Today's Progress",
           points: "2/10",
         ),
         totalXp: QuestProgress(
-          iconPath: IconPath.trophy,
+          iconPath: 'trophy',
           header: "Today's Progress",
           points: "45 XP",
         ),
@@ -131,4 +130,6 @@ class QuestController extends GetxController {
       isLoading(false);
     }
   }
+
+  // ...existing code...
 }

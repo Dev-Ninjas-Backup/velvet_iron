@@ -22,10 +22,10 @@ class NoteTextField extends StatelessWidget {
               hintText: "How are you feeling today?",
               hintStyle: getTextStyle(
                 fontSize: 12,
-                color: themeController.activeTheme.todoSubtitleColor,
+                color: themeController.activeTheme.todoTimeColor,
               ),
               filled: true,
-              fillColor: themeController.activeTheme.dropdownBackgroundColor,
+              fillColor: themeController.activeTheme.textfieldColor,
               contentPadding: const EdgeInsets.all(12),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),

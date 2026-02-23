@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
-import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/gradient_option_button.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/meal_tab_switcher.dart';
@@ -72,12 +71,6 @@ class MealLog extends StatelessWidget {
           },
           body: Stack(
             children: [
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Image.asset(ImagePath.magicImage, fit: BoxFit.cover),
-              ),
               SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,25 +113,38 @@ class MealLog extends StatelessWidget {
                           SizedBox(height: 20),
                           CalorieConsumptionCard(),
                           SizedBox(height: 15),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
-                              NutritionLoadingCard(
-                                amount: "80/120 g",
-                                label: "Carbs",
-                                progress: 0.7,
-                              ),
-                              NutritionLoadingCard(
-                                amount: "180/210 g",
-                                label: "Protein",
-                                progress: 0.5,
-                              ),
-                              NutritionLoadingCard(
-                                amount: "110/140 g",
-                                label: "Fats",
-                                progress: 0.4,
-                              ),
-                            ],
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: const [
+                                SizedBox(
+                                  width: 100,
+                                  child: NutritionLoadingCard(
+                                    amount: "80/120 g",
+                                    label: "Carbs",
+                                    progress: 0.7,
+                                  ),
+                                ),
+                                SizedBox(width: 12),
+                                SizedBox(
+                                  width: 100,
+                                  child: NutritionLoadingCard(
+                                    amount: "180/210 g",
+                                    label: "Protein",
+                                    progress: 0.5,
+                                  ),
+                                ),
+                                SizedBox(width: 12),
+                                SizedBox(
+                                  width: 100,
+                                  child: NutritionLoadingCard(
+                                    amount: "110/140 g",
+                                    label: "Fats",
+                                    progress: 0.4,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           Text(
                             "Log a Meal",
@@ -149,12 +155,12 @@ class MealLog extends StatelessWidget {
                           ),
                           SizedBox(height: 20),
                           Container(
-                            padding: const EdgeInsets.all(12),
+                            // padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               color: themeController
                                   .activeTheme
                                   .cardBackgroundColor
-                                  .withValues(alpha: .8),
+                                  .withValues(alpha: .4),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: MealTabSwitcher(

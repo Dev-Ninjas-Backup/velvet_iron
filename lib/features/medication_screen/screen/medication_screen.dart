@@ -103,7 +103,14 @@ class MedicationScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: CustomLogContainer(
-                            iconPath: IconPath.injection,
+                            iconPath:
+                                themeController.activeTheme.id == 'adventurer'
+                                ? IconPath.injectionAdventure
+                                : themeController.activeTheme.id == 'mage'
+                                ? IconPath.injectionMage
+                                : themeController.activeTheme.id == 'gamer'
+                                ? IconPath.injectionGamer
+                                : IconPath.injectionReader,
                             title: "Dose Logged",
                             value: "50",
                             rewardAmount: "150",
@@ -112,7 +119,14 @@ class MedicationScreen extends StatelessWidget {
                         const SizedBox(width: 12),
                         Expanded(
                           child: CustomLogContainer(
-                            iconPath: IconPath.quillpen,
+                            iconPath:
+                                themeController.activeTheme.id == 'adventurer'
+                                ? IconPath.quillpenAdenture
+                                : themeController.activeTheme.id == 'mage'
+                                ? IconPath.quillpenMage
+                                : themeController.activeTheme.id == 'gamer'
+                                ? IconPath.quillpenGamer
+                                : IconPath.quillpenReader,
                             title: "Next Dose",
                             value: "50",
                             rewardAmount: "150",
@@ -133,7 +147,7 @@ class MedicationScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: themeController.activeTheme.cardBackgroundColor
-                            .withValues(alpha: .7),
+                            .withValues(alpha: .5),
                         borderRadius: BorderRadius.circular(10),
                       ),
 

@@ -40,7 +40,7 @@ class GeneralSettingsWidget extends StatelessWidget {
             // Daily Macro Goal
             _SettingsItem(
               themeController: themeController,
-              iconPath: IconPath.trophy,
+              iconPath: IconPath.trophyAdventure,
               title: 'Daily Macro Goal',
               onTap: () => Get.toNamed(AppRoute.getdailyGoalScreen()),
             ),
@@ -58,7 +58,7 @@ class GeneralSettingsWidget extends StatelessWidget {
             // My Subscriptions
             _SettingsItem(
               themeController: themeController,
-              iconPath: ImagePath.diamond,
+              iconPath: ImagePath.diamondAdventurer,
               title: 'My Subscriptions',
               onTap: () => Get.toNamed(AppRoute.mySubscriptionScreen),
             ),
@@ -109,7 +109,7 @@ class _SettingsItem extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: themeController.activeTheme.cardBackgroundColor.withValues(
-            alpha: .8,
+            alpha: .5,
           ),
           borderRadius: BorderRadius.circular(16),
         ),
@@ -144,11 +144,7 @@ class _SettingsItem extends StatelessWidget {
                 ),
               ),
             ),
-            Icon(
-              Icons.chevron_right,
-              color: themeController.activeTheme.todoSubtitleColor,
-              size: 24,
-            ),
+            Icon(Icons.chevron_right, color: Colors.white, size: 24),
           ],
         ),
       ),

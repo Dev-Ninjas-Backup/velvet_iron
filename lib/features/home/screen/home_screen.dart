@@ -75,21 +75,23 @@ class HomeScreenContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 120),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            HeaderSection(),
-            SizedBox(height: 20),
-            WelcomeCard(),
-            SizedBox(height: 26),
-            WeightProgress(title: 'Weekly Activity'),
-            SizedBox(height: 26),
-            MoodSelector(),
-            SizedBox(height: 26),
-            TodoSection(),
-          ],
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              HeaderSection(),
+              SizedBox(height: 20),
+              WelcomeCard(),
+              SizedBox(height: 26),
+              WeightProgress(title: 'Weekly Activity'),
+              SizedBox(height: 26),
+              MoodSelector(),
+              SizedBox(height: 26),
+              TodoSection(),
+            ],
+          ),
         ),
       ),
     );

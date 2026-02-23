@@ -83,32 +83,66 @@ class ThemeScreen extends StatelessWidget {
                             const SizedBox(height: 20),
                             Themes(
                               title: 'Adventurer',
-                              badgeText: 'Active Now',
+                              badgeText:
+                                  themeController.activeTheme.id == 'adventurer'
+                                  ? 'Active Now'
+                                  : 'Unlock 250 xp',
                               subtitle:
-                                  '"Discipline is the blade — sharpen it daily."',
+                                  themeController.activeTheme.id == 'adventurer'
+                                  ? '"Discipline is the blade — sharpen it daily."'
+                                  : null,
                               gradientColors: _getThemeGradient('adventurer'),
-                              icon: Image.asset(IconPath.goldencircle),
+                              icon:
+                                  themeController.activeTheme.id == 'adventurer'
+                                  ? Image.asset(IconPath.goldencircle)
+                                  : Image.asset(IconPath.lock),
                             ),
                             const SizedBox(height: 12),
                             Themes(
                               title: 'Mage',
-                              badgeText: 'Unlock 250 xp',
+                              badgeText:
+                                  themeController.activeTheme.id == 'mage'
+                                  ? 'Active Now'
+                                  : 'Unlock 250 xp',
+                              subtitle: themeController.activeTheme.id == 'mage'
+                                  ? '"Discipline is the blade — sharpen it daily."'
+                                  : null,
                               gradientColors: _getThemeGradient('mage'),
-                              icon: Image.asset(IconPath.lock),
+                              icon: themeController.activeTheme.id == 'mage'
+                                  ? Image.asset(IconPath.goldencircle)
+                                  : Image.asset(IconPath.lock),
                             ),
                             const SizedBox(height: 12),
                             Themes(
                               title: 'Reader',
-                              badgeText: 'Unlock 250 xp',
+                              badgeText:
+                                  themeController.activeTheme.id == 'reader'
+                                  ? 'Active Now'
+                                  : 'Unlock 250 xp',
+                              subtitle:
+                                  themeController.activeTheme.id == 'reader'
+                                  ? '"Discipline is the blade — sharpen it daily."'
+                                  : null,
                               gradientColors: _getThemeGradient('reader'),
-                              icon: Image.asset(IconPath.lock),
+                              icon: themeController.activeTheme.id == 'reader'
+                                  ? Image.asset(IconPath.goldencircle)
+                                  : Image.asset(IconPath.lock),
                             ),
                             const SizedBox(height: 12),
                             Themes(
                               title: 'Gamer',
-                              badgeText: 'Unlock 250 xp',
+                              badgeText:
+                                  themeController.activeTheme.id == 'gamer'
+                                  ? 'Active Now'
+                                  : 'Unlock 250 xp',
+                              subtitle:
+                                  themeController.activeTheme.id == 'gamer'
+                                  ? '"Discipline is the blade — sharpen it daily."'
+                                  : null,
                               gradientColors: _getThemeGradient('gamer'),
-                              icon: Image.asset(IconPath.lock),
+                              icon: themeController.activeTheme.id == 'gamer'
+                                  ? Image.asset(IconPath.goldencircle)
+                                  : Image.asset(IconPath.lock),
                             ),
                             const SizedBox(height: 30),
                             Text(
@@ -218,8 +252,7 @@ class ThemeScreen extends StatelessWidget {
           Color(0xFF1E332C),
           Color(0xFF111C18),
           Color(0xFF1E332C),
-          Color(0xFF111C18),
-          Color(0xFFE7C143),
+          Color(0xFF008353),
         ];
       default:
         return const [
@@ -228,8 +261,8 @@ class ThemeScreen extends StatelessWidget {
           Color(0xFF310101),
           Color(0xFF550606),
           Color(0xFF310101),
-          Color(0xFF9E6D38),
           Color(0xFF683E23),
+          Color(0xFF9E6D38),
         ];
     }
   }

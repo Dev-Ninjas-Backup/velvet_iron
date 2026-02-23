@@ -19,7 +19,6 @@ import 'package:velvet_iron/features/onboarding_screens/onboarding7/screen/onboa
 import 'package:velvet_iron/features/onboarding_screens/onboarding8/screen/onboarding8_screen.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding9/screen/onboarding9_screen.dart';
 import 'package:velvet_iron/features/onboarding_screens/theme_onboading/screen/theme_onboarding_screen.dart';
-import 'package:velvet_iron/features/popups/red_golden/screen/red_golden_popup_screen.dart';
 import 'package:velvet_iron/features/profile/screens/profile_screen.dart';
 import 'package:velvet_iron/features/qr_code_scan/screen/qrcode_scan_screen.dart';
 import 'package:velvet_iron/features/settings/screen/setting_screen.dart';
@@ -125,7 +124,6 @@ class AppRoute {
     GetPage(name: questsScreen, page: () => QuestsScreen()),
     GetPage(name: profileScreen, page: () => ProfileScreen()),
     GetPage(name: qrcodeScanScreen, page: () => QrcodeScanScreen()),
-    GetPage(name: redGoldenPopupScreen, page: () => RedGoldenPopupScreen()),
     GetPage(name: dailyGoalScreen, page: () => DailyGoalScreen()),
     GetPage(name: feedbackScreen, page: () => FeedbackScreen()),
     GetPage(name: themeScreen, page: () => ThemeScreen()),

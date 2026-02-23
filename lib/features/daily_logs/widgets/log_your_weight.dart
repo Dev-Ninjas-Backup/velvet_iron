@@ -24,7 +24,9 @@ class LogYourWeightCard extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: themeController.activeTheme.cardBackgroundColor,
+            color: themeController.activeTheme.cardBackgroundColor.withValues(
+              alpha: 0.4,
+            ),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
@@ -42,7 +44,10 @@ class LogYourWeightCard extends StatelessWidget {
                   style: getTextStyle(fontSize: 14),
                   decoration: InputDecoration(
                     hintText: "Enter current weight",
-                    hintStyle: getTextStyle(fontSize: 12, color: Colors.white),
+                    hintStyle: getTextStyle(
+                      fontSize: 12,
+                      color: themeController.activeTheme.todoTimeColor,
+                    ),
                     filled: true,
                     fillColor: themeController
                         .activeTheme
@@ -100,7 +105,7 @@ class LogYourWeightCard extends StatelessWidget {
                     hintText: "Feeling good today...",
                     hintStyle: getTextStyle(
                       fontSize: 12,
-                      color: Colors.white70,
+                      color: themeController.activeTheme.todoTimeColor,
                     ),
                     filled: true,
                     fillColor: themeController

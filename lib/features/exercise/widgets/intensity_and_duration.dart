@@ -43,9 +43,8 @@ class _IntensityAndDurationState extends State<IntensityAndDuration> {
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: themeController
-                              .activeTheme
-                              .dropdownBackgroundColor,
+                          color: themeController.activeTheme.textfieldColor
+                              .withValues(alpha: 0.4),
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                             color: themeController.activeTheme.borderColor,
@@ -97,9 +96,8 @@ class _IntensityAndDurationState extends State<IntensityAndDuration> {
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: themeController
-                              .activeTheme
-                              .dropdownBackgroundColor,
+                          color: themeController.activeTheme.textfieldColor
+                              .withValues(alpha: 0.4),
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                             color: themeController.activeTheme.borderColor,

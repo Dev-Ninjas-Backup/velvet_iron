@@ -17,8 +17,8 @@ class UpcomingLogWidget extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: themeController.activeTheme.todoSubtitleColor.withValues(
-              alpha: 0.3,
+            color: themeController.activeTheme.textfieldColor.withValues(
+              alpha: 0.6,
             ),
           ),
           child: Column(
@@ -69,8 +69,10 @@ class _UpcomingLogHeader extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(8),
+                color: themeController.activeTheme.textfieldColor.withValues(
+                  alpha: 0.6,
+                ),
+                borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: themeController.activeTheme.borderColor,
                   width: 1,
@@ -136,7 +138,7 @@ class _UpcomingLogContent extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
-          Center(child: Image.asset(IconPath.todo)),
+          Center(child: Image.asset(IconPath.todo, height: 25, width: 25)),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -158,7 +160,7 @@ class _UpcomingLogContent extends StatelessWidget {
                   style: getTextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
-                    color: themeController.activeTheme.todoSubtitleColor,
+                    color: themeController.activeTheme.accentGoldColor,
                   ),
                 ),
               ],
@@ -180,7 +182,17 @@ class _UpcomingLogContent extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 4),
-                  Image.asset(IconPath.star, height: 12, width: 12),
+                  Image.asset(
+                    themeController.activeTheme.id == 'adventurer'
+                        ? IconPath.starAdventure
+                        : themeController.activeTheme.id == 'mage'
+                        ? IconPath.starMage
+                        : themeController.activeTheme.id == 'gamer'
+                        ? IconPath.starGamer
+                        : IconPath.starReader,
+                    height: 12,
+                    width: 12,
+                  ),
                 ],
               ),
               const SizedBox(height: 2),
@@ -190,7 +202,7 @@ class _UpcomingLogContent extends StatelessWidget {
                   style: getTextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w400,
-                    color: Colors.white,
+                    color: themeController.activeTheme.accentGoldColor,
                   ),
                 ),
               ),

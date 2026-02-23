@@ -24,7 +24,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
           height: 40,
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
           decoration: BoxDecoration(
-            color: themeController.activeTheme.dropdownBackgroundColor,
+            color: themeController.activeTheme.textfieldColor,
             borderRadius: BorderRadius.circular(10),
           ),
           child: DropdownButtonHideUnderline(

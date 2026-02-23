@@ -29,7 +29,7 @@ class QuestTips extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: themeController.activeTheme.cardBackgroundColor.withValues(
-              alpha: 4,
+              alpha: 0.8,
             ),
             borderRadius: BorderRadius.circular(10),
           ),
@@ -56,18 +56,6 @@ class QuestTips extends StatelessWidget {
                 "Complete all daily quests to maintain your streak and earn bonus XP",
                 themeController,
               ),
-              // const SizedBox(height: 16),
-              // _buildTipRow(
-              //   "Quests reset daily at midnight, so check back tomorrow for new challenges",
-              // ),
-              // const SizedBox(height: 16),
-              // _buildTipRow(
-              //   "Building a streak helps establish healthy habits and keeps you motivated",
-              // ),
-              // const SizedBox(height: 16),
-              // _buildTipRow(
-              //   "Use the tracking features in other tabs to complete your quests",
-              // ),
               const SizedBox(height: 18),
               Row(
                 children: [
@@ -75,15 +63,7 @@ class QuestTips extends StatelessWidget {
                     width: 108,
                     text: "Read Article",
                     onPressed: () {},
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Color(0xFFFDE7BB),
-                        Color(0xFF9D6933),
-                        Color(0xFFFEE9BF),
-                      ],
-                    ),
+                    gradient: themeController.activeTheme.progressBarGradient,
                     fontColor: Colors.white,
                   ),
                   const Spacer(),
@@ -92,7 +72,17 @@ class QuestTips extends StatelessWidget {
                     style: getTextStyle(size: 10, weight: FontWeight.bold),
                   ),
                   const SizedBox(width: 5),
-                  Image.asset(IconPath.star, width: 14, height: 14),
+                  Image.asset(
+                    themeController.activeTheme.id == 'adventurer'
+                        ? IconPath.starAdventure
+                        : themeController.activeTheme.id == 'mage'
+                        ? IconPath.starMage
+                        : themeController.activeTheme.id == 'gamer'
+                        ? IconPath.starGamer
+                        : IconPath.starReader,
+                    width: 14,
+                    height: 14,
+                  ),
                 ],
               ),
             ],

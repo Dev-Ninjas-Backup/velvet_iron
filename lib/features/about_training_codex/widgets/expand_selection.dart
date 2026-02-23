@@ -97,15 +97,18 @@ class _FeatureItem extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GestureDetector(
-                onTap: onTap,
-                child: Container(
-                  width: 24,
-                  height: 24,
-                  margin: const EdgeInsets.only(top: 2),
-                  child: Image.asset(
-                    isSelected ? IconPath.goldencircle : IconPath.whitecircle,
-                  ),
+              Container(
+                width: 24,
+                height: 24,
+                margin: const EdgeInsets.only(top: 2),
+                child: Image.asset(
+                  themeController.activeTheme.id == 'adventurer'
+                      ? IconPath.doticonAdventure
+                      : themeController.activeTheme.id == 'mage'
+                      ? IconPath.doticonMage
+                      : themeController.activeTheme.id == 'gamer'
+                      ? IconPath.doticonGamer
+                      : IconPath.doticonReader,
                 ),
               ),
               const SizedBox(width: 12),
@@ -120,9 +123,7 @@ class _FeatureItem extends StatelessWidget {
                           style: getTextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: isSelected
-                                ? themeController.activeTheme.accentGoldColor
-                                : Colors.white,
+                            color: themeController.activeTheme.accentGoldColor,
                           ),
                         ),
                         if (description.isNotEmpty)

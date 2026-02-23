@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
+import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
 
 class BottomNav extends StatelessWidget {
@@ -17,7 +18,7 @@ class BottomNav extends StatelessWidget {
           return Container(
             height: 75,
             padding: const EdgeInsets.all(12),
-            margin: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+            // margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             decoration: BoxDecoration(
               border: Border.all(
                 color: themeController.activeTheme.borderColor,
@@ -31,7 +32,7 @@ class BottomNav extends StatelessWidget {
               children: [
                 Expanded(
                   child: _buildNavItem(
-                    "assets/icons/btmBar1.png",
+                    IconPath.home,
                     "Home",
                     controller.tabIndex.value == 0,
                     () => controller.changeTabIndex(0),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/widgets/custom_back_button.dart';
-import 'package:velvet_iron/core/common/widgets/custom_background_withimage.dart';
-import 'package:velvet_iron/core/common/widgets/custom_button_two.dart';
+import 'package:velvet_iron/core/common/widgets/custom_button.dart';
+import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding5/controller/onboarding5_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding5/widgets/dateof_birth_selection.dart';
@@ -16,63 +16,91 @@ class OnboardingScreen5 extends StatelessWidget {
     final controller = Get.put(OnboardingController5());
 
     return Scaffold(
-      body: CustomBackgroundWithImage(
-        imageAsset: ImagePath.magicImage,
-        child: Stack(
-          children: [
-            SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight:
-                          MediaQuery.of(context).size.height -
-                          MediaQuery.of(context).padding.top,
-                    ),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 60),
-                        const StepsTextWidget5(),
-                        const SizedBox(height: 16),
-                        const ProgressBarWidget5(),
-                        const SizedBox(height: 32),
-                        const OnboardingHeader5Widget(),
-                        const SizedBox(height: 24),
-
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 24),
-                          child: DateSelectionWidget(),
-                        ),
-                        const SizedBox(height: 32),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
-                          child: CustomButtonTwo(
-                            label: 'Continue (+10 XP)',
-                            onPressed: controller.onContinue,
-                          ),
-                        ),
-
-                        const SizedBox(height: 40),
-                      ],
+      body: GetBuilder<AppThemeController>(
+        builder: (themeController) {
+          return Container(
+            decoration: BoxDecoration(
+              gradient: themeController.activeTheme.backgroundGradient,
+            ),
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Opacity(
+                    opacity: 1.0,
+                    child: Image.asset(
+                      themeController.activeTheme.id == 'reader'
+                          ? ImagePath.magicImageBlue
+                          : themeController.activeTheme.id == 'mage'
+                          ? ImagePath.magicImagePurple
+                          : themeController.activeTheme.id == 'gamer'
+                          ? ImagePath.magicImageGreen
+                          : ImagePath.magicImageRed,
+                      height: 378,
+                      width: 411,
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),
-              ),
-            ),
+                SafeArea(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight:
+                              MediaQuery.of(context).size.height -
+                              MediaQuery.of(context).padding.top,
+                        ),
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 60),
+                            const StepsTextWidget5(),
+                            const SizedBox(height: 16),
+                            const ProgressBarWidget5(),
+                            const SizedBox(height: 32),
+                            const OnboardingHeader5Widget(),
+                            const SizedBox(height: 24),
 
-            /// Fixed Back Button
-            Positioned(
-              top: MediaQuery.of(context).padding.top + 12,
-              left: 24,
-              child: FigmaBackButton(
-                onPressed: () => Get.back(),
-                applyTheme: false,
-              ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 24),
+                              child: DateSelectionWidget(),
+                            ),
+                            const SizedBox(height: 32),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                              ),
+                              child: CustomButton(
+                                label: 'Continue (+10 XP)',
+                                onPressed: controller.onContinue,
+                              ),
+                            ),
+
+                            const SizedBox(height: 40),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                /// Fixed Back Button
+                Positioned(
+                  top: MediaQuery.of(context).padding.top + 12,
+                  left: 24,
+                  child: FigmaBackButton(
+                    onPressed: () => Get.back(),
+                    applyTheme: true,
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

@@ -27,7 +27,7 @@ class SelectMealType extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: themeController.activeTheme.todoSubtitleColor.withValues(
+              color: themeController.activeTheme.cardBackgroundColor.withValues(
                 alpha: .4,
               ),
               borderRadius: BorderRadius.circular(18),
@@ -70,14 +70,14 @@ class SelectMealType extends StatelessWidget {
                       Text(
                         title,
                         style: getTextStyle(color: Colors.white),
-                        overflow: TextOverflow.ellipsis,
+                        // overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         sub,
                         style: getTextStyle(
-                          color: themeController.activeTheme.todoTimeColor,
+                          color: themeController.activeTheme.accentGoldColor,
                         ),
-                        overflow: TextOverflow.ellipsis,
+                        // overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
@@ -88,7 +88,17 @@ class SelectMealType extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Image.asset(IconPath.star, width: 16, height: 16),
+                        Image.asset(
+                          themeController.activeTheme.id == 'adventurer'
+                              ? IconPath.starAdventure
+                              : themeController.activeTheme.id == 'mage'
+                              ? IconPath.starMage
+                              : themeController.activeTheme.id == 'gamer'
+                              ? IconPath.starGamer
+                              : IconPath.starReader,
+                          width: 16,
+                          height: 16,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           "+10 XP",
@@ -100,7 +110,7 @@ class SelectMealType extends StatelessWidget {
                     Text(
                       time,
                       style: getTextStyle(
-                        color: themeController.activeTheme.todoTimeColor,
+                        color: themeController.activeTheme.accentGoldColor,
                       ),
                     ),
                   ],

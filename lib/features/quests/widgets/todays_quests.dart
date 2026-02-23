@@ -10,6 +10,7 @@ class TodaysQuestItem extends StatefulWidget {
   final String tagText;
   final List<Color> tagGradient;
   final int xp;
+  final bool isActive;
 
   const TodaysQuestItem({
     super.key,
@@ -18,6 +19,7 @@ class TodaysQuestItem extends StatefulWidget {
     required this.tagText,
     required this.tagGradient,
     required this.xp,
+    required this.isActive,
   });
 
   @override
@@ -44,30 +46,37 @@ class _TodaysQuestItemState extends State<TodaysQuestItem> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              GestureDetector(
-                onTap: () => setState(() => selected = !selected),
-                child: Image.asset(
-                  selected ? IconPath.goldencircle : IconPath.whitecircle,
-                  width: 24,
-                  height: 24,
-                ),
+              Image.asset(
+                widget.isActive
+                    ? (themeController.activeTheme.id == 'adventurer'
+                          ? IconPath.doticonAdventure
+                          : themeController.activeTheme.id == 'mage'
+                          ? IconPath.doticonMage
+                          : themeController.activeTheme.id == 'gamer'
+                          ? IconPath.doticonGamer
+                          : IconPath.doticonReader)
+                    : IconPath.whitecircle,
+                width: 24,
+                height: 24,
               ),
 
               const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    widget.header,
-                    style: getTextStyle(color: Colors.white, fontSize: 14),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    widget.title,
-                    style: getTextStyle(color: Colors.white, fontSize: 12),
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      widget.header,
+                      style: getTextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      widget.title,
+                      style: getTextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                  ],
+                ),
               ),
 
               Expanded(
@@ -116,7 +125,17 @@ class _TodaysQuestItemState extends State<TodaysQuestItem> {
                             ),
                           ),
                           const SizedBox(width: 4),
-                          Image.asset(IconPath.star, width: 12, height: 12),
+                          Image.asset(
+                            themeController.activeTheme.id == 'adventurer'
+                                ? IconPath.starAdventure
+                                : themeController.activeTheme.id == 'mage'
+                                ? IconPath.starMage
+                                : themeController.activeTheme.id == 'gamer'
+                                ? IconPath.starGamer
+                                : IconPath.starReader,
+                            width: 12,
+                            height: 12,
+                          ),
                         ],
                       ),
                     ],

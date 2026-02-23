@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
+import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding9/controller/onboarding9_controller.dart';
 
 class MedicineFormWidget extends StatelessWidget {
@@ -13,165 +15,182 @@ class MedicineFormWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<OnboardingController9>();
+    final themeController = Get.find<AppThemeController>();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Dose Name
-          Text(
-            'Dose Name:',
-            style: getTextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF3A0303),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Color(0xFF6B1717), width: 1),
-            ),
-            child: TextField(
-              controller: controller.doseNameController,
-              style: getTextStyle(fontSize: 14, color: Colors.white),
-              decoration: InputDecoration(
-                hintText: 'Enter medicine name',
-                hintStyle: getTextStyle(
-                  fontSize: 12,
-                  color: Colors.white.withValues(alpha: 0.4),
-                ),
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(vertical: 14),
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 12),
-          Row(
+    return GetBuilder<AppThemeController>(
+      builder: (_) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Dose Name
               Text(
-                'Medicine Type:',
+                'Dose Name:',
                 style: getTextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(width: 6),
-              Icon(
-                Icons.info_outline,
-                color: Colors.white.withValues(alpha: 0.6),
-                size: 16,
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Obx(
-            () => Container(
-              height: 50,
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: const Color(0xFF3A0303),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Color(0xFF6B1717), width: 1),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: controller.selectedMedicineType.value,
-                  isExpanded: true,
-                  dropdownColor: const Color(0xFF3A0303),
-                  icon: const Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Colors.white,
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: themeController.activeTheme.dropdownBackgroundColor,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: themeController.activeTheme.borderColor,
+                    width: 1,
                   ),
+                ),
+                child: TextField(
+                  controller: controller.doseNameController,
                   style: getTextStyle(fontSize: 14, color: Colors.white),
-                  items: controller.medicineTypes.map((type) {
-                    return DropdownMenuItem<String>(
-                      value: type,
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            IconPath.injection,
-                            width: 16,
-                            height: 16,
-                          ),
-                          const SizedBox(width: 10),
-                          Text(type),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      controller.selectMedicineType(value);
-                    }
-                  },
+                  decoration: InputDecoration(
+                    hintText: 'Enter medicine name',
+                    hintStyle: getTextStyle(
+                      fontSize: 12,
+                      color: Colors.white.withValues(alpha: 0.4),
+                    ),
+                    border: InputBorder.none,
+                    isDense: true,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
                 ),
               ),
-            ),
-          ),
 
-          const SizedBox(height: 12),
-          Text(
-            'Dose (mg):',
-            style: getTextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF3A0303),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Color(0xFF6B1717), width: 1),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: controller.doseController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'^\d+\.?\d{0,2}'),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Text(
+                    'Medicine Type:',
+                    style: getTextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Icon(
+                    Icons.info_outline,
+                    color: Colors.white.withValues(alpha: 0.6),
+                    size: 16,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Obx(
+                () => Container(
+                  height: 50,
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: themeController.activeTheme.cardBackgroundColor,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: themeController.activeTheme.borderColor,
+                      width: 1,
+                    ),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: controller.selectedMedicineType.value,
+                      isExpanded: true,
+                      dropdownColor:
+                          themeController.activeTheme.cardBackgroundColor,
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.white,
                       ),
-                    ],
-                    style: getTextStyle(fontSize: 14, color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText: 'e.g., 5',
-                      hintStyle: getTextStyle(
-                        fontSize: 12,
-                        color: Colors.white.withValues(alpha: 0.4),
-                      ),
-                      border: InputBorder.none,
-                      isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                      style: getTextStyle(fontSize: 14, color: Colors.white),
+                      items: controller.medicineTypes.map((type) {
+                        return DropdownMenuItem<String>(
+                          value: type,
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                IconPath.injection,
+                                width: 16,
+                                height: 16,
+                              ),
+                              const SizedBox(width: 10),
+                              Text(type),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          controller.selectMedicineType(value);
+                        }
+                      },
                     ),
                   ),
                 ),
-                Text(
-                  'mg',
-                  style: getTextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
+              ),
+
+              const SizedBox(height: 12),
+              Text(
+                'Dose (mg):',
+                style: getTextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: themeController.activeTheme.dropdownBackgroundColor,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: themeController.activeTheme.borderColor,
+                    width: 1,
                   ),
                 ),
-              ],
-            ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: controller.doseController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d+\.?\d{0,2}'),
+                          ),
+                        ],
+                        style: getTextStyle(fontSize: 14, color: Colors.white),
+                        decoration: InputDecoration(
+                          hintText: 'e.g., 5',
+                          hintStyle: getTextStyle(
+                            fontSize: 12,
+                            color: Colors.white.withValues(alpha: 0.4),
+                          ),
+                          border: InputBorder.none,
+                          isDense: true,
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      'mg',
+                      style: getTextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

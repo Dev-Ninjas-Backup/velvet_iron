@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
-import 'package:velvet_iron/features/onboarding_screens/theme_onboading/widgets/select_theme.dart';
+import 'package:velvet_iron/features/themes_and_preference/widgets/themes.dart';
 
 class ThemesListWidget extends StatelessWidget {
   const ThemesListWidget({super.key});
@@ -20,34 +19,27 @@ class ThemesListWidget extends StatelessWidget {
             final theme = themeController.themes[index];
             final isSelected = themeController.isThemeSelected(index);
 
-            // Theme-specific subtitles/taglines
-            String getThemeTagline(int index) {
-              switch (index) {
-                case 0:
-                  return 'Discipline is the blade — sharpen it daily.';
-                case 1:
-                  return 'Knowledge is power.';
-                case 2:
-                  return 'Magic flows through your veins.';
-                case 3:
-                  return 'Level up and conquer.';
-                default:
-                  return theme.name;
-              }
-            }
-
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),
-              child: SelectTheme(
+              child: Themes(
                 title: theme.name,
-                badgeText: 'Unlock',
-                subtitle: getThemeTagline(index),
-                gradientColors: theme.backgroundGradient.colors,
-                icon: Image.asset(IconPath.goldencircle, width: 18, height: 18),
-                isSelected: isSelected,
+                badgeText: isSelected ? 'Active Now' : '',
+                gradientColors: _getThemeGradient(theme.id),
+                icon: isSelected
+                    ? const Icon(
+                        Icons.radio_button_checked,
+                        color: Colors.white,
+                        size: 20,
+                      )
+                    : const Icon(
+                        Icons.radio_button_unchecked,
+                        color: Colors.white,
+                        size: 20,
+                      ),
                 borderColor: isSelected
-                    ? theme.accentGoldColor
+                    ? Colors.white
                     : Colors.white.withValues(alpha: .3),
+                isSelected: isSelected,
                 onTap: () {
                   themeController.selectTheme(index);
                 },
@@ -57,5 +49,46 @@ class ThemesListWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  static List<Color> _getThemeGradient(String themeId) {
+    switch (themeId) {
+      case 'mage':
+        return const [
+          Color(0xFF1B0033),
+          Color(0xFF35065E),
+          Color(0xFF1B0033),
+          Color(0xFF35065E),
+          Color(0xFF1B0033),
+          Color(0xFFBE32FF),
+        ];
+      case 'reader':
+        return const [
+          Color(0xFF00027B),
+          Color(0xFF292CB7),
+          Color(0xFF00027B),
+          Color(0xFF00013F),
+          Color(0xFF3385FF),
+        ];
+      case 'gamer':
+        return const [
+          Color(0xFF111C18),
+          Color(0xFF1E332C),
+          Color(0xFF111C18),
+          Color(0xFF1E332C),
+          Color(0xFF111C18),
+          Color(0xFF008353),
+        ];
+      default:
+        return const [
+          Color(0xFF310101),
+          Color(0xFF550606),
+          Color(0xFF310101),
+          Color(0xFF550606),
+          Color(0xFF310101),
+          Color(0xFF683E23),
+          Color(0xFF9E6D38),
+        ];
+    }
   }
 }

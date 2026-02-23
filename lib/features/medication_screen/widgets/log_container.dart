@@ -25,7 +25,7 @@ class CustomLogContainer extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: themeController.activeTheme.cardBackgroundColor.withValues(
-              alpha: 0.4,
+              alpha: 0.6,
             ),
             borderRadius: BorderRadius.circular(12),
           ),
@@ -46,7 +46,7 @@ class CustomLogContainer extends StatelessWidget {
                           title,
                           style: getTextStyle(
                             color: Colors.white,
-                            fontSize: 12,
+                            fontSize: 11,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -70,7 +70,10 @@ class CustomLogContainer extends StatelessWidget {
                 children: [
                   Text(
                     "Total Rewards:",
-                    style: getTextStyle(color: Colors.white, fontSize: 10),
+                    style: getTextStyle(
+                      color: themeController.activeTheme.todoTimeColor,
+                      fontSize: 10,
+                    ),
                   ),
 
                   const Spacer(),
@@ -78,7 +81,7 @@ class CustomLogContainer extends StatelessWidget {
                   Text(
                     "$rewardAmount XP",
                     style: getTextStyle(
-                      color: Colors.white,
+                      color: themeController.activeTheme.todoTimeColor,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                     ),

@@ -14,18 +14,22 @@ class NutritionFields extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildLabel("Carbs"),
-                _buildLabel("Protein"),
-                _buildLabel("Fats"),
+                Expanded(child: _buildLabel("Carbs")),
+                SizedBox(width: 8),
+                Expanded(child: _buildLabel("Protein")),
+                SizedBox(width: 8),
+                Expanded(child: _buildLabel("Fats")),
               ],
             ),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildTextField(themeController),
-                _buildTextField(themeController),
-                _buildTextField(themeController),
+                Expanded(child: _buildTextField(themeController)),
+                SizedBox(width: 8),
+                Expanded(child: _buildTextField(themeController)),
+                SizedBox(width: 8),
+                Expanded(child: _buildTextField(themeController)),
               ],
             ),
           ],
@@ -50,7 +54,7 @@ class NutritionFields extends StatelessWidget {
       height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: themeController.activeTheme.cardBackgroundColor,
+        color: themeController.activeTheme.textfieldColor,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: themeController.activeTheme.accentGoldColor.withValues(

@@ -23,7 +23,9 @@ class _CustomDropdownState extends State<ExcerciseDropdown> {
           height: 40,
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
           decoration: BoxDecoration(
-            color: themeController.activeTheme.dropdownBackgroundColor,
+            color: themeController.activeTheme.todoSubtitleColor.withValues(
+              alpha: 0.3,
+            ),
             borderRadius: BorderRadius.circular(10),
           ),
           child: DropdownButtonHideUnderline(
