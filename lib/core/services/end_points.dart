@@ -8,4 +8,5 @@ class Urls {
   static const String forgetPassword = '$baseUrl/auth/forgot-password';
   static const String resetPassword = '$baseUrl/auth/reset-password';
   static const String myProfile = '$baseUrl/user-info/my-profile';
+  static const String logout = '$baseUrl/auth/logout';
 }
