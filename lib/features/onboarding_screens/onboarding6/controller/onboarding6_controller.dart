@@ -21,8 +21,22 @@ class OnboardingController6 extends GetxController {
   }
 
   Future<void> onContinue() async {
-    if (weightController.text.isEmpty) {
+    final weightText = weightController.text.trim();
+
+    if (weightText.isEmpty) {
       EasyLoading.showInfo('Please enter your weight');
+      return;
+    }
+
+    final weight = double.tryParse(weightText);
+
+    if (weight == null) {
+      EasyLoading.showInfo('Weight must be a valid number');
+      return;
+    }
+
+    if (weight <= 0) {
+      EasyLoading.showInfo('Weight must be greater than 0');
       return;
     }
 
