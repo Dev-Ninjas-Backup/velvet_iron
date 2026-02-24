@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding2/model/profile_update_response_model.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding2/services/onboarding2_service.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
 class Onboarding2Controller extends GetxController {
@@ -13,6 +15,7 @@ class Onboarding2Controller extends GetxController {
   final Rxn<File> profileImage = Rxn<File>();
   final nameController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
+  final Onboarding2Service _onboarding2Service = Onboarding2Service();
   double get progressValue => currentStep.value / totalSteps.value;
 
   void onBackPressed() {
@@ -44,10 +47,25 @@ class Onboarding2Controller extends GetxController {
       return;
     }
     EasyLoading.show(status: 'Recording your legend...');
-    await Future.delayed(const Duration(milliseconds: 1200));
-    EasyLoading.showSuccess('Profile saved Successfully');
 
-    Get.toNamed(AppRoute.getonboardingScreen3());
+    final response = await _onboarding2Service.updateProfile(
+      username: nameController.text.trim(),
+      profilePhoto: profileImage.value,
+    );
+
+    if (response.isSuccess) {
+      final profileResponse = ProfileUpdateResponseModel.fromJson(
+        response.responseData,
+      );
+      EasyLoading.showSuccess(
+        profileResponse.message.isNotEmpty
+            ? profileResponse.message
+            : 'Profile saved Successfully',
+      );
+      Get.toNamed(AppRoute.getonboardingScreen3());
+    } else {
+      EasyLoading.showError(response.errorMessage);
+    }
   }
 
   @override
