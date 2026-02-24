@@ -75,7 +75,6 @@ class IconPath {
   static const String poorEmojiPurple = 'assets/icons/poorEmojiPurple.png';
 
   // blue emojis:
-
   static const String bluegood = 'assets/icons/bluegood.png';
   static const String bluegreat = 'assets/icons/bluegreate.png';
   static const String bluepoor = 'assets/icons/bluepoor.png';

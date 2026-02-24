@@ -149,14 +149,20 @@ class MoodLog extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 12),
                                 Obx(
-                                  () => SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: List.generate(
-                                        moodLogController.moods.length,
-                                        (index) => Padding(
-                                          padding: const EdgeInsets.only(
-                                            right: 8,
+                                  () => Row(
+                                    children: List.generate(
+                                      moodLogController.moods.length,
+                                      (index) => Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                            right:
+                                                index <
+                                                    moodLogController
+                                                            .moods
+                                                            .length -
+                                                        1
+                                                ? 8
+                                                : 0,
                                           ),
                                           child: MoodOptionWidget(
                                             icon: moodLogController
