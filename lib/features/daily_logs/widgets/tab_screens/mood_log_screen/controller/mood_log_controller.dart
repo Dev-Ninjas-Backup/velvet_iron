@@ -73,17 +73,17 @@ class MoodLogController extends GetxController {
   String _getWhiteEmoji(String moodType) {
     switch (moodType) {
       case 'tired':
-        return IconPath.tiredEmojiWhite;
+        return IconPath.bluetired;
       case 'good':
-        return IconPath.goodEmojiWhite;
+        return IconPath.bluegood;
       case 'pissed':
-        return IconPath.pissedEmojiWhite;
+        return IconPath.bluepissed;
       case 'great':
-        return IconPath.greatEmojiWhite;
+        return IconPath.bluegreat;
       case 'poor':
-        return IconPath.poorEmojiWhite;
+        return IconPath.bluepoor;
       default:
-        return IconPath.tiredEmojiWhite;
+        return IconPath.bluetired;
     }
   }
 

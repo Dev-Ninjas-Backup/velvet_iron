@@ -24,7 +24,6 @@ class MoodOptionWidget extends StatelessWidget {
         return GestureDetector(
           onTap: onTap,
           child: Container(
-            width: 55.8,
             height: 80,
             padding: const EdgeInsets.fromLTRB(7, 7, 7, 11),
             decoration: BoxDecoration(
@@ -70,7 +69,17 @@ class MoodOptionWidget extends StatelessWidget {
               children: [
                 Image.asset(icon, width: 22, height: 24),
                 const SizedBox(height: 6),
-                Text(title, style: getTextStyle(fontSize: 11)),
+                Text(
+                  title,
+                  style: getTextStyle(
+                    fontSize: 11,
+                    color:
+                        (isSelected &&
+                            themeController.activeTheme.id == 'reader')
+                        ? const Color(0xFF141694)
+                        : Colors.white,
+                  ),
+                ),
               ],
             ),
           ),
