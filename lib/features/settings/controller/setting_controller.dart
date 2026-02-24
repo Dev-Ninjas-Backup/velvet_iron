@@ -3,7 +3,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
-import 'package:velvet_iron/features/settings/services/services.dart';
+import 'package:velvet_iron/features/settings/services/logout_service.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
 class SettingsController extends GetxController {

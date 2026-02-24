@@ -1,4 +1,4 @@
-package com.example.velvet_iron
+package com.velvet.velvetiron
 
 import io.flutter.embedding.android.FlutterActivity
 
