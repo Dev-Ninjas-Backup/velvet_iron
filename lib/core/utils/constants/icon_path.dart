@@ -74,6 +74,14 @@ class IconPath {
   static const String greatEmojiPurple = 'assets/icons/greatEmojiPurple.png';
   static const String poorEmojiPurple = 'assets/icons/poorEmojiPurple.png';
 
+  // blue emojis:
+
+  static const String bluegood = 'assets/icons/bluegood.png';
+  static const String bluegreat = 'assets/icons/bluegreate.png';
+  static const String bluepoor = 'assets/icons/bluepoor.png';
+  static const String bluepissed = 'assets/icons/bluepissed.png';
+  static const String bluetired = 'assets/icons/bluetired.png';
+
   static const String tiredEmojiBlue = 'assets/icons/tiredemojiblue.png';
 
   static const String whiteClock = 'assets/icons/white_clock.png';
