@@ -65,6 +65,10 @@ class CustomGradientOptionButton extends StatelessWidget {
               style: getTextStyle(
                 fontSize: 12,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                color:
+                    (isSelected && themeController.activeTheme.id == 'reader')
+                    ? const Color(0xFF141694)
+                    : Colors.white,
               ),
             ),
           ),

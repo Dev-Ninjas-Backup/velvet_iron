@@ -70,10 +70,8 @@ class _IntensityAndDurationState extends State<IntensityAndDuration> {
                                 child: Text(
                                   value,
                                   style: getTextStyle(
-                                    color: themeController
-                                        .activeTheme
-                                        .todoTimeColor,
-                                  ),
+                                    color: Colors.white,
+                                  ).copyWith(fontSize: 12),
                                 ),
                               );
                             }).toList(),
