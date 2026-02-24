@@ -21,7 +21,7 @@ class ThemeOnboardingController extends GetxController {
 
       await Future.delayed(const Duration(milliseconds: 1000));
 
-      Get.toNamed(AppRoute.getHomeScreen());
+      Get.toNamed(AppRoute.getonboadingScreen1());
     } finally {
       EasyLoading.dismiss();
     }
