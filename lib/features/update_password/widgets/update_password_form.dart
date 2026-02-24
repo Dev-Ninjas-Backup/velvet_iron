@@ -49,7 +49,7 @@ class UpdatePasswordFormWidget extends StatelessWidget {
             "* Password must be minimum 8 characters",
             style: getTextStyle(
               fontSize: 12,
-              color: Color.fromRGBO(220, 170, 100, 1),
+              color: Get.find<AppThemeController>().activeTheme.accentGoldColor,
             ),
           ),
         ],
@@ -88,7 +88,18 @@ class UpdatePasswordFormWidget extends StatelessWidget {
                 borderSide: BorderSide.none,
               ),
               suffixIcon: IconButton(
-                icon: Image.asset(IconPath.eye, height: 16, width: 20),
+                icon: Image.asset(
+                  Get.find<AppThemeController>().activeTheme.id == 'mage'
+                      ? IconPath.eyeMage
+                      : Get.find<AppThemeController>().activeTheme.id == 'gamer'
+                      ? IconPath.eyeGamer
+                      : Get.find<AppThemeController>().activeTheme.id ==
+                            'reader'
+                      ? IconPath.eyeReader
+                      : IconPath.eyeAdventure,
+                  height: 16,
+                  width: 20,
+                ),
                 onPressed: onToggle,
               ),
             ),

@@ -153,4 +153,10 @@ class IconPath {
   static const String timeMage = 'assets/icons/time_mage.png';
   static const String timeGamer = 'assets/icons/time_gamer.png';
   static const String timeReader = 'assets/icons/time_reader.png';
+
+  // eyes icons
+  static const String eyeAdventure = 'assets/icons/eye_adventure.png';
+  static const String eyeMage = 'assets/icons/eye_mage.png';
+  static const String eyeGamer = 'assets/icons/eye_gamer.png';
+  static const String eyeReader = 'assets/icons/eye_reader.png';
 }

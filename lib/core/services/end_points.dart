@@ -10,4 +10,5 @@ class Urls {
   static const String myProfile = '$baseUrl/user-info/my-profile';
   static const String logout = '$baseUrl/auth/logout';
   static const String googleLogin = '$baseUrl/auth/firebase-login';
+  static const String profile = '$baseUrl/auth/profile';
 }
