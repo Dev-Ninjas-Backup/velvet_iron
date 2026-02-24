@@ -138,18 +138,37 @@ class LoginScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(IconPath.googleIcon, height: 46, width: 46),
-                        SizedBox(width: 26),
-                        Image.asset(
-                          IconPath.facebookIcon,
-                          height: 46,
-                          width: 46,
+                        GestureDetector(
+                          onTap: () {
+                            debugPrint('Google clicked');
+                          },
+                          child: Image.asset(
+                            IconPath.googleIcon,
+                            height: 46,
+                            width: 46,
+                          ),
                         ),
-                        SizedBox(width: 26),
-                        Image.asset(
-                          IconPath.discordIcon,
-                          height: 46,
-                          width: 46,
+                        const SizedBox(width: 26),
+                        GestureDetector(
+                          onTap: () {
+                            debugPrint('Facebook clicked');
+                          },
+                          child: Image.asset(
+                            IconPath.facebookIcon,
+                            height: 46,
+                            width: 46,
+                          ),
+                        ),
+                        const SizedBox(width: 26),
+                        GestureDetector(
+                          onTap: () {
+                            debugPrint('Discord clicked');
+                          },
+                          child: Image.asset(
+                            IconPath.discordIcon,
+                            height: 46,
+                            width: 46,
+                          ),
                         ),
                       ],
                     ),
