@@ -136,6 +136,12 @@ class _CalorieConsumptionCardState extends State<CalorieConsumptionCard> {
                       color: themeController.activeTheme.todoSubtitleColor
                           .withValues(alpha: 0.4),
                       borderRadius: BorderRadius.circular(50),
+                      border: isActive
+                          ? Border.all(
+                              color: themeController.activeTheme.dateNameborder,
+                              width: 1,
+                            )
+                          : null,
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -148,9 +154,6 @@ class _CalorieConsumptionCardState extends State<CalorieConsumptionCard> {
                               height: 24,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
-                                // gradient: themeController
-                                //     .activeTheme
-                                //     .progressBarGradient,
                               ),
                             ),
                             Image.asset(dotIcon, width: 18, height: 18),

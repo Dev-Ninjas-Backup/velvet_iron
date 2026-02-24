@@ -66,7 +66,10 @@ class _IntensityAndDurationState extends State<IntensityAndDuration> {
                             items: _intensities.map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
-                                child: Text(value, style: getTextStyle()),
+                                child: Text(
+                                  value,
+                                  style: getTextStyle().copyWith(fontSize: 12),
+                                ),
                               );
                             }).toList(),
                             onChanged: (String? newValue) {
@@ -113,7 +116,9 @@ class _IntensityAndDurationState extends State<IntensityAndDuration> {
                                 decoration: InputDecoration(
                                   hintText: "e.g. 30 min",
                                   hintStyle: TextStyle(
-                                    color: Colors.white,
+                                    color: themeController
+                                        .activeTheme
+                                        .todoTimeColor,
                                     fontSize: 12,
                                   ),
                                   border: InputBorder.none,

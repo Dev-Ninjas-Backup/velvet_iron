@@ -59,8 +59,7 @@ class TokenContent extends StatelessWidget {
                     color: themeController.activeTheme.todoTimeColor,
                   ),
                   filled: true,
-                  fillColor: themeController.activeTheme.textfieldColor
-                      .withValues(alpha: 0.3),
+                  fillColor: themeController.activeTheme.textfieldColor,
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(

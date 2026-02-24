@@ -93,8 +93,12 @@ class SelectableOptionRow extends StatelessWidget {
                         const SizedBox(width: 4),
                         Text(
                           options[index],
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color:
+                                (selected &&
+                                    themeController.activeTheme.id == 'reader')
+                                ? const Color(0xFF141694)
+                                : Colors.white,
                             fontSize: 12,
                           ),
                         ),

@@ -55,7 +55,7 @@ class ScheduleTabContent extends StatelessWidget {
               cursorColor: themeController.activeTheme.accentGoldColor,
               style: getTextStyle(fontSize: 12, color: Colors.white),
               decoration: InputDecoration(
-                hintText: "Grilled chicken salad with olive oil dressing...?",
+                hintText: "How did it feel??",
                 hintStyle: getTextStyle(
                   fontSize: 12,
                   color: themeController.activeTheme.todoTimeColor,
