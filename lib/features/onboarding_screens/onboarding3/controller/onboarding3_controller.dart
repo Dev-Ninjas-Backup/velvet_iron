@@ -1,3 +1,5 @@
+// ignore_for_file: dead_code
+
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding3/model/onboarding3_model.dart';
@@ -10,6 +12,8 @@ class Onboarding3Controller extends GetxController {
   final xpPoints = 10.obs;
 
   final selectedGoal = RxnInt();
+  final isLoading = false.obs;
+
   final Onboarding3Service _onboarding3Service = Onboarding3Service();
 
   final List<String> goals = [
@@ -35,34 +39,36 @@ class Onboarding3Controller extends GetxController {
     selectedGoal.value = index;
   }
 
-  void onContinue() async {
+  Future<void> onContinue() async {
     if (selectedGoal.value == null) {
       EasyLoading.showInfo('Please select a fitness goal');
       return;
     }
-    EasyLoading.show(status: 'Setting your destiny...');
 
-    final response = await _onboarding3Service.updateFitnessGoal(
-      goal: goals[selectedGoal.value!],
-    );
+    try {
+      isLoading(true);
+      EasyLoading.show(status: 'Setting your destiny...');
 
-    if (response.isSuccess) {
-      final fitnessGoalResponse = FitnessGoalResponseModel.fromJson(
-        response.responseData,
+      final response = await _onboarding3Service.updateFitnessGoal(
+        goal: goals[selectedGoal.value!],
       );
-      EasyLoading.showSuccess(
-        fitnessGoalResponse.message.isNotEmpty
-            ? fitnessGoalResponse.message
-            : 'Goal selected! +${xpPoints.value} XP',
-      );
-      Get.toNamed(AppRoute.getonboardingScreen4());
-    } else if (response.statusCode == 404 &&
-        (response.errorMessage?.contains('Profile not found') ?? false)) {
-      // Bypass: treat as success for onboarding
-      EasyLoading.showSuccess('Goal selected! +${xpPoints.value} XP');
-      Get.toNamed(AppRoute.getonboardingScreen4());
-    } else {
-      EasyLoading.showError(response.errorMessage);
+
+      if (response.isSuccess) {
+        final fitnessGoalResponse = FitnessGoalResponseModel.fromJson(
+          response.responseData,
+        );
+        EasyLoading.showSuccess(
+          fitnessGoalResponse.fitnessGoal.isNotEmpty
+              ? 'Goal selected! +${xpPoints.value} XP'
+              : 'Goal updated!',
+        );
+        Get.toNamed(AppRoute.getonboardingScreen4());
+      } else {
+        EasyLoading.showError(response.errorMessage);
+      }
+    } finally {
+      isLoading(false);
+      EasyLoading.dismiss();
     }
   }
 }

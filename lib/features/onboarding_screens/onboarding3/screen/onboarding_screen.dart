@@ -65,17 +65,19 @@ class OnboardingScreen3 extends StatelessWidget {
                             const SizedBox(height: 24),
                             const FitnessGoalsWidget(),
                             const SizedBox(height: 32),
-
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 24,
                               ),
-                              child: CustomButton(
-                                label: 'Continue (+10 XP)',
-                                onPressed: controller.onContinue,
+                              child: Obx(
+                                () => CustomButton(
+                                  label: 'Continue (+10 XP)',
+                                  onPressed: controller.isLoading.value
+                                      ? null
+                                      : controller.onContinue,
+                                ),
                               ),
                             ),
-
                             const SizedBox(height: 40),
                           ],
                         ),
