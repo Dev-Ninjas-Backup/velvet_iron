@@ -57,6 +57,8 @@ class OnboardingController4 extends GetxController {
         final genderResponse = GenderUpdateResponseModel.fromJson(
           response.responseData,
         );
+        // ignore: avoid_print
+        print('Gender update response: ${response.responseData}');
         EasyLoading.showSuccess(
           genderResponse.message.isNotEmpty
               ? genderResponse.message

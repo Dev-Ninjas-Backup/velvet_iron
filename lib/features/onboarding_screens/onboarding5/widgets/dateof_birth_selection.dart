@@ -91,7 +91,7 @@ class DateSelectionWidget extends StatelessWidget {
                   size: 20,
                 ),
                 style: getTextStyle(
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),
