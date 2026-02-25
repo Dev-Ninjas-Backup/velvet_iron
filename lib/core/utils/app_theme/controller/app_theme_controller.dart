@@ -11,7 +11,7 @@ class AppThemeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    selectTheme(0);
+    selectTheme(-1);
   }
 
   void selectTheme(int index) {

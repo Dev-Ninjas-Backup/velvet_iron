@@ -45,7 +45,7 @@ class OnboardingController1 extends GetxController {
           }).toList(),
         );
 
-        selectedIndex.value = 0;
+        selectedIndex.value = -1;
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to load companions: $e');

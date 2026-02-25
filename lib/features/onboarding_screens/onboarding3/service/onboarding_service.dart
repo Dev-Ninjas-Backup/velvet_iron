@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:velvet_iron/core/models/response_data.dart';
@@ -21,31 +23,21 @@ class Onboarding3Service {
 
       final uri = Uri.parse(Urls.fitnessGoal);
 
-      // print('=== Fitness Goal Update Request ===');
-      // print('URL: ${uri.toString()}');
-      // print('Goal: $goal');
-
       final response = await http.patch(
         uri,
         headers: {
           'Authorization': 'Bearer $accessToken',
           'x-refresh-token': refreshToken,
           'Content-Type': 'application/json',
-          // 'accept': '*/*',
         },
         body: jsonEncode({'goal': goal}),
       );
-
-      // print('=== Fitness Goal Update Response ===');
-      // print('Status Code: ${response.statusCode}');
-      // print('Response Body: ${response.body}');
+      print("----Response body----: ${response.body}");
 
       final decodedData = jsonDecode(response.body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        bool isSuccess = decodedData['success'] ?? false;
-
-        if (isSuccess) {
+        if (decodedData['fitnessGoal'] != null) {
           return ResponseData(
             isSuccess: true,
             statusCode: response.statusCode,
