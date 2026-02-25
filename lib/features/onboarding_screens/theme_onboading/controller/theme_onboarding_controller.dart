@@ -10,7 +10,7 @@ class ThemeOnboardingController extends GetxController {
   final totalSteps = 11.obs;
   final xpPoints = 10.obs;
 
-  final selectedThemeIndex = 0.obs;
+  final selectedThemeIndex = (-1).obs;
 
   var isLoading = true.obs;
   var themesList = <ThemeModel>[].obs;
@@ -56,13 +56,15 @@ class ThemeOnboardingController extends GetxController {
         return;
       }
       final themeId = themesList[index].id;
-      final success = await _service.unlockTheme(themeId);
+      final result = await _service.unlockTheme(themeId);
 
-      if (success) {
-        EasyLoading.showSuccess('Theme unlocked and activated!');
+      if (result['success'] == true) {
+        EasyLoading.showSuccess(
+          result['message'] ?? 'Theme unlocked and activated!',
+        );
         Get.toNamed(AppRoute.getonboadingScreen1());
       } else {
-        EasyLoading.showError('Failed to unlock theme.');
+        EasyLoading.showError(result['message'] ?? 'Failed to unlock theme.');
       }
     } finally {
       EasyLoading.dismiss();

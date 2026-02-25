@@ -2,11 +2,12 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/onboarding_screens/theme_onboading/model/theme_onboarding_model.dart';
 
 class ThemeOnboardingService {
-  Future<bool> unlockTheme(String themeId) async {
+  Future<Map<String, dynamic>> unlockTheme(String themeId) async {
     final token = await SharedPreferencesHelper.getAccessToken();
     final refreshToken = await SharedPreferencesHelper.getRefreshToken();
 
@@ -15,12 +16,15 @@ class ThemeOnboardingService {
         refreshToken == null ||
         refreshToken.isEmpty) {
       print('ERROR Token or Refresh Token is null or empty!');
-      return false;
+      return {
+        'success': false,
+        'message': 'Token or Refresh Token is null or empty!',
+      };
     }
 
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/onboarding/theme/$themeId'),
+        Uri.parse('${Urls.baseUrl}/onboarding/theme/$themeId'),
         headers: {
           'Authorization': 'Bearer $token',
           'x-refresh-token': refreshToken,
@@ -32,20 +36,30 @@ class ThemeOnboardingService {
       print('RESPONSE Status: ${response.statusCode}');
       print('RESPONSE Body: ${response.body}');
 
+      final decoded = response.body.isNotEmpty
+          ? jsonDecode(response.body) as Map<String, dynamic>
+          : <String, dynamic>{};
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         print('SUCCESS Theme unlocked and activated!');
-        return true;
-      } else {
-        print('ERROR Failed to unlock theme. Error: ${response.body}');
-        return false;
+        return {...decoded, 'success': true};
       }
+
+      if (response.statusCode == 400) {
+        final message = decoded['message'] ?? '';
+        if (message.toString().toLowerCase().contains('already unlocked')) {
+          print('INFO: Theme already unlocked — treating as success');
+          return {'success': true, 'message': message};
+        }
+      }
+
+      print('ERROR Failed to unlock theme. Error: ${response.body}');
+      return {...decoded, 'success': false};
     } catch (e) {
       print('EXCEPTION Error unlocking theme: $e');
-      return false;
+      return {'success': false, 'message': 'Error unlocking theme: $e'};
     }
   }
-
-  static const String baseUrl = 'https://velvet.api.softvence.app';
 
   Future<ThemeResponse?> fetchMyThemes() async {
     final token = await SharedPreferencesHelper.getAccessToken();
@@ -61,7 +75,7 @@ class ThemeOnboardingService {
 
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/themes/my-themes'),
+        Uri.parse(Urls.getThemes),
         headers: {
           'Authorization': 'Bearer $token',
           'x-refresh-token': refreshToken,
