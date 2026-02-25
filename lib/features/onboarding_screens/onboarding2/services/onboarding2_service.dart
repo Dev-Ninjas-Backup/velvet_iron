@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -52,17 +54,17 @@ class Onboarding2Service {
         request.files.add(file);
       }
 
-      // print('=== Profile Update Request ===');
-      // print('URL: ${uri.toString()}');
-      // print('Username: $username');
-      // print('Profile Photo: ${profilePhoto?.path ?? 'null'}');
+      print('=== Profile Update Request ===');
+      print('URL: ${uri.toString()}');
+      print('Username: $username');
+      print('Profile Photo: ${profilePhoto?.path ?? 'null'}');
 
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 
-      // print('=== Profile Update Response ===');
-      // print('Status Code: ${response.statusCode}');
-      // print('Response Body: ${response.body}');
+      print('=== Profile Update Response ===');
+      print('Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
 
       final decodedData = jsonDecode(response.body);
 

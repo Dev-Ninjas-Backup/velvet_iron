@@ -1,5 +1,8 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding7/model/onboarding7_model.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding7/service/onboarding7_service.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
 class OnboardingController7 extends GetxController {
@@ -13,17 +16,11 @@ class OnboardingController7 extends GetxController {
 
   double get progressValue => currentStep.value / totalSteps.value;
 
-  void selectMood(String value) {
-    selectedMood.value = value;
-  }
+  void selectMood(String value) => selectedMood.value = value;
+  void selectEnergyLevel(String value) => selectedEnergyLevel.value = value;
+  void selectHungerLevel(String value) => selectedHungerLevel.value = value;
 
-  void selectEnergyLevel(String value) {
-    selectedEnergyLevel.value = value;
-  }
-
-  void selectHungerLevel(String value) {
-    selectedHungerLevel.value = value;
-  }
+  final _service = Onboarding7Service();
 
   Future<void> onContinue() async {
     if (selectedMood.isEmpty ||
@@ -34,13 +31,29 @@ class OnboardingController7 extends GetxController {
     }
 
     EasyLoading.show(status: 'Analyzing your vitals...');
-    await Future.delayed(const Duration(milliseconds: 1000));
-    EasyLoading.showSuccess('Condition Recorded! +${xpPoints.value} XP');
 
-    Get.toNamed(AppRoute.getonboardingScreen8());
+    final model = MoodLogModel(
+      mood: MoodLogModel.toApiFormat(selectedMood.value),
+      energyLevel: MoodLogModel.toApiFormat(selectedEnergyLevel.value),
+      hungerLevel: MoodLogModel.toApiFormat(selectedHungerLevel.value),
+    );
+
+    final response = await _service.logMood(
+      accessToken: await SharedPreferencesHelper.getAccessToken() ?? '',
+      refreshToken: await SharedPreferencesHelper.getRefreshToken() ?? '',
+      model: model,
+    );
+
+    // ignore: avoid_print
+    print('LogMood Response: $response');
+
+    if (response['id'] != null) {
+      EasyLoading.showSuccess('Condition Recorded! +${xpPoints.value} XP');
+      Get.toNamed(AppRoute.getonboardingScreen8());
+    } else {
+      EasyLoading.showError(response['message'] ?? 'Failed to record mood');
+    }
   }
 
-  void onBackPressed() {
-    Get.back();
-  }
+  void onBackPressed() => Get.back();
 }
