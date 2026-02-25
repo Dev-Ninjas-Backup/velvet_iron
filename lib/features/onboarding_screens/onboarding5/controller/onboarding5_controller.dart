@@ -39,19 +39,13 @@ class OnboardingController5 extends GetxController {
     (index) => (DateTime.now().year - index).toString(),
   );
 
-  // ── Service ──────────────────────────────────────────────────────────────
   final _onboardingService = OnboardingService();
 
-  // ── Helpers ──────────────────────────────────────────────────────────────
-
-  /// Converts selected day/month/year into yyyy-MM-dd for the API.
   String get _formattedDateOfBirth {
     final monthIndex = months.indexOf(selectedMonth.value) + 1;
     final mm = monthIndex.toString().padLeft(2, '0');
     return '${selectedYear.value}-$mm-${selectedDay.value}';
   }
-
-  // ── API call ─────────────────────────────────────────────────────────────
 
   Future<void> _updateDateOfBirth() async {
          final accessToken = await SharedPreferencesHelper.getAccessToken();
@@ -74,7 +68,6 @@ class OnboardingController5 extends GetxController {
     }
   }
 
-  // ── Existing logic — UNCHANGED ────────────────────────────────────────────
 
   Future<void> onContinue() async {
     try {

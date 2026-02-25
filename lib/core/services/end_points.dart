@@ -13,4 +13,5 @@ class Urls {
   static const String profile = '$baseUrl/auth/profile';
   static const String getThemes = '$baseUrl/themes/my-themes';
   static const String fitnessGoal = '$baseUrl/profile/fitness-goal';
+  static const String weightLog = '$baseUrl/weight-log';
 }
