@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:velvet_iron/core/models/response_data.dart';
@@ -26,16 +28,16 @@ class Onboarding4Service {
       request.headers['accept'] = '*/*';
       request.fields['gender'] = gender;
 
-      // print('=== Gender Update Request ===');
-      // print('URL: ${uri.toString()}');
-      // print('Gender: $gender');
+      print('=== Gender Update Request ===');
+      print('URL: ${uri.toString()}');
+      print('Gender: $gender');
 
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 
-      // print('=== Gender Update Response ===');
-      // print('Status Code: ${response.statusCode}');
-      // print('Response Body: ${response.body}');
+      print('=== Gender Update Response ===');
+      print('Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
 
       final decodedData = jsonDecode(response.body);
 
