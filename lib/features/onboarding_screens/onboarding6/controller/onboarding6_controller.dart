@@ -4,7 +4,10 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding6/service/onboarding6_service.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
+
 
 class OnboardingController6 extends GetxController {
   final currentStep = 7.obs;
@@ -19,6 +22,20 @@ class OnboardingController6 extends GetxController {
   void selectUnit(String unit) {
     selectedUnit.value = unit;
   }
+
+  // ── Calculation ───────────────────────────────────────────────────────────
+  // If user selected 'kg', convert to lbs before sending.
+  // Formula: lbs = kg × 2.20462
+  // If user selected 'lbs', use value as-is.
+
+  double _toWeightInLbs(double value) {
+    if (selectedUnit.value == 'kg') {
+      return value * 2.20462;
+    }
+    return value; // already lbs
+  }
+
+  final _onboardingService = Onboarding6Service();
 
   Future<void> onContinue() async {
     final weightText = weightController.text.trim();
@@ -41,9 +58,36 @@ class OnboardingController6 extends GetxController {
     }
 
     EasyLoading.show(status: 'Updating your stats...');
-    await Future.delayed(const Duration(milliseconds: 1000));
-    EasyLoading.showSuccess('Weight recorded Successfully');
 
+    final weightInLbs = _toWeightInLbs(weight);
+
+    final accessToken = await SharedPreferencesHelper.getAccessToken() ?? '';
+    final refreshToken = await SharedPreferencesHelper.getRefreshToken() ?? '';
+
+    final response = await _onboardingService.updateWeight(
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      weightInLbs: weightInLbs,
+    );
+
+    // ignore: avoid_print
+    print('UpdateWeight Response: $response');
+
+    if (response['success'] != true) {
+      EasyLoading.showError(response['message'] ?? 'Failed to save weight');
+      return;
+    }
+
+    final logResponse = await _onboardingService.logWeight(
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      weightInLbs: weightInLbs,
+    );
+
+    // ignore: avoid_print
+    print('LogWeight Response: $logResponse');
+
+    EasyLoading.showSuccess('Weight recorded Successfully');
     Get.toNamed(AppRoute.getonboardingScreen7());
   }
 
