@@ -12,4 +12,5 @@ class Urls {
   static const String googleLogin = '$baseUrl/auth/firebase-login';
   static const String profile = '$baseUrl/auth/profile';
   static const String getThemes = '$baseUrl/themes/my-themes';
+  static const String fitnessGoal = '$baseUrl/profile/fitness-goal';
 }
