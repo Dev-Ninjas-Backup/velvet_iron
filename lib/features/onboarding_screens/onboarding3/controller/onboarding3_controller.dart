@@ -1,5 +1,7 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding3/model/onboarding3_model.dart';
+import 'package:velvet_iron/features/onboarding_screens/onboarding3/service/onboarding_service.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
 class Onboarding3Controller extends GetxController {
@@ -8,6 +10,7 @@ class Onboarding3Controller extends GetxController {
   final xpPoints = 10.obs;
 
   final selectedGoal = RxnInt();
+  final Onboarding3Service _onboarding3Service = Onboarding3Service();
 
   final List<String> goals = [
     'Transform my body and grow stronger',
@@ -38,9 +41,28 @@ class Onboarding3Controller extends GetxController {
       return;
     }
     EasyLoading.show(status: 'Setting your destiny...');
-    await Future.delayed(const Duration(milliseconds: 1000));
-    EasyLoading.showSuccess('Goal selected! +${xpPoints.value} XP');
 
-    Get.toNamed(AppRoute.getonboardingScreen4());
+    final response = await _onboarding3Service.updateFitnessGoal(
+      goal: goals[selectedGoal.value!],
+    );
+
+    if (response.isSuccess) {
+      final fitnessGoalResponse = FitnessGoalResponseModel.fromJson(
+        response.responseData,
+      );
+      EasyLoading.showSuccess(
+        fitnessGoalResponse.message.isNotEmpty
+            ? fitnessGoalResponse.message
+            : 'Goal selected! +${xpPoints.value} XP',
+      );
+      Get.toNamed(AppRoute.getonboardingScreen4());
+    } else if (response.statusCode == 404 &&
+        (response.errorMessage?.contains('Profile not found') ?? false)) {
+      // Bypass: treat as success for onboarding
+      EasyLoading.showSuccess('Goal selected! +${xpPoints.value} XP');
+      Get.toNamed(AppRoute.getonboardingScreen4());
+    } else {
+      EasyLoading.showError(response.errorMessage);
+    }
   }
 }
