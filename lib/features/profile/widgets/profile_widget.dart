@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
@@ -92,16 +93,55 @@ class ProfileWidget extends StatelessWidget {
                         color: themeController.activeTheme.cardBackgroundColor,
                       ),
                       child: ClipOval(
-                        child: Image.asset(
-                          ImagePath.profile,
-                          height: 60,
-                          width: 60,
-                          fit: BoxFit.cover,
-                        ),
+                        child: Obx(() {
+                          final localPath = controller.profileImage.value;
+                          final remoteUrl = controller.remoteProfilePhoto.value;
+                          final isLocalPicked =
+                              localPath != ImagePath.profile &&
+                              localPath.isNotEmpty;
+                          if (isLocalPicked) {
+                            return Image.file(
+                              File(localPath),
+                              width: 102,
+                              height: 102,
+                              fit: BoxFit.cover,
+                            );
+                          } else if (remoteUrl.isNotEmpty) {
+                            return Image.network(
+                              remoteUrl,
+                              width: 102,
+                              height: 102,
+                              fit: BoxFit.cover,
+                              loadingBuilder: (_, child, progress) {
+                                if (progress == null) return child;
+                                return const Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                );
+                              },
+                              errorBuilder: (_, __, ___) => Image.asset(
+                                ImagePath.profile,
+                                width: 102,
+                                height: 102,
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                          } else {
+                            return Image.asset(
+                              ImagePath.profile,
+                              width: 102,
+                              height: 102,
+                              fit: BoxFit.cover,
+                            );
+                          }
+                        }),
                       ),
                     ),
                   ),
                 ),
+
                 Positioned(
                   bottom: 0,
                   right: 0,
@@ -131,7 +171,9 @@ class ProfileWidget extends StatelessWidget {
                 ),
               ],
             ),
+
             const SizedBox(height: 15),
+
             Obx(
               () => Text(
                 controller.fullName.value,
@@ -142,9 +184,12 @@ class ProfileWidget extends StatelessWidget {
                 ),
               ),
             ),
+
             Obx(
               () => Text(
-                '@${controller.usernameHandle.value}',
+                controller.userName.value.isNotEmpty
+                    ? '@${controller.userName.value}'
+                    : '',
                 style: getTextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
@@ -152,6 +197,7 @@ class ProfileWidget extends StatelessWidget {
                 ),
               ),
             ),
+
             const SizedBox(height: 20),
             Container(
               height: 1,

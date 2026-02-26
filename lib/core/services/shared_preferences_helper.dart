@@ -5,6 +5,7 @@ class SharedPreferencesHelper {
   static const String _userIdKey = 'userId';
   static const String _emailKey = 'email';
   static const String _nameKey = 'name';
+  static const String _usernameKey = 'username';
   static const String _avatarKey = 'avatar';
   static const String _roleKey = 'role';
   static const String _isLoginKey = 'isLogin';
@@ -38,6 +39,16 @@ class SharedPreferencesHelper {
     await prefs.setString(_nameKey, name);
     await prefs.setString(_avatarKey, avatar);
     await prefs.setString(_roleKey, role);
+  }
+
+  static Future<void> saveUsername(String username) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_usernameKey, username);
+  }
+
+  static Future<String?> getUsername() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_usernameKey);
   }
 
   // save user login data
