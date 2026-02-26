@@ -11,7 +11,7 @@ class DailyGoalScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(DailyGoalController());
+    final controller = Get.put(DailyGoalController());
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -59,7 +59,7 @@ class DailyGoalScreen extends StatelessWidget {
                               ),
                               child: CustomButton(
                                 label: 'Save Changes',
-                                onPressed: () {},
+                                onPressed: controller.saveGoals,
                               ),
                             ),
                             const SizedBox(height: 20),
