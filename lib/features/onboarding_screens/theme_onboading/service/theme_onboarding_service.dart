@@ -24,7 +24,7 @@ class ThemeOnboardingService {
 
     try {
       final response = await http.post(
-        Uri.parse('${Urls.baseUrl}/onboarding/theme/$themeId'),
+        Uri.parse(Urls.unlockTheme(themeId)),
         headers: {
           'Authorization': 'Bearer $token',
           'x-refresh-token': refreshToken,

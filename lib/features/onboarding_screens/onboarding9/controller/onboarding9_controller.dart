@@ -21,8 +21,8 @@ class OnboardingController9 extends GetxController {
     'TABLET',
     'CAPSULE',
     'INJECTION',
-    'SYRUP',
-    'DROPS',
+    'LIQUID',
+    // 'DROPS',
   ];
 
   final Onboarding9Service _service = Onboarding9Service();
