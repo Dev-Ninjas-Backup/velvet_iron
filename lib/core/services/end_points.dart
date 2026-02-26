@@ -12,6 +12,7 @@ class Urls {
   static const String logout = '$baseUrl/auth/logout';
   static const String googleLogin = '$baseUrl/auth/firebase-login';
   static const String profile = '$baseUrl/auth/profile';
+  static const String getProfile = '$baseUrl/profile';
   static const String getThemes = '$baseUrl/themes/my-themes';
   static String unlockTheme(String themeId) => '$baseUrl/onboarding/theme/$themeId';
   static const String getCompanions = '$baseUrl/companions/my-companions';

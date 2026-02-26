@@ -1,73 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
+import 'package:velvet_iron/features/profile/service/profile_service.dart';
 
 class ProfileController extends GetxController {
-  final fullName = 'Jamie Friddle'.obs;
-  final username = 'jamiefriddle123@gmail.com'.obs;
-  final usernameHandle = 'jamiefriddle123'.obs;
+  final fullName = ''.obs;
+  final userName = ''.obs;
+  final remoteProfilePhoto = ''.obs;
+
   final profileImage = ImagePath.profile.obs;
+  final isLoading = false.obs;
+
+  String? _localPickedPath;
 
   late TextEditingController fullNameController;
   late TextEditingController usernameController;
 
   final ImagePicker _picker = ImagePicker();
-
-  // gender selection
-
-  final selectedGender = RxnInt();
-
-  final List<String> genders = ['Male', 'Female', 'Non-binary'];
-
-  void selectGender(int index) {
-    selectedGender.value = index;
-  }
-
-  // date of birth selection
-
-  final selectedDay = '08'.obs;
-  final selectedMonth = 'January'.obs;
-  final selectedYear = '1999'.obs;
-
-  final List<String> days = List.generate(
-    31,
-    (index) => (index + 1).toString().padLeft(2, '0'),
-  );
-
-  final List<String> months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-
-  final List<String> years = List.generate(
-    100,
-    (index) => (DateTime.now().year - index).toString(),
-  );
+  final ProfileService _profileService = ProfileService();
 
   @override
   void onInit() {
     super.onInit();
-
-    fullNameController = TextEditingController(text: fullName.value);
-    usernameController = TextEditingController(text: username.value);
-
-    fullNameController.addListener(() {
-      fullName.value = fullNameController.text;
-    });
-    usernameController.addListener(() {
-      username.value = usernameController.text;
-    });
+    fullNameController = TextEditingController();
+    usernameController = TextEditingController();
+    _fetchProfile();
   }
 
   @override
@@ -77,96 +37,136 @@ class ProfileController extends GetxController {
     super.onClose();
   }
 
+  // Fetch profile data
+
+  Future<void> _fetchProfile() async {
+    final accessToken = await SharedPreferencesHelper.getAccessToken();
+    final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+
+    debugPrint('Profile accessToken : $accessToken');
+    debugPrint('Profile refreshToken: $refreshToken');
+
+    if (accessToken == null || refreshToken == null) {
+      debugPrint('Profile Token missing — cannot fetch');
+      return;
+    }
+
+    isLoading.value = true;
+
+    try {
+      final profile = await _profileService.getProfile(
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      );
+
+      debugPrint('Profile Fetched →');
+      debugPrint('name        : ${profile.name}');
+      debugPrint('profilePhoto: ${profile.profilePhoto}');
+
+      fullName.value = profile.name;
+      remoteProfilePhoto.value = profile.profilePhoto;
+      fullNameController.text = profile.name;
+
+      final savedUsername = await SharedPreferencesHelper.getUsername();
+      debugPrint('savedUsername: $savedUsername');
+
+      if (savedUsername != null && savedUsername.isNotEmpty) {
+        userName.value = savedUsername;
+        usernameController.text = savedUsername;
+      }
+    } on ProfileException catch (e) {
+      debugPrint('Profile Fetch ProfileException: $e');
+    } catch (e, stackTrace) {
+      debugPrint('Profile Fetch unexpected error: $e');
+      debugPrint('StackTrace:\n$stackTrace');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  //  Image picker
   Future<void> pickImage() async {
     try {
       final XFile? image = await _picker.pickImage(
         source: ImageSource.gallery,
         imageQuality: 80,
       );
-
       if (image != null) {
+        _localPickedPath = image.path;
         profileImage.value = image.path;
-        Get.snackbar(
-          'Success',
-          'Profile image updated',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green.withValues(alpha: 0.8),
-          colorText: Colors.white,
-          duration: const Duration(seconds: 2),
-        );
+        debugPrint('Profile Image picked: ${image.path}');
+        EasyLoading.showSuccess('Profile picture selected!');
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to pick image',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withValues(alpha: 0.8),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 2),
-      );
+      debugPrint('Profile Image pick error: $e');
+      EasyLoading.showError('Failed to pick image. Please try again.');
     }
   }
 
-  // Save changes
-  void saveChanges() {
+  //  Save changes
+  Future<void> saveChanges() async {
     if (fullNameController.text.trim().isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please enter your full name',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withValues(alpha: 0.8),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 2),
-      );
+      EasyLoading.showInfo('Please enter your full name');
       return;
     }
-
     if (usernameController.text.trim().isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please enter your username',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withValues(alpha: 0.8),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 2),
-      );
+      EasyLoading.showInfo('Please enter your username');
       return;
     }
 
-    // Update observable values
-    fullName.value = fullNameController.text;
-    username.value = usernameController.text;
+    final accessToken = await SharedPreferencesHelper.getAccessToken();
+    final refreshToken = await SharedPreferencesHelper.getRefreshToken();
 
-    Get.snackbar(
-      'Success',
-      'Profile updated successfully!',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.green.withValues(alpha: 0.8),
-      colorText: Colors.white,
-      duration: const Duration(seconds: 2),
-    );
-  }
+    debugPrint('Profile accessToken : $accessToken');
+    debugPrint('Profile refreshToken: $refreshToken');
 
-  // gender selection
-
-  void onContinue() {
-    if (selectedGender.value == null) {
-      Get.snackbar(
-        'Required',
-        'Please select your gender',
-        backgroundColor: Colors.orange.withValues(alpha: 0.7),
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
+    if (accessToken == null || refreshToken == null) {
+      debugPrint('Profile Token missing — aborting save');
+      EasyLoading.showError('Session expired. Please log in again.');
       return;
     }
 
-    Get.snackbar(
-      'Success',
-      'Gender selected',
-      backgroundColor: Colors.green.withValues(alpha: 0.7),
-      colorText: Colors.white,
-      snackPosition: SnackPosition.BOTTOM,
-    );
+    EasyLoading.show(status: 'Updating profile...');
+
+    try {
+      final result = await _profileService.updateProfile(
+        name: fullNameController.text.trim(),
+        username: usernameController.text.trim(),
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        profilePhotoPath: _localPickedPath,
+      );
+
+      debugPrint('Profile Updated →');
+      debugPrint('name        : ${result.user.name}');
+      debugPrint('username    : ${result.user.username}');
+      debugPrint('profilePhoto: ${result.user.profilePhoto}');
+
+      //  State update
+      fullName.value = result.user.name;
+      userName.value = result.user.username;
+      remoteProfilePhoto.value = result.user.profilePhoto.isNotEmpty
+          ? result.user.profilePhoto
+          : result.user.avatar;
+
+      await SharedPreferencesHelper.saveUsername(result.user.username);
+      debugPrint('Profile username saved to prefs: ${result.user.username}');
+
+      _localPickedPath = null;
+
+      EasyLoading.showSuccess(
+        result.message.isNotEmpty
+            ? result.message
+            : 'Profile updated successfully!',
+      );
+      Get.back();
+    } on ProfileException catch (e) {
+      debugPrint('Profile Update ProfileException: $e');
+      EasyLoading.showError(e.message);
+    } catch (e, stackTrace) {
+      debugPrint('Profile Update unexpected error: $e');
+      debugPrint('StackTrace:\n$stackTrace');
+      EasyLoading.showError('Failed to update profile. Please try again.');
+    }
   }
 }

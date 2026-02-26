@@ -11,7 +11,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ProfileController());
+    final controller = Get.put(ProfileController());
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -60,7 +60,7 @@ class ProfileScreen extends StatelessWidget {
                               ),
                               child: CustomButton(
                                 label: 'Save Changes',
-                                onPressed: () {},
+                                onPressed: controller.saveChanges,
                               ),
                             ),
                           ],
