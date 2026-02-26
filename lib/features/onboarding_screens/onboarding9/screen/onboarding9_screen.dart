@@ -65,13 +65,12 @@ class OnboardingScreen9 extends StatelessWidget {
                             const SizedBox(height: 24),
                             const MedicineFormWidget(),
                             const SizedBox(height: 32),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 24,
-                              ),
-                              child: CustomButton(
+                            Obx(
+                              () => CustomButton(
                                 label: 'Continue (+10 XP)',
-                                onPressed: controller.onContinue,
+                                onPressed: controller.isLoading.value
+                                    ? null
+                                    : controller.onContinue,
                               ),
                             ),
                             const SizedBox(height: 40),

@@ -8,7 +8,6 @@ import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding6/service/onboarding6_service.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
-
 class OnboardingController6 extends GetxController {
   final currentStep = 7.obs;
   final totalSteps = 11.obs;
@@ -23,16 +22,12 @@ class OnboardingController6 extends GetxController {
     selectedUnit.value = unit;
   }
 
-  // ── Calculation ───────────────────────────────────────────────────────────
-  // If user selected 'kg', convert to lbs before sending.
-  // Formula: lbs = kg × 2.20462
-  // If user selected 'lbs', use value as-is.
 
   double _toWeightInLbs(double value) {
     if (selectedUnit.value == 'kg') {
       return value * 2.20462;
     }
-    return value; // already lbs
+    return value; 
   }
 
   final _onboardingService = Onboarding6Service();
@@ -63,20 +58,6 @@ class OnboardingController6 extends GetxController {
 
     final accessToken = await SharedPreferencesHelper.getAccessToken() ?? '';
     final refreshToken = await SharedPreferencesHelper.getRefreshToken() ?? '';
-
-    final response = await _onboardingService.updateWeight(
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-      weightInLbs: weightInLbs,
-    );
-
-    // ignore: avoid_print
-    print('UpdateWeight Response: $response');
-
-    if (response['success'] != true) {
-      EasyLoading.showError(response['message'] ?? 'Failed to save weight');
-      return;
-    }
 
     final logResponse = await _onboardingService.logWeight(
       accessToken: accessToken,
