@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/daily_macro_goal/controller/daily_goal_controller.dart';
 
 class DailyMacroGoalWidget extends StatelessWidget {
   const DailyMacroGoalWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<DailyGoalController>();
@@ -35,7 +34,8 @@ class DailyMacroGoalWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              _buildCaloriesGoalBox(themeController),
+
+              _buildCaloriesGoalBox(themeController, controller),
 
               const SizedBox(height: 20),
               Container(
@@ -56,26 +56,19 @@ class DailyMacroGoalWidget extends StatelessWidget {
                     _buildInputLabel("Carbs"),
                     _buildInputField(
                       themeController: themeController,
-                      initialValue: controller.carbs.value.toString(),
-                      onChanged: (val) =>
-                          controller.carbs.value = int.tryParse(val) ?? 0,
+                      controller: controller.carbsController,
                     ),
                     const SizedBox(height: 16),
                     _buildInputLabel("Protein"),
                     _buildInputField(
                       themeController: themeController,
-                      initialValue: controller.protein.value.toString(),
-                      onChanged: (val) =>
-                          controller.protein.value = int.tryParse(val) ?? 0,
+                      controller: controller.proteinController,
                     ),
-
                     const SizedBox(height: 16),
                     _buildInputLabel("Fats"),
                     _buildInputField(
                       themeController: themeController,
-                      initialValue: controller.fats.value.toString(),
-                      onChanged: (val) =>
-                          controller.fats.value = int.tryParse(val) ?? 0,
+                      controller: controller.fatsController,
                     ),
                   ],
                 ),
@@ -87,7 +80,11 @@ class DailyMacroGoalWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildCaloriesGoalBox(AppThemeController themeController) {
+  //  Calories box
+  Widget _buildCaloriesGoalBox(
+    AppThemeController themeController,
+    DailyGoalController controller,
+  ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
@@ -111,12 +108,15 @@ class DailyMacroGoalWidget extends StatelessWidget {
               color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
-          Text(
-            "729 kcal",
-            style: getTextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+          // Reactive — updates live as user types
+          Obx(
+            () => Text(
+              '${controller.totalCalories} kcal',
+              style: getTextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
@@ -138,10 +138,10 @@ class DailyMacroGoalWidget extends StatelessWidget {
     );
   }
 
+  //  TextEditingController  API data auto-populate
   Widget _buildInputField({
     required AppThemeController themeController,
-    required String initialValue,
-    required Function(String) onChanged,
+    required TextEditingController controller,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -152,9 +152,8 @@ class DailyMacroGoalWidget extends StatelessWidget {
           width: 1.2,
         ),
       ),
-      child: TextFormField(
-        initialValue: initialValue,
-        onChanged: onChanged,
+      child: TextField(
+        controller: controller,
         keyboardType: TextInputType.number,
         style: getTextStyle(fontSize: 14, color: Colors.white),
         decoration: InputDecoration(
