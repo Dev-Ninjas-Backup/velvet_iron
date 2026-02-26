@@ -2,11 +2,10 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 
 class Onboarding1Service {
-  static const String baseUrl = 'https://velvet.api.softvence.app';
-
   Future<Map<String, dynamic>?> fetchMyCompanions() async {
     final token = await SharedPreferencesHelper.getAccessToken();
     final refreshToken = await SharedPreferencesHelper.getRefreshToken();
@@ -21,7 +20,7 @@ class Onboarding1Service {
 
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/companions/my-companions'),
+        Uri.parse(Urls.getCompanions),
         headers: {
           'Authorization': 'Bearer $token',
           'x-refresh-token': refreshToken,
@@ -58,7 +57,7 @@ class Onboarding1Service {
 
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/onboarding/companion/$companionId'),
+        Uri.parse(Urls.unlockCompanion(companionId)),
         headers: {
           'Authorization': 'Bearer $token',
           'x-refresh-token': refreshToken,
