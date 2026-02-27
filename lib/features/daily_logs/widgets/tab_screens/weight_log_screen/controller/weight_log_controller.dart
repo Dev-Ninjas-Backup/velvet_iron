@@ -13,7 +13,6 @@ class WeightLogController extends GetxController {
   late TextEditingController noteController;
 
   @override
-
   void onInit() {
     super.onInit();
     weightController = TextEditingController();
@@ -38,4 +37,3 @@ class WeightLogController extends GetxController {
     super.onClose();
   }
 }
-
