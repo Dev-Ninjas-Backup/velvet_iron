@@ -22,4 +22,8 @@ class Urls {
   static const String medication = '$baseUrl/medication';
   static const String moodLog = '$baseUrl/mood-log';
   static const String mealLog = '$baseUrl/meal-log';
+  static const String macroGoal = '$baseUrl/macro-goal';
+  static const String getTodayMoodLog = '$baseUrl/mood-log/today';
+  
+
 }

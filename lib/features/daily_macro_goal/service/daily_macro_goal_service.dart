@@ -2,33 +2,30 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/features/daily_macro_goal/model/daily_goal_model.dart';
 
-
 class MacroGoalService {
-  static const String _baseUrl = 'https://velvet.api.softvence.app';
-
- // get macro goals for current user
+  // get macro goals for current user
 
   Future<MacroGoalListResponse> getMacroGoals({
     required String accessToken,
     required String refreshToken,
   }) async {
-    final uri = Uri.parse('$_baseUrl/macro-goal');
-    debugPrint('🎯 [MacroGoal] GET $uri');
+    final uri = Uri.parse(Urls.macroGoal);
+    debugPrint('MacroGoal GET $uri');
 
     try {
       final response = await http.get(
         uri,
         headers: {
-          'accept': '*/*',
           'Authorization': 'Bearer $accessToken',
           'x-refresh-token': refreshToken,
         },
       );
 
-      debugPrint('📡 [MacroGoal] GET Status: ${response.statusCode}');
-      debugPrint('📡 [MacroGoal] GET Body  : ${response.body}');
+      debugPrint('MacroGoal GET Status: ${response.statusCode}');
+      debugPrint('MacroGoal GET Body  : ${response.body}');
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
@@ -55,7 +52,7 @@ class MacroGoalService {
   }
 
   // create new macro goal for current user
- 
+
   Future<MacroGoalResponse> createMacroGoal({
     required int carbs,
     required int protein,
@@ -63,18 +60,17 @@ class MacroGoalService {
     required String accessToken,
     required String refreshToken,
   }) async {
-    final uri = Uri.parse('$_baseUrl/macro-goal');
+    final uri = Uri.parse(Urls.macroGoal);
 
-    debugPrint('🎯 [MacroGoal] POST $uri');
-    debugPrint('   carbs  : $carbs g');
-    debugPrint('   protein: $protein g');
-    debugPrint('   fat    : $fat g');
+    debugPrint('MacroGoal POST $uri');
+    debugPrint('carbs  : $carbs g');
+    debugPrint('protein: $protein g');
+    debugPrint('fat    : $fat g');
 
     try {
       final response = await http.post(
         uri,
         headers: {
-          'accept': '*/*',
           'Authorization': 'Bearer $accessToken',
           'x-refresh-token': refreshToken,
           'Content-Type': 'application/json',
@@ -82,8 +78,8 @@ class MacroGoalService {
         body: jsonEncode({'carbs': carbs, 'protein': protein, 'fat': fat}),
       );
 
-      debugPrint('📡 [MacroGoal] POST Status: ${response.statusCode}');
-      debugPrint('📡 [MacroGoal] POST Body  : ${response.body}');
+      debugPrint('MacroGoal POST Status: ${response.statusCode}');
+      debugPrint('MacroGoal POST Body  : ${response.body}');
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
@@ -110,7 +106,7 @@ class MacroGoalService {
   }
 }
 
-// Exception 
+// Exception
 
 class MacroGoalException implements Exception {
   final String message;
