@@ -42,8 +42,6 @@ class MoodLog extends StatelessWidget {
                     GestureDetector(
                       onTap: () => Get.back(),
                       child: Container(
-                        // width: 32,
-                        // height: 32,
                         decoration: BoxDecoration(
                           color: themeController.activeTheme.todoSubtitleColor
                               .withValues(alpha: .2),
@@ -222,9 +220,11 @@ class MoodLog extends StatelessWidget {
                                   onChanged: moodLogController.setNote,
                                 ),
                                 const SizedBox(height: 14),
+
+                                // ── Log Entry button — API connected ────────
                                 CustomButton(
                                   label: "Log Entry (+10 XP)",
-                                  onPressed: () {},
+                                  onPressed: moodLogController.logEntry,
                                 ),
                               ],
                             ),
