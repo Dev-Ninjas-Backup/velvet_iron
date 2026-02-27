@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/daily_logs/models/log_option_model.dart';
@@ -16,7 +15,12 @@ class MoodLogController extends GetxController {
   final note = ''.obs;
   final moods = <LogOptionModel>[].obs;
   final isLoading = false.obs;
+  final isHistoryLoading = false.obs;
   final alreadyLoggedToday = false.obs;
+  final historyLogs = <MoodLogResponse>[].obs;
+  final totalCount = 0.obs;
+
+  final noteController = TextEditingController();
 
   final energyLevels = ["Exhausted", "Low", "Moderate", "Energized", "High"];
   final hungerLevels = ["Not Hungry", "Hungry", "Very Hungry"];
@@ -30,12 +34,16 @@ class MoodLogController extends GetxController {
     themeController = Get.find<AppThemeController>();
     _updateMoodsByTheme();
     ever(themeController.currentTheme, (_) => _updateMoodsByTheme());
-    _fetchTodayLog();
   }
 
-  // Fetch today's mood log
+  @override
+  void onClose() {
+    noteController.dispose();
+    super.onClose();
+  }
 
-  Future<void> _fetchTodayLog() async {
+  //  Fetch today + history 
+  Future<void> fetchTodayLog() async {
     final accessToken = await SharedPreferencesHelper.getAccessToken();
     final refreshToken = await SharedPreferencesHelper.getRefreshToken();
 
@@ -43,12 +51,18 @@ class MoodLogController extends GetxController {
     debugPrint('MoodLog refreshToken: $refreshToken');
 
     if (accessToken == null || refreshToken == null) {
-      debugPrint('MoodLog Token missing — cannot fetch today log');
+      debugPrint('MoodLog Token missing');
       return;
     }
 
-    isLoading.value = true;
+    await Future.wait([
+      _fetchToday(accessToken, refreshToken),
+      _fetchHistory(accessToken, refreshToken),
+    ]);
+  }
 
+  Future<void> _fetchToday(String accessToken, String refreshToken) async {
+    isLoading.value = true;
     try {
       final todayLog = await _service.getTodayMoodLog(
         accessToken: accessToken,
@@ -60,25 +74,53 @@ class MoodLogController extends GetxController {
         selectedEnergy.value = EnergyLevel.toIndex(todayLog.energyLevel);
         selectedHunger.value = HungerLevel.toIndex(todayLog.hungerLevel);
         note.value = todayLog.note ?? '';
+        noteController.text = todayLog.note ?? '';
         alreadyLoggedToday.value = true;
+
+        debugPrint(
+          'MoodLog today → mood: ${todayLog.mood}, energy: ${todayLog.energyLevel}',
+        );
       } else {
         alreadyLoggedToday.value = false;
-        debugPrint('MoodLog No log for today — fresh state');
+        debugPrint('MoodLog No log for today');
       }
     } on MoodLogException catch (e) {
-      debugPrint('MoodLog Fetch MoodLogException: $e');
-    } catch (e, stackTrace) {
-      debugPrint('MoodLog Fetch unexpected error: $e');
-      debugPrint('   StackTrace:\n$stackTrace');
+      debugPrint('MoodLog today fetch error: $e');
+    } catch (e) {
+      debugPrint('MoodLog today unexpected: $e');
     } finally {
       isLoading.value = false;
     }
   }
 
-  void _updateMoodsByTheme() {
-    final activeTheme = themeController.currentTheme.value;
-    final themeId = activeTheme?.id ?? 'adventurer';
+  Future<void> _fetchHistory(String accessToken, String refreshToken) async {
+    isHistoryLoading.value = true;
+    try {
+      final result = await _service.getMoodLogHistory(
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        limit: 30,
+        offset: 0,
+      );
 
+      historyLogs.value = result.logs; 
+      totalCount.value = result.totalCount;
+
+      debugPrint(
+        'MoodLog history → ${result.logs.length} logs (total: ${result.totalCount})',
+      );
+    } on MoodLogException catch (e) {
+      debugPrint('MoodLog history fetch error: $e');
+    } catch (e) {
+      debugPrint('MoodLog history unexpected: $e');
+    } finally {
+      isHistoryLoading.value = false;
+    }
+  }
+
+  // Theme emoji 
+  void _updateMoodsByTheme() {
+    final themeId = themeController.currentTheme.value?.id ?? 'adventurer';
     moods.value = [
       LogOptionModel(title: "Tired", icon: _getEmojiForTheme(themeId, 'tired')),
       LogOptionModel(title: "Good", icon: _getEmojiForTheme(themeId, 'good')),
@@ -90,6 +132,10 @@ class MoodLogController extends GetxController {
       LogOptionModel(title: "Poor", icon: _getEmojiForTheme(themeId, 'poor')),
     ];
   }
+
+  // emoji helper এ themeId based icon path return করে
+  String getEmojiPath(String themeId, String moodType) =>
+      _getEmojiForTheme(themeId, moodType);
 
   String _getEmojiForTheme(String themeId, String moodType) {
     switch (themeId) {
@@ -177,16 +223,13 @@ class MoodLogController extends GetxController {
   void selectHunger(int index) => selectedHunger.value = index;
   void setNote(String value) => note.value = value;
 
-  //  Log Entry
+// POST log entry 
+
   Future<void> logEntry() async {
     final accessToken = await SharedPreferencesHelper.getAccessToken();
     final refreshToken = await SharedPreferencesHelper.getRefreshToken();
 
-    debugPrint('MoodLog accessToken : $accessToken');
-    debugPrint('MoodLog refreshToken: $refreshToken');
-
     if (accessToken == null || refreshToken == null) {
-      debugPrint('MoodLog Token missing — aborting');
       EasyLoading.showError('Session expired. Please log in again.');
       return;
     }
@@ -207,19 +250,21 @@ class MoodLogController extends GetxController {
         refreshToken: refreshToken,
       );
 
-      debugPrint('MoodLog Success →');
-      debugPrint('id       : ${result.id}');
-      debugPrint('earnedXp : +${result.earnedXp} XP');
+      debugPrint('MoodLog Success → +${result.earnedXp} XP');
 
+      historyLogs.insert(0, result);
+      totalCount.value = totalCount.value + 1;
       alreadyLoggedToday.value = true;
-      EasyLoading.showSuccess('Mood logged! +${result.earnedXp} XP');
+
+      await EasyLoading.dismiss();
+      await Future.delayed(const Duration(milliseconds: 100));
       Get.back();
+      EasyLoading.showSuccess('Mood logged! +${result.earnedXp} XP');
     } on MoodLogException catch (e) {
       debugPrint('MoodLog MoodLogException: $e');
       EasyLoading.showError(e.message);
     } catch (e, stackTrace) {
-      debugPrint('MoodLog Unexpected error: $e');
-      debugPrint('StackTrace:\n$stackTrace');
+      debugPrint('MoodLog Unexpected error: $e\n$stackTrace');
       EasyLoading.showError('Failed to log mood. Please try again.');
     }
   }

@@ -1,48 +1,47 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_screen/model/mood_log_model.dart';
 
 class MoodLogService {
+  static const String _baseUrl = 'https://velvet.api.softvence.app';
+
+  //  GET Mood-log/today 
+
   Future<MoodLogResponse?> getTodayMoodLog({
     required String accessToken,
     required String refreshToken,
   }) async {
-    final uri = Uri.parse(Urls.getTodayMoodLog);
-    debugPrint('MoodLog] GET $uri');
+    final uri = Uri.parse('$_baseUrl/mood-log/today');
+    debugPrint('MoodLog GET today: $uri');
 
     try {
       final response = await http.get(
         uri,
         headers: {
+          'accept': '*/*',
           'Authorization': 'Bearer $accessToken',
           'x-refresh-token': refreshToken,
         },
       );
 
-      debugPrint('MoodLog GET Status: ${response.statusCode}');
-      debugPrint('MoodLog GET Body  : ${response.body}');
+      debugPrint('MoodLog today status: ${response.statusCode}');
+      debugPrint('MoodLog today body  : ${response.body}');
 
       if (response.statusCode == 404) return null;
+
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        final json = jsonDecode(response.body) as Map<String, dynamic>;
-        return MoodLogResponse.fromJson(json);
+        return MoodLogResponse.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
       }
 
-      String errorMessage =
-          'Failed to fetch today mood log (${response.statusCode})';
-      try {
-        final body = jsonDecode(response.body) as Map<String, dynamic>;
-        errorMessage = body['message'] as String? ?? errorMessage;
-      } catch (_) {}
-      throw MoodLogException(errorMessage, statusCode: response.statusCode);
-    } on SocketException {
       throw MoodLogException(
-        'No internet connection. Please check your network.',
+        'Failed to fetch today log (${response.statusCode})',
       );
+    } on SocketException {
+      throw MoodLogException('No internet connection.');
     } on HttpException catch (e) {
       throw MoodLogException('HTTP error: ${e.message}');
     } catch (e) {
@@ -51,7 +50,54 @@ class MoodLogService {
     }
   }
 
-  // POST mood-log
+  //  GET Mood-log-history 
+  Future<MoodLogHistoryResponse> getMoodLogHistory({
+    required String accessToken,
+    required String refreshToken,
+    int limit = 30,
+    int offset = 0,
+  }) async {
+    final uri = Uri.parse(
+      '$_baseUrl/mood-log/history?limit=$limit&offset=$offset',
+    );
+    debugPrint('MoodLog GET history: $uri');
+
+    try {
+      final response = await http.get(
+        uri,
+        headers: {
+          'accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+          'x-refresh-token': refreshToken,
+        },
+      );
+
+      debugPrint('MoodLog history status: ${response.statusCode}');
+      debugPrint('MoodLog history body  : ${response.body}');
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return MoodLogHistoryResponse.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+      }
+
+      String errorMessage = 'Failed to fetch history (${response.statusCode})';
+      try {
+        final body = jsonDecode(response.body) as Map<String, dynamic>;
+        errorMessage = body['message'] as String? ?? errorMessage;
+      } catch (_) {}
+      throw MoodLogException(errorMessage, statusCode: response.statusCode);
+    } on SocketException {
+      throw MoodLogException('No internet connection.');
+    } on HttpException catch (e) {
+      throw MoodLogException('HTTP error: ${e.message}');
+    } catch (e) {
+      if (e is MoodLogException) rethrow;
+      throw MoodLogException('Unexpected error: $e');
+    }
+  }
+
+  // POST Mood-log 
 
   Future<MoodLogResponse> logMood({
     required MoodType mood,
@@ -61,7 +107,8 @@ class MoodLogService {
     required String refreshToken,
     String? note,
   }) async {
-    final uri = Uri.parse(Urls.moodLog);
+    final uri = Uri.parse('$_baseUrl/mood-log');
+    debugPrint('MoodLog POST $uri');
 
     final request = http.MultipartRequest('POST', uri)
       ..headers.addAll({
@@ -78,14 +125,23 @@ class MoodLogService {
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 
-      debugPrint('MoodLog Status: ${response.statusCode}');
-      debugPrint('MoodLog Body  : ${response.body}');
+      debugPrint('MoodLog POST status: ${response.statusCode}');
+      debugPrint('MoodLog POST body  : ${response.body}');
 
-      return _handleResponse(response);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return MoodLogResponse.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+      }
+
+      String errorMessage = 'Failed to log mood (${response.statusCode})';
+      try {
+        final body = jsonDecode(response.body) as Map<String, dynamic>;
+        errorMessage = body['message'] as String? ?? errorMessage;
+      } catch (_) {}
+      throw MoodLogException(errorMessage, statusCode: response.statusCode);
     } on SocketException {
-      throw MoodLogException(
-        'No internet connection. Please check your network.',
-      );
+      throw MoodLogException('No internet connection.');
     } on HttpException catch (e) {
       throw MoodLogException('HTTP error: ${e.message}');
     } catch (e) {
@@ -93,22 +149,9 @@ class MoodLogService {
       throw MoodLogException('Unexpected error: $e');
     }
   }
-
-  MoodLogResponse _handleResponse(http.Response response) {
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      final json = jsonDecode(response.body) as Map<String, dynamic>;
-      return MoodLogResponse.fromJson(json);
-    }
-
-    String errorMessage = 'Failed to log mood (${response.statusCode})';
-    try {
-      final body = jsonDecode(response.body) as Map<String, dynamic>;
-      errorMessage = body['message'] as String? ?? errorMessage;
-    } catch (_) {}
-
-    throw MoodLogException(errorMessage, statusCode: response.statusCode);
-  }
 }
+
+//  Exception 
 
 class MoodLogException implements Exception {
   final String message;
