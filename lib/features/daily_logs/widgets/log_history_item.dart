@@ -101,13 +101,13 @@ class LogHistoryItem extends StatelessWidget {
                 ],
               ),
 
-              // if (thirdText.isNotEmpty) ...[
-              //   const SizedBox(height: 6),
-              //   Text(
-              //     // thirdText,
-              //     style: getTextStyle(fontSize: 12, color: Colors.white),
-              //   ),
-              // ],
+              if (thirdText.isNotEmpty) ...[
+                const SizedBox(height: 6),
+                Text(
+                  thirdText,
+                  style: getTextStyle(fontSize: 12, color: Colors.white),
+                ),
+              ],
             ],
           ),
         );
