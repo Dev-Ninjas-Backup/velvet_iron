@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
@@ -5,6 +6,19 @@ import 'package:velvet_iron/features/medication_screen/model/medication_model.da
 import 'package:velvet_iron/features/medication_screen/service/medication_service.dart';
 
 class MedicationController extends GetxController {
+  @override
+  void onClose() {
+    // Clear all fields and controllers to default/empty
+    selectedMedication.value = '';
+    selectedDoseMg.value = 0.0;
+    // selectedType.value = '';
+    doseNameController.clear();
+    doseMgController.clear();
+    doseNameController.dispose();
+    doseMgController.dispose();
+    super.onClose();
+  }
+
   var selectedMealTab = 0.obs;
   var medicationHistory = <Medication>[].obs;
   var isLoading = false.obs;
@@ -12,9 +26,13 @@ class MedicationController extends GetxController {
 
   // Form fields
   final Rx<String> selectedMedication = ''.obs;
-  final Rx<String> selectedType = 'CAPSULE'.obs;
+  final Rx<String> selectedType = '--'.obs;
   final Rx<double> selectedDoseMg = 0.0.obs;
   final Rx<DateTime> selectedDate = DateTime.now().obs;
+
+  // Text controllers for fields
+  final doseNameController = TextEditingController();
+  final doseMgController = TextEditingController();
 
   // For dropdowns or selection
   var availableMedications = <String>[].obs;
@@ -91,8 +109,11 @@ class MedicationController extends GetxController {
   }
 
   Future<void> logMedication() async {
-    if (selectedMedication.value.isEmpty || selectedDoseMg.value <= 0) {
-      EasyLoading.showInfo('Please select a medication and dose');
+    if (selectedMedication.value.isEmpty ||
+        selectedDoseMg.value <= 0 ||
+        selectedType.value == '--' ||
+        selectedType.value.isEmpty) {
+      EasyLoading.showInfo('Please fill all fields before logging medication.');
       return;
     }
     try {
@@ -121,10 +142,11 @@ class MedicationController extends GetxController {
 
       EasyLoading.showSuccess('Medication logged successfully');
 
-      // Reset form
-      selectedMedication.value = '';
-      selectedDoseMg.value = 0.0;
-      selectedType.value = 'CAPSULE';
+      doseNameController.clear();
+      doseMgController.clear();
+      selectedType.value = '--';
+
+      // No need to call resetFormFields; fields will be cleared on dispose
     } catch (e) {
       errorMessage.value = e.toString();
       EasyLoading.showError(e.toString());

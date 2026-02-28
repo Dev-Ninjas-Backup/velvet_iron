@@ -12,6 +12,7 @@ SizedBox DoseNameTextField() {
     child: GetBuilder<AppThemeController>(
       builder: (themeController) {
         return TextField(
+          controller: controller.doseNameController,
           onChanged: (value) => controller.updateMedicationName(value),
           cursorColor: themeController.activeTheme.accentGoldColor,
           style: getTextStyle(fontSize: 12, color: Colors.white),

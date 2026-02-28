@@ -13,60 +13,87 @@ class CustomDropdown extends StatefulWidget {
 }
 
 class _CustomDropdownState extends State<CustomDropdown> {
-  String? selectedValue = "INJECTION";
-  final List<String> options = ["INJECTION", "CAPSULE", "LIQUID", "TABLET"];
+  @override
+  void dispose() {
+    // Do not dispose controller from Get.find() here, as it is managed globally.
+    super.dispose();
+  }
+
+  final List<String> options = [
+    "--",
+    "INJECTION",
+    "CAPSULE",
+    "LIQUID",
+    "TABLET",
+  ];
   final MedicationController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
-        return Container(
-          width: double.infinity,
-          height: 40,
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-          decoration: BoxDecoration(
-            color: themeController.activeTheme.textfieldColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              value: selectedValue,
-              icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
-              isExpanded: true,
-              dropdownColor:
-                  themeController.activeTheme.dropdownBackgroundColor,
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedValue = newValue;
-                });
-                if (newValue != null) {
-                  controller.updateType(newValue);
-                }
-              },
-              items: options.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        IconPath.todo2,
-                        width: 20,
-                        height: 20,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        value,
+        return Obx(
+          () => Container(
+            width: double.infinity,
+            height: 40,
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+            decoration: BoxDecoration(
+              color: themeController.activeTheme.textfieldColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: controller.selectedType.value == ''
+                    ? null
+                    : controller.selectedType.value,
+                icon: const Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.white,
+                ),
+                isExpanded: true,
+                dropdownColor:
+                    themeController.activeTheme.dropdownBackgroundColor,
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    controller.updateType(newValue);
+                  }
+                },
+                items: options.map<DropdownMenuItem<String>>((String value) {
+                  if (value == "--") {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        '',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 14,
                         ),
                       ),
-                    ],
-                  ),
-                );
-              }).toList(),
+                    );
+                  }
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          IconPath.todo2,
+                          width: 20,
+                          height: 20,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          value,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
           ),
         );
