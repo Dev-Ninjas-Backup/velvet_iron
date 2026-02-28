@@ -1,5 +1,8 @@
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/medication_screen/model/medication_model.dart';
+import 'package:velvet_iron/features/medication_screen/service/medication_service.dart';
 
 class MedicationController extends GetxController {
   var selectedMealTab = 0.obs;
@@ -9,12 +12,16 @@ class MedicationController extends GetxController {
 
   // Form fields
   final Rx<String> selectedMedication = ''.obs;
-  final Rx<double> selectedDose = 0.0.obs;
+  final Rx<String> selectedType = 'CAPSULE'.obs;
+  final Rx<double> selectedDoseMg = 0.0.obs;
   final Rx<DateTime> selectedDate = DateTime.now().obs;
 
   // For dropdowns or selection
   var availableMedications = <String>[].obs;
   var availableDoses = <double>[].obs;
+
+  // Service instance
+  final MedicationService _medicationService = MedicationService();
 
   @override
   void onInit() {
@@ -32,26 +39,37 @@ class MedicationController extends GetxController {
       isLoading(true);
       errorMessage('');
 
-      // Simulated API response
       await Future.delayed(const Duration(seconds: 1));
       medicationHistory.assignAll([
         Medication(
           id: '1',
+          userId: '',
           name: 'GLP-1',
-          dose: 0.25,
-          timestamp: DateTime.now().subtract(const Duration(days: 7)),
+          type: 'LIQUID',
+          doseMg: 250,
+          isTaken: true,
+          earnedXp: 10,
+          createdAt: DateTime.now().subtract(const Duration(days: 7)),
         ),
         Medication(
           id: '2',
+          userId: '',
           name: 'GLP-1',
-          dose: 0.25,
-          timestamp: DateTime.now().subtract(const Duration(days: 14)),
+          type: 'LIQUID',
+          doseMg: 250,
+          isTaken: true,
+          earnedXp: 10,
+          createdAt: DateTime.now().subtract(const Duration(days: 14)),
         ),
         Medication(
           id: '3',
+          userId: '',
           name: 'GLP-1',
-          dose: 0.5,
-          timestamp: DateTime.now().subtract(const Duration(days: 21)),
+          type: 'LIQUID',
+          doseMg: 500,
+          isTaken: false,
+          earnedXp: 0,
+          createdAt: DateTime.now().subtract(const Duration(days: 21)),
         ),
       ]);
     } catch (e) {
@@ -66,52 +84,65 @@ class MedicationController extends GetxController {
     try {
       await Future.delayed(const Duration(milliseconds: 500));
       availableMedications.assignAll(['GLP-1', 'Metformin']);
-      availableDoses.assignAll([0.25, 0.5, 1.0]);
+      availableDoses.assignAll([250, 500, 1000]);
     } catch (e) {
       errorMessage('Failed to fetch available medications');
     }
   }
 
-  // Log a new medication dose
   Future<void> logMedication() async {
-    if (selectedMedication.value.isEmpty || selectedDose.value <= 0) {
-      Get.snackbar('Error', 'Please select a medication and dose');
+    if (selectedMedication.value.isEmpty || selectedDoseMg.value <= 0) {
+      EasyLoading.showInfo('Please select a medication and dose');
       return;
     }
     try {
-      isLoading(true);
-      errorMessage('');
+      EasyLoading.show(status: 'Logging medication...');
 
-      await Future.delayed(const Duration(seconds: 1));
-      medicationHistory.insert(
-        0,
-        Medication(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          name: selectedMedication.value,
-          dose: selectedDose.value,
-          timestamp: selectedDate.value,
-        ),
+      // Get tokens from SharedPreferences
+      final accessToken = await SharedPreferencesHelper.getAccessToken();
+      final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+
+      if (accessToken == null || refreshToken == null) {
+        EasyLoading.showError('Session expired. Please log in again.');
+        return;
+      }
+
+      // Call API to log medication
+      final medication = await _medicationService.logMedication(
+        name: selectedMedication.value,
+        type: selectedType.value,
+        doseMg: selectedDoseMg.value,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
       );
-      Get.snackbar('Success', 'Medication logged successfully');
+
+      // Add to history
+      medicationHistory.insert(0, medication);
+
+      EasyLoading.showSuccess('Medication logged successfully');
+
+      // Reset form
+      selectedMedication.value = '';
+      selectedDoseMg.value = 0.0;
+      selectedType.value = 'CAPSULE';
     } catch (e) {
-      errorMessage('Failed to log medication');
-      Get.snackbar('Error', errorMessage.value);
-    } finally {
-      isLoading(false);
+      errorMessage.value = e.toString();
+      EasyLoading.showError(e.toString());
     }
   }
 
-  // Example method to update dose
-  void updateDose(double newDose) {
-    selectedDose.value = newDose;
+  void updateDoseMg(double newDose) {
+    selectedDoseMg.value = newDose;
   }
 
-  // Example method to update medication name
   void updateMedicationName(String newName) {
     selectedMedication.value = newName;
   }
 
-  // Example method to update date
+  void updateType(String newType) {
+    selectedType.value = newType;
+  }
+
   void updateDate(DateTime newDate) {
     selectedDate.value = newDate;
   }

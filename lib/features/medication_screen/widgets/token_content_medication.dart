@@ -43,6 +43,12 @@ class TokenContentMedication extends StatelessWidget {
             SizedBox(
               height: 40,
               child: TextField(
+                onChanged: (value) {
+                  final dose = double.tryParse(value);
+                  if (dose != null) {
+                    controller.updateDoseMg(dose);
+                  }
+                },
                 cursorColor: themeController.activeTheme.accentGoldColor,
                 style: getTextStyle(fontSize: 12, color: Colors.white),
                 decoration: InputDecoration(
@@ -75,7 +81,10 @@ class TokenContentMedication extends StatelessWidget {
               ),
             ),
             SizedBox(height: 14),
-            CustomButton(label: "Log Meal (+10 XP)", onPressed: () {}),
+            CustomButton(
+              label: "Log Meal (+10 XP)",
+              onPressed: () => controller.logMedication(),
+            ),
             SizedBox(height: 16),
             Text(
               "Dose History",
