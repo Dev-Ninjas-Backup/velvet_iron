@@ -26,7 +26,7 @@ class TokenContent extends StatelessWidget {
               "Log a Meal:",
               style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Obx(
               () => SelectableOptionRow(
                 options: ["Breakfast", "Lunch", "Dinner", "Snack"],
@@ -40,7 +40,7 @@ class TokenContent extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               "What did you eat?",
               style: getTextStyle(fontSize: 18, fontWeight: FontWeight.w400),
@@ -49,6 +49,7 @@ class TokenContent extends StatelessWidget {
             SizedBox(
               height: 73,
               child: TextField(
+                controller: controller.descriptionController,
                 maxLines: 3,
                 cursorColor: themeController.activeTheme.textfieldColor,
                 style: getTextStyle(fontSize: 12, color: Colors.white),
@@ -84,7 +85,7 @@ class TokenContent extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -125,16 +126,25 @@ class TokenContent extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 14),
+            const SizedBox(height: 14),
+
             ScanCodeButton(onPressed: () {}),
-            SizedBox(height: 18),
-            CustomButton(label: "Log Meal (+10 XP)", onPressed: () {}),
-            SizedBox(height: 16),
+            const SizedBox(height: 18),
+            Obx(
+              () => controller.isLoading.value
+                  ? const Center(child: CircularProgressIndicator())
+                  : CustomButton(
+                      label: "Log Meal (+10 XP)",
+                      onPressed: () => controller.submitMealLog(),
+                    ),
+            ),
+            const SizedBox(height: 16),
+
             Text(
               "What did you eat?",
               style: getTextStyle(fontSize: 16, fontWeight: FontWeight.w400),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             SelectMealType(
               title: "Dinner",
               sub: "120 calories",

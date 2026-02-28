@@ -28,7 +28,6 @@ class LogHistoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
-        // Get the emoji path based on theme if moodType is provided
         final displayIconPath = moodType != null
             ? _getEmojiForTheme(themeController.activeTheme.id, moodType!)
             : iconPath;
@@ -49,10 +48,7 @@ class LogHistoryItem extends StatelessWidget {
                   Image.asset(displayIconPath, width: 25, height: 30),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: Text(
-                      'Feeling $title',
-                      style: getTextStyle(fontSize: 14),
-                    ),
+                    child: Text(title, style: getTextStyle(fontSize: 14)),
                   ),
                   Row(
                     children: [
@@ -82,7 +78,7 @@ class LogHistoryItem extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    '$secondText & $title',
+                    secondText,
                     style: getTextStyle(
                       fontSize: 12,
                       color: themeController.activeTheme.todoTimeColor,
