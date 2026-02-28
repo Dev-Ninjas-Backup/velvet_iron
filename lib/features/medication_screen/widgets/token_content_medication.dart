@@ -43,6 +43,7 @@ class TokenContentMedication extends StatelessWidget {
             SizedBox(
               height: 40,
               child: TextField(
+                controller: controller.doseMgController,
                 onChanged: (value) {
                   final dose = double.tryParse(value);
                   if (dose != null) {
