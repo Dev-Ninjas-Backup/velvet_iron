@@ -2,25 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/controller/meal_log_controller.dart';
 
 class IconPath {
   static const String goldencircle = 'assets/icons/goldencircle.png';
   static const String whitecircle = 'assets/icons/whitecircle.png';
 }
 
-class CalorieConsumptionCard extends StatefulWidget {
+class CalorieConsumptionCard extends StatelessWidget {
   const CalorieConsumptionCard({super.key});
-
-  @override
-  State<CalorieConsumptionCard> createState() => _CalorieConsumptionCardState();
-}
-
-class _CalorieConsumptionCardState extends State<CalorieConsumptionCard> {
-  List<bool> activeDays = [true, true, true, true, false, false, false];
-  String selectedPeriod = "this week";
-  bool isLoading = true;
-
-  final List<String> weekDays = [
+  static const List<String> _weekDayLabels = [
     "Sun",
     "Mon",
     "Tue",
@@ -29,21 +20,20 @@ class _CalorieConsumptionCardState extends State<CalorieConsumptionCard> {
     "Fri",
     "Sat",
   ];
-
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    });
-  }
+  static const List<String> _weekDayKeys = [
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final mealController = Get.find<MealLogController>();
+
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
         return Container(
@@ -55,172 +45,150 @@ class _CalorieConsumptionCardState extends State<CalorieConsumptionCard> {
             ),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Text(
-                    "Calories Consumption",
-                    style: getTextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                  const Spacer(),
-                  Container(
-                    height: 22,
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    decoration: BoxDecoration(
-                      color: themeController.activeTheme.todoSubtitleColor
-                          .withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(
-                        color: themeController.activeTheme.borderColor,
-                        width: 1,
-                      ),
+          child: Obx(() {
+            final h = mealController.history.value;
+            final consumed = h?.consumedCalories ?? 0;
+            final daily = h?.dailyCalories ?? 0;
+            final weekly = h?.weeklyPresent ?? {};
+            final calorieProgress = daily > 0
+                ? (consumed / daily).clamp(0.0, 1.0)
+                : 0.0;
+
+            return Column(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      "Calories Consumption",
+                      style: getTextStyle(fontSize: 16, color: Colors.white),
                     ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: selectedPeriod,
-                        isDense: true,
-                        dropdownColor: themeController
-                            .activeTheme
-                            .todoSubtitleColor
+                    const Spacer(),
+                    Container(
+                      height: 22,
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      decoration: BoxDecoration(
+                        color: themeController.activeTheme.todoSubtitleColor
                             .withValues(alpha: 0.3),
-                        icon: Icon(
-                          Icons.keyboard_arrow_down,
-                          size: 14,
-                          color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: themeController.activeTheme.borderColor,
+                          width: 1,
                         ),
-                        items: ["this day", "this week", "this month"].map((
-                          String value,
-                        ) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: getTextStyle(
-                                fontSize: 10,
-                                color: Colors.white,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          if (newValue != null) {
-                            setState(() => selectedPeriod = newValue);
-                          }
-                        },
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(weekDays.length, (index) {
-                  final bool isActive = activeDays[index];
-                  String dotIcon = isActive
-                      ? (themeController.activeTheme.id == 'adventurer'
-                            ? 'assets/icons/doticon_adventure.png'
-                            : themeController.activeTheme.id == 'mage'
-                            ? 'assets/icons/doticon_mage.png'
-                            : themeController.activeTheme.id == 'gamer'
-                            ? 'assets/icons/doticon_gamer.png'
-                            : 'assets/icons/doticon_reader.png')
-                      : IconPath.whitecircle;
+                  ],
+                ),
+                const SizedBox(height: 15),
 
-                  return Container(
-                    width: 43,
-                    height: 60,
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    decoration: BoxDecoration(
-                      color: themeController.activeTheme.todoSubtitleColor
-                          .withValues(alpha: 0.4),
-                      borderRadius: BorderRadius.circular(50),
-                      border: isActive
-                          ? Border.all(
-                              color: themeController.activeTheme.dateNameborder,
-                              width: 1,
-                            )
-                          : null,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Container(
-                              width: 24,
-                              height: 24,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(_weekDayLabels.length, (index) {
+                    final bool isActive = weekly[_weekDayKeys[index]] ?? false;
+                    String dotIcon = isActive
+                        ? (themeController.activeTheme.id == 'adventurer'
+                              ? 'assets/icons/doticon_adventure.png'
+                              : themeController.activeTheme.id == 'mage'
+                              ? 'assets/icons/doticon_mage.png'
+                              : themeController.activeTheme.id == 'gamer'
+                              ? 'assets/icons/doticon_gamer.png'
+                              : 'assets/icons/doticon_reader.png')
+                        : IconPath.whitecircle;
+
+                    return Container(
+                      width: 43,
+                      height: 60,
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      decoration: BoxDecoration(
+                        color: themeController.activeTheme.todoSubtitleColor
+                            .withValues(alpha: 0.4),
+                        borderRadius: BorderRadius.circular(50),
+                        border: isActive
+                            ? Border.all(
+                                color:
+                                    themeController.activeTheme.dateNameborder,
+                                width: 1,
+                              )
+                            : null,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                width: 24,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
                               ),
-                            ),
-                            Image.asset(dotIcon, width: 18, height: 18),
-                          ],
-                        ),
-                        Text(
-                          weekDays[index],
-                          style: getTextStyle(
-                            fontSize: 10,
-                            color: Colors.white,
+                              Image.asset(dotIcon, width: 18, height: 18),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-              ),
+                          Text(
+                            _weekDayLabels[index],
+                            style: getTextStyle(
+                              fontSize: 10,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Total Calories",
-                    style: getTextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Total Calories",
+                      style: getTextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  Text(
-                    "590/796 kcal",
-                    style: getTextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white,
+                    Text(
+                      "${consumed.toInt()}/${daily.toInt()} kcal",
+                      style: getTextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Stack(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: 6,
-                    decoration: BoxDecoration(
-                      color: themeController.activeTheme.textfieldColor,
-                      borderRadius: BorderRadius.circular(10),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Stack(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: 6,
+                      decoration: BoxDecoration(
+                        color: themeController.activeTheme.textfieldColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                  ),
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      return Container(
-                        width: constraints.maxWidth * 0.6,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          gradient:
-                              themeController.activeTheme.progressBarGradient,
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        return Container(
+                          width: constraints.maxWidth * calorieProgress,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            gradient:
+                                themeController.activeTheme.progressBarGradient,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            );
+          }),
         );
       },
     );

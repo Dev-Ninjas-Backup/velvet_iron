@@ -41,8 +41,6 @@ class MealLog extends StatelessWidget {
                     GestureDetector(
                       onTap: () => Get.back(),
                       child: Container(
-                        // width: 32,
-                        // height: 32,
                         decoration: BoxDecoration(
                           color: themeController.activeTheme.todoSubtitleColor
                               .withValues(alpha: .2),
@@ -110,42 +108,71 @@ class MealLog extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 20),
-                          CalorieConsumptionCard(),
-                          SizedBox(height: 15),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: const [
-                                SizedBox(
-                                  width: 100,
-                                  child: NutritionLoadingCard(
-                                    amount: "80/120 g",
-                                    label: "Carbs",
-                                    progress: 0.7,
+                          const SizedBox(height: 20),
+                          const CalorieConsumptionCard(),
+                          const SizedBox(height: 15),
+
+                          // ✅ CHANGE: hardcoded → real API data from controller
+                          Obx(() {
+                            final h = mealLogController.history.value;
+                            final consumedCarb = h?.consumedCarb ?? 0;
+                            final targetCarb = h?.macroNeed.carb ?? 0;
+                            final consumedProtein = h?.consumedProtein ?? 0;
+                            final targetProtein = h?.macroNeed.protein ?? 0;
+                            final consumedFat = h?.consumedFat ?? 0;
+                            final targetFat = h?.macroNeed.fat ?? 0;
+
+                            return SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 100,
+                                    child: NutritionLoadingCard(
+                                      amount:
+                                          "${consumedCarb.toInt()}/${targetCarb.toInt()} g",
+                                      label: "Carbs",
+                                      progress: targetCarb > 0
+                                          ? (consumedCarb / targetCarb).clamp(
+                                              0.0,
+                                              1.0,
+                                            )
+                                          : 0.0,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 12),
-                                SizedBox(
-                                  width: 100,
-                                  child: NutritionLoadingCard(
-                                    amount: "180/210 g",
-                                    label: "Protein",
-                                    progress: 0.5,
+                                  const SizedBox(width: 12),
+                                  SizedBox(
+                                    width: 100,
+                                    child: NutritionLoadingCard(
+                                      amount:
+                                          "${consumedProtein.toInt()}/${targetProtein.toInt()} g",
+                                      label: "Protein",
+                                      progress: targetProtein > 0
+                                          ? (consumedProtein / targetProtein)
+                                                .clamp(0.0, 1.0)
+                                          : 0.0,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 12),
-                                SizedBox(
-                                  width: 100,
-                                  child: NutritionLoadingCard(
-                                    amount: "110/140 g",
-                                    label: "Fats",
-                                    progress: 0.4,
+                                  const SizedBox(width: 12),
+                                  SizedBox(
+                                    width: 100,
+                                    child: NutritionLoadingCard(
+                                      amount:
+                                          "${consumedFat.toInt()}/${targetFat.toInt()} g",
+                                      label: "Fats",
+                                      progress: targetFat > 0
+                                          ? (consumedFat / targetFat).clamp(
+                                              0.0,
+                                              1.0,
+                                            )
+                                          : 0.0,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
+                                ],
+                              ),
+                            );
+                          }),
+
                           Text(
                             "Log a Meal",
                             style: getTextStyle(
@@ -153,9 +180,8 @@ class MealLog extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           Container(
-                            // padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               color: themeController
                                   .activeTheme
