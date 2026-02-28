@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
+import 'package:velvet_iron/features/medication_screen/controller/medication_controller.dart';
 
 class CustomDropdown extends StatefulWidget {
   final String iconPath;
@@ -12,8 +13,9 @@ class CustomDropdown extends StatefulWidget {
 }
 
 class _CustomDropdownState extends State<CustomDropdown> {
-  String? selectedValue = "Injection";
-  final List<String> options = ["Injection", "Ozempic"];
+  String? selectedValue = "INJECTION";
+  final List<String> options = ["INJECTION", "CAPSULE", "LIQUID", "TABLET"];
+  final MedicationController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -29,37 +31,42 @@ class _CustomDropdownState extends State<CustomDropdown> {
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
-              value: "Injection",
+              value: selectedValue,
               icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
               isExpanded: true,
               dropdownColor:
                   themeController.activeTheme.dropdownBackgroundColor,
-              onChanged: (String? newValue) {},
-              items: <String>["Injection", "Ozempic"]
-                  .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            IconPath.todo2,
-                            width: 20,
-                            height: 20,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            value,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedValue = newValue;
+                });
+                if (newValue != null) {
+                  controller.updateType(newValue);
+                }
+              },
+              items: options.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        IconPath.todo2,
+                        width: 20,
+                        height: 20,
+                        color: Colors.white,
                       ),
-                    );
-                  })
-                  .toList(),
+                      const SizedBox(width: 12),
+                      Text(
+                        value,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
             ),
           ),
         );
