@@ -19,6 +19,7 @@ class Urls {
   static String unlockCompanion(String companionId) => '$baseUrl/onboarding/companion/$companionId';
   static const String fitnessGoal = '$baseUrl/profile/fitness-goal';
   static const String weightLog = '$baseUrl/weight-log';
+  static const String weightLogHistory = '$baseUrl/weight-log/history';
   static const String medication = '$baseUrl/medication';
   static const String moodLog = '$baseUrl/mood-log';
   static const String mealLog = '$baseUrl/meal-log';

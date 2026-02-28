@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
@@ -22,6 +23,23 @@ class WeightLog extends StatelessWidget {
   final DailyLogController dailyLogController;
   final BottomNavController navController;
   final WeightLogController weightLogController;
+
+  String _formatDate(DateTime dt) {
+    return DateFormat("dd MMM, EEE - hh:mm a").format(dt.toLocal());
+  }
+
+  String _formatChange(String? changeType) {
+    if (changeType == null || changeType.isEmpty) return '';
+    if (changeType.startsWith('increase')) {
+      final val = changeType.replaceAll('increase:', '').trim();
+      return '$val lbs increased';
+    } else if (changeType.startsWith('decrease')) {
+      final val = changeType.replaceAll('decrease:', '').trim();
+      return '$val lbs decreased';
+    }
+    return changeType;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppThemeController>(
@@ -44,8 +62,6 @@ class WeightLog extends StatelessWidget {
                         navController.changeTabIndex(0);
                       },
                       child: Container(
-                        // width: 32,
-                        // height: 32,
                         decoration: BoxDecoration(
                           color: themeController.activeTheme.todoSubtitleColor
                               .withValues(alpha: 0.2),
@@ -114,6 +130,8 @@ class WeightLog extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 20),
+
+                          // Status Cards 
                           Row(
                             children: [
                               Expanded(
@@ -180,9 +198,13 @@ class WeightLog extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 20),
-                          Graph(),
-                          SizedBox(height: 8),
+
+                          const SizedBox(height: 20),
+                          const Graph(),
+                          const SizedBox(height: 8),
+
+                          // Log Your Weight
+
                           Text(
                             "Log Your Weight",
                             style: getTextStyle(
@@ -190,14 +212,17 @@ class WeightLog extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           LogYourWeightCard(
                             weightController:
                                 weightLogController.weightController,
                             noteController: weightLogController.noteController,
-                            onPressed: () {},
+                            onPressed: () =>
+                                weightLogController.submitWeightLog(),
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
+
+                          //  Log History 
                           Text(
                             "Log History",
                             style: getTextStyle(
@@ -205,24 +230,45 @@ class WeightLog extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          SizedBox(height: 10),
-                          LogHistoryItem(
-                            title: "16.1 lbs",
-                            xpText: "+10 XP",
-                            iconPath: IconPath.whiteSteelyard,
-                            secondText: "0.5 lbs increased",
-                            thirdText: "Feeling good today...",
-                            dateTimeText: "15 Dec, Wed - 09:30 AM",
-                          ),
-                          SizedBox(height: 10),
-                          LogHistoryItem(
-                            title: "16.1 lbs",
-                            xpText: "+10 XP",
-                            iconPath: IconPath.whiteSteelyard,
-                            secondText: "0.5 lbs increased",
-                            thirdText: "",
-                            dateTimeText: "15 Dec, Wed - 09:30 AM",
-                          ),
+                          const SizedBox(height: 10),
+                          Obx(() {
+                            if (weightLogController.historyList.isEmpty) {
+                              return Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 20,
+                                  ),
+                                  child: Text(
+                                    "No logs yet. Start logging your weight!",
+                                    style: getTextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white54,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+
+                            return ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: weightLogController.historyList.length,
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(height: 10),
+                              itemBuilder: (context, index) {
+                                final item =
+                                    weightLogController.historyList[index];
+                                return LogHistoryItem(
+                                  title: "${item.weight} lbs",
+                                  xpText: "+${item.earnedXp} XP",
+                                  iconPath: IconPath.whiteSteelyard,
+                                  secondText: _formatChange(item.changeType),
+                                  thirdText: item.note ?? '',
+                                  dateTimeText: _formatDate(item.loggedAt),
+                                );
+                              },
+                            );
+                          }),
                         ],
                       ),
                     ),
