@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/model/meal_log_model.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/model/meal_log_schidule_model.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/service/meal_log_service.dart';
-// ✅ ADD: history model import
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/model/meal_log_history_model.dart';
 
 class MealLogController extends GetxController {
@@ -27,8 +26,6 @@ class MealLogController extends GetxController {
 
   final isScheduleLoading = false.obs;
   final scheduledMeal = Rxn<MealScheduleModel>();
-
-  // ✅ ADD: history state variables
   final isHistoryLoading = false.obs;
   final history = Rxn<MealLogHistoryModel>();
 
@@ -44,18 +41,16 @@ class MealLogController extends GetxController {
 
   void setDate(DateTime date) => selectedDate.value = date;
   void setTime(TimeOfDay time) => selectedTime.value = time;
-
-  // ✅ ADD: onInit এ history fetch হবে screen open হলেই
   @override
   void onInit() {
     super.onInit();
     fetchHistory();
   }
 
-  // ✅ ADD: history fetch method
+  //  history fetch method
   Future<void> fetchHistory() async {
     isHistoryLoading.value = true;
-    final result = await MealLogService.getHistory();
+    final result = await MealLogService.getMealLogHistory();
     isHistoryLoading.value = false;
 
     if (result != null) {
@@ -66,16 +61,9 @@ class MealLogController extends GetxController {
       print('[MealLogController] weeklyPresent=${result.weeklyPresent}');
       print('[MealLogController] consumedCalories=${result.consumedCalories}');
       print('[MealLogController] dailyCalories=${result.dailyCalories}');
-      print(
-        '[MealLogController] consumedCarb=${result.consumedCarb}  macroNeed.carb=${result.macroNeed.carb}',
-      );
-      print(
-        '[MealLogController] consumedProtein=${result.consumedProtein}  macroNeed.protein=${result.macroNeed.protein}',
-      );
-      print(
-        '[MealLogController] consumedFat=${result.consumedFat}  macroNeed.fat=${result.macroNeed.fat}',
-      );
+      EasyLoading.showSuccess('History loaded successfully!');
     } else {
+      EasyLoading.showError('Failed to load history. Please try again.');
       print('[MealLogController] History fetch failed.');
     }
   }
@@ -123,7 +111,7 @@ class MealLogController extends GetxController {
         'Meal logged successfully! +${result.earnedXp} XP',
       );
       _clearFields();
-      fetchHistory(); // ✅ ADD: log হলে history refresh
+      fetchHistory();
     } else {
       EasyLoading.showError('Failed to log meal. Please try again.');
     }
@@ -182,7 +170,7 @@ class MealLogController extends GetxController {
         'Meal scheduled successfully! +${result.earnedXp} XP',
       );
       _clearFields();
-      fetchHistory(); // ✅ ADD: schedule হলে history refresh
+      fetchHistory();
     } else {
       EasyLoading.showError('Failed to schedule meal. Please try again.');
     }
@@ -194,7 +182,6 @@ class MealLogController extends GetxController {
     proteinController.clear();
     fatController.clear();
     caloriesController.clear();
-    // ✅ ADD: meal type, date, time reset
     selectedMealType.value = 0;
     selectedDate.value = DateTime.now();
     selectedTime.value = TimeOfDay.now();

@@ -2,18 +2,17 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_screen/model/mood_log_model.dart';
 
 class MoodLogService {
-  static const String _baseUrl = 'https://velvet.api.softvence.app';
-
-  //  GET Mood-log/today 
+  //  GET Mood-log/today
 
   Future<MoodLogResponse?> getTodayMoodLog({
     required String accessToken,
     required String refreshToken,
   }) async {
-    final uri = Uri.parse('$_baseUrl/mood-log/today');
+    final uri = Uri.parse(Urls.getTodayMoodLog);
     debugPrint('MoodLog GET today: $uri');
 
     try {
@@ -50,16 +49,14 @@ class MoodLogService {
     }
   }
 
-  //  GET Mood-log-history 
+  //  GET Mood-log-history
   Future<MoodLogHistoryResponse> getMoodLogHistory({
     required String accessToken,
     required String refreshToken,
     int limit = 30,
     int offset = 0,
   }) async {
-    final uri = Uri.parse(
-      '$_baseUrl/mood-log/history?limit=$limit&offset=$offset',
-    );
+    final uri = Uri.parse(Urls.getMoodLogHistory(limit, offset));
     debugPrint('MoodLog GET history: $uri');
 
     try {
@@ -97,7 +94,7 @@ class MoodLogService {
     }
   }
 
-  // POST Mood-log 
+  // POST Mood-log
 
   Future<MoodLogResponse> logMood({
     required MoodType mood,
@@ -107,7 +104,7 @@ class MoodLogService {
     required String refreshToken,
     String? note,
   }) async {
-    final uri = Uri.parse('$_baseUrl/mood-log');
+    final uri = Uri.parse(Urls.moodLog);
     debugPrint('MoodLog POST $uri');
 
     final request = http.MultipartRequest('POST', uri)
@@ -151,7 +148,7 @@ class MoodLogService {
   }
 }
 
-//  Exception 
+//  Exception
 
 class MoodLogException implements Exception {
   final String message;

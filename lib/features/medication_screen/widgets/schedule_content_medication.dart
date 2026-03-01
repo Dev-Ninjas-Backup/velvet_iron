@@ -14,6 +14,41 @@ class ScheduleContentMedication extends StatelessWidget {
   const ScheduleContentMedication({super.key, required this.controller});
 
   final MedicationController controller;
+  String _getMedIcon(String type) {
+    switch (type.toUpperCase()) {
+      case 'INJECTION':
+        return IconPath.injection;
+      case 'CAPSULE':
+      case 'TABLET':
+        return IconPath.injection2;
+      default:
+        return IconPath.injection;
+    }
+  }
+  String _formatDateTime(DateTime dt) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    final local = dt.toLocal();
+    final day = days[local.weekday - 1];
+    final month = months[local.month - 1];
+    final hour = local.hour % 12 == 0 ? 12 : local.hour % 12;
+    final minute = local.minute.toString().padLeft(2, '0');
+    final period = local.hour >= 12 ? 'PM' : 'AM';
+    return "${local.day} $month, $day - $hour:$minute $period";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,26 +61,32 @@ class ScheduleContentMedication extends StatelessWidget {
               "Dose Name:",
               style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             DoseNameTextField(),
-            SizedBox(height: 14),
+            const SizedBox(height: 14),
             Text(
               "Medicine Type:",
               style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
             ),
-            SizedBox(height: 11),
+            const SizedBox(height: 11),
             CustomDropdown(iconPath: IconPath.todo2),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               "Dose (mg):",
               style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             SizedBox(
               height: 40,
               child: TextField(
+                controller: controller.doseMgController,
+                keyboardType: TextInputType.number,
                 cursorColor: themeController.activeTheme.accentGoldColor,
                 style: getTextStyle(fontSize: 12, color: Colors.white),
+                onChanged: (val) {
+                  final parsed = double.tryParse(val);
+                  if (parsed != null) controller.updateDoseMg(parsed);
+                },
                 decoration: InputDecoration(
                   hintText: "4",
                   hintStyle: getTextStyle(
@@ -82,34 +123,88 @@ class ScheduleContentMedication extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            DateAndTimePicker(
-              onDateChanged: (p0) {},
-              onTimeChanged: (p0) {},
-              selectedDate: DateTime.now(),
-              selectedTime: TimeOfDay.now(),
+            Obx(
+              () => DateAndTimePicker(
+                selectedDate: controller.selectedDate.value,
+                selectedTime: controller.selectedTime.value,
+                onDateChanged: (date) => controller.updateDate(date),
+                onTimeChanged: (time) => controller.updateTime(time),
+              ),
             ),
-            SizedBox(height: 20),
-            CustomButton(label: "Log Meal (+10 XP)", onPressed: () {}),
+            const SizedBox(height: 20),
+            CustomButton(
+              label: "Log Meal (+10 XP)",
+              onPressed: () => controller.scheduleMedication(),
+            ),
             const SizedBox(height: 14),
             Text(
               "Dose History",
               style: getTextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 14),
-            DoseHistory(
-              title: "Ozempic (4mg)",
-              sub: "1 Injection",
-              time: "Wed - 09:30 AM",
-              iconPath: IconPath.injection,
-              isSelected: RxBool(false),
-            ),
-            DoseHistory(
-              title: "Metformin (400mg)",
-              sub: "120 calories",
-              time: "12 Dec, Wed - 09:00 PM",
-              iconPath: IconPath.injection2,
-              isSelected: RxBool(false),
-            ),
+            Obx(() {
+              if (controller.isHistoryLoading.value) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              final logs = controller.medicationHistory;
+
+              if (logs.isEmpty) {
+                return Center(
+                  child: Text(
+                    "No dose history found",
+                    style: getTextStyle(fontSize: 14, color: Colors.white54),
+                  ),
+                );
+              }
+
+              return Column(
+                children: logs.map((med) {
+                  final timeStr = med.loggedAt != null
+                      ? _formatDateTime(med.loggedAt!)
+                      : med.scheduledAt != null
+                      ? _formatDateTime(med.scheduledAt!)
+                      : '';
+
+                  return DoseHistory(
+                    title: "${med.name} (${med.doseMg.toInt()}mg)",
+                    sub: med.type[0] + med.type.substring(1).toLowerCase(),
+                    time: timeStr,
+                    iconPath: _getMedIcon(med.type),
+                    isSelected: RxBool(false),
+                  );
+                }).toList(),
+              );
+            }),
+
+            const SizedBox(height: 14),
+            Obx(() {
+              final next = controller.historyData.value?.nextSchedule;
+              if (next == null) return const SizedBox.shrink();
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Next Dose",
+                    style: getTextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  DoseHistory(
+                    title: "${next.name} (${next.doseMg.toInt()}mg)",
+                    sub: next.type[0] + next.type.substring(1).toLowerCase(),
+                    time: next.scheduledAt != null
+                        ? _formatDateTime(next.scheduledAt!)
+                        : '',
+                    iconPath: _getMedIcon(next.type),
+                    isSelected: RxBool(false),
+                  ),
+                ],
+              );
+            }),
           ],
         );
       },
