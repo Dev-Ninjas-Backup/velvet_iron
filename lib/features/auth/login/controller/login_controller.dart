@@ -3,12 +3,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/auth/login/validation/login_validation.dart';
 import 'package:velvet_iron/features/auth/services/auth_service.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
 class LoginController extends GetxController {
+ Future<void> signInWithDiscord() async {
+    try {
+      isLoading.value = true;
+      final url = await _authService.getDiscordOAuthUrl();
+      if (url != null) {
+        await launchUrlString(url, mode: LaunchMode.externalApplication);
+      } else {
+        EasyLoading.showError('Failed to generate Discord OAuth URL');
+      }
+    } catch (e) {
+      EasyLoading.showError('Discord sign-in failed: ${e.toString()}');
+      print('Discord sign-in failed: ${e.toString()}');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   final formKey = GlobalKey<FormState>();
   final AuthService _authService = AuthService();
 

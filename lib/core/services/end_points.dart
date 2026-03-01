@@ -25,6 +25,8 @@ class Urls {
   static const String mealLog = '$baseUrl/meal-log';
   static const String macroGoal = '$baseUrl/macro-goal';
   static const String getTodayMoodLog = '$baseUrl/mood-log/today';
-
+  static const String discordSignIn = '$baseUrl/auth/discord-auth-url';
+  static const String discordCallback = '$baseUrl/auth/discord/callback';
+  static const String authDiscord = '$baseUrl/auth/discord';
 
 }
