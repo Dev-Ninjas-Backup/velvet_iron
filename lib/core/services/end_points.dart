@@ -21,12 +21,24 @@ class Urls {
   static const String weightLog = '$baseUrl/weight-log';
   static const String weightLogHistory = '$baseUrl/weight-log/history';
   static const String medication = '$baseUrl/medication';
+  static const String medicationHistory = '$baseUrl/medication/history';
+  static const String medicationSchedule = '$baseUrl/medication-schedule';
   static const String moodLog = '$baseUrl/mood-log';
-  static const String mealLog = '$baseUrl/meal-log';
+  static String getMoodLogHistory(int limit, int offset) => '$baseUrl/mood-log/history?limit=$limit&offset=$offset';
   static const String macroGoal = '$baseUrl/macro-goal';
   static const String getTodayMoodLog = '$baseUrl/mood-log/today';
+
+  static const String mealLog = '$baseUrl/meal-log';
+  static const String mealSchedule = '$baseUrl/meal-schedule';
+  static String mealLogHistory(int limit, int offset) => '$baseUrl/meal-log/history?limit=$limit&offset=$offset';
+
+  // static const String mealLog = '$baseUrl/meal-log';
+
+
+
   static const String discordSignIn = '$baseUrl/auth/discord-auth-url';
   static const String discordCallback = '$baseUrl/auth/discord/callback';
   static const String authDiscord = '$baseUrl/auth/discord';
+
 
 }

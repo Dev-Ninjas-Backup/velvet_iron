@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/model/meal_log_history_model.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/model/meal_log_model.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/model/meal_log_schidule_model.dart';
 
 class MealLogService {
-  static const String _baseUrl = 'https://velvet.api.softvence.app';
-
   static Future<MealLogModel?> logMeal({
     required String mealType,
     required String description,
@@ -28,7 +27,7 @@ class MealLogService {
       }
 
       //  Build multipart request
-      final uri = Uri.parse('$_baseUrl/meal-log');
+      final uri = Uri.parse(Urls.mealLog);
       final request = http.MultipartRequest('POST', uri);
 
       request.headers.addAll({
@@ -104,7 +103,7 @@ class MealLogService {
         return null;
       }
 
-      final uri = Uri.parse('$_baseUrl/meal-schedule');
+      final uri = Uri.parse(Urls.mealSchedule);
       final request = http.MultipartRequest('POST', uri);
 
       request.headers.addAll({
@@ -156,7 +155,7 @@ class MealLogService {
   }
 
   //  GET /meal-log/history
-  static Future<MealLogHistoryModel?> getHistory({
+  static Future<MealLogHistoryModel?> getMealLogHistory({
     int limit = 30,
     int offset = 0,
   }) async {
@@ -172,9 +171,7 @@ class MealLogService {
         return null;
       }
 
-      final uri = Uri.parse(
-        '$_baseUrl/meal-log/history?limit=$limit&offset=$offset',
-      );
+      final uri = Uri.parse(Urls.mealLogHistory(limit, offset));
 
       final response = await http.get(
         uri,
@@ -211,6 +208,4 @@ class MealLogService {
       return null;
     }
   }
-
-  
 }

@@ -56,7 +56,7 @@ class WeightLogService {
   }
 
   //  GET weight-log-history
-  
+
   Future<WeightLogHistoryModel> getWeightLogHistory({
     required String accessToken,
     required String refreshToken,

@@ -66,6 +66,7 @@ class WeightLogController extends GetxController {
         );
       }
 
+      EasyLoading.showSuccess('Data loaded successfully!');
       _applyHistoryData(result);
       EasyLoading.dismiss();
     } catch (e, stackTrace) {
@@ -124,7 +125,7 @@ class WeightLogController extends GetxController {
       weightController.clear();
       noteController.clear();
 
-      EasyLoading.showSuccess('Weight logged successfully!');
+      EasyLoading.showSuccess('Weight logged successfully');
 
       // Refresh history
       await fetchWeightLogHistory();

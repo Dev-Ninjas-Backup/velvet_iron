@@ -8,10 +8,8 @@ import 'package:velvet_iron/features/medication_screen/service/medication_servic
 class MedicationController extends GetxController {
   @override
   void onClose() {
-    // Clear all fields and controllers to default/empty
     selectedMedication.value = '';
     selectedDoseMg.value = 0.0;
-    // selectedType.value = '';
     doseNameController.clear();
     doseMgController.clear();
     doseNameController.dispose();
@@ -29,16 +27,17 @@ class MedicationController extends GetxController {
   final Rx<String> selectedType = '--'.obs;
   final Rx<double> selectedDoseMg = 0.0.obs;
   final Rx<DateTime> selectedDate = DateTime.now().obs;
-
-  // Text controllers for fields
+  final Rx<TimeOfDay> selectedTime = TimeOfDay.now().obs;
   final doseNameController = TextEditingController();
   final doseMgController = TextEditingController();
 
-  // For dropdowns or selection
   var availableMedications = <String>[].obs;
   var availableDoses = <double>[].obs;
 
-  // Service instance
+  final isHistoryLoading = false.obs;
+  final Rxn<MedicationHistoryResponse> historyData =
+      Rxn<MedicationHistoryResponse>();
+
   final MedicationService _medicationService = MedicationService();
 
   @override
@@ -52,49 +51,62 @@ class MedicationController extends GetxController {
     selectedMealTab.value = index;
   }
 
+  void updateTime(TimeOfDay time) {
+    selectedTime.value = time;
+  }
+
+  //  build scheduleTime ISO string from selectedDate + selectedTime
+  String _buildScheduleTime() {
+    final date = selectedDate.value;
+    final time = selectedTime.value;
+    final combined = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      time.hour,
+      time.minute,
+    );
+    final utc = combined.toUtc();
+    final iso = utc.toIso8601String();
+    return '${iso.replaceFirst(RegExp(r'\.\d+Z$'), '')}Z';
+  }
+
+  // fetchMedicationHistory now calls real GET - medication-history
   Future<void> fetchMedicationHistory() async {
     try {
-      isLoading(true);
+      isHistoryLoading(true);
       errorMessage('');
 
-      await Future.delayed(const Duration(seconds: 1));
-      medicationHistory.assignAll([
-        Medication(
-          id: '1',
-          userId: '',
-          name: 'GLP-1',
-          type: 'LIQUID',
-          doseMg: 250,
-          isTaken: true,
-          earnedXp: 10,
-          createdAt: DateTime.now().subtract(const Duration(days: 7)),
-        ),
-        Medication(
-          id: '2',
-          userId: '',
-          name: 'GLP-1',
-          type: 'LIQUID',
-          doseMg: 250,
-          isTaken: true,
-          earnedXp: 10,
-          createdAt: DateTime.now().subtract(const Duration(days: 14)),
-        ),
-        Medication(
-          id: '3',
-          userId: '',
-          name: 'GLP-1',
-          type: 'LIQUID',
-          doseMg: 500,
-          isTaken: false,
-          earnedXp: 0,
-          createdAt: DateTime.now().subtract(const Duration(days: 21)),
-        ),
-      ]);
+      final accessToken = await SharedPreferencesHelper.getAccessToken();
+      final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+
+      if (accessToken == null || refreshToken == null) {
+        errorMessage('Session expired. Please log in again.');
+        return;
+      }
+
+      final result = await _medicationService.getMedicationHistory(
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      );
+
+      historyData.value = result;
+      medicationHistory.assignAll(result.logs);
+
+      debugPrint(
+        '[MedicationController] History loaded. count=${result.logs.length}',
+      );
+      debugPrint(
+        '[MedicationController] nextSchedule=${result.nextSchedule?.name}',
+      );
+      debugPrint(
+        '[MedicationController] totalEarnedXp=${result.totalEarnedXp}',
+      );
     } catch (e) {
-      errorMessage('Failed to fetch medication history');
-      Get.snackbar('Error', errorMessage.value);
+      errorMessage('Failed to fetch medication history: $e');
+      debugPrint('[MedicationController] fetchMedicationHistory error: $e');
     } finally {
-      isLoading(false);
+      isHistoryLoading(false);
     }
   }
 
@@ -108,6 +120,8 @@ class MedicationController extends GetxController {
     }
   }
 
+  //  POST medication-log
+
   Future<void> logMedication() async {
     if (selectedMedication.value.isEmpty ||
         selectedDoseMg.value <= 0 ||
@@ -119,7 +133,6 @@ class MedicationController extends GetxController {
     try {
       EasyLoading.show(status: 'Logging medication...');
 
-      // Get tokens from SharedPreferences
       final accessToken = await SharedPreferencesHelper.getAccessToken();
       final refreshToken = await SharedPreferencesHelper.getRefreshToken();
 
@@ -128,7 +141,6 @@ class MedicationController extends GetxController {
         return;
       }
 
-      // Call API to log medication
       final medication = await _medicationService.logMedication(
         name: selectedMedication.value,
         type: selectedType.value,
@@ -137,20 +149,78 @@ class MedicationController extends GetxController {
         refreshToken: refreshToken,
       );
 
-      // Add to history
       medicationHistory.insert(0, medication);
-
       EasyLoading.showSuccess('Medication logged successfully');
-
-      doseNameController.clear();
-      doseMgController.clear();
-      selectedType.value = '--';
-
-      // No need to call resetFormFields; fields will be cleared on dispose
+      _clearFields();
+      fetchMedicationHistory();
     } catch (e) {
       errorMessage.value = e.toString();
       EasyLoading.showError(e.toString());
     }
+  }
+
+  // POST medication-schedule
+
+  Future<void> scheduleMedication() async {
+    if (selectedMedication.value.isEmpty ||
+        selectedDoseMg.value <= 0 ||
+        selectedType.value == '--' ||
+        selectedType.value.isEmpty) {
+      EasyLoading.showInfo('Please fill all fields before scheduling.');
+      return;
+    }
+
+    try {
+      EasyLoading.show(status: 'Scheduling medication...');
+
+      final accessToken = await SharedPreferencesHelper.getAccessToken();
+      final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+
+      if (accessToken == null || refreshToken == null) {
+        EasyLoading.showError('Session expired. Please log in again.');
+        return;
+      }
+
+      final scheduleTime = _buildScheduleTime();
+
+      debugPrint('[MedicationController] scheduleMedication...');
+      debugPrint(
+        '[MedicationController] name        : ${selectedMedication.value}',
+      );
+      debugPrint('[MedicationController] type        : ${selectedType.value}');
+      debugPrint(
+        '[MedicationController] doseMg      : ${selectedDoseMg.value}',
+      );
+      debugPrint('[MedicationController] scheduleTime: $scheduleTime');
+
+      final medication = await _medicationService.scheduleMedication(
+        name: selectedMedication.value,
+        type: selectedType.value,
+        doseMg: selectedDoseMg.value,
+        scheduleTime: scheduleTime,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      );
+
+      EasyLoading.showSuccess(
+        'Medication scheduled! +${medication.earnedXp} XP',
+      );
+      _clearFields();
+      fetchMedicationHistory();
+    } catch (e) {
+      errorMessage.value = e.toString();
+      EasyLoading.showError(e.toString());
+    }
+  }
+
+  void _clearFields() {
+    doseNameController.clear();
+    doseMgController.clear();
+    selectedType.value = '--';
+    selectedMedication.value = '';
+    selectedDoseMg.value = 0.0;
+    selectedDate.value = DateTime.now();
+    selectedTime.value = TimeOfDay.now();
   }
 
   void updateDoseMg(double newDose) {

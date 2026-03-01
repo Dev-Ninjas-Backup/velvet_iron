@@ -62,8 +62,6 @@ class MedicationScreen extends StatelessWidget {
                                 navController.changeTabIndex(1);
                               },
                               child: Container(
-                                // width: 32,
-                                // height: 32,
                                 decoration: BoxDecoration(
                                   color: themeController
                                       .activeTheme
@@ -98,43 +96,57 @@ class MedicationScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CalorieConsumptionCard(),
-                    SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomLogContainer(
-                            iconPath:
-                                themeController.activeTheme.id == 'adventurer'
-                                ? IconPath.injectionAdventure
-                                : themeController.activeTheme.id == 'mage'
-                                ? IconPath.injectionMage
-                                : themeController.activeTheme.id == 'gamer'
-                                ? IconPath.injectionGamer
-                                : IconPath.injectionReader,
-                            title: "Dose Logged",
-                            value: "50",
-                            rewardAmount: "150",
+                    const SizedBox(height: 8),
+                    Obx(() {
+                      final h = controller.historyData.value;
+                      final totalLogged = h?.totalCount ?? 0;
+                      final totalXp = h?.totalEarnedXp ?? 0;
+                      final nextDose = h?.nextSchedule;
+                      final nextDoseValue = nextDose != null
+                          ? "${nextDose.name} ${nextDose.doseMg.toInt()}mg"
+                          : "No schedule";
+                      final pendingCount = h?.pendingCount ?? 0;
+
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: CustomLogContainer(
+                              iconPath:
+                                  themeController.activeTheme.id == 'adventurer'
+                                  ? IconPath.injectionAdventure
+                                  : themeController.activeTheme.id == 'mage'
+                                  ? IconPath.injectionMage
+                                  : themeController.activeTheme.id == 'gamer'
+                                  ? IconPath.injectionGamer
+                                  : IconPath.injectionReader,
+                              title: "Dose Logged",
+                              value: "$totalLogged",
+                              rewardAmount: "$totalXp",
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: CustomLogContainer(
-                            iconPath:
-                                themeController.activeTheme.id == 'adventurer'
-                                ? IconPath.quillpenAdenture
-                                : themeController.activeTheme.id == 'mage'
-                                ? IconPath.quillpenMage
-                                : themeController.activeTheme.id == 'gamer'
-                                ? IconPath.quillpenGamer
-                                : IconPath.quillpenReader,
-                            title: "Next Dose",
-                            value: "50",
-                            rewardAmount: "150",
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: CustomLogContainer(
+                              iconPath:
+                                  themeController.activeTheme.id == 'adventurer'
+                                  ? IconPath.quillpenAdenture
+                                  : themeController.activeTheme.id == 'mage'
+                                  ? IconPath.quillpenMage
+                                  : themeController.activeTheme.id == 'gamer'
+                                  ? IconPath.quillpenGamer
+                                  : IconPath.quillpenReader,
+                              title: "Next Dose",
+                              // ✅ CHANGE: next dose name + mg
+                              value: nextDoseValue,
+                              // ✅ CHANGE: pending count
+                              rewardAmount: "$pendingCount",
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
+                        ],
+                      );
+                    }),
+
+                    const SizedBox(height: 20),
                     Text(
                       "Add Dose (+10 XP)",
                       style: getTextStyle(
@@ -142,7 +154,7 @@ class MedicationScreen extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
@@ -150,7 +162,6 @@ class MedicationScreen extends StatelessWidget {
                             .withValues(alpha: .5),
                         borderRadius: BorderRadius.circular(10),
                       ),
-
                       child: MealTabSwitcherMedication(
                         controller: controller,
                         tokenContent: TokenContentMedication(
