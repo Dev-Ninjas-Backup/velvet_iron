@@ -162,7 +162,7 @@ class LoginScreen extends StatelessWidget {
                         const SizedBox(width: 26),
                         GestureDetector(
                           onTap: () {
-                            debugPrint('Discord clicked');
+                            controller.signInWithDiscord();
                           },
                           child: Image.asset(
                             IconPath.discordIcon,

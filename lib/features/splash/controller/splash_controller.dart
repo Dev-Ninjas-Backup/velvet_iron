@@ -19,7 +19,7 @@ class SplashController extends GetxController {
         accessToken.isNotEmpty &&
         refreshToken != null &&
         refreshToken.isNotEmpty) {
-      Get.offAllNamed(AppRoute.getHomeScreen());
+      Get.offAllNamed(AppRoute.getLoginScreen());
     } else {
       Get.offAllNamed('/loginScreen');
     }

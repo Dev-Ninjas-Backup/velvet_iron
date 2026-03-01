@@ -1,12 +1,41 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
-// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:velvet_iron/core/models/response_data.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
+// import 'package:velvet_iron/secrets/secrets.dart';
 
 class AuthService {
+  Future<String?> getDiscordOAuthUrl() async {
+    try {
+      final response = await http.get(
+        Uri.parse(Urls.discordSignIn),
+        headers: {'accept': '*/*'},
+      );
+
+      print('Discord Response Status: ${response.statusCode}');
+      print('Discord Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          final url = data['url'];
+          print('Discord OAuth URL: $url');
+          return url;
+        } else {
+          print('Failed to get Discord OAuth URL: ${data['message']}');
+          return null;
+        }
+      } else {
+        print('HTTP Error: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error generating Discord OAuth URL: $e');
+      return null;
+    }
+  }
   static const String baseUrl = Urls.baseUrl;
 
   Future<ResponseData> signUp({
