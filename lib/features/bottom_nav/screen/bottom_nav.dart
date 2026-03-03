@@ -105,7 +105,7 @@ class BottomNav extends StatelessWidget {
 
     final Color textColor = isSelected
         ? themeController.activeTheme.accentGoldColor
-        : Colors.white54;
+        : Colors.white;
 
     return GestureDetector(
       onTap: onTap,

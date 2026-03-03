@@ -25,16 +25,16 @@ class CompletedTabContent extends StatelessWidget {
             style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
           ),
           SizedBox(height: 13),
-          ExcerciseDropdown(iconPath: IconPath.heart),
+          ExcerciseDropdown(iconPath: IconPath.heart, controller: controller),
           SizedBox(height: 13),
           Text(
             "Exercise Name:",
             style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
           ),
           const SizedBox(height: 10),
-          const ExerciseNameTextField(),
+          ExerciseNameTextField(controller: controller),
           SizedBox(height: 16),
-          IntensityAndDuration(),
+          IntensityAndDuration(controller: controller),
           SizedBox(height: 14),
           Text(
             "Notes (optional):",
@@ -44,6 +44,7 @@ class CompletedTabContent extends StatelessWidget {
           SizedBox(
             height: 73,
             child: TextField(
+              controller: controller.notesController,
               maxLines: 3,
               cursorColor: themeController.activeTheme.accentGoldColor,
               style: getTextStyle(fontSize: 12, color: Colors.white),
@@ -83,7 +84,10 @@ class CompletedTabContent extends StatelessWidget {
             ),
           ),
           SizedBox(height: 14),
-          CustomButton(label: "Log Exercise (+10 XP)", onPressed: () {}),
+          CustomButton(
+            label: "Log Exercise (+10 XP)",
+            onPressed: () => controller.logExercise(),
+          ),
         ],
       ),
     );

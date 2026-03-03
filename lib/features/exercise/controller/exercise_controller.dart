@@ -1,18 +1,31 @@
+// ignore_for_file: avoid_print
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/features/exercise/model/exercise_model.dart';
+import 'package:velvet_iron/features/exercise/service/exercise_service.dart';
 
 class ExerciseController extends GetxController {
+  final _exerciseService = ExerciseService();
+
   final isLoading = true.obs;
 
   // Exercise Stats
-  final exerciseStats = ExerciseStats(
-    loggedExercises: 0,
-    timeExercises: 0,
-  ).obs;
+  final totalCount = 0.obs;
+  final pendingCount = 0.obs;
+  final totalEarnedXp = 0.obs;
+  final nextSchedule = Rxn<Exercise>();
+
+  // Exercise Stats (legacy)
+  final exerciseStats = ExerciseStats(loggedExercises: 0, timeExercises: 0).obs;
 
   // Exercise History
   final exercises = <Exercise>[].obs;
+
+  // Text controllers for clearing fields
+  final exerciseNameController = TextEditingController();
+  final notesController = TextEditingController();
 
   @override
   void onInit() {
@@ -20,59 +33,59 @@ class ExerciseController extends GetxController {
     fetchExerciseData();
   }
 
+  @override
+  void onClose() {
+    exerciseNameController.dispose();
+    notesController.dispose();
+    super.onClose();
+  }
+
   Future<void> fetchExerciseData() async {
     try {
       isLoading(true);
-      await Future.wait([
-        fetchExerciseStats(),
-        fetchExerciseHistory(),
-      ]);
+      await fetchExerciseHistory();
     } finally {
       isLoading(false);
     }
   }
 
-  Future<void> fetchExerciseStats() async {
-    // Simulate API call
-    await Future.delayed(const Duration(seconds: 1));
-    exerciseStats.value = ExerciseStats(
-      loggedExercises: 64,
-      timeExercises: 120,
-    );
-  }
-
   Future<void> fetchExerciseHistory() async {
-    // Simulate API call
-    await Future.delayed(const Duration(seconds: 1));
-    exercises.assignAll([
-      Exercise(
-        id: '1',
-        name: 'Yoga Meditation',
-        type: 'Cardio',
-        duration: 30,
-        intensity: 'Medium',
-        dateTime: DateTime.now().subtract(const Duration(days: 1)),
-        isCompleted: true,
-      ),
-      Exercise(
-        id: '2',
-        name: 'Running',
-        type: 'Cardio',
-        duration: 30,
-        intensity: 'High',
-        dateTime: DateTime.now().subtract(const Duration(days: 1)),
-        isCompleted: true,
-      ),
-      Exercise(
-        id: '3',
-        name: 'Squats',
-        type: 'Strength',
-        duration: 30,
-        intensity: 'High',
-        dateTime: DateTime.now().subtract(const Duration(days: 2)),
-        isCompleted: true,
-      ),
-    ]);
+    try {
+      final response = await _exerciseService.fetchExerciseHistory();
+
+      if (response == null) {
+        print('❌ Failed to fetch exercise history');
+        return;
+      }
+
+      print('✅ Exercise History Response: ${jsonEncode(response)}');
+
+      // Parse stats from response
+      totalCount.value = response['totalCount'] ?? 0;
+      pendingCount.value = response['pendingCount'] ?? 0;
+      totalEarnedXp.value = response['totalEarnedXp'] ?? 0;
+      nextSchedule.value = response['nextSchedule'] != null
+          ? Exercise.fromJson(response['nextSchedule'])
+          : null;
+
+      // Update legacy stats
+      exerciseStats.value = ExerciseStats(
+        loggedExercises: totalCount.value,
+        timeExercises: totalEarnedXp.value,
+      );
+
+      // Parse logs list
+      final List<dynamic> logs = response['logs'] ?? [];
+      final List<Exercise> parsed = logs
+          .map((e) => Exercise.fromJson(e))
+          .toList();
+
+      exercises.assignAll(parsed);
+
+      print('✅ Parsed ${exercises.length} exercises');
+    } catch (e) {
+      print('❌ fetchExerciseHistory Error: $e');
+    }
   }
 
   // Form state
@@ -98,14 +111,91 @@ class ExerciseController extends GetxController {
     selectedExerciseTab.value = index;
   }
 
-  void logExercise() {
-    // Logic to add a new exercise will go here
-    // This will be called when the user clicks the "Log Exercise" button
-    // This would typically involve making a POST request to an API
+  void _clearFields() {
+    exerciseNameController.clear();
+    notesController.clear();
+    exerciseType.value = 'Cardio'; // Reset dropdown
+    intensity.value = 'Medium'; // Reset dropdown
+    duration.value = 30;
+    exerciseName.value = '';
+    notes.value = '';
+    // Always reset scheduling state to avoid pollution between tabs
+    scheduleDate.value = DateTime.now();
+    scheduleTime.value = TimeOfDay.now();
   }
 
-  void scheduleExercise() {
-    // Logic to schedule a new exercise will go here
-    // This would typically involve making a POST request to an API
+  /// Log a completed exercise (Completed tab)
+  /// Only sends fields required for completion, never scheduling fields
+  Future<void> logExercise() async {
+    try {
+      EasyLoading.show(status: 'Logging exercise...');
+      final response = await _exerciseService.logExercise(
+        type: exerciseType.value,
+        name: exerciseNameController.text,
+        intensity: intensity.value,
+        duration: duration.value,
+        note: notesController.text,
+      );
+      if (response == null) {
+        EasyLoading.showError('Failed to log exercise. Please try again.');
+        return;
+      }
+      print('✅ Exercise Logged Successfully: ${jsonEncode(response)}');
+      final logged = Exercise.fromJson({
+        ...response,
+        'userId': response['userId'] ?? '',
+        'entryType': response['entryType'] ?? 'LOG',
+      });
+      exercises.insert(0, logged);
+      // Update stats
+      totalCount.value += 1;
+      totalEarnedXp.value += logged.earnedXp;
+      exerciseStats.value = ExerciseStats(
+        loggedExercises: totalCount.value,
+        timeExercises: totalEarnedXp.value,
+      );
+      EasyLoading.showSuccess('Exercise logged! +${logged.earnedXp} XP');
+      _clearFields(); // Always clear all state after logging
+    } catch (e) {
+      print('❌ Log Exercise Error: $e');
+      EasyLoading.showError('Failed to log exercise. Please try again.');
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  /// Schedule an exercise for the future (Schedule tab)
+  /// Only updates nextSchedule, does not add to history list
+  Future<void> scheduleExercise() async {
+    try {
+      EasyLoading.show(status: 'Scheduling exercise...');
+      final response = await _exerciseService.scheduleExercise(
+        type: exerciseType.value,
+        name: exerciseNameController.text,
+        intensity: intensity.value,
+        duration: duration.value,
+        note: notesController.text,
+        scheduledAt: DateTime(
+          scheduleDate.value.year,
+          scheduleDate.value.month,
+          scheduleDate.value.day,
+          scheduleTime.value.hour,
+          scheduleTime.value.minute,
+        ),
+      );
+      if (response == null) {
+        EasyLoading.showError('Failed to schedule exercise. Please try again.');
+        return;
+      }
+      print('✅ Exercise Scheduled Successfully: ${jsonEncode(response)}');
+      await fetchExerciseHistory();
+      EasyLoading.showSuccess('Exercise scheduled!');
+      _clearFields(); 
+    } catch (e) {
+      print('❌ Schedule Exercise Error: $e');
+      EasyLoading.showError('Failed to schedule exercise. Please try again.');
+    } finally {
+      EasyLoading.dismiss();
+    }
   }
 }

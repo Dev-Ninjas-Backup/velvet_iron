@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:velvet_iron/core/models/response_data.dart';
@@ -23,7 +25,7 @@ class SettingsService {
       }
 
       final url = Uri.parse(Urls.logout);
-      // print('Logout URL: $url');
+      print('Logout URL: $url');
 
       final response = await http.delete(
         url,
@@ -34,14 +36,14 @@ class SettingsService {
         },
       );
 
-      // print('Response Status Code: ${response.statusCode}');
+      print('Response Status Code: ${response.statusCode}');
 
       final decodedData = jsonDecode(response.body);
-      // print('Decoded Response: $decodedData');
+      print('Decoded Response: $decodedData');
 
       if (response.statusCode == 200) {
         bool isSuccess = decodedData['success'] ?? false;
-        // print('Is Success: $isSuccess');
+        print('Is Success: $isSuccess');
 
         if (isSuccess) {
           await SharedPreferencesHelper.clearAll();
@@ -71,7 +73,7 @@ class SettingsService {
         );
       }
     } catch (e) {
-      // print('Error: ${e.toString()}');
+      print('Error: ${e.toString()}');
       await SharedPreferencesHelper.clearAll();
       return ResponseData(
         isSuccess: false,
