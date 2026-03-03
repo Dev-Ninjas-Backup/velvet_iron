@@ -1,10 +1,8 @@
-
-
 class DashboardProfileModel {
   final String id;
-  final String name;        
-  final String userName;    
-  final String profilePhoto; 
+  final String name;
+  final String userName;
+  final String profilePhoto;
 
   DashboardProfileModel({
     required this.id,
@@ -14,20 +12,16 @@ class DashboardProfileModel {
   });
 
   factory DashboardProfileModel.fromJson(Map<String, dynamic> json) {
-    // name lives inside user.name
-    final userMap = json['user'] as Map<String, dynamic>?;
-    final name = userMap?['name'] as String? ?? '';
+    final userMap = json['user'] as Map<String, dynamic>? ?? {};
 
     return DashboardProfileModel(
-      id: json['id'] as String? ?? '',
-      name: name,
-      userName: json['userName'] as String? ?? '',      
-      profilePhoto: json['profilePhoto'] as String? ?? '',
+      id: json['id'] as String? ?? '', 
+      name: userMap['name'] as String? ?? '', 
+      userName: json['userName'] as String? ?? '', 
+      profilePhoto: json['profilePhoto'] as String? ?? '', 
     );
   }
 }
-
-
 
 class UpdatedUserModel {
   final String id;
