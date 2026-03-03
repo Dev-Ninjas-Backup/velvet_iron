@@ -27,18 +27,16 @@ class Urls {
   static String getMoodLogHistory(int limit, int offset) => '$baseUrl/mood-log/history?limit=$limit&offset=$offset';
   static const String macroGoal = '$baseUrl/macro-goal';
   static const String getTodayMoodLog = '$baseUrl/mood-log/today';
-
   static const String mealLog = '$baseUrl/meal-log';
   static const String mealSchedule = '$baseUrl/meal-schedule';
   static String mealLogHistory(int limit, int offset) => '$baseUrl/meal-log/history?limit=$limit&offset=$offset';
-
   // static const String mealLog = '$baseUrl/meal-log';
-
-
-
   static const String discordSignIn = '$baseUrl/auth/discord-auth-url';
   static const String discordCallback = '$baseUrl/auth/discord/callback';
   static const String authDiscord = '$baseUrl/auth/discord';
+  static const String exerciseLog = '$baseUrl/exercise-log'; 
+  static const String exerciseHistory = '$baseUrl/exercise-log/history';
+  static const String exerciseLogSchedule = '$baseUrl/exercise-log/schedule';
 
 
 }

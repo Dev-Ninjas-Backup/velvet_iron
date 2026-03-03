@@ -36,6 +36,7 @@ class AuthService {
       return null;
     }
   }
+
   static const String baseUrl = Urls.baseUrl;
 
   Future<ResponseData> signUp({

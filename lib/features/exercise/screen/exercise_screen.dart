@@ -1,3 +1,5 @@
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
@@ -89,12 +91,12 @@ class ExerciseScreen extends StatelessWidget {
                                           ? 'assets/icons/letter_gamer.png'
                                           : 'assets/icons/letter_reader.png',
                                       title: "Logged Exercise",
-                                      value: controller
-                                          .exerciseStats
-                                          .value
-                                          .loggedExercises
+                                      value: controller.totalCount.value
                                           .toString(),
-                                      rewardAmount: "150",
+                                      rewardAmount: controller
+                                          .totalEarnedXp
+                                          .value
+                                          .toString(),
                                     );
                                   },
                                 ),
@@ -103,6 +105,28 @@ class ExerciseScreen extends StatelessWidget {
                               Expanded(
                                 child: GetBuilder<AppThemeController>(
                                   builder: (themeController) {
+                                    String nextScheduleStr = '-';
+                                    final next = controller.nextSchedule.value;
+                                    if (next != null &&
+                                        next.scheduledAt != null) {
+                                      final dayName = const [
+                                        'Mon',
+                                        'Tue',
+                                        'Wed',
+                                        'Thu',
+                                        'Fri',
+                                        'Sat',
+                                        'Sun',
+                                      ][next.scheduledAt!.weekday - 1];
+                                      final hour = next.scheduledAt!.hour
+                                          .toString()
+                                          .padLeft(2, '0');
+                                      final minute = next.scheduledAt!.minute
+                                          .toString()
+                                          .padLeft(2, '0');
+                                      nextScheduleStr =
+                                          "${next.name} - $dayName $hour:$minute";
+                                    }
                                     return CustomLogContainerExercise(
                                       iconPath:
                                           themeController.activeTheme.id ==
@@ -116,8 +140,7 @@ class ExerciseScreen extends StatelessWidget {
                                           ? 'assets/icons/time_gamer.png'
                                           : 'assets/icons/time_reader.png',
                                       title: "Time Exercise ",
-                                      value:
-                                          "${controller.exerciseStats.value.timeExercises} min",
+                                      value: nextScheduleStr,
                                       rewardAmount: "15+",
                                     );
                                   },
@@ -167,20 +190,100 @@ class ExerciseScreen extends StatelessWidget {
                             itemCount: controller.exercises.length,
                             itemBuilder: (context, index) {
                               final exercise = controller.exercises[index];
+                              final loggedAt = exercise.loggedAt.toLocal();
+                              final dayName = const [
+                                'Mon',
+                                'Tue',
+                                'Wed',
+                                'Thu',
+                                'Fri',
+                                'Sat',
+                                'Sun',
+                              ][loggedAt.weekday - 1];
+                              final hour = loggedAt.hour.toString().padLeft(
+                                2,
+                                '0',
+                              );
+                              final minute = loggedAt.minute.toString().padLeft(
+                                2,
+                                '0',
+                              );
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 7.0),
                                 child: ExcersiseHistory(
                                   title: exercise.name,
                                   sub:
                                       "${exercise.type} - ${exercise.duration} min",
-                                  time:
-                                      "Wed - ${exercise.dateTime.hour}:${exercise.dateTime.minute}",
-                                  iconPath: _getIconPath(exercise.type),
+                                  time: "$dayName - $hour:$minute",
+                                  iconPath: _getIconPath(
+                                    exercise.type,
+                                    exercise.name,
+                                  ),
                                   isSelected: RxBool(false),
                                 ),
                               );
                             },
                           ),
+
+                          // Next Exercise section (below history, only on schedule tab)
+                          Obx(() {
+                            if (controller.selectedExerciseTab.value != 1)
+                              return const SizedBox.shrink();
+                            final next = controller.nextSchedule.value;
+                            if (next == null || next.scheduledAt == null)
+                              return const SizedBox.shrink();
+                            final dayName = const [
+                              'Mon',
+                              'Tue',
+                              'Wed',
+                              'Thu',
+                              'Fri',
+                              'Sat',
+                              'Sun',
+                            ][next.scheduledAt!.weekday - 1];
+                            final hour = next.scheduledAt!.hour
+                                .toString()
+                                .padLeft(2, '0');
+                            final minute = next.scheduledAt!.minute
+                                .toString()
+                                .padLeft(2, '0');
+                            final timeStr = "$dayName - $hour:$minute";
+                            String iconPath;
+                            switch (next.name) {
+                              case 'Yoga Meditation':
+                                iconPath = IconPath.yoga;
+                                break;
+                              case 'Running':
+                                iconPath = IconPath.heart;
+                                break;
+                              case 'Squats':
+                                iconPath = IconPath.dumble;
+                                break;
+                              default:
+                                iconPath = IconPath.heart;
+                            }
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 18),
+                                Text(
+                                  "Next Exercise",
+                                  style: getTextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                ExcersiseHistory(
+                                  title: next.name,
+                                  sub: "${next.type} - ${next.duration} min",
+                                  time: timeStr,
+                                  iconPath: iconPath,
+                                  isSelected: RxBool(false),
+                                ),
+                              ],
+                            );
+                          }),
                         ],
                       ),
                     ),
@@ -194,14 +297,15 @@ class ExerciseScreen extends StatelessWidget {
     );
   }
 
-  String _getIconPath(String type) {
-    switch (type) {
-      case 'Cardio':
-        return IconPath.heart;
-      case 'Strength':
-        return IconPath.dumble;
-      default:
-        return IconPath.yoga;
+  String _getIconPath(String type, String name) {
+    if (name == 'Yoga Meditation') {
+      return IconPath.yoga;
+    } else if (name == 'Running') {
+      return IconPath.heart;
+    } else if (name == 'Squats') {
+      return IconPath.dumble;
+    } else {
+      return IconPath.heart;
     }
   }
 }

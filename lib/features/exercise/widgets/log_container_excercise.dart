@@ -69,7 +69,7 @@ class CustomLogContainerExercise extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    "Total Rewards:",
+                    title == "Time Exercise " ? "Rewards:" : "Total Rewards:",
                     style: getTextStyle(
                       color: themeController.activeTheme.todoTimeColor,
                       fontSize: 10,

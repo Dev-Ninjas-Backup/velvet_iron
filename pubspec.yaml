@@ -49,6 +49,7 @@ dependencies:
   firebase_core: ^4.4.0
   http_parser: ^4.1.2
   url_launcher: ^6.3.2
+  app_links: ^6.3.2
 
 dev_dependencies:
   flutter_test:

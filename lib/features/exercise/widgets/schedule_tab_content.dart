@@ -7,8 +7,8 @@ import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/date_and_time_picker.dart';
 import 'package:velvet_iron/features/exercise/controller/exercise_controller.dart';
 import 'package:velvet_iron/features/exercise/widgets/excercise_dropdown.dart';
-import 'package:velvet_iron/features/exercise/widgets/intensity_and_duaration.dart';
 import 'package:velvet_iron/features/exercise/widgets/exercise_name_textfield.dart';
+import 'package:velvet_iron/features/exercise/widgets/intensity_and_duration.dart';
 
 class ScheduleTabContent extends StatelessWidget {
   const ScheduleTabContent({super.key, required this.controller});
@@ -21,21 +21,22 @@ class ScheduleTabContent extends StatelessWidget {
       builder: (themeController) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          
           Text(
             "Exercise Type:",
             style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
           ),
           SizedBox(height: 13),
-          ExcerciseDropdown(iconPath: IconPath.heart),
+          ExcerciseDropdown(iconPath: IconPath.heart, controller: controller),
           SizedBox(height: 13),
           Text(
             "Exercise Name:",
             style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
           ),
           const SizedBox(height: 10),
-          const ExerciseNameTextField(),
+          ExerciseNameTextField(controller: controller),
           SizedBox(height: 16),
-          IntensityAndDuration(),
+          IntensityAndDuration(controller: controller),
           SizedBox(height: 10),
           Obx(
             () => DateAndTimePicker(
@@ -88,7 +89,10 @@ class ScheduleTabContent extends StatelessWidget {
             ),
           ),
           SizedBox(height: 18),
-          CustomButton(label: "Add Exercise (+10 XP)", onPressed: () {}),
+          CustomButton(
+            label: "Add Exercise (+10 XP)",
+            onPressed: () => controller.scheduleExercise(),
+          ),
         ],
       ),
     );

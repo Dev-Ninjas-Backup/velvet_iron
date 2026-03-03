@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
+import 'package:velvet_iron/features/exercise/controller/exercise_controller.dart';
 
 class ExerciseNameTextField extends StatelessWidget {
-  const ExerciseNameTextField({super.key});
+  final ExerciseController controller;
+  const ExerciseNameTextField({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +15,8 @@ class ExerciseNameTextField extends StatelessWidget {
       child: GetBuilder<AppThemeController>(
         builder: (themeController) {
           return TextField(
+            controller: controller.exerciseNameController,
+            onChanged: (value) => controller.exerciseName.value = value,
             cursorColor: themeController.activeTheme.accentGoldColor,
             style: getTextStyle(fontSize: 12, color: Colors.white),
             decoration: InputDecoration(
