@@ -43,9 +43,6 @@ class ProfileController extends GetxController {
     final accessToken = await SharedPreferencesHelper.getAccessToken();
     final refreshToken = await SharedPreferencesHelper.getRefreshToken();
 
-    debugPrint('Profile accessToken : $accessToken');
-    debugPrint('Profile refreshToken: $refreshToken');
-
     if (accessToken == null || refreshToken == null) {
       debugPrint('Profile Token missing — cannot fetch');
       return;
@@ -59,17 +56,21 @@ class ProfileController extends GetxController {
         refreshToken: refreshToken,
       );
 
-      debugPrint('Profile Fetched →');
-      debugPrint('name        : ${profile.name}');
-      debugPrint('profilePhoto: ${profile.profilePhoto}');
-
       fullName.value = profile.name;
-      remoteProfilePhoto.value = profile.profilePhoto;
       fullNameController.text = profile.name;
 
-      final savedUsername = await SharedPreferencesHelper.getUsername();
-      debugPrint('savedUsername: $savedUsername');
+      // ✅ Use profilePhoto if available, otherwise fall back to saved avatar
+      if (profile.profilePhoto.isNotEmpty) {
+        remoteProfilePhoto.value = profile.profilePhoto;
+      } else {
+        final savedAvatar = await SharedPreferencesHelper.getAvatar();
+        if (savedAvatar != null && savedAvatar.isNotEmpty) {
+          remoteProfilePhoto.value = savedAvatar;
+          debugPrint('Profile using Discord avatar: $savedAvatar');
+        }
+      }
 
+      final savedUsername = await SharedPreferencesHelper.getUsername();
       if (savedUsername != null && savedUsername.isNotEmpty) {
         userName.value = savedUsername;
         usernameController.text = savedUsername;
