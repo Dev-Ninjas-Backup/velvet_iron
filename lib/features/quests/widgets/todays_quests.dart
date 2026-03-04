@@ -4,41 +4,74 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 
-class TodaysQuestItem extends StatefulWidget {
+class TodaysQuestItem extends StatelessWidget {
+  final String id;
   final String header;
   final String title;
-  final String tagText;
-  final List<Color> tagGradient;
   final int xp;
   final bool isActive;
 
   const TodaysQuestItem({
     super.key,
+    required this.id,
     required this.header,
     required this.title,
-    required this.tagText,
-    required this.tagGradient,
     required this.xp,
     required this.isActive,
   });
 
-  @override
-  State<TodaysQuestItem> createState() => _TodaysQuestItemState();
-}
-
-class _TodaysQuestItemState extends State<TodaysQuestItem> {
-  bool selected = false;
+  static const Map<String, _TagData> _tagMap = {
+    'track-your-shot': _TagData('Health', [
+      Color(0xFFA60404),
+      Color(0xFFF0AA48),
+    ]),
+    'three-meals': _TagData('Nutrition', [
+      Color(0xFF04A647),
+      Color(0xFFF0AA48),
+    ]),
+    'mood-check': _TagData('Mindfulness', [
+      Color(0xFF7804A6),
+      Color(0xFFF0AA48),
+    ]),
+    'step-master': _TagData('Activity', [Color(0xFF0495A6), Color(0xFFF0AA48)]),
+    'protein-power': _TagData('Nutrition', [
+      Color(0xFF04A647),
+      Color(0xFFF0AA48),
+    ]),
+  };
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
+        final themeId = themeController.activeTheme.id;
+
+        final dotIcon = themeId == 'adventurer'
+            ? IconPath.doticonAdventure
+            : themeId == 'mage'
+            ? IconPath.doticonMage
+            : themeId == 'gamer'
+            ? IconPath.doticonGamer
+            : IconPath.doticonReader;
+
+        final starIcon = themeId == 'adventurer'
+            ? IconPath.starAdventure
+            : themeId == 'mage'
+            ? IconPath.starMage
+            : themeId == 'gamer'
+            ? IconPath.starGamer
+            : IconPath.starReader;
+
+        final tag =
+            _tagMap[id] ??
+            const _TagData('Quest', [Color(0xFF555555), Color(0xFF999999)]);
+
         return Container(
           width: double.infinity,
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
           decoration: BoxDecoration(
-            color: themeController.activeTheme.cardBackgroundColor.withValues(
-              alpha: .4,
+            color: themeController.activeTheme.textfieldColor.withValues(
+              alpha: 0.6,
             ),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: Colors.white.withValues(alpha: .2)),
@@ -47,19 +80,10 @@ class _TodaysQuestItemState extends State<TodaysQuestItem> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(
-                widget.isActive
-                    ? (themeController.activeTheme.id == 'adventurer'
-                          ? IconPath.doticonAdventure
-                          : themeController.activeTheme.id == 'mage'
-                          ? IconPath.doticonMage
-                          : themeController.activeTheme.id == 'gamer'
-                          ? IconPath.doticonGamer
-                          : IconPath.doticonReader)
-                    : IconPath.whitecircle,
+                isActive ? dotIcon : IconPath.whitecircle,
                 width: 24,
                 height: 24,
               ),
-
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
@@ -67,18 +91,21 @@ class _TodaysQuestItemState extends State<TodaysQuestItem> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      widget.header,
+                      header,
                       style: getTextStyle(color: Colors.white, fontSize: 14),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      widget.title,
-                      style: getTextStyle(color: Colors.white, fontSize: 12),
+                      title,
+                      style: getTextStyle(
+                        color: themeController.activeTheme.todoSubtitleColor
+                            .withValues(alpha: 1),
+                        fontSize: 11,
+                      ),
                     ),
                   ],
                 ),
               ),
-
               Expanded(
                 child: Align(
                   alignment: Alignment.centerRight,
@@ -92,24 +119,23 @@ class _TodaysQuestItemState extends State<TodaysQuestItem> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(colors: widget.tagGradient),
+                          gradient: LinearGradient(colors: tag.gradient),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          widget.tagText,
+                          tag.label,
                           style: getTextStyle(
                             color: Colors.white,
                             fontSize: 12,
                           ),
                         ),
                       ),
-
                       const SizedBox(height: 4),
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            '+${widget.xp}',
+                            '+$xp',
                             style: getTextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -125,17 +151,7 @@ class _TodaysQuestItemState extends State<TodaysQuestItem> {
                             ),
                           ),
                           const SizedBox(width: 4),
-                          Image.asset(
-                            themeController.activeTheme.id == 'adventurer'
-                                ? IconPath.starAdventure
-                                : themeController.activeTheme.id == 'mage'
-                                ? IconPath.starMage
-                                : themeController.activeTheme.id == 'gamer'
-                                ? IconPath.starGamer
-                                : IconPath.starReader,
-                            width: 12,
-                            height: 12,
-                          ),
+                          Image.asset(starIcon, width: 12, height: 12),
                         ],
                       ),
                     ],
@@ -148,4 +164,10 @@ class _TodaysQuestItemState extends State<TodaysQuestItem> {
       },
     );
   }
+}
+
+class _TagData {
+  final String label;
+  final List<Color> gradient;
+  const _TagData(this.label, this.gradient);
 }

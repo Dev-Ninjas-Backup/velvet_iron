@@ -28,8 +28,8 @@ class QuestTips extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: themeController.activeTheme.cardBackgroundColor.withValues(
-              alpha: 0.8,
+            color: themeController.activeTheme.textfieldColor.withValues(
+              alpha: 0.6,
             ),
             borderRadius: BorderRadius.circular(10),
           ),

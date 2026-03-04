@@ -73,6 +73,7 @@ class QuestsScreen extends StatelessWidget {
                         child: Text('No quest data available.'),
                       );
                     }
+
                     return Padding(
                       padding: const EdgeInsets.all(16),
                       child: SingleChildScrollView(
@@ -83,23 +84,23 @@ class QuestsScreen extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: ProgressCard(
-                                    iconPath:
-                                        questsData.progressPoints.iconPath,
-                                    header: questsData.progressPoints.header,
-                                    points: questsData.progressPoints.points,
+                                    iconPath: 'steelyard',
+                                    header: "Today's Progress",
+                                    points:
+                                        '${questsData.todayLogCount}/${controller.logTarget}',
                                   ),
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: ProgressCard(
-                                    iconPath: questsData.totalXp.iconPath,
-                                    header: questsData.totalXp.header,
-                                    points: questsData.totalXp.points,
+                                    iconPath: 'trophy',
+                                    header: 'Total XP',
+                                    points: '${questsData.todayTotalXp} XP',
                                   ),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             Text(
                               "Today's Quests",
                               style: getTextStyle(
@@ -108,22 +109,21 @@ class QuestsScreen extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 20),
-                            ...questsData.todaysQuests.map(
+                            const SizedBox(height: 20),
+                            ...questsData.quests.map(
                               (quest) => Padding(
                                 padding: const EdgeInsets.only(bottom: 7),
                                 child: TodaysQuestItem(
-                                  header: quest.header,
-                                  title: quest.title,
-                                  tagText: quest.tagText,
-                                  tagGradient: quest.tagGradient,
+                                  id: quest.id,
+                                  header: quest.title,
+                                  title: quest.description,
                                   xp: quest.xp,
-                                  isActive: false,
+                                  isActive: quest.isDone,
                                 ),
                               ),
                             ),
-                            SizedBox(height: 20),
-                            QuestTips(),
+                            const SizedBox(height: 20),
+                            const QuestTips(),
                           ],
                         ),
                       ),
