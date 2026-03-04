@@ -7,6 +7,59 @@ import 'package:velvet_iron/core/services/end_points.dart';
 // import 'package:velvet_iron/secrets/secrets.dart';
 
 class AuthService {
+
+
+  Future<ResponseData> firebaseLogin({required String token}) async {
+    try {
+      final url = Uri.parse(Urls.firebaseLogin);
+
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'token': token}),
+      );
+
+      print('Firebase Login Response Status: ${response.statusCode}');
+      print('Firebase Login Response Body: ${response.body}');
+
+      final decodedData = jsonDecode(response.body);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        if (decodedData['access_token'] != null) {
+          return ResponseData(
+            isSuccess: true,
+            statusCode: response.statusCode,
+            errorMessage: '',
+            responseData: decodedData,
+          );
+        } else {
+          return ResponseData(
+            isSuccess: false,
+            statusCode: response.statusCode,
+            errorMessage: decodedData['message'] ?? 'Firebase login failed',
+            responseData: null,
+          );
+        }
+      } else {
+        return ResponseData(
+          isSuccess: false,
+          statusCode: response.statusCode,
+          errorMessage: decodedData['message'] ?? 'Firebase login failed',
+          responseData: null,
+        );
+      }
+    } catch (e) {
+      print('Firebase Login Error: $e');
+      return ResponseData(
+        isSuccess: false,
+        statusCode: 500,
+        errorMessage: 'Network error: ${e.toString()}',
+        responseData: null,
+      );
+    }
+  }
+
+
   Future<String?> getDiscordOAuthUrl() async {
     try {
       final response = await http.get(
