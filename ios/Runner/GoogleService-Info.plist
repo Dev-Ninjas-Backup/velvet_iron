@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>492471411308-3ejvn2ceighl6e215kqojlni97i4hn35.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.492471411308-3ejvn2ceighl6e215kqojlni97i4hn35</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>492471411308-acd2s7cmob9152e2q2i89hlc0ip03mag.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBc8sLdZ-jI_-Ainz_7lBGl0VdYvSUvuIU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>492471411308</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.velvet.velvetiron</string>
+	<key>PROJECT_ID</key>
+	<string>velvetand-iron-training-mhr8qv</string>
+	<key>STORAGE_BUCKET</key>
+	<string>velvetand-iron-training-mhr8qv.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:492471411308:ios:fce36d4291c65235e92e49</string>
+</dict>
+</plist>

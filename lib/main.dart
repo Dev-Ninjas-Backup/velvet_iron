@@ -1,17 +1,22 @@
 import 'dart:convert';
 
 import 'package:app_links/app_links.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/app.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
+import 'package:velvet_iron/firebase_options.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized(); 
-  initDeepLinks(); 
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  initDeepLinks();
   runApp(VelvetIron());
   configLoading();
 }

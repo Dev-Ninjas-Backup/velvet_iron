@@ -140,7 +140,7 @@ class LoginScreen extends StatelessWidget {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            debugPrint('Google clicked');
+                            controller.signInWithGoogle();
                           },
                           child: Image.asset(
                             IconPath.googleIcon,
