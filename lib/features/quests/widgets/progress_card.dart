@@ -47,7 +47,7 @@ class ProgressCard extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: themeController.activeTheme.cardBackgroundColor.withValues(
-              alpha: .4,
+              alpha: 0.5,
             ),
             borderRadius: BorderRadius.circular(12),
           ),
@@ -75,7 +75,7 @@ class ProgressCard extends StatelessWidget {
                       height: 36,
                       fit: BoxFit.contain,
                     ),
-              const SizedBox(width: 8), 
+              const SizedBox(width: 8),
               Expanded(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,

@@ -38,6 +38,7 @@ class Urls {
   static const String exerciseHistory = '$baseUrl/exercise-log/history';
   static const String exerciseLogSchedule = '$baseUrl/exercise-log/schedule';
   static const String firebaseLogin = '$baseUrl/auth/firebase-login';
+  static const String quests = '$baseUrl/xp-stats/quests';
 
 
 }
