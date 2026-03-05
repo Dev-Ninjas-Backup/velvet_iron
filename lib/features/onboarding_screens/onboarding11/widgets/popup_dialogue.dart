@@ -51,7 +51,7 @@ class PopUpDialogue extends StatelessWidget {
                   height: h(325),
                   width: w(270),
                   padding: EdgeInsets.only(
-                    top: h(20),
+                    top: h(33),
                     right: w(12),
                     bottom: h(15),
                     left: w(12),

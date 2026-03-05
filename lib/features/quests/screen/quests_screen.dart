@@ -38,43 +38,41 @@ class QuestsScreen extends StatelessWidget {
                   height: double.infinity,
                 ),
               ),
-              NestedScrollView(
-                headerSliverBuilder:
-                    (BuildContext context, bool innerBoxIsScrolled) {
-                      return <Widget>[
-                        SliverAppBar(
-                          backgroundColor: Colors.transparent,
-                          elevation: 0,
-                          floating: true,
-                          snap: true,
-                          automaticallyImplyLeading: false,
-                          titleSpacing: 16,
-                          title: FigmaBackButton(
-                            onPressed: () {
-                              navController.changeTabIndex(0);
-                            },
-                            appBarTitle: 'Quests',
-                          ),
-                        ),
-                      ];
-                    },
-                body: GetX<QuestController>(
-                  init: QuestController(),
-                  builder: (controller) {
-                    if (controller.isLoading.value) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    if (controller.errorMessage.value.isNotEmpty) {
-                      return Center(child: Text(controller.errorMessage.value));
-                    }
-                    final questsData = controller.questsData.value;
-                    if (questsData == null) {
-                      return const Center(
-                        child: Text('No quest data available.'),
-                      );
-                    }
+              GetX<QuestController>(
+                init: QuestController(),
+                builder: (controller) {
+                  if (controller.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (controller.errorMessage.value.isNotEmpty) {
+                    return Center(child: Text(controller.errorMessage.value));
+                  }
+                  final questsData = controller.questsData.value;
+                  if (questsData == null) {
+                    return const Center(child: Text('No quest data available.'));
+                  }
 
-                    return Padding(
+                  return NestedScrollView(
+                    headerSliverBuilder:
+                        (BuildContext context, bool innerBoxIsScrolled) {
+                          return <Widget>[
+                            SliverAppBar(
+                              backgroundColor: Colors.transparent,
+                              elevation: 0,
+                              floating: true,
+                              snap: true,
+                              automaticallyImplyLeading: false,
+                              titleSpacing: 16,
+                              title: FigmaBackButton(
+                                onPressed: () {
+                                  navController.changeTabIndex(0);
+                                },
+                                appBarTitle: 'Quests',
+                              ),
+                            ),
+                          ];
+                        },
+                    body: Padding(
                       padding: const EdgeInsets.all(16),
                       child: SingleChildScrollView(
                         child: Column(
@@ -123,13 +121,22 @@ class QuestsScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            const QuestTips(),
+                            QuestTips(
+                              onXpEarned: (message) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(message),
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ],
           );
