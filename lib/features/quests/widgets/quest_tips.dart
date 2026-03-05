@@ -3,9 +3,13 @@ import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/widgets/custom_small_button.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
+import 'package:velvet_iron/features/about_training_codex/screens/about_training_screen.dart';
+import 'package:velvet_iron/features/quests/controller/quest_controller.dart'
+    show QuestController;
 
 class QuestTips extends StatelessWidget {
-  const QuestTips({super.key});
+  final void Function(String message)? onXpEarned;
+  const QuestTips({super.key, this.onXpEarned});
 
   TextStyle getTextStyle({
     double size = 14,
@@ -38,8 +42,7 @@ class QuestTips extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(
-                IconPath
-                    .moon, // This is your string variable containing the path
+                IconPath.moon,
                 width: 40,
                 height: 41,
                 fit: BoxFit.contain,
@@ -62,13 +65,29 @@ class QuestTips extends StatelessWidget {
                   CustomSmallButton(
                     width: 108,
                     text: "Read Article",
-                    onPressed: () {},
+                    onPressed: () async {
+                      final controller = Get.find<QuestController>();
+                      onXpEarned?.call('Earning XP...');
+                      try {
+                        await controller.earnArticleXp();
+                        onXpEarned?.call(
+                          'You earned 10 XP for reading the article!',
+                        );
+                        Get.to(() => const AboutTrainingScreen())?.then((
+                          _,
+                        ) async {
+                          await controller.fetchQuests();
+                        });
+                      } catch (e) {
+                        onXpEarned?.call('Failed to earn XP: $e');
+                      }
+                    },
                     gradient: themeController.activeTheme.progressBarGradient,
                     fontColor: Colors.white,
                   ),
                   const Spacer(),
                   Text(
-                    "Earn: +30 XP",
+                    "Earn: +10 XP",
                     style: getTextStyle(size: 10, weight: FontWeight.bold),
                   ),
                   const SizedBox(width: 5),

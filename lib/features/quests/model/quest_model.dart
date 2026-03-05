@@ -1,3 +1,21 @@
+class AddXpResponse {
+  final int xp;
+  final String reason;
+
+  const AddXpResponse({required this.xp, required this.reason});
+
+  factory AddXpResponse.fromJson(Map<String, dynamic> json) {
+    return AddXpResponse(
+      xp: json['xp'] as int,
+      reason: json['reason'] as String,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'xp': xp, 'reason': reason};
+  }
+}
+
 class DailyQuestResponse {
   final int todayTotalXp;
   final int todayLogCount;
