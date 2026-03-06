@@ -1,7 +1,7 @@
-class ActivityModel {
-  final List<double> weeklyData;
+// class ActivityModel {
+//   final List<double> weeklyData;
 
-  ActivityModel({
-    required this.weeklyData,
-  });
-}
+//   ActivityModel({
+//     required this.weeklyData,
+//   });
+// }

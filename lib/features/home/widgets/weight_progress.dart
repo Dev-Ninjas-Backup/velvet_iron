@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,25 +6,14 @@ import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller
 import 'package:velvet_iron/core/utils/app_theme/model/app_theme_model.dart';
 import 'package:velvet_iron/features/home/controller/home_controller.dart';
 
-class WeightProgress extends StatefulWidget {
+class WeightProgress extends StatelessWidget {
   final String title;
   const WeightProgress({super.key, required this.title});
 
-  @override
-  State<WeightProgress> createState() => _WeightProgressState();
-}
-
-class _WeightProgressState extends State<WeightProgress> {
-  String _selectedValue = "All Activity";
-  List<double>? _randomData;
-
-  static const List<String> xpLabels = [
-    '100xp',
-    '80xp',
-    '60xp',
-    '40xp',
-    '20xp',
-  ];
+  List<String> _buildXpLabels(double maxY) {
+    final step = maxY / 5;
+    return List.generate(5, (index) => '${(maxY - (step * index)).round()}xp');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,51 +25,54 @@ class _WeightProgressState extends State<WeightProgress> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // ── Header row ─────────────────────────────────────────
         Row(
           children: [
             Text(
-              widget.title,
+              title,
               style: getTextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             const Spacer(),
-            Container(
-              height: 26,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(21),
-                border: Border.all(color: activeTheme.borderColor),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: _selectedValue,
-                  icon: const Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 16,
-                    color: Colors.white,
+            Obx(
+              () => Container(
+                height: 26,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(21),
+                  border: Border.all(color: activeTheme.borderColor),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: controller.selectedChartFilter.value,
+                    icon: const Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 16,
+                      color: Colors.white,
+                    ),
+                    style: getTextStyle(fontSize: 10, color: Colors.white),
+                    dropdownColor: activeTheme.dropdownBackgroundColor,
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'currentWeek',
+                        child: Text('This Week'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'lastWeek',
+                        child: Text('Last Week'),
+                      ),
+                    ],
+                    onChanged: (val) {
+                      if (val != null) controller.selectChartFilter(val);
+                    },
                   ),
-                  style: getTextStyle(fontSize: 10, color: Colors.white),
-                  dropdownColor: activeTheme.dropdownBackgroundColor,
-                  items:
-                      ['this week', 'last week', 'this month', 'All Activity']
-                          .map(
-                            (e) => DropdownMenuItem(value: e, child: Text(e)),
-                          )
-                          .toList(),
-                  onChanged: (val) {
-                    setState(() {
-                      _selectedValue = val!;
-                      _randomData = List.generate(
-                        7,
-                        (index) => Random().nextDouble() * 100,
-                      );
-                    });
-                  },
                 ),
               ),
             ),
           ],
         ),
         const SizedBox(height: 12),
+
+        // ── Chart ───────────────────────────────────────────────
         SizedBox(
           height: 150,
           child: Obx(() {
@@ -89,10 +80,18 @@ class _WeightProgressState extends State<WeightProgress> {
               return const Center(child: CircularProgressIndicator());
             }
 
-            final data = _randomData ?? controller.activity.value?.weeklyData;
-            if (data == null) {
-              return const Center(child: Text("No data"));
+            final data = controller.chartData;
+            if (data.isEmpty) {
+              return const Center(child: Text('No data'));
             }
+
+            final rawMaxY = data.fold<double>(
+              0,
+              (prev, item) => item > prev ? item : prev,
+            );
+            final maxY = rawMaxY <= 0 ? 100.0 : rawMaxY * 1.2;
+            final xpLabels = _buildXpLabels(maxY);
+
             return Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -100,7 +99,7 @@ class _WeightProgressState extends State<WeightProgress> {
                   child: BarChart(
                     BarChartData(
                       minY: 0,
-                      maxY: 100,
+                      maxY: maxY,
                       alignment: BarChartAlignment.spaceBetween,
                       barTouchData: BarTouchData(enabled: false),
                       titlesData: FlTitlesData(
@@ -127,11 +126,9 @@ class _WeightProgressState extends State<WeightProgress> {
                                 'Fri',
                                 'Sat',
                               ];
-
                               if (value.toInt() > 6) {
                                 return const SizedBox.shrink();
                               }
-
                               return FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(

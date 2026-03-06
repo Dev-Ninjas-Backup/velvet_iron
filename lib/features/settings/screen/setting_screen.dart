@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
+import 'package:velvet_iron/features/home/widgets/weight_progress.dart';
 import 'package:velvet_iron/features/settings/controller/setting_controller.dart';
 import 'package:velvet_iron/features/settings/widgets/general_setting_item.dart';
 import 'package:velvet_iron/features/settings/widgets/setting_widget.dart';
@@ -56,7 +57,7 @@ class SettingScreen extends StatelessWidget {
                             const SizedBox(height: 20),
                             const UpcomingLogWidget(),
                             const SizedBox(height: 20),
-                            const WeeklyActivityProgress(
+                            const WeightProgress(
                               title: 'Weekly Activity',
                             ),
                             const SizedBox(height: 20),
