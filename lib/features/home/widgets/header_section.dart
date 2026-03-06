@@ -21,23 +21,34 @@ class HeaderSection extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (controller.user.value == null) {
+          if (controller.userProfile.value == null) {
             return const SizedBox.shrink();
           }
+
+          final profilePhoto = controller.userProfile.value?.profilePhoto;
+          final imageProvider =
+              (profilePhoto != null && profilePhoto.isNotEmpty)
+              ? (profilePhoto.startsWith('http')
+                    ? NetworkImage(profilePhoto) as ImageProvider
+                    : AssetImage(profilePhoto))
+              : null;
+
           return Row(
             children: [
               CircleAvatar(
                 radius: 22,
-                backgroundImage: AssetImage(
-                  controller.user.value!.profileImage,
-                ),
+                backgroundImage: imageProvider,
+                backgroundColor: activeTheme.headerIconBackgroundColor,
+                child: imageProvider == null
+                    ? const Icon(Icons.person, color: Colors.white)
+                    : null,
               ),
               const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    controller.user.value!.name,
+                    controller.userProfile.value?.user.name ?? 'User',
                     style: getTextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -55,7 +66,7 @@ class HeaderSection extends StatelessWidget {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        "${controller.user.value!.title} | ${controller.user.value!.xp} xp",
+                        "${controller.levelStatus} | ${controller.balanceXp} xp",
                         style: getTextStyle(color: Colors.white, fontSize: 12),
                       ),
                     ],
