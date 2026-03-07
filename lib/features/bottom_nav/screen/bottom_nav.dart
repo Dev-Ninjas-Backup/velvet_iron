@@ -4,6 +4,7 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
+import 'package:velvet_iron/features/daily_logs/popup_dialogue.dart';
 
 class BottomNav extends StatelessWidget {
   const BottomNav({super.key});
@@ -44,7 +45,15 @@ class BottomNav extends StatelessWidget {
                     "assets/icons/btmBar2.png",
                     "Daily Log",
                     controller.tabIndex.value == 1,
-                    () => controller.changeTabIndex(1),
+                    () {
+                      controller.changeTabIndex(1);
+                      // Show the daily rewards popup
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            PopUpDialogue(onCollectRewards: () => Get.back()),
+                      );
+                    },
                     themeController,
                   ),
                 ),

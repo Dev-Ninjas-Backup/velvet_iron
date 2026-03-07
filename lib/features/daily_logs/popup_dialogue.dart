@@ -9,7 +9,9 @@ import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
 class PopUpDialogue extends StatelessWidget {
-  const PopUpDialogue({super.key});
+  final VoidCallback? onCollectRewards;
+
+  const PopUpDialogue({super.key, this.onCollectRewards});
 
   @override
   Widget build(BuildContext context) {
@@ -133,8 +135,9 @@ class PopUpDialogue extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: w(6)),
                         child: CustomButton(
                           label: 'Collect Rewards',
-                          onPressed: () =>
-                              Get.toNamed(AppRoute.getHomeScreen()),
+                          onPressed:
+                              onCollectRewards ??
+                              () => Get.toNamed(AppRoute.getHomeScreen()),
                         ),
                       ),
                     ],
