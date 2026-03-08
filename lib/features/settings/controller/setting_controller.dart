@@ -12,9 +12,9 @@ class SettingsController extends GetxController {
   // JSON: "userName"
   final userName = ''.obs;
   // JSON: "level"
-  final userLevel = 1.obs;
+  final nextLevel = 2.obs;
   // JSON: "levelStatus" → "Unbound"
-  final levelStatus = ''.obs;
+  final levelStatus = 'test'.obs;
   // JSON: "nextLevel.xpRequired" → 550
   final xpRequired = 0.obs;
   // JSON: "totalEarnXp" → 100  (used as progress numerator)
@@ -29,7 +29,7 @@ class SettingsController extends GetxController {
   final isLoadingProfile = false.obs;
 
   // Progress bar uses totalEarnXp / xpRequired
-  String get progressText => 'Progress to level ${userLevel.value + 1}';
+  String get progressText => 'Progress to level ${nextLevel.value}';
   String get xpText => '${totalEarnXp.value}/${xpRequired.value} XP';
   double get progressPercentage =>
       xpRequired.value > 0 ? totalEarnXp.value / xpRequired.value : 0.0;
@@ -48,7 +48,7 @@ class SettingsController extends GetxController {
     if (result.isSuccess && result.data != null) {
       final p = result.data!;
       userName.value = p.userName;
-      userLevel.value = p.level;
+      nextLevel.value = p.nextLevel.level;
       levelStatus.value = p.levelStatus;
       xpRequired.value = p.nextLevel.xpRequired;
       totalEarnXp.value = p.totalEarnXp;
