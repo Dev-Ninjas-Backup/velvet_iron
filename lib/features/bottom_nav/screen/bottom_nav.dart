@@ -5,6 +5,7 @@ import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
 import 'package:velvet_iron/features/daily_logs/popup_dialogue.dart';
+import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 
 class BottomNav extends StatelessWidget {
   const BottomNav({super.key});
@@ -45,14 +46,25 @@ class BottomNav extends StatelessWidget {
                     "assets/icons/btmBar2.png",
                     "Daily Log",
                     controller.tabIndex.value == 1,
-                    () {
+                    () async {
                       controller.changeTabIndex(1);
-                      // Show the daily rewards popup
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) =>
-                            PopUpDialogue(onCollectRewards: () => Get.back()),
-                      );
+                      final accessToken =
+                          await SharedPreferencesHelper.getAccessToken();
+                      final refreshToken =
+                          await SharedPreferencesHelper.getRefreshToken();
+                      if (accessToken != null && refreshToken != null) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => PopUpDialogue(
+                            accessToken: accessToken,
+                            refreshToken: refreshToken,
+                          ),
+                        );
+                      } else {
+                        // If tokens are missing, just go to Daily Log screen
+                        // (or show an error if you prefer)
+                        Get.toNamed('/daily-log');
+                      }
                     },
                     themeController,
                   ),
