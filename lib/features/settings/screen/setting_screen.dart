@@ -7,7 +7,6 @@ import 'package:velvet_iron/features/settings/widgets/general_setting_item.dart'
 import 'package:velvet_iron/features/settings/widgets/setting_widget.dart';
 import 'package:velvet_iron/features/settings/widgets/upcoming_widgets.dart';
 import 'package:velvet_iron/features/settings/widgets/user_profile.dart';
-import 'package:velvet_iron/features/settings/widgets/weekly_activity_widget.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});

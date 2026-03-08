@@ -14,21 +14,70 @@ class UserProfileWidget extends StatelessWidget {
 
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
-        return Container(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              _ProfileAvatar(themeController: themeController),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _ProfileDetails(
-                  themeController: themeController,
-                  controller: controller,
-                ),
+        return Obx(() {
+          if (controller.isLoadingProfile.value) {
+            return Container(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  _ProfileAvatar(themeController: themeController),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 20,
+                          width: 120,
+                          decoration: BoxDecoration(
+                            color: themeController.activeTheme.textfieldColor
+                                .withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        const SizedBox(height: 9),
+                        Container(
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: themeController.activeTheme.textfieldColor
+                                .withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          height: 12,
+                          width: 160,
+                          decoration: BoxDecoration(
+                            color: themeController.activeTheme.textfieldColor
+                                .withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        );
+            );
+          }
+
+          return Container(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                _ProfileAvatar(themeController: themeController),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: _ProfileDetails(
+                    themeController: themeController,
+                    controller: controller,
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
       },
     );
   }
@@ -112,9 +161,9 @@ class _ProfileHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Obx(
+       Obx(
           () => Text(
-            controller.userName.value,
+            controller.levelStatus.value,
             style: getTextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
         ),
@@ -146,7 +195,7 @@ class _LevelBadge extends StatelessWidget {
           const SizedBox(width: 4),
           Obx(
             () => Text(
-              'Level ${controller.userLevel.value}',
+              'Level ${controller.levelStatus.value}',
               style: getTextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
@@ -183,7 +232,7 @@ class _ProgressBar extends StatelessWidget {
             ),
             FractionallySizedBox(
               alignment: Alignment.centerLeft,
-              widthFactor: controller.progressPercentage,
+              widthFactor: controller.progressPercentage.clamp(0.0, 1.0),
               child: Container(
                 height: 8,
                 decoration: BoxDecoration(

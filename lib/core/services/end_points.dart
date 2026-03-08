@@ -14,6 +14,7 @@ class Urls {
   static const String profile = '$baseUrl/auth/profile';
   static const String getProfile = '$baseUrl/profile';
   static const String getThemes = '$baseUrl/themes/my-themes';
+  static String themes(String themeId) => '$baseUrl/themes/$themeId';
   static String unlockTheme(String themeId) => '$baseUrl/onboarding/theme/$themeId';
   static const String getCompanions = '$baseUrl/companions/my-companions';
   static String unlockCompanion(String companionId) => '$baseUrl/onboarding/companion/$companionId';
