@@ -7,40 +7,60 @@ import 'package:velvet_iron/features/settings/services/logout_service.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
 class SettingsController extends GetxController {
-  final userName = 'Unbound'.obs;
+  final _profileService = UserProfileService();
+
+  // JSON: "userName"
+  final userName = ''.obs;
+  // JSON: "level"
   final userLevel = 1.obs;
-  final currentXP = 220.obs;
-  final maxXP = 500.obs;
+  // JSON: "levelStatus" → "Unbound"
+  final levelStatus = ''.obs;
+  // JSON: "nextLevel.xpRequired" → 550
+  final xpRequired = 0.obs;
+  // JSON: "totalEarnXp" → 100  (used as progress numerator)
+  final totalEarnXp = 0.obs;
+  // JSON: "balanceXp" → 100  (wallet balance)
+  final currentXP = 0.obs;
 
   final upcomingLog = 'Breakfast'.obs;
   final upcomingLogXP = 10.obs;
   final upcomingLogTime = 'Wed - 8:30 AM'.obs;
-
   final appVersion = 'v1.0'.obs;
+  final isLoadingProfile = false.obs;
 
+  // Progress bar uses totalEarnXp / xpRequired
   String get progressText => 'Progress to level ${userLevel.value + 1}';
-  String get xpText => '${currentXP.value}/${maxXP.value} XP';
-  double get progressPercentage => currentXP.value / maxXP.value;
+  String get xpText => '${totalEarnXp.value}/${xpRequired.value} XP';
+  double get progressPercentage =>
+      xpRequired.value > 0 ? totalEarnXp.value / xpRequired.value : 0.0;
 
-  void navigateToProfile() {
-    Get.toNamed('/profileScreen');
+  @override
+  void onInit() {
+    super.onInit();
+    fetchUserProfile();
   }
 
-  void navigateToDailyMacroGoal() {
-    Get.toNamed('/dailyMacroGoal');
+  Future<void> fetchUserProfile() async {
+    isLoadingProfile.value = true;
+    final result = await _profileService.fetchProfile();
+    isLoadingProfile.value = false;
+
+    if (result.isSuccess && result.data != null) {
+      final p = result.data!;
+      userName.value = p.userName;
+      userLevel.value = p.level;
+      levelStatus.value = p.levelStatus;
+      xpRequired.value = p.nextLevel.xpRequired;
+      totalEarnXp.value = p.totalEarnXp;
+      currentXP.value = p.balanceXp;
+    }
   }
 
-  void navigateToThemes() {
-    Get.toNamed('/themes');
-  }
-
-  void navigateToFeedback() {
-    Get.toNamed('/feedback');
-  }
-
-  void navigateToAbout() {
-    Get.toNamed('/about');
-  }
+  void navigateToProfile() => Get.toNamed('/profileScreen');
+  void navigateToDailyMacroGoal() => Get.toNamed('/dailyMacroGoal');
+  void navigateToThemes() => Get.toNamed('/themes');
+  void navigateToFeedback() => Get.toNamed('/feedback');
+  void navigateToAbout() => Get.toNamed('/about');
 
   void logout() {
     final themeController = Get.find<AppThemeController>();
@@ -63,7 +83,6 @@ class SettingsController extends GetxController {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Title
               ShaderMask(
                 blendMode: BlendMode.srcIn,
                 shaderCallback: (bounds) => LinearGradient(
@@ -80,8 +99,6 @@ class SettingsController extends GetxController {
                 ),
               ),
               const SizedBox(height: 16),
-
-              // Content
               Text(
                 'Are you sure you want to logout?',
                 textAlign: TextAlign.center,
@@ -92,8 +109,6 @@ class SettingsController extends GetxController {
                 ),
               ),
               const SizedBox(height: 24),
-
-              // Buttons
               Row(
                 children: [
                   Expanded(
@@ -132,15 +147,12 @@ class SettingsController extends GetxController {
                       onTap: () async {
                         Get.back();
                         EasyLoading.show(status: 'Leaving the Codex...');
-
                         final settingsService = SettingsService();
                         final result = await settingsService.logout();
-
                         await Future.delayed(
                           const Duration(milliseconds: 1200),
                         );
                         EasyLoading.dismiss();
-
                         if (result.isSuccess) {
                           Get.offAllNamed(AppRoute.getLoginScreen());
                         }
@@ -184,9 +196,7 @@ class SettingsController extends GetxController {
 
   Future<void> skipUpcomingLog() async {
     EasyLoading.show(status: 'Skipping log...');
-
     await Future.delayed(const Duration(milliseconds: 800));
-
     EasyLoading.showSuccess('Log skipped successfully');
   }
 }

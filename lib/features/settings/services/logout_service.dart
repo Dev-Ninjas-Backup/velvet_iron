@@ -1,10 +1,13 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
+import 'package:get/get_connect/connect.dart';
 import 'package:http/http.dart' as http;
 import 'package:velvet_iron/core/models/response_data.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
+import 'package:velvet_iron/features/home/models/home_screen_model.dart';
+import 'package:velvet_iron/features/settings/model/settings_model.dart' hide UserProfile;
 
 class SettingsService {
   static const String baseUrl = Urls.baseUrl;
@@ -81,6 +84,39 @@ class SettingsService {
         errorMessage: 'Network error: ${e.toString()}',
         responseData: null,
       );
+    }
+  }
+}
+
+
+class UserProfileResult {
+  final bool isSuccess;
+  final UserProfile? data;
+  final String? errorMessage;
+
+  UserProfileResult({required this.isSuccess, this.data, this.errorMessage});
+}
+
+class UserProfileService extends GetConnect {
+  Future<UserProfileResult> fetchProfile() async {
+    try {
+      final response = await get(Urls.getProfile);
+
+      if (response.statusCode == 200) {
+        final json = response.body is Map
+            ? response.body
+            : response.body as Map<String, dynamic>;
+
+        final profile = UserProfile.fromJson(json);
+        return UserProfileResult(isSuccess: true, data: profile);
+      } else {
+        return UserProfileResult(
+          isSuccess: false,
+          errorMessage: 'Failed: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      return UserProfileResult(isSuccess: false, errorMessage: 'Error: $e');
     }
   }
 }

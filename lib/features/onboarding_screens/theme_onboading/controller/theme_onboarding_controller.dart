@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
@@ -62,6 +64,38 @@ class ThemeOnboardingController extends GetxController {
         EasyLoading.showSuccess(
           result['message'] ?? 'Theme unlocked and activated!',
         );
+//-----------------------
+        // Extract themeId from unlock response and activate it
+        try {
+          final appThemeController = Get.find<AppThemeController>();
+
+          // Get the theme name from the themesList using the themeId
+          final selectedThemeModel = themesList.firstWhere(
+            (theme) => theme.id == themeId,
+            orElse: () => themesList[index],
+          );
+
+          print('Selected theme name: ${selectedThemeModel.name}');
+          print('Selected theme ID: ${selectedThemeModel.id}');
+
+          // Find the matching AppThemeModel by name (since backend and app use different IDs)
+          final themeIndex = appThemeController.themes.indexWhere(
+            (t) =>
+                t.name.toLowerCase() == selectedThemeModel.name.toLowerCase(),
+          );
+
+          if (themeIndex != -1) {
+            appThemeController.selectTheme(themeIndex);
+            print(
+              'Theme activated successfully: ${appThemeController.themes[themeIndex].name} at index: $themeIndex',
+            );
+          } else {
+            print('Theme "${selectedThemeModel.name}" not found in app themes');
+          }
+        } catch (e) {
+          print('Error activating theme: $e');
+        }
+///--------------
         Get.toNamed(AppRoute.getonboadingScreen1());
       } else {
         EasyLoading.showError(result['message'] ?? 'Failed to unlock theme.');
