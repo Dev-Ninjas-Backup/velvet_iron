@@ -7,7 +7,8 @@ import 'package:velvet_iron/core/models/response_data.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/home/models/home_screen_model.dart';
-import 'package:velvet_iron/features/settings/model/settings_model.dart' hide UserProfile;
+import 'package:velvet_iron/features/settings/model/settings_model.dart'
+    hide UserProfile;
 
 class SettingsService {
   static const String baseUrl = Urls.baseUrl;
@@ -88,7 +89,6 @@ class SettingsService {
   }
 }
 
-
 class UserProfileResult {
   final bool isSuccess;
   final UserProfile? data;
@@ -100,7 +100,24 @@ class UserProfileResult {
 class UserProfileService extends GetConnect {
   Future<UserProfileResult> fetchProfile() async {
     try {
-      final response = await get(Urls.getProfile);
+      final accessToken = await SharedPreferencesHelper.getAccessToken();
+      final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+
+      if (accessToken == null || refreshToken == null) {
+        return UserProfileResult(
+          isSuccess: false,
+          errorMessage: 'Tokens not found',
+        );
+      }
+
+      final response = await get(
+        Urls.getProfile,
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'x-refresh-token': refreshToken,
+          'Content-Type': 'application/json',
+        },
+      );
 
       if (response.statusCode == 200) {
         final json = response.body is Map
