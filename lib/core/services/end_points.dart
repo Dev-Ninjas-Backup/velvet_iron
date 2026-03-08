@@ -15,9 +15,11 @@ class Urls {
   static const String getProfile = '$baseUrl/profile';
   static const String getThemes = '$baseUrl/themes/my-themes';
   static String themes(String themeId) => '$baseUrl/themes/$themeId';
-  static String unlockTheme(String themeId) => '$baseUrl/onboarding/theme/$themeId';
+  static String unlockTheme(String themeId) =>
+      '$baseUrl/onboarding/theme/$themeId';
   static const String getCompanions = '$baseUrl/companions/my-companions';
-  static String unlockCompanion(String companionId) => '$baseUrl/onboarding/companion/$companionId';
+  static String unlockCompanion(String companionId) =>
+      '$baseUrl/onboarding/companion/$companionId';
   static const String fitnessGoal = '$baseUrl/profile/fitness-goal';
   static const String weightLog = '$baseUrl/weight-log';
   static const String weightLogHistory = '$baseUrl/weight-log/history';
@@ -25,23 +27,24 @@ class Urls {
   static const String medicationHistory = '$baseUrl/medication/history';
   static const String medicationSchedule = '$baseUrl/medication-schedule';
   static const String moodLog = '$baseUrl/mood-log';
-  static String getMoodLogHistory(int limit, int offset) => '$baseUrl/mood-log/history?limit=$limit&offset=$offset';
+  static String getMoodLogHistory(int limit, int offset) =>
+      '$baseUrl/mood-log/history?limit=$limit&offset=$offset';
   static const String macroGoal = '$baseUrl/macro-goal';
   static const String getTodayMoodLog = '$baseUrl/mood-log/today';
   static const String mealLog = '$baseUrl/meal-log';
   static const String mealSchedule = '$baseUrl/meal-schedule';
-  static String mealLogHistory(int limit, int offset) => '$baseUrl/meal-log/history?limit=$limit&offset=$offset';
+  static String mealLogHistory(int limit, int offset) =>
+      '$baseUrl/meal-log/history?limit=$limit&offset=$offset';
   // static const String mealLog = '$baseUrl/meal-log';
   static const String discordSignIn = '$baseUrl/auth/discord-auth-url';
   static const String discordCallback = '$baseUrl/auth/discord/callback';
   static const String authDiscord = '$baseUrl/auth/discord';
-  static const String exerciseLog = '$baseUrl/exercise-log'; 
+  static const String exerciseLog = '$baseUrl/exercise-log';
   static const String exerciseHistory = '$baseUrl/exercise-log/history';
   static const String exerciseLogSchedule = '$baseUrl/exercise-log/schedule';
   static const String firebaseLogin = '$baseUrl/auth/firebase-login';
   static const String quests = '$baseUrl/xp-stats/quests';
   static const String addXP = '$baseUrl/profile/add-xp/log';
   static const String homeScreen = '$baseUrl/profile';
-
-
+  static const String onboardingStatus = '$baseUrl/onboarding';
 }

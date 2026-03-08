@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/auth/login/validation/login_validation.dart';
 import 'package:velvet_iron/features/auth/services/auth_service.dart';
+import 'package:velvet_iron/features/auth/services/onboarding_status_service.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
 class LoginController extends GetxController {
@@ -114,13 +115,7 @@ class LoginController extends GetxController {
         if (accessToken.isNotEmpty) {
           EasyLoading.showSuccess('Login successful!');
           await Future.delayed(const Duration(milliseconds: 800));
-          if (user != null && user['onBoarded'] == false) {
-            print('User not onboarded. Navigating to welcome screen...');
-            Get.offAllNamed(AppRoute.welcomeScreen);
-          } else {
-            print('User already onboarded. Navigating to home screen...');
-            Get.offAllNamed(AppRoute.homeScreen);
-          }
+          _checkOnboardingAndNavigate();
         } else {
           EasyLoading.showError('Login failed: No token received');
         }
@@ -155,6 +150,7 @@ class LoginController extends GetxController {
 
   final formKey = GlobalKey<FormState>();
   final AuthService _authService = AuthService();
+  final OnboardingStatusService _onboardingService = OnboardingStatusService();
 
   late final TextEditingController userIdentifierController;
   late final TextEditingController passwordController;
@@ -199,6 +195,25 @@ class LoginController extends GetxController {
 
   void togglePasswordVisibility() {
     passwordObscured.toggle();
+  }
+
+  Future<void> _checkOnboardingAndNavigate() async {
+    try {
+      final result = await _onboardingService.getOnboardingStatus();
+      final isComplete = result['iscomplete'] ?? false;
+
+      if (isComplete) {
+        print('User onboarding complete. Navigating to home screen...');
+        Get.offAllNamed(AppRoute.bottomNavScreen);
+      } else {
+        print('User onboarding incomplete. Navigating to welcome screen...');
+        Get.offAllNamed(AppRoute.welcomeScreen);
+      }
+    } catch (e) {
+      print('Error checking onboarding status: $e');
+      // Default to welcome screen on error
+      Get.offAllNamed(AppRoute.welcomeScreen);
+    }
   }
 
   String? userIdentifierValidator(String? value) {
@@ -274,14 +289,7 @@ class LoginController extends GetxController {
 
         await Future.delayed(const Duration(milliseconds: 800));
 
-        // if (userData['onBoarded'] == false) {
-        //   print('User not onboarded. Navigating to welcome screen...');
-        //   Get.offAllNamed(AppRoute.welcomeScreen);
-        // } else {
-        //   print('User already onboarded. Navigating to home screen...');
-        //   Get.offAllNamed(AppRoute.homeScreen);
-        // }
-        Get.offAllNamed(AppRoute.bottomNavScreen);
+        _checkOnboardingAndNavigate();
       } else {
         print('Login failed!');
         print('Error: ${response.errorMessage}');

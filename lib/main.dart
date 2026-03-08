@@ -8,14 +8,13 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/app.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
+import 'package:velvet_iron/features/auth/services/onboarding_status_service.dart';
 import 'package:velvet_iron/firebase_options.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   initDeepLinks();
   runApp(VelvetIron());
   configLoading();
@@ -23,6 +22,7 @@ void main() async {
 
 void initDeepLinks() {
   final appLinks = AppLinks();
+  final onboardingService = OnboardingStatusService();
 
   appLinks.uriLinkStream.listen((Uri uri) async {
     if (uri.host == 'auth' && uri.path.contains('discord')) {
@@ -49,13 +49,24 @@ void initDeepLinks() {
           await SharedPreferencesHelper.saveUsername(
             userJson['username'] ?? '',
           );
+
+          // Check onboarding status and navigate accordingly
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            final result = await onboardingService.getOnboardingStatus();
+            final isComplete = result['iscomplete'] ?? false;
+
+            if (isComplete) {
+              Get.offAllNamed(AppRoute.bottomNavScreen);
+            } else {
+              Get.offAllNamed(AppRoute.welcomeScreen);
+            }
+          });
         } catch (e) {
           debugPrint('Failed to parse Discord user data: $e');
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Get.offAllNamed(AppRoute.welcomeScreen);
+          });
         }
-
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Get.offAllNamed(AppRoute.homeScreen);
-        });
       }
     }
   });
