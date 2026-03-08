@@ -274,13 +274,14 @@ class LoginController extends GetxController {
 
         await Future.delayed(const Duration(milliseconds: 800));
 
-        if (userData['onBoarded'] == false) {
-          print('User not onboarded. Navigating to welcome screen...');
-          Get.offAllNamed(AppRoute.welcomeScreen);
-        } else {
-          print('User already onboarded. Navigating to home screen...');
-          Get.offAllNamed(AppRoute.homeScreen);
-        }
+        // if (userData['onBoarded'] == false) {
+        //   print('User not onboarded. Navigating to welcome screen...');
+        //   Get.offAllNamed(AppRoute.welcomeScreen);
+        // } else {
+        //   print('User already onboarded. Navigating to home screen...');
+        //   Get.offAllNamed(AppRoute.homeScreen);
+        // }
+        Get.offAllNamed(AppRoute.bottomNavScreen);
       } else {
         print('Login failed!');
         print('Error: ${response.errorMessage}');

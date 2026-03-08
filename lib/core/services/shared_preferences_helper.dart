@@ -22,6 +22,7 @@ class SharedPreferencesHelper {
 
   static const String _refreshTokenKey = 'refresh_token';
   static const String _rememberMeKey = 'rememberMe';
+  static const String _activeThemeIdKey = 'activeThemeId';
 
   static Future<void> saveTokenAndRole(
     String token,
@@ -134,5 +135,16 @@ class SharedPreferencesHelper {
   static Future<void> clearAll() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
+  }
+
+  // Theme persistence methods
+  static Future<void> saveActiveThemeId(String themeId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_activeThemeIdKey, themeId);
+  }
+
+  static Future<String?> getActiveThemeId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_activeThemeIdKey);
   }
 }

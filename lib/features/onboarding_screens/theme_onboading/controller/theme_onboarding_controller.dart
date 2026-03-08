@@ -2,6 +2,7 @@
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/theme_onboading/model/theme_onboarding_model.dart';
 import 'package:velvet_iron/features/onboarding_screens/theme_onboading/service/theme_onboarding_service.dart';
@@ -64,7 +65,7 @@ class ThemeOnboardingController extends GetxController {
         EasyLoading.showSuccess(
           result['message'] ?? 'Theme unlocked and activated!',
         );
-//-----------------------
+        //-----------------------
         // Extract themeId from unlock response and activate it
         try {
           final appThemeController = Get.find<AppThemeController>();
@@ -86,6 +87,10 @@ class ThemeOnboardingController extends GetxController {
 
           if (themeIndex != -1) {
             appThemeController.selectTheme(themeIndex);
+
+            // Save theme ID to local storage for persistence
+            await SharedPreferencesHelper.saveActiveThemeId(themeId);
+
             print(
               'Theme activated successfully: ${appThemeController.themes[themeIndex].name} at index: $themeIndex',
             );
@@ -95,7 +100,8 @@ class ThemeOnboardingController extends GetxController {
         } catch (e) {
           print('Error activating theme: $e');
         }
-///--------------
+
+        ///--------------
         Get.toNamed(AppRoute.getonboadingScreen1());
       } else {
         EasyLoading.showError(result['message'] ?? 'Failed to unlock theme.');
