@@ -4,6 +4,7 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/profile/controller/profile_controller.dart';
+import 'package:velvet_iron/features/themes_and_preference/controller/themes_controller.dart';
 import 'package:velvet_iron/features/themes_and_preference/widgets/select_companion.dart';
 import 'package:velvet_iron/features/themes_and_preference/widgets/themes.dart';
 import 'package:velvet_iron/features/themes_and_preference/widgets/themes_preference_widgets.dart';
@@ -14,6 +15,7 @@ class ThemeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themesController = Get.put(ThemesController());
     Get.put(ProfileController());
 
     return Scaffold(
@@ -81,68 +83,46 @@ class ThemeScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            Themes(
-                              title: 'Adventurer',
-                              badgeText:
-                                  themeController.activeTheme.id == 'adventurer'
-                                  ? 'Active Now'
-                                  : 'Unlock 250 xp',
-                              subtitle:
-                                  themeController.activeTheme.id == 'adventurer'
-                                  ? '"Discipline is the blade — sharpen it daily."'
-                                  : null,
-                              gradientColors: _getThemeGradient('adventurer'),
-                              icon:
-                                  themeController.activeTheme.id == 'adventurer'
-                                  ? Image.asset(IconPath.goldencircle)
-                                  : Image.asset(IconPath.lock),
-                            ),
-                            const SizedBox(height: 12),
-                            Themes(
-                              title: 'Mage',
-                              badgeText:
-                                  themeController.activeTheme.id == 'mage'
-                                  ? 'Active Now'
-                                  : 'Unlock 250 xp',
-                              subtitle: themeController.activeTheme.id == 'mage'
-                                  ? '"Discipline is the blade — sharpen it daily."'
-                                  : null,
-                              gradientColors: _getThemeGradient('mage'),
-                              icon: themeController.activeTheme.id == 'mage'
-                                  ? Image.asset(IconPath.goldencircle)
-                                  : Image.asset(IconPath.lock),
-                            ),
-                            const SizedBox(height: 12),
-                            Themes(
-                              title: 'Reader',
-                              badgeText:
-                                  themeController.activeTheme.id == 'reader'
-                                  ? 'Active Now'
-                                  : 'Unlock 250 xp',
-                              subtitle:
-                                  themeController.activeTheme.id == 'reader'
-                                  ? '"Discipline is the blade — sharpen it daily."'
-                                  : null,
-                              gradientColors: _getThemeGradient('reader'),
-                              icon: themeController.activeTheme.id == 'reader'
-                                  ? Image.asset(IconPath.goldencircle)
-                                  : Image.asset(IconPath.lock),
-                            ),
-                            const SizedBox(height: 12),
-                            Themes(
-                              title: 'Gamer',
-                              badgeText:
-                                  themeController.activeTheme.id == 'gamer'
-                                  ? 'Active Now'
-                                  : 'Unlock 250 xp',
-                              subtitle:
-                                  themeController.activeTheme.id == 'gamer'
-                                  ? '"Discipline is the blade — sharpen it daily."'
-                                  : null,
-                              gradientColors: _getThemeGradient('gamer'),
-                              icon: themeController.activeTheme.id == 'gamer'
-                                  ? Image.asset(IconPath.goldencircle)
-                                  : Image.asset(IconPath.lock),
+                            Obx(
+                              () => Column(
+                                children: List.generate(
+                                  themesController.themes.length,
+                                  (index) {
+                                    final theme =
+                                        themesController.themes[index];
+                                    final isActive =
+                                        themesController
+                                            .selectedThemeIndex
+                                            .value ==
+                                        index;
+
+                                    return Column(
+                                      children: [
+                                        Themes(
+                                          title: theme.title,
+                                          badgeText: isActive
+                                              ? 'Active Now'
+                                              : theme.badgeText,
+                                          subtitle: isActive
+                                              ? '"Discipline is the blade — sharpen it daily."'
+                                              : null,
+                                          gradientColors: _getThemeGradient(
+                                            theme.id,
+                                          ),
+                                          icon: isActive
+                                              ? Image.asset(
+                                                  IconPath.goldencircle,
+                                                )
+                                              : Image.asset(IconPath.lock),
+                                        ),
+                                        if (index <
+                                            themesController.themes.length - 1)
+                                          const SizedBox(height: 12),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
                             ),
                             const SizedBox(height: 30),
                             Text(
@@ -163,55 +143,43 @@ class ThemeScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            SelectCompanion(
-                              leadingIcon: Image.asset(
-                                IconPath.goldencircle,
-                                fit: BoxFit.contain,
+                            Obx(
+                              () => Column(
+                                children: List.generate(
+                                  themesController.companions.length,
+                                  (index) {
+                                    final companion =
+                                        themesController.companions[index];
+
+                                    return Column(
+                                      children: [
+                                        SelectCompanion(
+                                          leadingIcon: Image.asset(
+                                            companion.leadingIconPath,
+                                            fit: BoxFit.contain,
+                                          ),
+                                          avatar: Image.asset(
+                                            companion.avatarPath,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          name: companion.name,
+                                          badgeText: companion.locked
+                                              ? 'Unlock 250 xp'
+                                              : null,
+                                          onTap: !companion.locked
+                                              ? () => themesController
+                                                    .selectCompanion(index)
+                                              : null,
+                                        ),
+                                        if (index <
+                                            themesController.companions.length -
+                                                1)
+                                          const SizedBox(height: 12),
+                                      ],
+                                    );
+                                  },
+                                ),
                               ),
-                              avatar: Image.asset(
-                                ImagePath.charecterOne,
-                                fit: BoxFit.cover,
-                              ),
-                              name: 'Ser Kael Thornwatch',
-                            ),
-                            const SizedBox(height: 12),
-                            SelectCompanion(
-                              leadingIcon: Image.asset(
-                                IconPath.lock,
-                                fit: BoxFit.contain,
-                              ),
-                              avatar: Image.asset(
-                                ImagePath.charecterThree,
-                                fit: BoxFit.cover,
-                              ),
-                              name: 'Riven Ashcroft',
-                              badgeText: 'Unlock 250 xp',
-                            ),
-                            const SizedBox(height: 12),
-                            SelectCompanion(
-                              leadingIcon: Image.asset(
-                                IconPath.lock,
-                                fit: BoxFit.contain,
-                              ),
-                              avatar: Image.asset(
-                                ImagePath.charecterFour,
-                                fit: BoxFit.cover,
-                              ),
-                              name: 'Pyraxis',
-                              badgeText: 'Unlock 250 xp',
-                            ),
-                            const SizedBox(height: 12),
-                            SelectCompanion(
-                              leadingIcon: Image.asset(
-                                IconPath.lock,
-                                fit: BoxFit.contain,
-                              ),
-                              avatar: Image.asset(
-                                ImagePath.charecterTwo,
-                                fit: BoxFit.cover,
-                              ),
-                              name: 'Bram Ironledger',
-                              badgeText: 'Unlock 250 xp',
                             ),
                           ],
                         ),
