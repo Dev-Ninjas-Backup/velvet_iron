@@ -1,4 +1,7 @@
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
+import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/themes_and_preference/model/theme_model.dart';
 import 'package:velvet_iron/features/themes_and_preference/model/companion_model.dart';
 import 'package:velvet_iron/features/themes_and_preference/service/themes_service.dart';
@@ -32,200 +35,41 @@ class ThemesController extends GetxController {
       if (result.isSuccess && result.data != null) {
         final apiThemes = result.data!.themes;
 
+        ThemeData _findApi(String name) => apiThemes.firstWhere(
+          (t) => t.name.toLowerCase() == name.toLowerCase(),
+          orElse: () => ThemeData(
+            id: '',
+            name: name,
+            isActive: false,
+            isUnlocked: false,
+            tagline: '',
+            description: '',
+            unlockXp: 250,
+          ),
+        );
+
         // Map API data to ThemeModel with unlock status
         final mappedThemes = [
-          ThemeModel(
-            id: 'adventurer',
-            title: 'Adventurer',
-            badgeText: _getBadgeText(
-              apiThemes.firstWhere(
-                (t) => t.name.toLowerCase() == 'adventurer',
-                orElse: () => ThemeData(
-                  id: '',
-                  name: 'Adventurer',
-                  isActive: false,
-                  isUnlocked: false,
-                  tagline: '',
-                  description: '',
-                  unlockXp: 250,
-                ),
-              ),
-            ),
-            subtitle: _getSubtitle(
-              apiThemes.firstWhere(
-                (t) => t.name.toLowerCase() == 'adventurer',
-                orElse: () => ThemeData(
-                  id: '',
-                  name: 'Adventurer',
-                  isActive: false,
-                  isUnlocked: false,
-                  tagline: '',
-                  description: '',
-                  unlockXp: 250,
-                ),
-              ),
-            ),
-            gradientColors: [0xFF310101, 0xFF550606, 0xFF9E6D38],
-            iconPath: 'assets/icons/goldencircle.png',
-            locked: !apiThemes
-                .firstWhere(
-                  (t) => t.name.toLowerCase() == 'adventurer',
-                  orElse: () => ThemeData(
-                    id: '',
-                    name: 'Adventurer',
-                    isActive: false,
-                    isUnlocked: false,
-                    tagline: '',
-                    description: '',
-                    unlockXp: 250,
-                  ),
-                )
-                .isUnlocked,
-          ),
-          ThemeModel(
-            id: 'mage',
-            title: 'Mage',
-            badgeText: _getBadgeText(
-              apiThemes.firstWhere(
-                (t) => t.name.toLowerCase() == 'mage',
-                orElse: () => ThemeData(
-                  id: '',
-                  name: 'Mage',
-                  isActive: false,
-                  isUnlocked: false,
-                  tagline: '',
-                  description: '',
-                  unlockXp: 250,
-                ),
-              ),
-            ),
-            subtitle: _getSubtitle(
-              apiThemes.firstWhere(
-                (t) => t.name.toLowerCase() == 'mage',
-                orElse: () => ThemeData(
-                  id: '',
-                  name: 'Mage',
-                  isActive: false,
-                  isUnlocked: false,
-                  tagline: '',
-                  description: '',
-                  unlockXp: 250,
-                ),
-              ),
-            ),
-            gradientColors: [0xFF1B0033, 0xFF35065E, 0xFFBE32FF],
-            iconPath: 'assets/icons/lock.png',
-            locked: !apiThemes
-                .firstWhere(
-                  (t) => t.name.toLowerCase() == 'mage',
-                  orElse: () => ThemeData(
-                    id: '',
-                    name: 'Mage',
-                    isActive: false,
-                    isUnlocked: false,
-                    tagline: '',
-                    description: '',
-                    unlockXp: 250,
-                  ),
-                )
-                .isUnlocked,
-          ),
-          ThemeModel(
-            id: 'reader',
-            title: 'Reader',
-            badgeText: _getBadgeText(
-              apiThemes.firstWhere(
-                (t) => t.name.toLowerCase() == 'reader',
-                orElse: () => ThemeData(
-                  id: '',
-                  name: 'Reader',
-                  isActive: false,
-                  isUnlocked: false,
-                  tagline: '',
-                  description: '',
-                  unlockXp: 250,
-                ),
-              ),
-            ),
-            subtitle: _getSubtitle(
-              apiThemes.firstWhere(
-                (t) => t.name.toLowerCase() == 'reader',
-                orElse: () => ThemeData(
-                  id: '',
-                  name: 'Reader',
-                  isActive: false,
-                  isUnlocked: false,
-                  tagline: '',
-                  description: '',
-                  unlockXp: 250,
-                ),
-              ),
-            ),
-            gradientColors: [0xFF00027B, 0xFF292CB7, 0xFF3385FF],
-            iconPath: 'assets/icons/lock.png',
-            locked: !apiThemes
-                .firstWhere(
-                  (t) => t.name.toLowerCase() == 'reader',
-                  orElse: () => ThemeData(
-                    id: '',
-                    name: 'Reader',
-                    isActive: false,
-                    isUnlocked: false,
-                    tagline: '',
-                    description: '',
-                    unlockXp: 250,
-                  ),
-                )
-                .isUnlocked,
-          ),
-          ThemeModel(
-            id: 'gamer',
-            title: 'Gamer',
-            badgeText: _getBadgeText(
-              apiThemes.firstWhere(
-                (t) => t.name.toLowerCase() == 'gamer',
-                orElse: () => ThemeData(
-                  id: '',
-                  name: 'Gamer',
-                  isActive: false,
-                  isUnlocked: false,
-                  tagline: '',
-                  description: '',
-                  unlockXp: 250,
-                ),
-              ),
-            ),
-            subtitle: _getSubtitle(
-              apiThemes.firstWhere(
-                (t) => t.name.toLowerCase() == 'gamer',
-                orElse: () => ThemeData(
-                  id: '',
-                  name: 'Gamer',
-                  isActive: false,
-                  isUnlocked: false,
-                  tagline: '',
-                  description: '',
-                  unlockXp: 250,
-                ),
-              ),
-            ),
-            gradientColors: [0xFF111C18, 0xFF1E332C, 0xFFE7C143],
-            iconPath: 'assets/icons/lock.png',
-            locked: !apiThemes
-                .firstWhere(
-                  (t) => t.name.toLowerCase() == 'gamer',
-                  orElse: () => ThemeData(
-                    id: '',
-                    name: 'Gamer',
-                    isActive: false,
-                    isUnlocked: false,
-                    tagline: '',
-                    description: '',
-                    unlockXp: 250,
-                  ),
-                )
-                .isUnlocked,
-          ),
+          _buildThemeModel('adventurer', 'Adventurer', [
+            0xFF310101,
+            0xFF550606,
+            0xFF9E6D38,
+          ], _findApi('adventurer')),
+          _buildThemeModel('mage', 'Mage', [
+            0xFF1B0033,
+            0xFF35065E,
+            0xFFBE32FF,
+          ], _findApi('mage')),
+          _buildThemeModel('reader', 'Reader', [
+            0xFF00027B,
+            0xFF292CB7,
+            0xFF3385FF,
+          ], _findApi('reader')),
+          _buildThemeModel('gamer', 'Gamer', [
+            0xFF111C18,
+            0xFF1E332C,
+            0xFFE7C143,
+          ], _findApi('gamer')),
         ];
 
         themes.assignAll(mappedThemes);
@@ -262,9 +106,34 @@ class ThemesController extends GetxController {
     }
   }
 
+  ThemeModel _buildThemeModel(
+    String id,
+    String title,
+    List<int> gradientColors,
+    ThemeData apiData,
+  ) {
+    return ThemeModel(
+      id: id,
+      apiId: apiData.id,
+      title: title,
+      badgeText: _getBadgeText(apiData),
+      subtitle: _getSubtitle(apiData),
+      gradientColors: gradientColors,
+      iconPath: apiData.isActive
+          ? 'assets/icons/goldencircle.png'
+          : apiData.isUnlocked
+          ? 'assets/icons/goldencircle.png'
+          : 'assets/icons/lock.png',
+      locked: !apiData.isUnlocked,
+    );
+  }
+
   String _getBadgeText(ThemeData themeData) {
     if (themeData.isActive) {
       return 'Active Now';
+    }
+    if (themeData.isUnlocked) {
+      return 'Activate';
     }
     return 'Unlock ${themeData.unlockXp} xp';
   }
@@ -368,9 +237,12 @@ class ThemesController extends GetxController {
     return apiCompanions.map((companion) {
       return CompanionModel(
         id: companion.id,
+        apiId: companion.id,
         name: companion.name,
         avatarPath: companionMap[companion.name] ?? 'assets/images/serkael.png',
-        leadingIconPath: companion.isUnlocked
+        leadingIconPath: companion.isActive
+            ? 'assets/icons/goldencircle.png'
+            : companion.isUnlocked
             ? 'assets/icons/goldencircle.png'
             : 'assets/icons/lock.png',
         locked: !companion.isUnlocked,
@@ -411,9 +283,116 @@ class ThemesController extends GetxController {
     ]);
   }
 
+  Future<void> unlockThemeAtIndex(int index) async {
+    if (index < 0 || index >= themes.length) return;
+    final theme = themes[index];
+    if (theme.apiId.isEmpty) {
+      EasyLoading.showError('Theme ID not found');
+      return;
+    }
+
+    try {
+      EasyLoading.show(status: 'Unlocking...');
+      final result = await _themesService.unlockTheme(theme.apiId);
+
+      if (result['success'] == true) {
+        EasyLoading.showSuccess(result['message'] ?? 'Theme unlocked!');
+        // Refresh themes from API to get updated state
+        await _loadThemesFromApi();
+      } else {
+        EasyLoading.showError(result['message'] ?? 'Failed to unlock theme');
+      }
+    } catch (e) {
+      EasyLoading.showError('Failed to unlock theme');
+    }
+  }
+
+  Future<void> activateThemeAtIndex(int index) async {
+    if (index < 0 || index >= themes.length) return;
+    final theme = themes[index];
+    if (theme.locked || theme.apiId.isEmpty) return;
+
+    try {
+      EasyLoading.show(status: 'Activating...');
+      final result = await _themesService.activateTheme(theme.apiId);
+
+      if (result['success'] == true) {
+        EasyLoading.showSuccess('Theme activated!');
+        selectedThemeIndex.value = index;
+
+        // Activate in the global AppThemeController
+        final appThemeController = Get.find<AppThemeController>();
+        final themeIndex = appThemeController.themes.indexWhere(
+          (t) => t.name.toLowerCase() == theme.title.toLowerCase(),
+        );
+        if (themeIndex != -1) {
+          appThemeController.selectTheme(themeIndex);
+          await SharedPreferencesHelper.saveActiveThemeId(theme.apiId);
+        }
+
+        // Refresh themes to update badge states
+        await _loadThemesFromApi();
+      } else {
+        EasyLoading.showError(result['message'] ?? 'Failed to activate theme');
+      }
+    } catch (e) {
+      EasyLoading.showError('Failed to activate theme');
+    }
+  }
+
   void selectTheme(int index) {
     if (index >= 0 && index < themes.length && !themes[index].locked) {
       selectedThemeIndex.value = index;
+    }
+  }
+
+  Future<void> unlockCompanionAtIndex(int index) async {
+    if (index < 0 || index >= companions.length) return;
+    final companion = companions[index];
+    if (companion.apiId.isEmpty) {
+      EasyLoading.showError('Companion ID not found');
+      return;
+    }
+
+    try {
+      EasyLoading.show(status: 'Unlocking...');
+      final result = await _companionsService.unlockCompanion(companion.apiId);
+
+      if (result['success'] == true) {
+        EasyLoading.showSuccess(result['message'] ?? 'Companion unlocked!');
+        await _loadCompanionsFromApi();
+      } else {
+        EasyLoading.showError(
+          result['message'] ?? 'Failed to unlock companion',
+        );
+      }
+    } catch (e) {
+      EasyLoading.showError('Failed to unlock companion');
+    }
+  }
+
+  Future<void> activateCompanionAtIndex(int index) async {
+    if (index < 0 || index >= companions.length) return;
+    final companion = companions[index];
+    if (companion.locked || companion.apiId.isEmpty) return;
+
+    try {
+      EasyLoading.show(status: 'Activating...');
+      final result = await _companionsService.activateCompanion(
+        companion.apiId,
+      );
+
+      if (result['success'] == true) {
+        EasyLoading.showSuccess('Companion activated!');
+        selectedCompanionIndex.value = index;
+        await _loadCompanionsFromApi();
+      } else {
+        EasyLoading.showError(
+          result['message'] ?? 'Failed to activate companion',
+        );
+      }
+    } catch (e) {
+      EasyLoading.showError('Failed to activate companion');
     }
   }
 

@@ -50,4 +50,11 @@ class Urls {
   static const String dailyLogsXP = '$baseUrl/profile/daily-login';
   static const String activeTheme = '$baseUrl/themes/my-themes';
   static const String activeCompanion = '$baseUrl/companions/my-companions';
+  static const String weeklyWeightLog = '$baseUrl/weight-log/chart/weekly';
+  static String unlockNewTheme(String id) => '$baseUrl/themes/$id/unlock';
+  static String activateNewTheme(String id) => '$baseUrl/themes/$id/activate';
+  static String unlockNewCompanion(String id) =>
+      '$baseUrl/companions/$id/unlock';
+  static String activateNewCompanion(String id) =>
+      '$baseUrl/companions/$id/activate';
 }

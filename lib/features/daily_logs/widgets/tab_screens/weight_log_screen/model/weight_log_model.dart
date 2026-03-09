@@ -64,7 +64,8 @@ class WeightLogHistoryModel {
       currentWeight: json['currentWeight'] ?? '0',
       totalChanges: json['totalChanges'] ?? '0',
       totalLogsCount: json['totalLogsCount'] ?? 0,
-      history: (json['history'] as List<dynamic>?)
+      history:
+          (json['history'] as List<dynamic>?)
               ?.map((item) => WeightLogModel.fromJson(item))
               .toList() ??
           [],
@@ -76,10 +77,7 @@ class CreateWeightLogRequest {
   final String weight;
   final String? note;
 
-  CreateWeightLogRequest({
-    required this.weight,
-    this.note,
-  });
+  CreateWeightLogRequest({required this.weight, this.note});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {'weight': weight};
@@ -87,6 +85,54 @@ class CreateWeightLogRequest {
       data['note'] = note;
     }
     return data;
+  }
+}
+
+class WeeklyWeightEntry {
+  final String date;
+  final String weight;
+
+  WeeklyWeightEntry({required this.date, required this.weight});
+
+  factory WeeklyWeightEntry.fromJson(Map<String, dynamic> json) {
+    return WeeklyWeightEntry(
+      date: json['date'] ?? '',
+      weight: json['weight'] ?? '0',
+    );
+  }
+}
+
+class WeeklyWeightChartModel {
+  final List<WeeklyWeightEntry> thisWeek;
+  final List<WeeklyWeightEntry> lastWeek;
+  final String? thisWeekAverage;
+  final String? lastWeekAverage;
+  final String? weeklyChange;
+
+  WeeklyWeightChartModel({
+    required this.thisWeek,
+    required this.lastWeek,
+    this.thisWeekAverage,
+    this.lastWeekAverage,
+    this.weeklyChange,
+  });
+
+  factory WeeklyWeightChartModel.fromJson(Map<String, dynamic> json) {
+    return WeeklyWeightChartModel(
+      thisWeek:
+          (json['thisWeek'] as List<dynamic>?)
+              ?.map((e) => WeeklyWeightEntry.fromJson(e))
+              .toList() ??
+          [],
+      lastWeek:
+          (json['lastWeek'] as List<dynamic>?)
+              ?.map((e) => WeeklyWeightEntry.fromJson(e))
+              .toList() ??
+          [],
+      thisWeekAverage: json['thisWeekAverage'],
+      lastWeekAverage: json['lastWeekAverage'],
+      weeklyChange: json['weeklyChange'],
+    );
   }
 }
 

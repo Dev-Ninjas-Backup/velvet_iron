@@ -116,4 +116,95 @@ class ThemesService extends GetConnect {
       return ThemesResult(isSuccess: false, errorMessage: 'Error: $e');
     }
   }
+
+  Future<Map<String, dynamic>> unlockTheme(String apiId) async {
+    try {
+      final accessToken = await SharedPreferencesHelper.getAccessToken();
+      final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+
+      if (accessToken == null || refreshToken == null) {
+        return {'success': false, 'message': 'Authentication tokens not found'};
+      }
+
+      final response = await post(
+        Urls.unlockNewTheme(apiId),
+        '',
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'x-refresh-token': refreshToken,
+          'Content-Type': 'application/json',
+        },
+      );
+
+      print('Unlock Theme Status: ${response.statusCode}');
+      print('Unlock Theme Body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return {
+          'success': true,
+          ...?(response.body is Map
+              ? response.body as Map<String, dynamic>
+              : null),
+        };
+      }
+
+      if (response.statusCode == 400) {
+        final message = response.body is Map
+            ? (response.body['message'] ?? '')
+            : '';
+        if (message.toString().toLowerCase().contains('already unlocked')) {
+          return {'success': true, 'message': message};
+        }
+      }
+
+      final message = response.body is Map
+          ? (response.body['message'] ?? 'Failed to unlock theme')
+          : 'Failed to unlock theme';
+      return {'success': false, 'message': message};
+    } catch (e) {
+      print('Error unlocking theme: $e');
+      return {'success': false, 'message': 'Error: $e'};
+    }
+  }
+
+  Future<Map<String, dynamic>> activateTheme(String apiId) async {
+    try {
+      final accessToken = await SharedPreferencesHelper.getAccessToken();
+      final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+
+      if (accessToken == null || refreshToken == null) {
+        return {'success': false, 'message': 'Authentication tokens not found'};
+      }
+
+      final response = await post(
+        Urls.activateNewTheme(apiId),
+        '',
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'x-refresh-token': refreshToken,
+          'Content-Type': 'application/json',
+        },
+      );
+
+      print('Activate Theme Status: ${response.statusCode}');
+      print('Activate Theme Body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return {
+          'success': true,
+          ...?(response.body is Map
+              ? response.body as Map<String, dynamic>
+              : null),
+        };
+      }
+
+      final message = response.body is Map
+          ? (response.body['message'] ?? 'Failed to activate theme')
+          : 'Failed to activate theme';
+      return {'success': false, 'message': message};
+    } catch (e) {
+      print('Error activating theme: $e');
+      return {'success': false, 'message': 'Error: $e'};
+    }
+  }
 }
