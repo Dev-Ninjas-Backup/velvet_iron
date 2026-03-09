@@ -13,6 +13,9 @@ class WeightLogController extends GetxController {
   final entriesLogged = "0".obs;
   final historyList = <WeightLogModel>[].obs;
 
+  // Weekly chart data
+  final weeklyChartData = Rxn<WeeklyWeightChartModel>();
+
   late TextEditingController weightController;
   late TextEditingController noteController;
   final WeightLogService _service = WeightLogService();
@@ -23,6 +26,7 @@ class WeightLogController extends GetxController {
     weightController = TextEditingController();
     noteController = TextEditingController();
     fetchWeightLogHistory();
+    fetchWeeklyWeightChart();
   }
 
   @override
@@ -84,6 +88,24 @@ class WeightLogController extends GetxController {
     historyList.assignAll(data.history);
   }
 
+  Future<void> fetchWeeklyWeightChart() async {
+    try {
+      final accessToken = await _getAccessToken();
+      final refreshToken = await _getRefreshToken();
+
+      final result = await _service.getWeeklyWeightChart(
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      );
+
+      weeklyChartData.value = result;
+    } catch (e, stackTrace) {
+      debugPrint('[WeightLogController] fetchWeeklyWeightChart() → ERROR');
+      debugPrint('Error      : $e');
+      debugPrint('StackTrace : $stackTrace');
+    }
+  }
+
   //  Submit New Weight Log
   Future<void> submitWeightLog() async {
     final weight = weightController.text.trim();
@@ -127,8 +149,9 @@ class WeightLogController extends GetxController {
 
       EasyLoading.showSuccess('Weight logged successfully');
 
-      // Refresh history
+      // Refresh history and chart
       await fetchWeightLogHistory();
+      await fetchWeeklyWeightChart();
     } catch (e, stackTrace) {
       EasyLoading.showError(e.toString().replaceFirst('Exception: ', ''));
       debugPrint('║ Error      : $e');

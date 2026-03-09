@@ -131,7 +131,7 @@ class WeightLog extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
 
-                          // Status Cards 
+                          // Status Cards
                           Row(
                             children: [
                               Expanded(
@@ -204,7 +204,6 @@ class WeightLog extends StatelessWidget {
                           const SizedBox(height: 8),
 
                           // Log Your Weight
-
                           Text(
                             "Log Your Weight",
                             style: getTextStyle(
@@ -222,7 +221,7 @@ class WeightLog extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
 
-                          //  Log History 
+                          //  Log History
                           Text(
                             "Log History",
                             style: getTextStyle(

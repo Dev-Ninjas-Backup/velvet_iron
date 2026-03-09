@@ -86,4 +86,35 @@ class WeightLogService {
       throw Exception(message);
     }
   }
+
+  //  GET weekly weight chart
+
+  Future<WeeklyWeightChartModel> getWeeklyWeightChart({
+    required String accessToken,
+    required String refreshToken,
+  }) async {
+    final url = Uri.parse(Urls.weeklyWeightLog);
+    final headers = _headers(
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    );
+
+    debugPrint('URL     : $url');
+
+    final response = await http.get(url, headers: headers);
+
+    final decodedBody = jsonDecode(response.body);
+
+    debugPrint('Status  : ${response.statusCode}');
+    debugPrint('Body    : ${response.body}');
+
+    if (response.statusCode == 200) {
+      return WeeklyWeightChartModel.fromJson(decodedBody);
+    } else {
+      final message =
+          decodedBody['message'] ?? 'Failed to fetch weekly weight chart';
+      debugPrint('WeightLog Error: $message');
+      throw Exception(message);
+    }
+  }
 }

@@ -114,4 +114,95 @@ class CompanionsService extends GetConnect {
       return CompanionsResult(isSuccess: false, errorMessage: 'Error: $e');
     }
   }
+
+  Future<Map<String, dynamic>> unlockCompanion(String apiId) async {
+    try {
+      final accessToken = await SharedPreferencesHelper.getAccessToken();
+      final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+
+      if (accessToken == null || refreshToken == null) {
+        return {'success': false, 'message': 'Authentication tokens not found'};
+      }
+
+      final response = await post(
+        Urls.unlockNewCompanion(apiId),
+        '',
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'x-refresh-token': refreshToken,
+          'Content-Type': 'application/json',
+        },
+      );
+
+      print('Unlock Companion Status: ${response.statusCode}');
+      print('Unlock Companion Body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return {
+          'success': true,
+          ...?(response.body is Map
+              ? response.body as Map<String, dynamic>
+              : null),
+        };
+      }
+
+      if (response.statusCode == 400) {
+        final message = response.body is Map
+            ? (response.body['message'] ?? '')
+            : '';
+        if (message.toString().toLowerCase().contains('already unlocked')) {
+          return {'success': true, 'message': message};
+        }
+      }
+
+      final message = response.body is Map
+          ? (response.body['message'] ?? 'Failed to unlock companion')
+          : 'Failed to unlock companion';
+      return {'success': false, 'message': message};
+    } catch (e) {
+      print('Error unlocking companion: $e');
+      return {'success': false, 'message': 'Error: $e'};
+    }
+  }
+
+  Future<Map<String, dynamic>> activateCompanion(String apiId) async {
+    try {
+      final accessToken = await SharedPreferencesHelper.getAccessToken();
+      final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+
+      if (accessToken == null || refreshToken == null) {
+        return {'success': false, 'message': 'Authentication tokens not found'};
+      }
+
+      final response = await post(
+        Urls.activateNewCompanion(apiId),
+        '',
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'x-refresh-token': refreshToken,
+          'Content-Type': 'application/json',
+        },
+      );
+
+      print('Activate Companion Status: ${response.statusCode}');
+      print('Activate Companion Body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return {
+          'success': true,
+          ...?(response.body is Map
+              ? response.body as Map<String, dynamic>
+              : null),
+        };
+      }
+
+      final message = response.body is Map
+          ? (response.body['message'] ?? 'Failed to activate companion')
+          : 'Failed to activate companion';
+      return {'success': false, 'message': message};
+    } catch (e) {
+      print('Error activating companion: $e');
+      return {'success': false, 'message': 'Error: $e'};
+    }
+  }
 }

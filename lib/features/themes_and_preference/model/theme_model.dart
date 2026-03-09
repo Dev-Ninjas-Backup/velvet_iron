@@ -1,5 +1,6 @@
 class ThemeModel {
   final String id;
+  final String apiId;
   final String title;
   final String badgeText;
   final String? subtitle;
@@ -9,6 +10,7 @@ class ThemeModel {
 
   ThemeModel({
     required this.id,
+    this.apiId = '',
     required this.title,
     required this.badgeText,
     this.subtitle,
@@ -19,6 +21,7 @@ class ThemeModel {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    'apiId': apiId,
     'title': title,
     'badgeText': badgeText,
     'subtitle': subtitle,
@@ -29,6 +32,7 @@ class ThemeModel {
 
   factory ThemeModel.fromJson(Map<String, dynamic> json) => ThemeModel(
     id: json['id'] ?? '',
+    apiId: json['apiId'] ?? '',
     title: json['title'] ?? '',
     badgeText: json['badgeText'] ?? '',
     subtitle: json['subtitle'],

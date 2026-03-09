@@ -95,6 +95,7 @@ class ThemeScreen extends StatelessWidget {
                                             .selectedThemeIndex
                                             .value ==
                                         index;
+                                    final isUnlocked = !theme.locked;
 
                                     return Column(
                                       children: [
@@ -113,7 +114,18 @@ class ThemeScreen extends StatelessWidget {
                                               ? Image.asset(
                                                   IconPath.goldencircle,
                                                 )
+                                              : isUnlocked
+                                              ? Image.asset(
+                                                  IconPath.goldencircle,
+                                                )
                                               : Image.asset(IconPath.lock),
+                                          onTap: isActive
+                                              ? null
+                                              : isUnlocked
+                                              ? () => themesController
+                                                    .activateThemeAtIndex(index)
+                                              : () => themesController
+                                                    .unlockThemeAtIndex(index),
                                         ),
                                         if (index <
                                             themesController.themes.length - 1)
@@ -150,12 +162,20 @@ class ThemeScreen extends StatelessWidget {
                                   (index) {
                                     final companion =
                                         themesController.companions[index];
+                                    final isActive =
+                                        themesController
+                                            .selectedCompanionIndex
+                                            .value ==
+                                        index;
+                                    final isUnlocked = !companion.locked;
 
                                     return Column(
                                       children: [
                                         SelectCompanion(
                                           leadingIcon: Image.asset(
-                                            companion.leadingIconPath,
+                                            isActive || isUnlocked
+                                                ? 'assets/icons/goldencircle.png'
+                                                : 'assets/icons/lock.png',
                                             fit: BoxFit.contain,
                                           ),
                                           avatar: Image.asset(
@@ -163,13 +183,22 @@ class ThemeScreen extends StatelessWidget {
                                             fit: BoxFit.cover,
                                           ),
                                           name: companion.name,
-                                          badgeText: companion.locked
-                                              ? 'Unlock 250 xp'
-                                              : null,
-                                          onTap: !companion.locked
+                                          badgeText: isActive
+                                              ? 'Active'
+                                              : isUnlocked
+                                              ? 'Activate'
+                                              : 'Unlock 250 xp',
+                                          onTap: isActive
+                                              ? null
+                                              : isUnlocked
                                               ? () => themesController
-                                                    .selectCompanion(index)
-                                              : null,
+                                                    .activateCompanionAtIndex(
+                                                      index,
+                                                    )
+                                              : () => themesController
+                                                    .unlockCompanionAtIndex(
+                                                      index,
+                                                    ),
                                         ),
                                         if (index <
                                             themesController.companions.length -
