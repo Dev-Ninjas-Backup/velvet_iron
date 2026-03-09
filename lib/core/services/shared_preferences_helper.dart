@@ -23,6 +23,7 @@ class SharedPreferencesHelper {
   static const String _refreshTokenKey = 'refresh_token';
   static const String _rememberMeKey = 'rememberMe';
   static const String _activeThemeIdKey = 'activeThemeId';
+  static const String _lastDailyLoginTimestampKey = 'lastDailyLoginTimestamp';
 
   static Future<void> saveTokenAndRole(
     String token,
@@ -134,7 +135,16 @@ class SharedPreferencesHelper {
 
   static Future<void> clearAll() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Save the daily login timestamp before clearing
+    final lastDailyLoginTimestamp = prefs.getString(_lastDailyLoginTimestampKey);
+    
+    // Clear all data
     await prefs.clear();
+    
+    // Restore the daily login timestamp (24-hour cooldown persists across logout/login)
+    if (lastDailyLoginTimestamp != null) {
+      await prefs.setString(_lastDailyLoginTimestampKey, lastDailyLoginTimestamp);
+    }
   }
 
   // Theme persistence methods
@@ -146,5 +156,19 @@ class SharedPreferencesHelper {
   static Future<String?> getActiveThemeId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(_activeThemeIdKey);
+  }
+
+  // Daily login timestamp methods
+  static Future<void> saveLastDailyLoginTimestamp(DateTime timestamp) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      _lastDailyLoginTimestampKey,
+      timestamp.toIso8601String(),
+    );
+  }
+
+  static Future<String?> getLastDailyLoginTimestamp() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_lastDailyLoginTimestampKey);
   }
 }
