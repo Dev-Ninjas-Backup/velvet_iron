@@ -13,6 +13,7 @@ class SettingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.delete<SettingsController>();
     Get.put(SettingsController());
 
     return GetBuilder<AppThemeController>(
@@ -56,9 +57,7 @@ class SettingScreen extends StatelessWidget {
                             const SizedBox(height: 20),
                             const UpcomingLogWidget(),
                             const SizedBox(height: 20),
-                            const WeightProgress(
-                              title: 'Weekly Activity',
-                            ),
+                            const WeightProgress(title: 'Weekly Activity'),
                             const SizedBox(height: 20),
                             const GeneralSettingsWidget(),
                             const SizedBox(height: 22),
