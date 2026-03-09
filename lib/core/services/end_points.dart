@@ -47,4 +47,5 @@ class Urls {
   static const String addXP = '$baseUrl/profile/add-xp/log';
   static const String homeScreen = '$baseUrl/profile';
   static const String onboardingStatus = '$baseUrl/onboarding';
+  static const String dailyLogsXP = '$baseUrl/profile/daily-login';
 }

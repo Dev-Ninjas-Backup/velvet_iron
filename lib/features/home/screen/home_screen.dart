@@ -5,6 +5,8 @@ import 'package:velvet_iron/features/home/controller/home_controller.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/home/widgets/mood_selector.dart';
 import 'package:velvet_iron/features/home/widgets/todo_list.dart';
+import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
+import 'package:velvet_iron/features/home/widgets/popup_dialogue.dart';
 import '../widgets/header_section.dart';
 import '../widgets/welcome_card.dart';
 import '../widgets/weight_progress.dart';
@@ -69,8 +71,81 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class HomeScreenContent extends StatelessWidget {
+class HomeScreenContent extends StatefulWidget {
   const HomeScreenContent({super.key});
+
+  @override
+  State<HomeScreenContent> createState() => _HomeScreenContentState();
+}
+
+class _HomeScreenContentState extends State<HomeScreenContent> {
+  bool _popupShown = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _showDailyRewardsPopup();
+  }
+
+  /// Check if 24 hours have passed since last daily login XP collection
+  Future<bool> _can24HoursPassed() async {
+    final lastLoginTimestamp =
+        await SharedPreferencesHelper.getLastDailyLoginTimestamp();
+
+    if (lastLoginTimestamp == null) {
+      // First time collecting daily XP
+      return true;
+    }
+
+    try {
+      final lastLoginTime = DateTime.parse(lastLoginTimestamp);
+      final now = DateTime.now();
+      final difference = now.difference(lastLoginTime);
+
+      // Check if 24 hours (86400 seconds) have passed
+      return difference.inHours >= 24;
+    } catch (e) {
+      debugPrint('Error parsing last login timestamp: $e');
+      // If there's an error, allow showing popup
+      return true;
+    }
+  }
+
+  Future<void> _showDailyRewardsPopup() async {
+    // Only show the popup once per screen load
+    if (_popupShown) return;
+
+    // Small delay to let the screen render first
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    if (!mounted) return;
+
+    // Check if 24 hours have passed since last collection
+    final canShowPopup = await _can24HoursPassed();
+
+    if (!canShowPopup) {
+      debugPrint('Daily XP popup already collected within 24 hours');
+      return;
+    }
+
+    final accessToken = await SharedPreferencesHelper.getAccessToken();
+    final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+
+    if (accessToken != null && refreshToken != null && mounted) {
+      _popupShown = true;
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => PopUpDialogue(
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          onCollectRewards: () {
+            // Called on successful XP collection
+            debugPrint('Daily rewards collected successfully');
+          },
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
