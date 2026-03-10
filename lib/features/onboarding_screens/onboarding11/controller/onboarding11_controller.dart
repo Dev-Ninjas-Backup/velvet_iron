@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding11/service/onboarding11_service.dart';
@@ -19,6 +21,10 @@ class OnboardingController11 extends GetxController {
 
   final Onboarding11Service _service = Onboarding11Service();
 
+  // Store companion data for the popup
+  final Rx<String?> activeCompanionImage = Rx<String?>(null);
+  final Rx<String?> activeCompanionName = Rx<String?>(null);
+
   void selectSection(int index) {
     selectedSection.value = index;
   }
@@ -38,6 +44,19 @@ class OnboardingController11 extends GetxController {
 
   void selectBilling(BillingType type) {
     selectedBilling.value = type;
+  }
+
+  /// Fetch active companion before showing popup
+  Future<void> fetchActiveCompanion() async {
+    try {
+      final companionData = await _service.fetchActiveCompanion();
+      if (companionData != null) {
+        activeCompanionImage.value = companionData['imagePath'] as String?;
+        activeCompanionName.value = companionData['name'] as String?;
+      }
+    } catch (e) {
+      print('Error fetching companion: $e');
+    }
   }
 
   Future<void> onContinueSubscription() async {

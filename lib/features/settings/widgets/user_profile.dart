@@ -37,11 +37,14 @@ class UserProfileWidget extends StatelessWidget {
                           color: Color(0xFF2A0F0F),
                         ),
                         child: ClipOval(
-                          child: Image.asset(
-                            IconPath.serkelProfile,
-                            height: 60,
-                            width: 60,
-                            fit: BoxFit.cover,
+                          child: Obx(
+                            () => Image.asset(
+                              controller.activeCompanionImage.value ??
+                                  IconPath.serkelProfile,
+                              height: 60,
+                              width: 60,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
@@ -112,11 +115,14 @@ class UserProfileWidget extends StatelessWidget {
                         color: Color(0xFF2A0F0F),
                       ),
                       child: ClipOval(
-                        child: Image.asset(
-                          IconPath.serkelProfile,
-                          height: 60,
-                          width: 60,
-                          fit: BoxFit.cover,
+                        child: Obx(
+                          () => Image.asset(
+                            controller.activeCompanionImage.value ??
+                                IconPath.serkelProfile,
+                            height: 60,
+                            width: 60,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),

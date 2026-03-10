@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
-import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/profile/controller/profile_controller.dart';
 import 'package:velvet_iron/features/themes_and_preference/controller/themes_controller.dart';
 import 'package:velvet_iron/features/themes_and_preference/widgets/select_companion.dart';

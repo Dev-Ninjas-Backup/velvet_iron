@@ -1,150 +1,54 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
-import 'package:http/http.dart' as http;
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
-import 'package:velvet_iron/core/services/end_points.dart';
-import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 
-// ─── Constants ───────────────────────────────────────────────────────────────
-const int dailyLoginXpAmount = 25;
-
-// ─── XP Service (inline) ────────────────────────────────────────────────────
-
-class _XpService {
-  static Future<Map<String, dynamic>> addDailyRewardXP({
-    required String accessToken,
-    required String refreshToken,
-  }) async {
-    const String dailyLoginXP = Urls.dailyLogsXP;
-    try {
-      final response = await http.post(
-        Uri.parse(dailyLoginXP),
-        headers: {
-          'accept': '*/*',
-          'Authorization': 'Bearer $accessToken',
-          'x-refresh-token': refreshToken,
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({'xp': dailyLoginXpAmount}),
-      );
-
-      debugPrint('Daily Login XP Response Status: ${response.statusCode}');
-      debugPrint('Daily Login XP Response Body: ${response.body}');
-
-      Map<String, dynamic> decoded = {};
-      String backendMessage = '';
-      Map<String, dynamic>? profileData;
-
-      try {
-        decoded = jsonDecode(response.body) as Map<String, dynamic>;
-        backendMessage = decoded['message'] as String? ?? '';
-
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          profileData =
-              decoded['logEntry']?['profile'] as Map<String, dynamic>?;
-        }
-      } catch (e) {
-        debugPrint('Failed to parse response: $e');
-      }
-
-      final isSuccess =
-          response.statusCode == 200 || response.statusCode == 201;
-
-      return {
-        'success': isSuccess,
-        'statusCode': response.statusCode,
-        'body': response.body,
-        'profile': profileData,
-        'message': backendMessage,
-      };
-    } catch (e) {
-      debugPrint('XP Service Error: $e');
-      return {
-        'success': false,
-        'statusCode': -1,
-        'body': 'Error: $e',
-        'message': 'Network error occurred',
-      };
-    }
-  }
-}
-
-// ─── PopUpDialogue ───────────────────────────────────────────────────────────
-
-class PopUpDialogue extends StatefulWidget {
+class SubscriptionCompletionPopup extends StatefulWidget {
   final VoidCallback? onCollectRewards;
-  final String accessToken;
-  final String refreshToken;
   final String? selectedCompanionName;
   final String? selectedCompanionImage;
 
-  const PopUpDialogue({
+  const SubscriptionCompletionPopup({
     super.key,
     this.onCollectRewards,
-    required this.accessToken,
-    required this.refreshToken,
     this.selectedCompanionName,
     this.selectedCompanionImage,
   });
 
   @override
-  State<PopUpDialogue> createState() => _PopUpDialogueState();
+  State<SubscriptionCompletionPopup> createState() =>
+      _SubscriptionCompletionPopupState();
 }
 
-class _PopUpDialogueState extends State<PopUpDialogue> {
+class _SubscriptionCompletionPopupState
+    extends State<SubscriptionCompletionPopup> {
   bool _isLoading = false;
 
   Future<void> _handleCollectRewards() async {
     if (_isLoading) return;
     setState(() => _isLoading = true);
 
-    final response = await _XpService.addDailyRewardXP(
-      accessToken: widget.accessToken,
-      refreshToken: widget.refreshToken,
-    );
+    try {
+      await Future.delayed(const Duration(milliseconds: 500));
 
-    if (!mounted) return;
-    setState(() => _isLoading = false);
-
-    final isSuccess = response['success'] as bool;
-    final backendMessage = response['message'] as String? ?? '';
-
-    if (isSuccess) {
-      debugPrint('✓ XP successfully collected!');
-
-      // Save the current timestamp for 24-hour cooldown
-      await SharedPreferencesHelper.saveLastDailyLoginTimestamp(DateTime.now());
+      if (!mounted) return;
+      setState(() => _isLoading = false);
 
       widget.onCollectRewards?.call();
-
-      // Show success toast with backend message or default message
-      final message = backendMessage.isNotEmpty
-          ? backendMessage
-          : '✓ You earned $dailyLoginXpAmount XP!';
-
-      EasyLoading.showSuccess(message, duration: const Duration(seconds: 3));
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           Navigator.of(context, rootNavigator: true).pop();
         }
       });
-    } else {
-      debugPrint(
-        '✗ Failed to collect XP. Status: ${response['statusCode']}, Body: ${response['body']}',
-      );
-
-      // Show backend error message or generic error
-      final errorMessage = backendMessage.isNotEmpty
-          ? backendMessage
-          : 'Failed to collect rewards. Status: ${response['statusCode']}';
-
-      EasyLoading.showError(errorMessage);
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+      EasyLoading.showError('Something went wrong. Please try again.');
     }
   }
 
@@ -213,34 +117,37 @@ class _PopUpDialogueState extends State<PopUpDialogue> {
                       // Diamond icon
                       Image.asset(
                         themeController.activeTheme.id == 'adventurer'
-                            ? ImagePath.diamondAdventurer
+                            ? ImagePath.congratulations
                             : themeController.activeTheme.id == 'mage'
-                            ? ImagePath.diamondMage
+                            ? ImagePath.congratulations
                             : themeController.activeTheme.id == 'gamer'
-                            ? ImagePath.diamondGamer
-                            : ImagePath.diamondReader,
+                            ? ImagePath.congratulations
+                            : ImagePath.congratulations,
                         width: 60,
                         height: 50,
                         fit: BoxFit.contain,
                       ),
                       SizedBox(height: h(16)),
 
+                      // Header
                       Text(
-                        'DAILY REWARDS',
+                        'Congratulations!',
                         style: getTextStyle(fontSize: 20, color: Colors.white),
                       ),
                       const SizedBox(height: 4),
 
+                      // Subtitle
                       Text(
-                        '"Discipline is the blade - sharpen it daily."',
+                        '"Your subscription is activated and will expire at Sept 15,2025. You can renew or cancel anytime from your profile settings ."',
                         style: getTextStyle(
-                          fontSize: 9,
+                          fontSize: 12,
                           color: Colors.white.withValues(alpha: .85),
                         ),
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: h(8)),
 
+                      // XP Box
                       Center(
                         child: ConstrainedBox(
                           constraints: BoxConstraints(maxWidth: w(220)),
@@ -253,20 +160,11 @@ class _PopUpDialogueState extends State<PopUpDialogue> {
                                   .withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Text(
-                              '+$dailyLoginXpAmount XP',
-                              style: getTextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
                           ),
                         ),
                       ),
                       SizedBox(height: h(10)),
 
-                      // Collect Rewards button
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: w(6)),
                         child: _isLoading
@@ -274,7 +172,7 @@ class _PopUpDialogueState extends State<PopUpDialogue> {
                                 color: Colors.white,
                               )
                             : CustomButton(
-                                label: 'Collect Rewards',
+                                label: 'Finish & Claim ( 25XP)',
                                 onPressed: _handleCollectRewards,
                               ),
                       ),

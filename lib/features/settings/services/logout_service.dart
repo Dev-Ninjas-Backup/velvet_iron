@@ -7,8 +7,6 @@ import 'package:velvet_iron/core/models/response_data.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/home/models/home_screen_model.dart';
-import 'package:velvet_iron/features/settings/model/settings_model.dart'
-    hide UserProfile;
 
 class SettingsService {
   static const String baseUrl = Urls.baseUrl;

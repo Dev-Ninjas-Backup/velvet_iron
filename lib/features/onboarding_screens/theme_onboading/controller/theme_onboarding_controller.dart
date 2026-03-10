@@ -66,11 +66,9 @@ class ThemeOnboardingController extends GetxController {
           result['message'] ?? 'Theme unlocked and activated!',
         );
         //-----------------------
-        // Extract themeId from unlock response and activate it
         try {
           final appThemeController = Get.find<AppThemeController>();
 
-          // Get the theme name from the themesList using the themeId
           final selectedThemeModel = themesList.firstWhere(
             (theme) => theme.id == themeId,
             orElse: () => themesList[index],
@@ -79,7 +77,6 @@ class ThemeOnboardingController extends GetxController {
           print('Selected theme name: ${selectedThemeModel.name}');
           print('Selected theme ID: ${selectedThemeModel.id}');
 
-          // Find the matching AppThemeModel by name (since backend and app use different IDs)
           final themeIndex = appThemeController.themes.indexWhere(
             (t) =>
                 t.name.toLowerCase() == selectedThemeModel.name.toLowerCase(),
@@ -88,7 +85,6 @@ class ThemeOnboardingController extends GetxController {
           if (themeIndex != -1) {
             appThemeController.selectTheme(themeIndex);
 
-            // Save theme ID to local storage for persistence
             await SharedPreferencesHelper.saveActiveThemeId(themeId);
 
             print(

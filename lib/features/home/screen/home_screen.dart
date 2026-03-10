@@ -133,15 +133,19 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
 
     if (accessToken != null && refreshToken != null && mounted) {
       _popupShown = true;
+      final homeController = Get.find<HomeController>();
       showDialog(
         context: context,
-        builder: (BuildContext context) => PopUpDialogue(
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-          onCollectRewards: () {
-            // Called on successful XP collection
-            debugPrint('Daily rewards collected successfully');
-          },
+        builder: (BuildContext context) => Obx(
+          () => PopUpDialogue(
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+            selectedCompanionImage: homeController.activeCompanionImage.value,
+            onCollectRewards: () {
+              // Called on successful XP collection
+              debugPrint('Daily rewards collected successfully');
+            },
+          ),
         ),
       );
     }
