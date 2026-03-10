@@ -123,11 +123,11 @@ class _SubscriptionCompletionPopupState
                             : themeController.activeTheme.id == 'gamer'
                             ? ImagePath.congratulations
                             : ImagePath.congratulations,
-                        width: 60,
-                        height: 50,
+                        width: 85,
+                        height: 85,
                         fit: BoxFit.contain,
                       ),
-                      SizedBox(height: h(16)),
+                      SizedBox(height: h(5)),
 
                       // Header
                       Text(
