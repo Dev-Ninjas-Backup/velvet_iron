@@ -1,25 +1,26 @@
+// ignore_for_file: avoid_print
+
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
+import 'package:velvet_iron/core/services/end_points.dart';
+import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
+import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/settings/services/logout_service.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
 class SettingsController extends GetxController {
   final _profileService = UserProfileService();
 
-  // JSON: "userName"
   final userName = ''.obs;
-  // JSON: "level"
   final nextLevel = 2.obs;
-  // JSON: "levelStatus" → "Unbound"
   final levelStatus = 'test'.obs;
-  // JSON: "nextLevel.xpRequired" → 550
   final xpRequired = 0.obs;
-  // JSON: "totalEarnXp" → 100  (used as progress numerator)
   final totalEarnXp = 0.obs;
-  // JSON: "balanceXp" → 100  (wallet balance)
   final currentXP = 0.obs;
 
   final upcomingLog = 'Breakfast'.obs;
@@ -27,6 +28,10 @@ class SettingsController extends GetxController {
   final upcomingLogTime = 'Wed - 8:30 AM'.obs;
   final appVersion = 'v1.0'.obs;
   final isLoadingProfile = false.obs;
+
+  // Active companion image
+  final activeCompanionImage = Rx<String?>(null);
+  final activeCompanionName = Rx<String?>(null);
 
   // Progress bar uses totalEarnXp / xpRequired
   String get progressText => 'Progress to level ${nextLevel.value}';
@@ -38,6 +43,7 @@ class SettingsController extends GetxController {
   void onInit() {
     super.onInit();
     fetchUserProfile();
+    fetchActiveCompanion();
   }
 
   Future<void> fetchUserProfile() async {
@@ -53,6 +59,70 @@ class SettingsController extends GetxController {
       xpRequired.value = p.nextLevel.xpRequired;
       totalEarnXp.value = p.totalEarnXp;
       currentXP.value = p.balanceXp;
+    }
+  }
+
+  /// Fetch active companion from API
+  Future<void> fetchActiveCompanion() async {
+    try {
+      final token = await SharedPreferencesHelper.getAccessToken();
+      final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+
+      if (token == null ||
+          token.isEmpty ||
+          refreshToken == null ||
+          refreshToken.isEmpty) {
+        print('ERROR: Token or Refresh Token is null or empty!');
+        return;
+      }
+
+      final response = await http.get(
+        Uri.parse(Urls.getCompanions),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'x-refresh-token': refreshToken,
+          'Content-Type': 'application/json',
+        },
+      );
+
+      print('COMPANIONS Response Status: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        final List companions = data['companions'] ?? [];
+
+        // Find the active companion
+        for (var companion in companions) {
+          if (companion['isAcitve'] == true) {
+            final name = companion['name'] ?? '';
+            final imagePath = _getCompanionImagePath(name);
+            activeCompanionImage.value = imagePath;
+            activeCompanionName.value = name;
+            print('Active Companion: $name -> $imagePath');
+            break;
+          }
+        }
+      } else {
+        print('ERROR: Failed to fetch companions. ${response.body}');
+      }
+    } catch (e) {
+      print('EXCEPTION: $e');
+    }
+  }
+
+  /// Map companion name to image path
+  static String _getCompanionImagePath(String name) {
+    switch (name) {
+      case 'Ser Kael Thornwatch':
+        return ImagePath.serKael;
+      case 'Riven Ashcroft':
+        return ImagePath.rvenAshcroft;
+      case 'Pyraxis':
+        return ImagePath.pyraxis;
+      case 'Bram Ironledger':
+        return ImagePath.bramIronledger;
+      default:
+        return ImagePath.serKael;
     }
   }
 

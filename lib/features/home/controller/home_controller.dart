@@ -19,6 +19,10 @@ class HomeController extends GetxController {
   // ── Todo filter: 'Today' | 'Weekly' | 'Monthly' ──────────────
   final selectedTodoFilter = 'Today'.obs;
 
+  // Active companion image
+  final activeCompanionImage = Rx<String?>(null);
+  final activeCompanionName = Rx<String?>(null);
+
   // ── Convenience getters ──────────────────────────────────────
 
   String get userName => userProfile.value?.userName ?? '';
@@ -69,6 +73,7 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     fetchData();
+    fetchActiveCompanion();
   }
 
   // ── Data fetching ────────────────────────────────────────────
@@ -114,6 +119,22 @@ class HomeController extends GetxController {
     } finally {
       isLoading(false);
       print('[HomeController] fetchData() completed');
+    }
+  }
+
+  /// Fetch active companion from API
+  Future<void> fetchActiveCompanion() async {
+    try {
+      final companionData = await HomeService().fetchActiveCompanion();
+      if (companionData != null) {
+        activeCompanionImage.value = companionData['imagePath'] as String?;
+        activeCompanionName.value = companionData['name'] as String?;
+        print(
+          '[HomeController] Active Companion: ${activeCompanionName.value} → ${activeCompanionImage.value}',
+        );
+      }
+    } catch (e) {
+      print('[HomeController] Error fetching companion: $e');
     }
   }
 

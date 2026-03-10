@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/app_theme/model/app_theme_model.dart';
-import 'package:velvet_iron/features/onboarding_screens/theme_onboading/model/theme_onboarding_model.dart';
 import 'package:velvet_iron/features/onboarding_screens/theme_onboading/service/theme_onboarding_service.dart';
 
 class AppThemeController extends GetxController {
