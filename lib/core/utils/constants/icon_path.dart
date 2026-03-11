@@ -159,4 +159,6 @@ class IconPath {
   static const String eyeMage = 'assets/icons/eye_mage.png';
   static const String eyeGamer = 'assets/icons/eye_gamer.png';
   static const String eyeReader = 'assets/icons/eye_reader.png';
+
+  static const String exclametory = 'assets/icons/exclametory.png';
 }
