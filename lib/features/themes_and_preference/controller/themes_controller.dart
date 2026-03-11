@@ -367,9 +367,9 @@ class ThemesController extends GetxController {
         await _loadCompanionsFromApi();
       } else {
         EasyLoading.showError(
-          'Reach Lv 10 to unlock your 2nd companion!\n'
-          'Reach Lv 20 to unlock your 3rd companion!\n'
-          'Reach Lv 30 to unlock the final companion!',
+          'Reach Lv 12 to unlock your 2nd companion!\n'
+          'Reach Lv 22 to unlock your 3rd companion!\n'
+          'Reach Lv 32 to unlock the final companion!',
         );
       }
     } catch (e) {
