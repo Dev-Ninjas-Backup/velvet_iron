@@ -1,3 +1,4 @@
+import 'package:velvet_iron/features/medication_screen/widgets/medication_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
@@ -28,9 +29,36 @@ class TokenContentMedication extends StatelessWidget {
             const SizedBox(height: 10),
             DoseNameTextField(),
             SizedBox(height: 16),
-            Text(
-              "Medicine Type:",
-              style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(
+                    "Medicine Type:",
+                    style: getTextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const MedicationPopup(),
+                    );
+                  },
+                  child: Image.asset(
+                    IconPath.exclametory,
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 13),
             CustomDropdown(iconPath: IconPath.todo2),
