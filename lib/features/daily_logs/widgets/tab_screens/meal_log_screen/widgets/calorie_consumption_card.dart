@@ -32,6 +32,10 @@ class CalorieConsumptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Initialize controller if not already registered
+    if (!Get.isRegistered<MealLogController>()) {
+      Get.put(MealLogController());
+    }
     final mealController = Get.find<MealLogController>();
 
     return GetBuilder<AppThemeController>(
