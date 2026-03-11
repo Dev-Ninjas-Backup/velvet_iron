@@ -300,7 +300,11 @@ class ThemesController extends GetxController {
         // Refresh themes from API to get updated state
         await _loadThemesFromApi();
       } else {
-        EasyLoading.showError(result['message'] ?? 'Failed to unlock theme');
+        EasyLoading.showError(
+          'Reach Lv 10 to unlock your 2nd theme!\n'
+          'Reach Lv 20 to unlock your 3rd theme!\n'
+          'Reach Lv 30 to unlock the final theme!',
+        );
       }
     } catch (e) {
       EasyLoading.showError('Failed to unlock theme');
@@ -363,7 +367,9 @@ class ThemesController extends GetxController {
         await _loadCompanionsFromApi();
       } else {
         EasyLoading.showError(
-          result['message'] ?? 'Failed to unlock companion',
+          'Reach Lv 10 to unlock your 2nd companion!\n'
+          'Reach Lv 20 to unlock your 3rd companion!\n'
+          'Reach Lv 30 to unlock the final companion!',
         );
       }
     } catch (e) {

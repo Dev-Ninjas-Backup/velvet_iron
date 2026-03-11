@@ -229,12 +229,6 @@ class OtpController extends GetxController {
 
   @override
   void onClose() {
-    for (var controller in otpControllers) {
-      controller.dispose();
-    }
-    for (var focusNode in focusNodes) {
-      focusNode.dispose();
-    }
     _countdownTimer?.cancel();
     super.onClose();
   }

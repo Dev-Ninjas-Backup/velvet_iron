@@ -14,6 +14,7 @@ class ThemeOnboardingController extends GetxController {
   final xpPoints = 10.obs;
 
   final selectedThemeIndex = (-1).obs;
+  final selectedThemeId = ''.obs;
 
   var isLoading = true.obs;
   var themesList = <ThemeModel>[].obs;
@@ -43,61 +44,66 @@ class ThemeOnboardingController extends GetxController {
 
   void selectTheme(int index) {
     selectedThemeIndex.value = index;
+    if (index >= 0 && index < themesList.length) {
+      selectedThemeId.value = themesList[index].id;
+    }
 
     final globalTheme = Get.find<AppThemeController>();
-
     globalTheme.selectTheme(index);
+  }
+
+  void selectThemeById(String themeId) {
+    selectedThemeId.value = themeId;
+    // Find the corresponding theme by ID in API response
+    final apiTheme = themesList.firstWhereOrNull((t) => t.id == themeId);
+
+    if (apiTheme != null) {
+      // Find the index in themesList
+      final themeIndex = themesList.indexOf(apiTheme);
+      if (themeIndex != -1) {
+        selectedThemeIndex.value = themeIndex;
+      }
+      // Select in AppThemeController by theme name
+      final globalTheme = Get.find<AppThemeController>();
+      globalTheme.selectThemeByName(apiTheme.name);
+    }
   }
 
   Future<void> onContinuePressed() async {
     try {
       EasyLoading.show(status: 'Saving Choice');
 
-      final index = selectedThemeIndex.value;
-      if (index < 0 || index >= themesList.length) {
+      final themeId = selectedThemeId.value;
+      if (themeId.isEmpty) {
         EasyLoading.showError('Please select a theme');
         return;
       }
-      final themeId = themesList[index].id;
       final result = await _service.unlockTheme(themeId);
 
       if (result['success'] == true) {
         EasyLoading.showSuccess(
           result['message'] ?? 'Theme unlocked and activated!',
         );
-        //-----------------------
         try {
+          // Find theme name from API response
+          final selectedTheme = themesList.firstWhere(
+            (t) => t.id == themeId,
+            orElse: () => themesList.first,
+          );
+
           final appThemeController = Get.find<AppThemeController>();
+          // Select by theme name
+          appThemeController.selectThemeByName(selectedTheme.name);
 
-          final selectedThemeModel = themesList.firstWhere(
-            (theme) => theme.id == themeId,
-            orElse: () => themesList[index],
-          );
+          // Save both the UUID and the theme name for recovery
+          await SharedPreferencesHelper.saveActiveThemeId(themeId);
+          await SharedPreferencesHelper.saveActiveThemeName(selectedTheme.name);
 
-          print('Selected theme name: ${selectedThemeModel.name}');
-          print('Selected theme ID: ${selectedThemeModel.id}');
-
-          final themeIndex = appThemeController.themes.indexWhere(
-            (t) =>
-                t.name.toLowerCase() == selectedThemeModel.name.toLowerCase(),
-          );
-
-          if (themeIndex != -1) {
-            appThemeController.selectTheme(themeIndex);
-
-            await SharedPreferencesHelper.saveActiveThemeId(themeId);
-
-            print(
-              'Theme activated successfully: ${appThemeController.themes[themeIndex].name} at index: $themeIndex',
-            );
-          } else {
-            print('Theme "${selectedThemeModel.name}" not found in app themes');
-          }
+          print('Theme activated: ${selectedTheme.name}');
         } catch (e) {
           print('Error activating theme: $e');
         }
 
-        ///--------------
         Get.toNamed(AppRoute.getonboadingScreen1());
       } else {
         EasyLoading.showError(result['message'] ?? 'Failed to unlock theme.');

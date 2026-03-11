@@ -25,19 +25,23 @@ class ThemesListWidget extends StatelessWidget {
 
           return ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 24),
-            itemCount: themeController.themes.length,
+            itemCount: onboardingController.themesList.length,
             itemBuilder: (context, index) {
-              final theme = themeController.themes[index];
-              final isSelected = themeController.isThemeSelected(index);
+              final apiTheme = onboardingController.themesList[index];
+              final appTheme = themeController.themes.firstWhere(
+                (t) => t.name.toLowerCase() == apiTheme.name.toLowerCase(),
+                orElse: () => themeController.themes[0],
+              );
+              final isSelected = appTheme == themeController.activeTheme;
               final isOnboardingSelected =
-                  onboardingController.selectedThemeIndex.value == index;
+                  onboardingController.selectedThemeId.value == apiTheme.id;
 
               return Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: Themes(
-                  title: theme.name,
+                  title: apiTheme.name,
                   badgeText: isSelected ? 'Active Now' : '',
-                  gradientColors: _getThemeGradient(theme.id),
+                  gradientColors: _getThemeGradient(appTheme.id),
                   icon: isOnboardingSelected
                       ? const Icon(
                           Icons.radio_button_checked,
@@ -54,8 +58,10 @@ class ThemesListWidget extends StatelessWidget {
                       : Colors.white.withValues(alpha: .3),
                   isSelected: isSelected,
                   onTap: () {
-                    themeController.selectTheme(index);
-                    onboardingController.selectTheme(index);
+                    themeController.selectTheme(
+                      themeController.themes.indexOf(appTheme),
+                    );
+                    onboardingController.selectThemeById(apiTheme.id);
                   },
                 ),
               );

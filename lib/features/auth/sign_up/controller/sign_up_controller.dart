@@ -114,7 +114,7 @@ class SignUpController extends GetxController {
         EasyLoading.showSuccess(message);
 
         // Navigate to OTP screen
-        
+
         print('Navigating to OTP screen...');
         print('Previous Page: SignUpScreen');
         print('Email: ${userData.email}');
@@ -143,10 +143,6 @@ class SignUpController extends GetxController {
 
   @override
   void onClose() {
-    nameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
     super.onClose();
   }
 }
