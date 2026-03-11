@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
+import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/auth/login/validation/login_validation.dart';
 import 'package:velvet_iron/features/auth/services/auth_service.dart';
 import 'package:velvet_iron/features/auth/services/onboarding_status_service.dart';
@@ -199,6 +200,15 @@ class LoginController extends GetxController {
 
   Future<void> _checkOnboardingAndNavigate() async {
     try {
+      // Reload the theme after login to ensure saved theme is applied
+      try {
+        final appThemeController = Get.find<AppThemeController>();
+        await appThemeController.reloadTheme();
+        print('Theme reloaded after login');
+      } catch (e) {
+        print('Error reloading theme: $e');
+      }
+
       final result = await _onboardingService.getOnboardingStatus();
       final isComplete = result['iscomplete'] ?? false;
 
@@ -310,8 +320,6 @@ class LoginController extends GetxController {
 
   @override
   void onClose() {
-    userIdentifierController.dispose();
-    passwordController.dispose();
     super.onClose();
   }
 }

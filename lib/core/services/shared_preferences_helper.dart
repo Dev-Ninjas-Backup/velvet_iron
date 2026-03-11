@@ -136,14 +136,19 @@ class SharedPreferencesHelper {
   static Future<void> clearAll() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     // Save the daily login timestamp before clearing
-    final lastDailyLoginTimestamp = prefs.getString(_lastDailyLoginTimestampKey);
-    
+    final lastDailyLoginTimestamp = prefs.getString(
+      _lastDailyLoginTimestampKey,
+    );
+
     // Clear all data
     await prefs.clear();
-    
+
     // Restore the daily login timestamp (24-hour cooldown persists across logout/login)
     if (lastDailyLoginTimestamp != null) {
-      await prefs.setString(_lastDailyLoginTimestampKey, lastDailyLoginTimestamp);
+      await prefs.setString(
+        _lastDailyLoginTimestampKey,
+        lastDailyLoginTimestamp,
+      );
     }
   }
 
@@ -156,6 +161,16 @@ class SharedPreferencesHelper {
   static Future<String?> getActiveThemeId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(_activeThemeIdKey);
+  }
+
+  static Future<void> saveActiveThemeName(String themeName) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('${_activeThemeIdKey}_name', themeName);
+  }
+
+  static Future<String?> getActiveThemeName() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('${_activeThemeIdKey}_name');
   }
 
   // Daily login timestamp methods
