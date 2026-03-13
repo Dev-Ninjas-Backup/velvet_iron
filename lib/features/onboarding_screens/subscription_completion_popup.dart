@@ -131,7 +131,7 @@ class _SubscriptionCompletionPopupState
 
                       // Header
                       Text(
-                        '!',
+                        'Congratulations!',
                         style: getTextStyle(fontSize: 20, color: Colors.white),
                       ),
                       const SizedBox(height: 4),
