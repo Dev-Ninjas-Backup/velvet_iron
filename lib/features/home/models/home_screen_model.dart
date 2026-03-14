@@ -191,12 +191,14 @@ class TodayMood {
   });
 
   factory TodayMood.fromJson(Map<String, dynamic> json) => TodayMood(
-    id: json['id'] as String,
-    mood: json['mood'] as String,
-    energyLevel: json['energyLevel'] as String,
-    hungerLevel: json['hungerLevel'] as String,
+    id: (json['id'] ?? '') as String,
+    mood: (json['mood'] ?? '') as String,
+    energyLevel: (json['energyLevel'] ?? '') as String,
+    hungerLevel: (json['hungerLevel'] ?? '') as String,
     note: json['note'] as String?,
-    loggedAt: DateTime.parse(json['loggedAt'] as String),
+    loggedAt: json['loggedAt'] != null
+        ? DateTime.parse(json['loggedAt'] as String)
+        : DateTime.now(),
   );
 
   Map<String, dynamic> toJson() => {
@@ -218,7 +220,7 @@ class UserInfo {
   const UserInfo({required this.name, required this.userProfile});
 
   factory UserInfo.fromJson(Map<String, dynamic> json) => UserInfo(
-    name: json['name'] as String,
+    name: (json['name'] ?? 'User') as String,
     userProfile: UserProfileXp.fromJson(
       json['userProfile'] as Map<String, dynamic>,
     ),
@@ -236,7 +238,7 @@ class UserProfileXp {
   const UserProfileXp({required this.balanceXp});
 
   factory UserProfileXp.fromJson(Map<String, dynamic> json) =>
-      UserProfileXp(balanceXp: json['balanceXp'] as int);
+      UserProfileXp(balanceXp: (json['balanceXp'] ?? 0) as int);
 
   Map<String, dynamic> toJson() => {'balanceXp': balanceXp};
 }
@@ -273,12 +275,14 @@ class ThemeInfo {
   });
 
   factory ThemeInfo.fromJson(Map<String, dynamic> json) => ThemeInfo(
-    id: json['id'] as String,
-    name: json['name'] as String,
-    tagline: json['tagline'] as String,
-    description: json['description'] as String,
-    unlockXp: json['unlockXp'] as int,
-    createdAt: DateTime.parse(json['createdAt'] as String),
+    id: (json['id'] ?? '') as String,
+    name: (json['name'] ?? '') as String,
+    tagline: (json['tagline'] ?? '') as String,
+    description: (json['description'] ?? '') as String,
+    unlockXp: (json['unlockXp'] ?? 0) as int,
+    createdAt: json['createdAt'] != null
+        ? DateTime.parse(json['createdAt'] as String)
+        : DateTime.now(),
   );
 
   Map<String, dynamic> toJson() => {
@@ -326,12 +330,14 @@ class CompanionInfo {
   });
 
   factory CompanionInfo.fromJson(Map<String, dynamic> json) => CompanionInfo(
-    id: json['id'] as String,
-    name: json['name'] as String,
-    title: json['title'] as String,
-    quote: json['quote'] as String,
-    unlockXp: json['unlockXp'] as int,
-    createdAt: DateTime.parse(json['createdAt'] as String),
+    id: (json['id'] ?? '') as String,
+    name: (json['name'] ?? '') as String,
+    title: (json['title'] ?? '') as String,
+    quote: (json['quote'] ?? '') as String,
+    unlockXp: (json['unlockXp'] ?? 0) as int,
+    createdAt: json['createdAt'] != null
+        ? DateTime.parse(json['createdAt'] as String)
+        : DateTime.now(),
   );
 
   Map<String, dynamic> toJson() => {
@@ -393,12 +399,14 @@ class XPPeriod {
   });
 
   factory XPPeriod.fromJson(Map<String, dynamic> json) => XPPeriod(
-    period: json['period'] as String,
-    timezone: json['timezone'] as String,
-    data: (json['data'] as List<dynamic>)
-        .map((e) => XPDayData.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    totalXp: json['totalXp'] as int,
+    period: (json['period'] ?? '') as String,
+    timezone: (json['timezone'] ?? '') as String,
+    data:
+        (json['data'] as List<dynamic>?)
+            ?.map((e) => XPDayData.fromJson(e as Map<String, dynamic>))
+            .toList() ??
+        [],
+    totalXp: (json['totalXp'] ?? 0) as int,
   );
 
   Map<String, dynamic> toJson() => {
@@ -425,11 +433,11 @@ class XPDayData {
   });
 
   factory XPDayData.fromJson(Map<String, dynamic> json) => XPDayData(
-    day: json['day'] as String,
-    dateLabel: json['dateLabel'] as String,
-    isoDate: json['isoDate'] as String,
-    xp: json['xp'] as int,
-    logsCount: json['logsCount'] as int,
+    day: (json['day'] ?? '') as String,
+    dateLabel: (json['dateLabel'] ?? '') as String,
+    isoDate: (json['isoDate'] ?? '') as String,
+    xp: (json['xp'] ?? 0) as int,
+    logsCount: (json['logsCount'] ?? 0) as int,
   );
 
   Map<String, dynamic> toJson() => {
@@ -513,16 +521,18 @@ class ScheduleItem {
   });
 
   factory ScheduleItem.fromJson(Map<String, dynamic> json) => ScheduleItem(
-    id: json['id'] as String,
+    id: (json['id'] ?? '') as String,
     type: ScheduleType.values.firstWhere(
-      (e) => e.name == json['type'],
+      (e) => e.name == (json['type'] ?? ''),
       orElse: () => ScheduleType.medication,
     ),
-    title: json['title'] as String,
-    description: json['description'] as String,
-    scheduledAt: json['scheduledAt'] as String,
-    earnedXp: json['earnedXp'] as int,
-    details: ScheduleDetails.fromJson(json['details'] as Map<String, dynamic>),
+    title: (json['title'] ?? '') as String,
+    description: (json['description'] ?? '') as String,
+    scheduledAt: (json['scheduledAt'] ?? '') as String,
+    earnedXp: (json['earnedXp'] ?? 0) as int,
+    details: ScheduleDetails.fromJson(
+      json['details'] as Map<String, dynamic> ?? {},
+    ),
   );
 
   Map<String, dynamic> toJson() => {
@@ -559,8 +569,8 @@ class ScheduleDetails {
 
   factory ScheduleDetails.fromJson(Map<String, dynamic> json) =>
       ScheduleDetails(
-        type: json['type'] as String,
-        isTaken: json['isTaken'] as bool,
+        type: (json['type'] ?? '') as String,
+        isTaken: (json['isTaken'] ?? false) as bool,
         doseMg: json['doseMg'] as int?,
         intensity: json['intensity'] as String?,
         duration: json['duration'] as int?,
