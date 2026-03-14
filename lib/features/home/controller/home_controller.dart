@@ -93,12 +93,13 @@ class HomeController extends GetxController {
   void navigateToMoodLog() {
     try {
       Get.toNamed('/dailyLogScreen');
-      // Set the tab to MoodLog (index 1) after navigation
-      Future.delayed(const Duration(milliseconds: 300), () {
-        final dailyLogController = Get.find<DailyLogController?>();
-        if (dailyLogController != null) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        try {
+          final dailyLogController = Get.find<DailyLogController>();
           dailyLogController.setTab(1);
           print('[HomeController] Navigated to MoodLog tab');
+        } catch (e) {
+          print('[HomeController] Error setting MoodLog tab: $e');
         }
       });
     } catch (e) {
