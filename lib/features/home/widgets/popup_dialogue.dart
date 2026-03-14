@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
@@ -76,14 +76,14 @@ class _XpService {
 
 // ─── PopUpDialogue ───────────────────────────────────────────────────────────
 
-class PopUpDialogue extends StatefulWidget {
+class PopUpDialogue extends StatelessWidget {
   final VoidCallback? onCollectRewards;
   final String accessToken;
   final String refreshToken;
   final String? selectedCompanionName;
   final String? selectedCompanionImage;
 
-  const PopUpDialogue({
+  PopUpDialogue({
     super.key,
     this.onCollectRewards,
     required this.accessToken,
@@ -92,24 +92,18 @@ class PopUpDialogue extends StatefulWidget {
     this.selectedCompanionImage,
   });
 
-  @override
-  State<PopUpDialogue> createState() => _PopUpDialogueState();
-}
+  final RxBool _isLoading = false.obs;
 
-class _PopUpDialogueState extends State<PopUpDialogue> {
-  bool _isLoading = false;
-
-  Future<void> _handleCollectRewards() async {
-    if (_isLoading) return;
-    setState(() => _isLoading = true);
+  Future<void> _handleCollectRewards(BuildContext context) async {
+    if (_isLoading.value) return;
+    _isLoading.value = true;
 
     final response = await _XpService.addDailyRewardXP(
-      accessToken: widget.accessToken,
-      refreshToken: widget.refreshToken,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
     );
 
-    if (!mounted) return;
-    setState(() => _isLoading = false);
+    _isLoading.value = false;
 
     final isSuccess = response['success'] as bool;
     final backendMessage = response['message'] as String? ?? '';
@@ -120,7 +114,7 @@ class _PopUpDialogueState extends State<PopUpDialogue> {
       // Save the current timestamp for 24-hour cooldown
       await SharedPreferencesHelper.saveLastDailyLoginTimestamp(DateTime.now());
 
-      widget.onCollectRewards?.call();
+      onCollectRewards?.call();
 
       // Show success toast with backend message or default message
       final message = backendMessage.isNotEmpty
@@ -130,9 +124,7 @@ class _PopUpDialogueState extends State<PopUpDialogue> {
       EasyLoading.showSuccess(message, duration: const Duration(seconds: 3));
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          Navigator.of(context, rootNavigator: true).pop();
-        }
+        Navigator.of(context, rootNavigator: true).pop();
       });
     } else {
       debugPrint(
@@ -269,14 +261,17 @@ class _PopUpDialogueState extends State<PopUpDialogue> {
                       // Collect Rewards button
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: w(6)),
-                        child: _isLoading
-                            ? const CircularProgressIndicator(
-                                color: Colors.white,
-                              )
-                            : CustomButton(
-                                label: 'Collect Rewards',
-                                onPressed: _handleCollectRewards,
-                              ),
+                        child: Obx(
+                          () => _isLoading.value
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : CustomButton(
+                                  label: 'Collect Rewards',
+                                  onPressed: () =>
+                                      _handleCollectRewards(context),
+                                ),
+                        ),
                       ),
                     ],
                   ),
@@ -304,10 +299,10 @@ class _PopUpDialogueState extends State<PopUpDialogue> {
                       fit: BoxFit.contain,
                     ),
                     // Companion image displayed in the center of topframe
-                    if (widget.selectedCompanionImage != null &&
-                        widget.selectedCompanionImage!.isNotEmpty)
+                    if (selectedCompanionImage != null &&
+                        selectedCompanionImage!.isNotEmpty)
                       Image.asset(
-                        widget.selectedCompanionImage!,
+                        selectedCompanionImage!,
                         width: w(80),
                         height: h(80),
                         fit: BoxFit.contain,

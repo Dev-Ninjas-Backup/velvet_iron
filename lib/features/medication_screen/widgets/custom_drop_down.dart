@@ -4,32 +4,21 @@ import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/medication_screen/controller/medication_controller.dart';
 
-class CustomDropdown extends StatefulWidget {
+class CustomDropdown extends StatelessWidget {
   final String iconPath;
   const CustomDropdown({super.key, required this.iconPath});
 
-  @override
-  State<CustomDropdown> createState() => _CustomDropdownState();
-}
-
-class _CustomDropdownState extends State<CustomDropdown> {
-  @override
-  void dispose() {
-    // Do not dispose controller from Get.find() here, as it is managed globally.
-    super.dispose();
-  }
-
-  final List<String> options = [
+  static const List<String> options = [
     "--",
     "INJECTION",
     "CAPSULE",
     "LIQUID",
     "TABLET",
   ];
-  final MedicationController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    final MedicationController controller = Get.find();
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
         return Obx(

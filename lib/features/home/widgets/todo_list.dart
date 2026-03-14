@@ -7,15 +7,8 @@ import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller
 import 'package:velvet_iron/core/utils/app_theme/model/app_theme_model.dart';
 import 'package:velvet_iron/features/home/models/home_screen_model.dart';
 
-class TodoSection extends StatefulWidget {
+class TodoSection extends StatelessWidget {
   const TodoSection({super.key});
-
-  @override
-  State<TodoSection> createState() => _TodoSectionState();
-}
-
-class _TodoSectionState extends State<TodoSection> {
-  String _selectedFilter = 'Today';
 
   @override
   Widget build(BuildContext context) {
@@ -44,32 +37,34 @@ class _TodoSectionState extends State<TodoSection> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: _selectedFilter,
-                      dropdownColor: activeTheme.cardBackgroundColor,
-                      icon: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Image.asset(
-                          "assets/icons/dropdown.png",
-                          width: 22,
-                          height: 22,
-                          color: Colors.white,
+                    child: Obx(
+                      () => DropdownButton<String>(
+                        value: homeController.selectedTodoFilter.value,
+                        dropdownColor: activeTheme.cardBackgroundColor,
+                        icon: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Image.asset(
+                            "assets/icons/dropdown.png",
+                            width: 22,
+                            height: 22,
+                            color: Colors.white,
+                          ),
                         ),
+                        style: getTextStyle(color: Colors.white),
+                        items: ['Today', 'Weekly', 'Monthly'].map((
+                          String value,
+                        ) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          if (newValue != null) {
+                            homeController.selectedTodoFilter.value = newValue;
+                          }
+                        },
                       ),
-                      style: getTextStyle(color: Colors.white),
-                      items: ['Today', 'Weekly', 'Monthly'].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        if (newValue != null) {
-                          setState(() {
-                            _selectedFilter = newValue;
-                          });
-                        }
-                      },
                     ),
                   ),
                 ),

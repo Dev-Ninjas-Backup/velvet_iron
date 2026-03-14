@@ -1,7 +1,6 @@
 // ignore_for_file: unused_element
 
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
@@ -10,7 +9,7 @@ import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 
-class MedicationPopup extends StatefulWidget {
+class MedicationPopup extends StatelessWidget {
   final VoidCallback? onCollectRewards;
   final String? selectedCompanionName;
   final String? selectedCompanionImage;
@@ -21,38 +20,6 @@ class MedicationPopup extends StatefulWidget {
     this.selectedCompanionName,
     this.selectedCompanionImage,
   });
-
-  @override
-  State<MedicationPopup> createState() => _MedicationPopupState();
-}
-
-class _MedicationPopupState extends State<MedicationPopup> {
-  bool _isLoading = false;
-
-  Future<void> _handleCollectRewards() async {
-    if (_isLoading) return;
-    setState(() => _isLoading = true);
-
-    try {
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      if (!mounted) return;
-      setState(() => _isLoading = false);
-
-      widget.onCollectRewards?.call();
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          Navigator.of(context, rootNavigator: true).pop();
-        }
-      });
-    } catch (e) {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
-      EasyLoading.showError('Something went wrong. Please try again.');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -264,10 +231,10 @@ class _MedicationPopupState extends State<MedicationPopup> {
                       fit: BoxFit.contain,
                     ),
                     // Companion image displayed in the center of topframe
-                    if (widget.selectedCompanionImage != null &&
-                        widget.selectedCompanionImage!.isNotEmpty)
+                    if (selectedCompanionImage != null &&
+                        selectedCompanionImage!.isNotEmpty)
                       Image.asset(
-                        widget.selectedCompanionImage!,
+                        selectedCompanionImage!,
                         width: w(80),
                         height: h(80),
                         fit: BoxFit.contain,

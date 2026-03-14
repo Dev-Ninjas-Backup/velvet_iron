@@ -2,16 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 
-class IntensityAndDuration extends StatefulWidget {
+class IntensityAndDuration extends StatelessWidget {
   const IntensityAndDuration({super.key});
 
-  @override
-  State<IntensityAndDuration> createState() => _IntensityAndDurationState();
-}
-
-class _IntensityAndDurationState extends State<IntensityAndDuration> {
-  String _selectedIntensity = "Moderate";
-  final List<String> _intensities = ["Low", "Moderate", "High"];
+  static final List<String> _intensities = ["Low", "Moderate", "High"];
 
   TextStyle getTextStyle({Color? color}) {
     return TextStyle(
@@ -23,6 +17,7 @@ class _IntensityAndDurationState extends State<IntensityAndDuration> {
 
   @override
   Widget build(BuildContext context) {
+    final RxString selectedIntensity = "Moderate".obs;
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
         return Column(
@@ -51,37 +46,37 @@ class _IntensityAndDurationState extends State<IntensityAndDuration> {
                             width: 1.11,
                           ),
                         ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            value: _selectedIntensity,
-                            isExpanded: true,
-                            icon: const Icon(
-                              Icons.expand_more,
-                              color: Colors.white,
-                              size: 18,
+                        child: Obx(
+                          () => DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: selectedIntensity.value,
+                              isExpanded: true,
+                              icon: const Icon(
+                                Icons.expand_more,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                              dropdownColor: themeController
+                                  .activeTheme
+                                  .todoSubtitleColor
+                                  .withValues(alpha: 0.3),
+                              items: _intensities.map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: getTextStyle(
+                                      color: Colors.white,
+                                    ).copyWith(fontSize: 12),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                if (newValue != null) {
+                                  selectedIntensity.value = newValue;
+                                }
+                              },
                             ),
-                            dropdownColor: themeController
-                                .activeTheme
-                                .todoSubtitleColor
-                                .withValues(alpha: 0.3),
-                            items: _intensities.map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                  style: getTextStyle(
-                                    color: Colors.white,
-                                  ).copyWith(fontSize: 12),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              if (newValue != null) {
-                                setState(() {
-                                  _selectedIntensity = newValue;
-                                });
-                              }
-                            },
                           ),
                         ),
                       ),

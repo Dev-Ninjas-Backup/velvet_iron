@@ -6,15 +6,8 @@ import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/weight_log_screen/controller/weight_log_controller.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/weight_log_screen/model/weight_log_model.dart';
 
-class Graph extends StatefulWidget {
+class Graph extends StatelessWidget {
   const Graph({super.key});
-
-  @override
-  State<Graph> createState() => _GraphState();
-}
-
-class _GraphState extends State<Graph> {
-  String _selectedValue = "this week";
 
   /// Build spots from weekly entries, mapping each entry's date to its
   /// day-of-week index (0=Sun … 6=Sat). Days without data are skipped
@@ -67,7 +60,8 @@ class _GraphState extends State<Graph> {
 
         return Obx(() {
           final chartData = weightLogController.weeklyChartData.value;
-          final entries = _selectedValue == "this week"
+          final selectedValue = weightLogController.selectedChart.value;
+          final entries = selectedValue == "this week"
               ? (chartData?.thisWeek ?? [])
               : (chartData?.lastWeek ?? []);
           final spots = _buildSpots(entries);
@@ -97,7 +91,7 @@ class _GraphState extends State<Graph> {
                     ),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
-                        value: _selectedValue,
+                        value: selectedValue,
                         icon: const Icon(
                           Icons.keyboard_arrow_down,
                           size: 16,
@@ -112,9 +106,9 @@ class _GraphState extends State<Graph> {
                             )
                             .toList(),
                         onChanged: (val) {
-                          setState(() {
-                            _selectedValue = val!;
-                          });
+                          if (val != null) {
+                            weightLogController.setChart(val);
+                          }
                         },
                       ),
                     ),
@@ -128,7 +122,7 @@ class _GraphState extends State<Graph> {
                 child: spots.isEmpty
                     ? Center(
                         child: Text(
-                          'No data for ${_selectedValue}',
+                          'No data for $selectedValue',
                           style: getTextStyle(
                             color: Colors.white54,
                             fontSize: 12,
