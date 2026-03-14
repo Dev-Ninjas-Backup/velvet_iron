@@ -93,8 +93,19 @@ class _TodoTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Container(
+    final themeController = Get.find<AppThemeController>();
+
+    return Obx(() {
+      final themeId = themeController.activeTheme.id;
+      final dotIcon = themeId == 'adventurer'
+          ? IconPath.doticonAdventure
+          : themeId == 'mage'
+          ? IconPath.doticonMage
+          : themeId == 'gamer'
+          ? IconPath.doticonGamer
+          : IconPath.doticonReader;
+
+      return Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
@@ -103,27 +114,10 @@ class _TodoTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Checkbox(
-              value: todo.isChecked.value,
-              onChanged: (bool? value) {
-                todo.isChecked.value = value ?? false;
-              },
-              shape: const CircleBorder(),
-              activeColor: theme.accentGoldColor,
-              checkColor: Colors.black,
-              side: const BorderSide(color: Colors.white),
-            ),
-            const SizedBox(width: 4),
             Image.asset(
-              todo.iconPath,
+              todo.isChecked.value ? dotIcon : IconPath.whitecircle,
               width: 24,
               height: 24,
-              color: Colors.white,
-              errorBuilder: (context, error, stackTrace) => const Icon(
-                Icons.image_not_supported,
-                color: Colors.white,
-                size: 24,
-              ),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -137,7 +131,6 @@ class _TodoTile extends StatelessWidget {
                   ),
                   Text(
                     todo.sub,
-
                     style: getTextStyle(color: theme.textColor, fontSize: 11),
                     // overflow: TextOverflow.ellipsis,
                   ),
@@ -175,7 +168,7 @@ class _TodoTile extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
+      );
+    });
   }
 }
