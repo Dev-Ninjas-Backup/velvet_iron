@@ -4,12 +4,15 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/app_theme/model/app_theme_model.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
 
 class MoodSelector extends StatelessWidget {
   const MoodSelector({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final homeController = Get.find<HomeController>();
+
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
         final activeTheme =
@@ -69,78 +72,119 @@ class MoodSelector extends StatelessWidget {
           },
         ];
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "How are you feeling?",
-              style: getTextStyle(color: Colors.white, fontSize: 18),
-            ),
-            const SizedBox(height: 14),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ...moods.map(
-                  (m) => Container(
-                    width: 55,
-                    height: 80,
-                    padding: const EdgeInsets.only(top: 0, bottom: 4),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: activeTheme.moodBorderColor),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: Center(
-                            child: Image.asset(
-                              m['icon']!,
-                              width: 24,
-                              height: 24,
+        return Obx(
+          () => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "How are you feeling?",
+                style: getTextStyle(color: Colors.white, fontSize: 18),
+              ),
+              const SizedBox(height: 14),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ...moods.map(
+                    (m) => Container(
+                      width: 55,
+                      height: 80,
+                      padding: const EdgeInsets.only(top: 0, bottom: 4),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: homeController.hasMoodLoggedToday
+                              ? activeTheme.moodBorderColor.withValues(
+                                  alpha: 0.5,
+                                )
+                              : activeTheme.moodBorderColor,
+                        ),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: Opacity(
+                        opacity: homeController.hasMoodLoggedToday ? 0.6 : 1.0,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: Center(
+                                child: Image.asset(
+                                  m['icon']!,
+                                  width: 24,
+                                  height: 24,
+                                ),
+                              ),
                             ),
-                          ),
+                            Text(
+                              m['label']!,
+                              style: getTextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          m['label']!,
-                          style: getTextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  child: Container(
-                    height: 80,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      gradient: activeTheme.id == 'reader'
-                          ? AppThemeModel.readerTheme.progressBarGradient
-                          : activeTheme.id == 'gamer'
-                          ? AppThemeModel.gamerTheme.progressBarGradient
-                          : activeTheme.id == 'mage'
-                          ? AppThemeModel.mageTheme.progressBarGradient
-                          : AppThemeModel.adventurerTheme.progressBarGradient,
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "+\nAdd\n+05 xp",
-                        textAlign: TextAlign.center,
-                        style: getTextStyle(color: Colors.white, fontSize: 12),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  GestureDetector(
+                    onTap: homeController.hasMoodLoggedToday
+                        ? null
+                        : homeController.navigateToMoodLog,
+                    child: Opacity(
+                      opacity: homeController.hasMoodLoggedToday ? 0.6 : 1.0,
+                      child: Container(
+                        height: 80,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          gradient: homeController.hasMoodLoggedToday
+                              ? activeTheme.progressBarGradient
+                                        .toString()
+                                        .contains('null')
+                                    ? LinearGradient(
+                                        colors: [
+                                          activeTheme.moodBorderColor
+                                              .withValues(alpha: 0.3),
+                                          activeTheme.moodBorderColor
+                                              .withValues(alpha: 0.3),
+                                        ],
+                                      )
+                                    : activeTheme.progressBarGradient
+                              : activeTheme.id == 'reader'
+                              ? AppThemeModel.readerTheme.progressBarGradient
+                              : activeTheme.id == 'gamer'
+                              ? AppThemeModel.gamerTheme.progressBarGradient
+                              : activeTheme.id == 'mage'
+                              ? AppThemeModel.mageTheme.progressBarGradient
+                              : AppThemeModel
+                                    .adventurerTheme
+                                    .progressBarGradient,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Center(
+                          child: homeController.hasMoodLoggedToday
+                              ? const Icon(
+                                  Icons.pause_circle_filled,
+                                  color: Colors.white,
+                                  size: 32,
+                                )
+                              : Text(
+                                  "+\nAdd\n+05 xp",
+                                  textAlign: TextAlign.center,
+                                  style: getTextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         );
       },
     );

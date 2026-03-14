@@ -3,6 +3,7 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
+import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
 import 'package:velvet_iron/features/home/models/home_screen_model.dart';
 import 'package:velvet_iron/features/home/service/home_service.dart';
 
@@ -43,6 +44,27 @@ class HomeController extends GetxController {
 
   int get totalWeeklyXp => userProfile.value?.xpCharts.currentWeek.totalXp ?? 0;
 
+  // ── Mood logging state ───────────────────────────────────────
+
+  /// Check if user has logged mood for today
+  bool get hasMoodLoggedToday {
+    final todayMood = userProfile.value?.todayMood;
+    if (todayMood == null) return false;
+
+    final today = DateTime.now();
+    final moodDate = DateTime(
+      todayMood.loggedAt.year,
+      todayMood.loggedAt.month,
+      todayMood.loggedAt.day,
+    );
+    final todayDate = DateTime(today.year, today.month, today.day);
+
+    return moodDate.compareTo(todayDate) == 0;
+  }
+
+  /// Get today's mood if logged
+  TodayMood? get todayMoodData => userProfile.value?.todayMood;
+
   // ── Chart data based on selected filter ─────────────────────
 
   List<double> get chartData {
@@ -65,6 +87,23 @@ class HomeController extends GetxController {
     selectedChartFilter.value = filter;
     print('[HomeController] Chart filter changed → $filter');
     print('[HomeController] Chart data → $chartData');
+  }
+
+  /// Navigate to MoodLog tab in Daily Logs screen
+  void navigateToMoodLog() {
+    try {
+      Get.toNamed('/dailyLogScreen');
+      // Set the tab to MoodLog (index 1) after navigation
+      Future.delayed(const Duration(milliseconds: 300), () {
+        final dailyLogController = Get.find<DailyLogController?>();
+        if (dailyLogController != null) {
+          dailyLogController.setTab(1);
+          print('[HomeController] Navigated to MoodLog tab');
+        }
+      });
+    } catch (e) {
+      print('[HomeController] Error navigating to MoodLog: $e');
+    }
   }
 
   // ── Lifecycle ────────────────────────────────────────────────
@@ -107,6 +146,12 @@ class HomeController extends GetxController {
       print('[HomeController] companionQuote → $companionQuote');
       print('[HomeController] themeName      → $themeName');
       print('[HomeController] totalWeeklyXp  → $totalWeeklyXp');
+      print('[HomeController] hasMoodLoggedToday → $hasMoodLoggedToday');
+      if (todayMoodData != null) {
+        print(
+          '[HomeController] todayMoodData  → mood: ${todayMoodData!.mood}, loggedAt: ${todayMoodData!.loggedAt}',
+        );
+      }
       print(
         '[HomeController] currentWeek XP → ${userProfile.value?.xpCharts.currentWeek.data.map((d) => '${d.day}: ${d.xp}xp').toList()}',
       );
