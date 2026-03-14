@@ -308,8 +308,8 @@ class _PopUpDialogueState extends State<PopUpDialogue> {
                         widget.selectedCompanionImage!.isNotEmpty)
                       Image.asset(
                         widget.selectedCompanionImage!,
-                        width: w(120),
-                        height: h(95),
+                        width: w(80),
+                        height: h(80),
                         fit: BoxFit.contain,
                       ),
                   ],

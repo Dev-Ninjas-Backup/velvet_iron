@@ -1,56 +1,91 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
+import 'package:velvet_iron/features/qr_code_scan/controller/scan_barcode_controller.dart';
 
 class NutritionFields extends StatelessWidget {
   const NutritionFields({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AppThemeController>(
-      builder: (themeController) {
-        return Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    // FIX: Wrap with GetBuilder<ScanBarcodeController> so fields rebuild
+    // when update() is called after a successful barcode scan
+    return GetBuilder<ScanBarcodeController>(
+      builder: (scanController) {
+        debugPrint(
+          '[NutritionFields] rebuild — '
+          'carbs="${scanController.carbs.text}", '
+          'protein="${scanController.protein.text}", '
+          'fats="${scanController.fats.text}"',
+        );
+
+        return GetBuilder<AppThemeController>(
+          builder: (themeController) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(child: _buildLabel("Carbs")),
-                SizedBox(width: 8),
-                Expanded(child: _buildLabel("Protein")),
-                SizedBox(width: 8),
-                Expanded(child: _buildLabel("Fats")),
+                // Labels row
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(child: _buildLabel("Carbs")),
+                    const SizedBox(width: 8),
+                    Expanded(child: _buildLabel("Protein")),
+                    const SizedBox(width: 8),
+                    Expanded(child: _buildLabel("Fats")),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                // Input fields row
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: _buildTextField(
+                        themeController,
+                        scanController.carbs,
+                        'Carbs',
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: _buildTextField(
+                        themeController,
+                        scanController.protein,
+                        'Protein',
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: _buildTextField(
+                        themeController,
+                        scanController.fats,
+                        'Fats',
+                      ),
+                    ),
+                  ],
+                ),
               ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(child: _buildTextField(themeController)),
-                SizedBox(width: 8),
-                Expanded(child: _buildTextField(themeController)),
-                SizedBox(width: 8),
-                Expanded(child: _buildTextField(themeController)),
-              ],
-            ),
-          ],
+            );
+          },
         );
       },
     );
   }
 
   Widget _buildLabel(String text) {
-    return SizedBox(
-      width: 89,
-      child: Text(
-        text,
-        style: const TextStyle(color: Colors.white, fontSize: 14),
-      ),
+    return Text(
+      text,
+      style: const TextStyle(color: Colors.white, fontSize: 14),
     );
   }
 
-  Widget _buildTextField(AppThemeController themeController) {
+  Widget _buildTextField(
+    AppThemeController themeController,
+    TextEditingController controller,
+    String fieldName,
+  ) {
     return Container(
-      width: 89,
       height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
@@ -64,10 +99,10 @@ class NutritionFields extends StatelessWidget {
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
             child: TextField(
+              controller: controller,
               keyboardType: TextInputType.number,
               style: const TextStyle(color: Colors.white, fontSize: 14),
               decoration: const InputDecoration(
@@ -75,6 +110,11 @@ class NutritionFields extends StatelessWidget {
                 isDense: true,
                 contentPadding: EdgeInsets.zero,
               ),
+              onChanged: (val) {
+                debugPrint(
+                  '[NutritionFields] $fieldName changed manually to: "$val"',
+                );
+              },
             ),
           ),
           const Text("g", style: TextStyle(color: Colors.white, fontSize: 14)),

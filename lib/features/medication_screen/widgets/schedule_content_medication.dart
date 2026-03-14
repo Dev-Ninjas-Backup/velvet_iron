@@ -5,10 +5,12 @@ import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/date_and_time_picker.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
 import 'package:velvet_iron/features/medication_screen/controller/medication_controller.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/custom_drop_down.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/dose_history.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/dose_name_textfield.dart';
+import 'package:velvet_iron/features/medication_screen/widgets/medication_popup.dart';
 
 class ScheduleContentMedication extends StatelessWidget {
   const ScheduleContentMedication({super.key, required this.controller});
@@ -25,6 +27,7 @@ class ScheduleContentMedication extends StatelessWidget {
         return IconPath.injection;
     }
   }
+
   String _formatDateTime(DateTime dt) {
     const months = [
       'Jan',
@@ -63,10 +66,43 @@ class ScheduleContentMedication extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             DoseNameTextField(),
-            const SizedBox(height: 14),
-            Text(
-              "Medicine Type:",
-              style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+            SizedBox(height: 14),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(
+                    "Medicine Type:",
+                    style: getTextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                GestureDetector(
+                  onTap: () {
+                    final homeController = Get.find<HomeController>();
+                    showDialog(
+                      context: context,
+                      builder: (context) => MedicationPopup(
+                        selectedCompanionImage:
+                            homeController.activeCompanionImage.value,
+                        selectedCompanionName:
+                            homeController.activeCompanionName.value,
+                      ),
+                    );
+                  },
+                  child: Image.asset(
+                    IconPath.exclametory,
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 11),
             CustomDropdown(iconPath: IconPath.todo2),
@@ -172,6 +208,7 @@ class ScheduleContentMedication extends StatelessWidget {
                     time: timeStr,
                     iconPath: _getMedIcon(med.type),
                     isSelected: RxBool(false),
+                    isTaken: med.isTaken,
                   );
                 }).toList(),
               );
@@ -201,6 +238,7 @@ class ScheduleContentMedication extends StatelessWidget {
                         : '',
                     iconPath: _getMedIcon(next.type),
                     isSelected: RxBool(false),
+                    isTaken: next.isTaken,
                   ),
                 ],
               );

@@ -8,7 +8,6 @@ import 'package:velvet_iron/features/daily_logs/widgets/scan_code_button.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/selectable_option_row.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/controller/meal_log_controller.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/date_and_time_picker.dart';
-import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/nutrition_input_field.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
 class ScheduleContent extends StatelessWidget {
@@ -30,6 +29,7 @@ class ScheduleContent extends StatelessWidget {
         return IconPath.foodBall;
     }
   }
+
   String _formatDateTime(DateTime dt) {
     const months = [
       'Jan',
@@ -125,46 +125,7 @@ class ScheduleContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 14),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: 98,
-                      child: Text("Carbs", style: getTextStyle(fontSize: 14)),
-                    ),
-                    SizedBox(
-                      width: 98,
-                      child: Text("Protein", style: getTextStyle(fontSize: 14)),
-                    ),
-                    SizedBox(
-                      width: 98,
-                      child: Text("Fats", style: getTextStyle(fontSize: 14)),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    NutritionInputField(
-                      hintText: "carbs",
-                      controller: controller.carbsController,
-                    ),
-                    NutritionInputField(
-                      hintText: "protein",
-                      controller: controller.proteinController,
-                    ),
-                    NutritionInputField(
-                      hintText: "fats",
-                      controller: controller.fatController,
-                    ),
-                  ],
-                ),
-              ],
-            ),
+            // ...existing code...
             const SizedBox(height: 20),
             Obx(
               () => DateAndTimePicker(
@@ -190,123 +151,269 @@ class ScheduleContent extends StatelessWidget {
                     ),
             ),
             const SizedBox(height: 14),
-            Text(
-              "Log History",
-              style: getTextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(height: 14),
             Obx(() {
               final logs = controller.history.value?.logs ?? [];
+              final taken = logs.where((e) => e.entryType == 'LOG').toList();
+              final scheduled = logs
+                  .where((e) => e.entryType == 'SCHEDULE')
+                  .toList();
 
               if (controller.isHistoryLoading.value) {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              if (logs.isEmpty) {
-                return Center(
-                  child: Text(
-                    "No history found",
-                    style: getTextStyle(fontSize: 14, color: Colors.white54),
-                  ),
-                );
-              }
-
               return Column(
-                children: logs.map((log) {
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: themeController.activeTheme.cardBackgroundColor
-                          .withValues(alpha: .4),
-                      borderRadius: BorderRadius.circular(12),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Log History Section
+                  Text(
+                    "Log History",
+                    style: getTextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
                     ),
-                    child: Row(
-                      children: [
-                        // meal icon
-                        Image.asset(
-                          _getMealIcon(log.mealType),
-                          width: 24,
-                          height: 24,
-                          color: Colors.white,
-                          errorBuilder: (_, __, ___) => const Icon(
-                            Icons.fastfood,
-                            color: Colors.white,
-                            size: 24,
-                          ),
+                  ),
+                  const SizedBox(height: 14),
+                  if (taken.isEmpty)
+                    Center(
+                      child: Text(
+                        "No history found",
+                        style: getTextStyle(
+                          fontSize: 14,
+                          color: Colors.white54,
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                      ),
+                    )
+                  else
+                    Column(
+                      children: taken.map((log) {
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: themeController
+                                .activeTheme
+                                .cardBackgroundColor
+                                .withValues(alpha: .4),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
                             children: [
-                              Text(
-                                log.mealType[0] +
-                                    log.mealType.substring(1).toLowerCase(),
-                                style: getTextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
+                              // Left-side status icon
+                              Image.asset(
+                                log.isTaken == true
+                                    ? (themeController.activeTheme.name ==
+                                              'adventure'
+                                          ? IconPath.doticonAdventure
+                                          : themeController.activeTheme.name ==
+                                                'mage'
+                                          ? IconPath.doticonMage
+                                          : themeController.activeTheme.name ==
+                                                'gamer'
+                                          ? IconPath.doticonGamer
+                                          : themeController.activeTheme.name ==
+                                                'reader'
+                                          ? IconPath.doticonReader
+                                          : IconPath.whitecircle)
+                                    : IconPath.whitecircle,
+                                width: 18,
+                                height: 18,
+                              ),
+                              const SizedBox(width: 8),
+                              Image.asset(
+                                _getMealIcon(log.mealType),
+                                width: 24,
+                                height: 24,
+                                color: Colors.white,
+                                errorBuilder: (_, __, ___) => const Icon(
+                                  Icons.fastfood,
                                   color: Colors.white,
+                                  size: 24,
                                 ),
                               ),
-                              const SizedBox(height: 2),
-                              Text(
-                                "${log.calories.toInt()} kcal  •  C:${log.carbs.toInt()}g  P:${log.protein.toInt()}g  F:${log.fats.toInt()}g",
-                                style: getTextStyle(
-                                  fontSize: 11,
-                                  color: themeController
-                                      .activeTheme
-                                      .accentGoldColor,
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      log.mealType[0] +
+                                          log.mealType
+                                              .substring(1)
+                                              .toLowerCase(),
+                                      style: getTextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      "${log.calories.toInt()} kcal  •  C:${log.carbs.toInt()}g  P:${log.protein.toInt()}g  F:${log.fats.toInt()}g",
+                                      style: getTextStyle(
+                                        fontSize: 11,
+                                        color: themeController
+                                            .activeTheme
+                                            .accentGoldColor,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(height: 2),
-                              Text(
-                                _formatDateTime(log.loggedAt),
-                                style: getTextStyle(
-                                  fontSize: 11,
-                                  color:
-                                      themeController.activeTheme.todoTimeColor,
-                                ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "+${log.earnedXp} XP",
+                                    style: getTextStyle(
+                                      fontSize: 12,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    _formatDateTime(log.loggedAt),
+                                    style: getTextStyle(
+                                      fontSize: 11,
+                                      color: themeController
+                                          .activeTheme
+                                          .todoTimeColor,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
+                        );
+                      }).toList(),
+                    ),
+                  const SizedBox(height: 24),
+                  // Schedule Section
+                  Text(
+                    "Schedule",
+                    style: getTextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  if (scheduled.isEmpty)
+                    Center(
+                      child: Text(
+                        "No scheduled meals found",
+                        style: getTextStyle(
+                          fontSize: 14,
+                          color: Colors.white54,
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              "+${log.earnedXp} XP",
-                              style: getTextStyle(
-                                fontSize: 12,
+                      ),
+                    )
+                  else
+                    Column(
+                      children: scheduled.map((log) {
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: themeController
+                                .activeTheme
+                                .cardBackgroundColor
+                                .withValues(alpha: .4),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            children: [
+                              // Left-side status icon for schedule
+                              Image.asset(
+                                log.isTaken == true
+                                    ? (themeController.activeTheme.name ==
+                                              'adventure'
+                                          ? IconPath.doticonAdventure
+                                          : themeController.activeTheme.name ==
+                                                'mage'
+                                          ? IconPath.doticonMage
+                                          : themeController.activeTheme.name ==
+                                                'gamer'
+                                          ? IconPath.doticonGamer
+                                          : themeController.activeTheme.name ==
+                                                'reader'
+                                          ? IconPath.doticonReader
+                                          : IconPath.whitecircle)
+                                    : IconPath.whitecircle,
+                                width: 18,
+                                height: 18,
+                              ),
+                              const SizedBox(width: 8),
+                              Image.asset(
+                                _getMealIcon(log.mealType),
+                                width: 24,
+                                height: 24,
                                 color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: log.entryType == 'LOG'
-                                    ? Colors.green.withValues(alpha: .3)
-                                    : Colors.blue.withValues(alpha: .3),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                log.entryType,
-                                style: getTextStyle(
-                                  fontSize: 10,
+                                errorBuilder: (_, __, ___) => const Icon(
+                                  Icons.fastfood,
                                   color: Colors.white,
+                                  size: 24,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      log.mealType[0] +
+                                          log.mealType
+                                              .substring(1)
+                                              .toLowerCase(),
+                                      style: getTextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      "${log.calories.toInt()} kcal  •  C:${log.carbs.toInt()}g  P:${log.protein.toInt()}g  F:${log.fats.toInt()}g",
+                                      style: getTextStyle(
+                                        fontSize: 11,
+                                        color: themeController
+                                            .activeTheme
+                                            .accentGoldColor,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "+${log.earnedXp} XP",
+                                    style: getTextStyle(
+                                      fontSize: 12,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  if (log.scheduledAt != null)
+                                    Text(
+                                      _formatDateTime(log.scheduledAt!),
+                                      style: getTextStyle(
+                                        fontSize: 11,
+                                        color: themeController
+                                            .activeTheme
+                                            .todoTimeColor,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
                     ),
-                  );
-                }).toList(),
+                ],
               );
             }),
           ],
