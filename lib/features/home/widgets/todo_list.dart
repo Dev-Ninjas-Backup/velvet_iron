@@ -114,10 +114,15 @@ class _TodoTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Image.asset(
-              todo.isChecked.value ? dotIcon : IconPath.whitecircle,
-              width: 24,
-              height: 24,
+            GestureDetector(
+              onTap: () {
+                todo.isChecked.toggle();
+              },
+              child: Image.asset(
+                todo.isChecked.value ? dotIcon : IconPath.whitecircle,
+                width: 24,
+                height: 24,
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(

@@ -114,6 +114,11 @@ class HomeController extends GetxController {
     super.onInit();
     fetchData();
     fetchActiveCompanion();
+
+    // Rebuild todos when filter changes
+    ever(selectedTodoFilter, (_) {
+      _buildTodos();
+    });
   }
 
   // ── Data fetching ────────────────────────────────────────────
@@ -189,37 +194,55 @@ class HomeController extends GetxController {
   // ── Todos ────────────────────────────────────────────────────
 
   void _buildTodos() {
-    todos.assignAll([
-      HomeScreenModel(
-        title: "Breakfast",
-        sub: "350 kcal",
-        time: "Wed - 8:30 AM",
-        iconPath: IconPath.todo,
-        xp: 15,
-      ),
-      HomeScreenModel(
-        title: "Ozempic (4mg)",
-        sub: "1 Injection",
-        time: "Wed - 09:30 AM",
-        iconPath: IconPath.injection,
-        xp: 10,
-      ),
-      HomeScreenModel(
-        title: "Walk the dog",
-        sub: "30 minutes",
-        time: "Wed - 06:00 PM",
-        iconPath: IconPath.grass,
-        xp: 20,
-      ),
-      HomeScreenModel(
-        title: "Vitamin B12 Shot",
-        sub: "1 Injection",
-        time: "Wed - 07:00 PM",
-        iconPath: IconPath.injection,
-        xp: 10,
-      ),
-    ]);
+    final profile = userProfile.value;
+    if (profile == null) {
+      todos.clear();
+      return;
+    }
 
-    print('[HomeController] _buildTodos() → ${todos.length} items built');
+    List<ScheduleItem> scheduleItems = [];
+
+    // Get the appropriate schedule based on filter
+    if (selectedTodoFilter.value == 'Weekly') {
+      scheduleItems = profile.thisWeek.combined;
+    } else if (selectedTodoFilter.value == 'Monthly') {
+      scheduleItems = profile.thisMonth.combined;
+    } else {
+      // Default: 'Today'
+      scheduleItems = profile.todaySchedules.combined;
+    }
+
+    // Convert ScheduleItem to HomeScreenModel
+    todos.assignAll(
+      scheduleItems.map((item) {
+        final iconPath = _getIconPathForScheduleType(item.type);
+        return HomeScreenModel(
+          title: item.title,
+          sub: item.description,
+          time: item.scheduledAt,
+          iconPath: iconPath,
+          xp: item.earnedXp,
+          isChecked: item.details.isTaken.obs,
+        );
+      }).toList(),
+    );
+
+    print(
+      '[HomeController] _buildTodos() → ${todos.length} items built for ${selectedTodoFilter.value}',
+    );
+  }
+
+  /// Map ScheduleType to icon path
+  String _getIconPathForScheduleType(ScheduleType type) {
+    switch (type) {
+      case ScheduleType.medication:
+        return IconPath.injection;
+      case ScheduleType.exercise:
+        return IconPath.grass;
+      case ScheduleType.meal:
+        return IconPath.todo;
+      default:
+        return IconPath.todo;
+    }
   }
 }
