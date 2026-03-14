@@ -25,7 +25,7 @@ class UserProfile {
   final TodaySchedules todaySchedules;
   final WeeklyActivity thisWeek;
   final WeeklyActivity thisMonth;
-  final dynamic todayMood;
+  final TodayMood? todayMood;
   final dynamic upcoming;
   final UserInfo user;
 
@@ -61,22 +61,26 @@ class UserProfile {
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
+      id: (json['id'] ?? '') as String,
+      userId: (json['userId'] ?? '') as String,
       activeThemeId: json['activeThemeId'] as String?,
       activeCompanionId: json['activeCompanionId'] as String?,
       availableCompanions: json['availableCompanions'] as List<dynamic>? ?? [],
-      themeCredits: json['themeCredits'] as int,
-      companionCredits: json['companionCredits'] as int,
-      totalEarnXp: json['totalEarnXp'] as int,
-      balanceXp: json['balanceXp'] as int,
-      level: json['level'] as int,
-      onBoardingCompleted: json['onBoardingCompleted'] as bool,
-      fitnessGoal: json['fitnessGoal'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      themeCredits: (json['themeCredits'] ?? 0) as int,
+      companionCredits: (json['companionCredits'] ?? 0) as int,
+      totalEarnXp: (json['totalEarnXp'] ?? 0) as int,
+      balanceXp: (json['balanceXp'] ?? 0) as int,
+      level: (json['level'] ?? 0) as int,
+      onBoardingCompleted: (json['onBoardingCompleted'] ?? false) as bool,
+      fitnessGoal: (json['fitnessGoal'] ?? '') as String,
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'] as String)
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'] as String)
+          : DateTime.now(),
       profilePhoto: json['profilePhoto'] as String?,
-      userName: json['userName'] as String,
+      userName: (json['userName'] ?? 'User') as String,
       activeTheme: json['activeTheme'] != null
           ? ActiveTheme.fromJson(json['activeTheme'] as Map<String, dynamic>)
           : null,
@@ -85,21 +89,54 @@ class UserProfile {
               json['activeCompanion'] as Map<String, dynamic>,
             )
           : null,
-      levelStatus: json['levelStatus'] as String,
-      nextLevel: NextLevel.fromJson(json['nextLevel'] as Map<String, dynamic>),
-      xpCharts: XPCharts.fromJson(json['XPcharts'] as Map<String, dynamic>),
-      todaySchedules: TodaySchedules.fromJson(
-        json['todaySchedules'] as Map<String, dynamic>,
-      ),
-      thisWeek: WeeklyActivity.fromJson(
-        json['thisWeek'] as Map<String, dynamic>,
-      ),
-      thisMonth: WeeklyActivity.fromJson(
-        json['thisMonth'] as Map<String, dynamic>,
-      ),
-      todayMood: json['todayMood'],
+      levelStatus: (json['levelStatus'] ?? '') as String,
+      nextLevel: json['nextLevel'] != null
+          ? NextLevel.fromJson(json['nextLevel'] as Map<String, dynamic>)
+          : NextLevel(level: 1, xpRequired: 0),
+      xpCharts: json['XPcharts'] != null
+          ? XPCharts.fromJson(json['XPcharts'] as Map<String, dynamic>)
+          : XPCharts(
+              currentWeek: XPPeriod(
+                period: 'current',
+                timezone: 'UTC',
+                data: [],
+                totalXp: 0,
+              ),
+              lastWeek: XPPeriod(
+                period: 'last',
+                timezone: 'UTC',
+                data: [],
+                totalXp: 0,
+              ),
+            ),
+      todaySchedules: json['todaySchedules'] != null
+          ? TodaySchedules.fromJson(
+              json['todaySchedules'] as Map<String, dynamic>,
+            )
+          : TodaySchedules(combined: []),
+      thisWeek: json['thisWeek'] != null
+          ? WeeklyActivity.fromJson(json['thisWeek'] as Map<String, dynamic>)
+          : WeeklyActivity(
+              combined: [],
+              totalMeals: 0,
+              totalMedications: 0,
+              totalExercises: 0,
+            ),
+      thisMonth: json['thisMonth'] != null
+          ? WeeklyActivity.fromJson(json['thisMonth'] as Map<String, dynamic>)
+          : WeeklyActivity(
+              combined: [],
+              totalMeals: 0,
+              totalMedications: 0,
+              totalExercises: 0,
+            ),
+      todayMood: json['todayMood'] != null
+          ? TodayMood.fromJson(json['todayMood'] as Map<String, dynamic>)
+          : null,
       upcoming: json['upcoming'],
-      user: UserInfo.fromJson(json['user'] as Map<String, dynamic>),
+      user: json['user'] != null
+          ? UserInfo.fromJson(json['user'] as Map<String, dynamic>)
+          : UserInfo(name: 'User', userProfile: UserProfileXp(balanceXp: 0)),
     );
   }
 
@@ -128,9 +165,47 @@ class UserProfile {
     'todaySchedules': todaySchedules.toJson(),
     'thisWeek': thisWeek.toJson(),
     'thisMonth': thisMonth.toJson(),
-    'todayMood': todayMood,
+    'todayMood': todayMood?.toJson(),
     'upcoming': upcoming,
     'user': user.toJson(),
+  };
+}
+
+// ─── TodayMood ─────────────────────────────────────────────
+
+class TodayMood {
+  final String id;
+  final String mood;
+  final String energyLevel;
+  final String hungerLevel;
+  final String? note;
+  final DateTime loggedAt;
+
+  const TodayMood({
+    required this.id,
+    required this.mood,
+    required this.energyLevel,
+    required this.hungerLevel,
+    this.note,
+    required this.loggedAt,
+  });
+
+  factory TodayMood.fromJson(Map<String, dynamic> json) => TodayMood(
+    id: json['id'] as String,
+    mood: json['mood'] as String,
+    energyLevel: json['energyLevel'] as String,
+    hungerLevel: json['hungerLevel'] as String,
+    note: json['note'] as String?,
+    loggedAt: DateTime.parse(json['loggedAt'] as String),
+  );
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'mood': mood,
+    'energyLevel': energyLevel,
+    'hungerLevel': hungerLevel,
+    'note': note,
+    'loggedAt': loggedAt.toIso8601String(),
   };
 }
 
