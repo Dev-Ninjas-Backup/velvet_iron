@@ -73,7 +73,7 @@ class ExcersiseHistory extends StatelessWidget {
                       Text(
                         sub,
                         style: getTextStyle(
-                          color: themeController.activeTheme.accentGoldColor,
+                          color: themeController.activeTheme.textColor,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -108,7 +108,7 @@ class ExcersiseHistory extends StatelessWidget {
                     Text(
                       time,
                       style: getTextStyle(
-                        color: themeController.activeTheme.accentGoldColor,
+                        color: themeController.activeTheme.textColor,
                       ),
                     ),
                   ],

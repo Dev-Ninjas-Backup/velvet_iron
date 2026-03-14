@@ -96,7 +96,7 @@ class ScheduleContent extends StatelessWidget {
                   hintText: "Grilled chicken salad with olive oil dressing...?",
                   hintStyle: getTextStyle(
                     fontSize: 12,
-                    color: themeController.activeTheme.todoTimeColor,
+                    color: themeController.activeTheme.textColor,
                   ),
                   filled: true,
                   fillColor: themeController.activeTheme.textfieldColor,
@@ -254,7 +254,7 @@ class ScheduleContent extends StatelessWidget {
                                         fontSize: 11,
                                         color: themeController
                                             .activeTheme
-                                            .accentGoldColor,
+                                            .textColor,
                                       ),
                                     ),
                                     const SizedBox(height: 2),
@@ -276,9 +276,8 @@ class ScheduleContent extends StatelessWidget {
                                     _formatDateTime(log.loggedAt),
                                     style: getTextStyle(
                                       fontSize: 11,
-                                      color: themeController
-                                          .activeTheme
-                                          .todoTimeColor,
+                                      color:
+                                          themeController.activeTheme.textColor,
                                     ),
                                   ),
                                 ],
@@ -378,7 +377,7 @@ class ScheduleContent extends StatelessWidget {
                                         fontSize: 11,
                                         color: themeController
                                             .activeTheme
-                                            .accentGoldColor,
+                                            .textColor,
                                       ),
                                     ),
                                     const SizedBox(height: 2),
@@ -403,7 +402,7 @@ class ScheduleContent extends StatelessWidget {
                                         fontSize: 11,
                                         color: themeController
                                             .activeTheme
-                                            .todoTimeColor,
+                                            .textColor,
                                       ),
                                     ),
                                 ],

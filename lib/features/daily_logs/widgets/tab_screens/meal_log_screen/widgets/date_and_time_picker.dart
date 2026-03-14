@@ -111,7 +111,10 @@ class DateAndTimePicker extends StatelessWidget {
         controller: TextEditingController(text: value),
         readOnly: true,
         onTap: onTap,
-        style: getTextStyle(fontSize: 12, color: Colors.white),
+        style: getTextStyle(
+          fontSize: 12,
+          color: themeController.activeTheme.textColor,
+        ),
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: getTextStyle(

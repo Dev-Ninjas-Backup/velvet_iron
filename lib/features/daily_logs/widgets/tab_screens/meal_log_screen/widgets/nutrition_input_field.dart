@@ -42,7 +42,7 @@ class NutritionInputField extends StatelessWidget {
                     hintText: hintText,
                     hintStyle: getTextStyle(
                       fontSize: 12,
-                      color: themeController.activeTheme.todoTimeColor,
+                      color: themeController.activeTheme.textColor,
                     ),
                     border: InputBorder.none,
                     isDense: true,

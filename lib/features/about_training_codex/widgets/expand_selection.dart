@@ -123,7 +123,7 @@ class _FeatureItem extends StatelessWidget {
                           style: getTextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: themeController.activeTheme.accentGoldColor,
+                            color: themeController.activeTheme.textColor,
                           ),
                         ),
                         if (description.isNotEmpty)

@@ -71,7 +71,7 @@ class CustomLogContainerExercise extends StatelessWidget {
                   Text(
                     title == "Time Exercise " ? "Rewards:" : "Total Rewards:",
                     style: getTextStyle(
-                      color: themeController.activeTheme.todoTimeColor,
+                      color: themeController.activeTheme.textColor,
                       fontSize: 10,
                     ),
                   ),
@@ -81,7 +81,7 @@ class CustomLogContainerExercise extends StatelessWidget {
                   Text(
                     "$rewardAmount XP",
                     style: getTextStyle(
-                      color: themeController.activeTheme.todoTimeColor,
+                      color: themeController.activeTheme.textColor,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                     ),

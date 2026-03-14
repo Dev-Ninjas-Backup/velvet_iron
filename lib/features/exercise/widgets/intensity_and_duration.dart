@@ -122,9 +122,8 @@ class IntensityAndDuration extends StatelessWidget {
                                     hintText:
                                         "${controller.duration.value} min",
                                     hintStyle: TextStyle(
-                                      color: themeController
-                                          .activeTheme
-                                          .todoTimeColor,
+                                      color:
+                                          themeController.activeTheme.textColor,
                                       fontSize: 12,
                                     ),
                                     border: InputBorder.none,

@@ -162,7 +162,7 @@ class LogoutWidget extends GetView<SettingsController> {
                   style: getTextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: themeController.activeTheme.accentGoldColor,
+                    color: themeController.activeTheme.textColor,
                   ),
                 ),
               ],
@@ -191,7 +191,7 @@ class AppVersionWidget extends GetView<SettingsController> {
                 style: getTextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w400,
-                  color: themeController.activeTheme.accentGoldColor,
+                  color: themeController.activeTheme.textColor,
                 ),
               ),
             ),
@@ -201,7 +201,7 @@ class AppVersionWidget extends GetView<SettingsController> {
               style: getTextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w400,
-                color: themeController.activeTheme.accentGoldColor,
+                color: themeController.activeTheme.textColor,
               ),
               textAlign: TextAlign.center,
             ),

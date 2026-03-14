@@ -20,7 +20,7 @@ SizedBox DoseNameTextField() {
             hintText: "Ozempic",
             hintStyle: getTextStyle(
               fontSize: 12,
-              color: themeController.activeTheme.todoTimeColor,
+              color: themeController.activeTheme.textColor,
             ),
             filled: true,
             fillColor: themeController.activeTheme.textfieldColor,

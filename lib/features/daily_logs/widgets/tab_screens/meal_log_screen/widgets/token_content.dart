@@ -58,7 +58,7 @@ class TokenContent extends StatelessWidget {
                   hintText: "Grilled chicken salad with olive oil dressing...?",
                   hintStyle: getTextStyle(
                     fontSize: 12,
-                    color: themeController.activeTheme.todoTimeColor,
+                    color: themeController.activeTheme.textColor,
                   ),
                   filled: true,
                   fillColor: themeController.activeTheme.textfieldColor,
@@ -183,9 +183,7 @@ class TokenContent extends StatelessWidget {
               }
 
               final logs = controller.history.value?.logs ?? [];
-              logs
-                  .where((e) => e.entryType == 'SCHEDULE')
-                  .toList();
+              logs.where((e) => e.entryType == 'SCHEDULE').toList();
               final taken = logs.where((e) => e.entryType == 'LOG').toList();
               // Tab 0: Show both sections
               if (controller.selectedMealTab.value == 0) {
@@ -281,7 +279,7 @@ class TokenContent extends StatelessWidget {
                                         fontSize: 11,
                                         color: themeController
                                             .activeTheme
-                                            .accentGoldColor,
+                                            .textColor,
                                       ),
                                     ),
                                     const SizedBox(height: 2),
@@ -303,9 +301,8 @@ class TokenContent extends StatelessWidget {
                                     _formatDateTime(log.loggedAt),
                                     style: getTextStyle(
                                       fontSize: 11,
-                                      color: themeController
-                                          .activeTheme
-                                          .todoTimeColor,
+                                      color:
+                                          themeController.activeTheme.textColor,
                                     ),
                                   ),
                                 ],

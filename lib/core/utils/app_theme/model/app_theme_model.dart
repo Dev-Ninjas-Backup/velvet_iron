@@ -20,6 +20,7 @@ class AppThemeModel {
   final Color graphColor;
   final List<Color> selectedColors;
   final Color dateNameborder;
+  final Color textColor;
 
   AppThemeModel({
     required this.id,
@@ -40,6 +41,7 @@ class AppThemeModel {
     required this.graphColor,
     required this.selectedColors,
     required this.dateNameborder,
+    required this.textColor,
   });
 
   /// Default theme: Deep red/maroon (original)
@@ -82,6 +84,7 @@ class AppThemeModel {
     ],
     textfieldColor: Color(0xFF3A0303),
     dateNameborder: Color(0xFFE9B86E),
+    textColor: Color(0xFFB43737),
   );
 
   /// Theme 2: Blue theme (Reader theme)
@@ -118,6 +121,7 @@ class AppThemeModel {
     ],
     textfieldColor: Color(0xFF141694),
     dateNameborder: Color(0xFFFFFFFF),
+    textColor: Color(0xFF1D7FFF),
   );
 
   /// Theme 3: Green theme (Gamer theme)
@@ -152,6 +156,7 @@ class AppThemeModel {
     ],
     textfieldColor: Color(0xFF00422B),
     dateNameborder: Color(0xFF7DF9CC),
+    textColor: Color(0xFF00A96E),
   );
 
   /// Theme 4: Purple theme (Mage theme)
@@ -186,6 +191,7 @@ class AppThemeModel {
     ],
     textfieldColor: Color(0xFF390063),
     dateNameborder: Color(0xFF9820FF),
+    textColor: Color(0xFF9E36FB),
   );
   static List<AppThemeModel> getAllThemes() {
     return [adventurerTheme, mageTheme, readerTheme, gamerTheme];
