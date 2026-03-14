@@ -2,17 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/features/auth/otp/controller/otp_controller.dart';
-class OtpField extends StatefulWidget {
+
+class OtpField extends StatelessWidget {
   const OtpField({super.key});
 
   @override
-  State<OtpField> createState() => _OtpFieldState();
-}
-class _OtpFieldState extends State<OtpField> {
-  final OtpController controller = Get.find<OtpController>();
-
-  @override
   Widget build(BuildContext context) {
+    final OtpController controller = Get.find<OtpController>();
     return SizedBox(
       height: 52,
       child: Form(
@@ -36,8 +32,7 @@ class _OtpFieldState extends State<OtpField> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 maxLength: 1,
                 onChanged: (value) => controller.onOtpChanged(value, index),
-                validator: controller
-                    .validateOtp, // This will be called on the form's validate.
+                validator: controller.validateOtp,
                 decoration: InputDecoration(
                   counterText: '',
                   border: InputBorder.none,

@@ -1,53 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 
-class SubscriptionCompletionPopup extends StatefulWidget {
+class SubscriptionCompletionPopup extends StatelessWidget {
   final VoidCallback? onCollectRewards;
   final String? selectedCompanionName;
   final String? selectedCompanionImage;
 
-  const SubscriptionCompletionPopup({
+  SubscriptionCompletionPopup({
     super.key,
     this.onCollectRewards,
     this.selectedCompanionName,
     this.selectedCompanionImage,
   });
 
-  @override
-  State<SubscriptionCompletionPopup> createState() =>
-      _SubscriptionCompletionPopupState();
-}
+  final RxBool _isLoading = false.obs;
 
-class _SubscriptionCompletionPopupState
-    extends State<SubscriptionCompletionPopup> {
-  bool _isLoading = false;
-
-  Future<void> _handleCollectRewards() async {
-    if (_isLoading) return;
-    setState(() => _isLoading = true);
+  Future<void> _handleCollectRewards(BuildContext context) async {
+    if (_isLoading.value) return;
+    _isLoading.value = true;
 
     try {
       await Future.delayed(const Duration(milliseconds: 500));
+      _isLoading.value = false;
 
-      if (!mounted) return;
-      setState(() => _isLoading = false);
-
-      widget.onCollectRewards?.call();
+      onCollectRewards?.call();
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          Navigator.of(context, rootNavigator: true).pop();
-        }
+        Navigator.of(context, rootNavigator: true).pop();
       });
     } catch (e) {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+      _isLoading.value = false;
       EasyLoading.showError('Something went wrong. Please try again.');
     }
   }
@@ -167,14 +154,17 @@ class _SubscriptionCompletionPopupState
 
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: w(6)),
-                        child: _isLoading
-                            ? const CircularProgressIndicator(
-                                color: Colors.white,
-                              )
-                            : CustomButton(
-                                label: 'Finish & Claim ( 25XP)',
-                                onPressed: _handleCollectRewards,
-                              ),
+                        child: Obx(
+                          () => _isLoading.value
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : CustomButton(
+                                  label: 'Finish & Claim ( 25XP)',
+                                  onPressed: () =>
+                                      _handleCollectRewards(context),
+                                ),
+                        ),
                       ),
                     ],
                   ),
@@ -202,10 +192,10 @@ class _SubscriptionCompletionPopupState
                       fit: BoxFit.contain,
                     ),
                     // Companion image displayed in the center of topframe
-                    if (widget.selectedCompanionImage != null &&
-                        widget.selectedCompanionImage!.isNotEmpty)
+                    if (selectedCompanionImage != null &&
+                        selectedCompanionImage!.isNotEmpty)
                       Image.asset(
-                        widget.selectedCompanionImage!,
+                        selectedCompanionImage!,
                         width: w(80),
                         height: h(80),
                         fit: BoxFit.contain,

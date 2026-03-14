@@ -6,6 +6,10 @@ import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/weight_log_s
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/weight_log_screen/service/weight_log_service.dart';
 
 class WeightLogController extends GetxController {
+  // Chart filter selection
+  final RxString selectedChart = 'this week'.obs;
+
+  void setChart(String value) => selectedChart.value = value;
   final currentWeight = "0".obs;
   final targetWeight = "0".obs;
   final weightIcon = "".obs;

@@ -7,37 +7,8 @@ import 'package:velvet_iron/features/about_training_codex/widgets/expand_selecti
 import 'package:velvet_iron/features/about_training_codex/widgets/founder_section.dart';
 import 'package:velvet_iron/features/about_training_codex/widgets/intro_widgets.dart';
 
-class AboutTrainingScreen extends StatefulWidget {
+class AboutTrainingScreen extends StatelessWidget {
   const AboutTrainingScreen({super.key});
-
-  @override
-  State<AboutTrainingScreen> createState() => _AboutTrainingScreenState();
-}
-
-class _AboutTrainingScreenState extends State<AboutTrainingScreen> {
-  final Set<int> _expandedSections = {0, 1};
-  final Map<int, Set<int>> _selectedFeatureIndices = {0: {}, 1: {}};
-
-  void _toggleSection(int sectionIndex) {
-    setState(() {
-      if (_expandedSections.contains(sectionIndex)) {
-        _expandedSections.remove(sectionIndex);
-      } else {
-        _expandedSections.add(sectionIndex);
-      }
-    });
-  }
-
-  void _toggleFeature(int sectionIndex, int featureIndex) {
-    setState(() {
-      _selectedFeatureIndices[sectionIndex] ??= {};
-      if (_selectedFeatureIndices[sectionIndex]!.contains(featureIndex)) {
-        _selectedFeatureIndices[sectionIndex]!.remove(featureIndex);
-      } else {
-        _selectedFeatureIndices[sectionIndex]!.add(featureIndex);
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,10 +63,11 @@ class _AboutTrainingScreenState extends State<AboutTrainingScreen> {
                                 onSectionChanged: controller.selectSection,
                                 features: controller.features,
                                 partnerFeatures: controller.partnerFeatures,
-                                expandedSections: _expandedSections,
-                                onSectionToggle: _toggleSection,
-                                selectedFeatureIndices: _selectedFeatureIndices,
-                                onFeatureToggle: _toggleFeature,
+                                expandedSections: controller.expandedSections,
+                                onSectionToggle: controller.toggleSection,
+                                selectedFeatureIndices:
+                                    controller.selectedFeatureIndices,
+                                onFeatureToggle: controller.toggleFeature,
                               ),
                             ),
                             const SizedBox(height: 20),

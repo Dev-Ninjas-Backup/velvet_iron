@@ -5,16 +5,11 @@ import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 
-class WeeklyActivityProgress extends StatefulWidget {
+class WeeklyActivityProgress extends StatelessWidget {
   final String title;
-  const WeeklyActivityProgress({super.key, required this.title});
+  WeeklyActivityProgress({super.key, required this.title});
 
-  @override
-  State<WeeklyActivityProgress> createState() => _WeightProgressState();
-}
-
-class _WeightProgressState extends State<WeeklyActivityProgress> {
-  String _selectedValue = "this week";
+  final RxString _selectedValue = 'this week'.obs;
 
   static const List<String> xpLabels = [
     '100xp',
@@ -40,7 +35,7 @@ class _WeightProgressState extends State<WeeklyActivityProgress> {
             Row(
               children: [
                 Text(
-                  widget.title,
+                  title,
                   style: getTextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
@@ -57,26 +52,26 @@ class _WeightProgressState extends State<WeeklyActivityProgress> {
                     ),
                   ),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: _selectedValue,
-                      icon: const Icon(
-                        Icons.keyboard_arrow_down,
-                        size: 16,
-                        color: Colors.white,
+                    child: Obx(
+                      () => DropdownButton<String>(
+                        value: _selectedValue.value,
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down,
+                          size: 16,
+                          color: Colors.white,
+                        ),
+                        style: getTextStyle(fontSize: 10, color: Colors.white),
+                        dropdownColor:
+                            themeController.activeTheme.dropdownBackgroundColor,
+                        items: ['this week', 'last week', 'this month']
+                            .map(
+                              (e) => DropdownMenuItem(value: e, child: Text(e)),
+                            )
+                            .toList(),
+                        onChanged: (val) {
+                          if (val != null) _selectedValue.value = val;
+                        },
                       ),
-                      style: getTextStyle(fontSize: 10, color: Colors.white),
-                      dropdownColor:
-                          themeController.activeTheme.dropdownBackgroundColor,
-                      items: ['this week', 'last week', 'this month']
-                          .map(
-                            (e) => DropdownMenuItem(value: e, child: Text(e)),
-                          )
-                          .toList(),
-                      onChanged: (val) {
-                        setState(() {
-                          _selectedValue = val!;
-                        });
-                      },
                     ),
                   ),
                 ),
