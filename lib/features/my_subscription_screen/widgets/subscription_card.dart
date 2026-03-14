@@ -89,7 +89,6 @@ class SubscriptionCard extends StatelessWidget {
   }
 
   Widget _premiumBadge(AppThemeController themeController) {
-
     String? selectedDotIcon =
         IconPath.doticonAdventure; // Default or based on logic
 

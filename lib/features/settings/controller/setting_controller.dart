@@ -18,7 +18,7 @@ class SettingsController extends GetxController {
 
   final userName = ''.obs;
   final nextLevel = 2.obs;
-  final levelStatus = 'test'.obs;
+  final levelStatus = ''.obs;
   final xpRequired = 0.obs;
   final totalEarnXp = 0.obs;
   final currentXP = 0.obs;

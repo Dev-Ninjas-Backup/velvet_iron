@@ -5,12 +5,41 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
 import 'package:velvet_iron/features/medication_screen/controller/medication_controller.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/custom_drop_down.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/dose_history.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/dose_name_textfield.dart';
 
 class TokenContentMedication extends StatelessWidget {
+  String _formatDateTime(DateTime dateTime) {
+    // Example: Wed - 09:30 AM
+    final weekDay = [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun",
+    ][dateTime.weekday - 1];
+    final hour = dateTime.hour % 12 == 0 ? 12 : dateTime.hour % 12;
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    final ampm = dateTime.hour >= 12 ? "PM" : "AM";
+    return "$weekDay - $hour:$minute $ampm";
+  }
+
+  String _getMedIcon(String type) {
+    switch (type.toLowerCase()) {
+      case 'injection':
+        return IconPath.injection;
+      case 'tablet':
+        return IconPath.injection2;
+      default:
+        return IconPath.injection;
+    }
+  }
+
   const TokenContentMedication({super.key, required this.controller});
 
   final MedicationController controller;
@@ -46,9 +75,15 @@ class TokenContentMedication extends StatelessWidget {
                 const SizedBox(width: 6),
                 GestureDetector(
                   onTap: () {
+                    final homeController = Get.find<HomeController>();
                     showDialog(
                       context: context,
-                      builder: (context) => const MedicationPopup(),
+                      builder: (context) => MedicationPopup(
+                        selectedCompanionImage:
+                            homeController.activeCompanionImage.value,
+                        selectedCompanionName:
+                            homeController.activeCompanionName.value,
+                      ),
                     );
                   },
                   child: Image.asset(
@@ -120,20 +155,37 @@ class TokenContentMedication extends StatelessWidget {
               style: getTextStyle(fontSize: 16, fontWeight: FontWeight.w400),
             ),
             SizedBox(height: 5),
-            DoseHistory(
-              title: "Ozempic (4mg)",
-              sub: "1 Injection",
-              time: "Wed - 09:30 AM",
-              iconPath: IconPath.injection,
-              isSelected: RxBool(false),
-            ),
-            DoseHistory(
-              title: "Metformin (400mg)",
-              sub: "120 calories",
-              time: "12 Dec, Wed - 09:00 PM",
-              iconPath: IconPath.injection2,
-              isSelected: RxBool(false),
-            ),
+            Obx(() {
+              if (controller.isHistoryLoading.value) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              final logs = controller.medicationHistory;
+              if (logs.isEmpty) {
+                return Center(
+                  child: Text(
+                    "No dose history found",
+                    style: getTextStyle(fontSize: 14, color: Colors.white54),
+                  ),
+                );
+              }
+              return Column(
+                children: logs.map((med) {
+                  final timeStr = med.loggedAt != null
+                      ? _formatDateTime(med.loggedAt!)
+                      : med.scheduledAt != null
+                      ? _formatDateTime(med.scheduledAt!)
+                      : '';
+                  return DoseHistory(
+                    title: "${med.name} (${med.doseMg.toInt()}mg)",
+                    sub: med.type[0] + med.type.substring(1).toLowerCase(),
+                    time: timeStr,
+                    iconPath: _getMedIcon(med.type),
+                    isSelected: RxBool(false),
+                    isTaken: med.isTaken,
+                  );
+                }).toList(),
+              );
+            }),
           ],
         );
       },

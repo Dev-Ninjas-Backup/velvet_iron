@@ -8,6 +8,7 @@ class DoseHistory extends StatelessWidget {
   final String title, sub, time;
   final String iconPath;
   final RxBool isSelected;
+  final bool isTaken;
 
   const DoseHistory({
     super.key,
@@ -16,6 +17,7 @@ class DoseHistory extends StatelessWidget {
     required this.time,
     required this.iconPath,
     required this.isSelected,
+    required this.isTaken,
   });
 
   @override
@@ -35,13 +37,15 @@ class DoseHistory extends StatelessWidget {
             child: Row(
               children: [
                 Image.asset(
-                  themeController.activeTheme.id == 'adventurer'
-                      ? IconPath.doticonAdventure
-                      : themeController.activeTheme.id == 'mage'
-                      ? IconPath.doticonMage
-                      : themeController.activeTheme.id == 'gamer'
-                      ? IconPath.doticonGamer
-                      : IconPath.doticonReader,
+                  isTaken
+                      ? (themeController.activeTheme.id == 'adventurer'
+                            ? IconPath.doticonAdventure
+                            : themeController.activeTheme.id == 'mage'
+                            ? IconPath.doticonMage
+                            : themeController.activeTheme.id == 'gamer'
+                            ? IconPath.doticonGamer
+                            : IconPath.doticonReader)
+                      : IconPath.whitecircle,
                   width: 22,
                   height: 22,
                 ),

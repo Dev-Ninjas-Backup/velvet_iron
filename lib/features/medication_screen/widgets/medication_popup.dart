@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -7,7 +9,6 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
-import 'package:velvet_iron/features/onboarding_screens/subscription_completion_popup.dart';
 
 class MedicationPopup extends StatefulWidget {
   final VoidCallback? onCollectRewards;
@@ -270,8 +271,8 @@ class _MedicationPopupState extends State<MedicationPopup> {
                         widget.selectedCompanionImage!.isNotEmpty)
                       Image.asset(
                         widget.selectedCompanionImage!,
-                        width: w(120),
-                        height: h(95),
+                        width: w(80),
+                        height: h(80),
                         fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) =>
                             const Icon(
