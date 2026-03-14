@@ -21,7 +21,6 @@ class ScheduleTabContent extends StatelessWidget {
       builder: (themeController) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
           Text(
             "Exercise Type:",
             style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
@@ -59,7 +58,7 @@ class ScheduleTabContent extends StatelessWidget {
                 hintText: "How did it feel??",
                 hintStyle: getTextStyle(
                   fontSize: 12,
-                  color: themeController.activeTheme.todoTimeColor,
+                  color: themeController.activeTheme.textColor,
                 ),
                 filled: true,
                 fillColor: themeController.activeTheme.textfieldColor

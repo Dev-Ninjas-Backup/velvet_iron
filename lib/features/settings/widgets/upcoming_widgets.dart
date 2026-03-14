@@ -160,7 +160,7 @@ class _UpcomingLogContent extends StatelessWidget {
                   style: getTextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
-                    color: themeController.activeTheme.accentGoldColor,
+                    color: themeController.activeTheme.textColor,
                   ),
                 ),
               ],
@@ -202,7 +202,7 @@ class _UpcomingLogContent extends StatelessWidget {
                   style: getTextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w400,
-                    color: themeController.activeTheme.accentGoldColor,
+                    color: themeController.activeTheme.textColor,
                   ),
                 ),
               ),

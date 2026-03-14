@@ -23,7 +23,7 @@ class ExerciseNameTextField extends StatelessWidget {
               hintText: "e.g. push ups",
               hintStyle: getTextStyle(
                 fontSize: 12,
-                color: themeController.activeTheme.todoTimeColor,
+                color: themeController.activeTheme.textColor,
               ),
               filled: true,
               fillColor: themeController.activeTheme.textfieldColor.withValues(

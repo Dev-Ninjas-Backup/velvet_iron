@@ -81,7 +81,7 @@ class LogHistoryItem extends StatelessWidget {
                     secondText,
                     style: getTextStyle(
                       fontSize: 12,
-                      color: themeController.activeTheme.todoTimeColor,
+                      color: themeController.activeTheme.textColor,
                     ),
                   ),
                   if (dateTimeText.isNotEmpty) ...[
@@ -90,7 +90,7 @@ class LogHistoryItem extends StatelessWidget {
                       dateTimeText,
                       style: getTextStyle(
                         fontSize: 12,
-                        color: themeController.activeTheme.todoTimeColor,
+                        color: themeController.activeTheme.textColor,
                       ),
                     ),
                   ],

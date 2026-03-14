@@ -71,8 +71,8 @@ class CustomLogContainer extends StatelessWidget {
                   Text(
                     "Total Rewards:",
                     style: getTextStyle(
-                      color: themeController.activeTheme.todoTimeColor,
                       fontSize: 10,
+                      color: themeController.activeTheme.textColor,
                     ),
                   ),
 
@@ -81,7 +81,7 @@ class CustomLogContainer extends StatelessWidget {
                   Text(
                     "$rewardAmount XP",
                     style: getTextStyle(
-                      color: themeController.activeTheme.todoTimeColor,
+                      color: themeController.activeTheme.textColor,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                     ),

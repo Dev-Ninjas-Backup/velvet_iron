@@ -49,7 +49,7 @@ class UpdatePasswordFormWidget extends StatelessWidget {
             "* Password must be minimum 8 characters",
             style: getTextStyle(
               fontSize: 12,
-              color: Get.find<AppThemeController>().activeTheme.accentGoldColor,
+              color: Get.find<AppThemeController>().activeTheme.textColor,
             ),
           ),
         ],

@@ -23,7 +23,7 @@ class NoteTextField extends StatelessWidget {
               hintText: "How are you feeling today?",
               hintStyle: getTextStyle(
                 fontSize: 12,
-                color: themeController.activeTheme.todoTimeColor,
+                color: themeController.activeTheme.textColor,
               ),
               filled: true,
               fillColor: themeController.activeTheme.textfieldColor,

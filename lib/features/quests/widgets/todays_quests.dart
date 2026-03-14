@@ -98,8 +98,7 @@ class TodaysQuestItem extends StatelessWidget {
                     Text(
                       title,
                       style: getTextStyle(
-                        color: themeController.activeTheme.todoSubtitleColor
-                            .withValues(alpha: 1),
+                        color: themeController.activeTheme.textColor,
                         fontSize: 11,
                       ),
                     ),

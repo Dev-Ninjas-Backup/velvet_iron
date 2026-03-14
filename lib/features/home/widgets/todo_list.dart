@@ -143,10 +143,7 @@ class _TodoTile extends StatelessWidget {
                   Text(
                     todo.sub,
 
-                    style: getTextStyle(
-                      color: theme.todoTimeColor,
-                      fontSize: 11,
-                    ),
+                    style: getTextStyle(color: theme.textColor, fontSize: 11),
                     // overflow: TextOverflow.ellipsis,
                   ),
                 ],
@@ -178,10 +175,7 @@ class _TodoTile extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  todo.time,
-                  style: getTextStyle(color: theme.todoTimeColor),
-                ),
+                Text(todo.time, style: getTextStyle(color: theme.textColor)),
               ],
             ),
           ],

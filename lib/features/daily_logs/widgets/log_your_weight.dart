@@ -46,7 +46,7 @@ class LogYourWeightCard extends StatelessWidget {
                     hintText: "Enter current weight",
                     hintStyle: getTextStyle(
                       fontSize: 12,
-                      color: themeController.activeTheme.todoTimeColor,
+                      color: themeController.activeTheme.textColor,
                     ),
                     filled: true,
                     fillColor: themeController
@@ -105,7 +105,7 @@ class LogYourWeightCard extends StatelessWidget {
                     hintText: "Feeling good today...",
                     hintStyle: getTextStyle(
                       fontSize: 12,
-                      color: themeController.activeTheme.todoTimeColor,
+                      color: themeController.activeTheme.textColor,
                     ),
                     filled: true,
                     fillColor: themeController

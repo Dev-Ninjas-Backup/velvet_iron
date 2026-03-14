@@ -133,15 +133,14 @@ class _MedicationPopupState extends State<MedicationPopup> {
                             Icon(
                               Icons.circle,
                               size: 8,
-                              color:
-                                  themeController.activeTheme.accentGoldColor,
+                              color: themeController.activeTheme.textColor,
                             ),
                             SizedBox(width: 6),
                             Text(
                               'Abdomen:',
                               style: getTextStyle(
                                 fontSize: 14,
-                                color: Colors.white,
+                                color: themeController.activeTheme.textColor,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -163,15 +162,14 @@ class _MedicationPopupState extends State<MedicationPopup> {
                             Icon(
                               Icons.circle,
                               size: 8,
-                              color:
-                                  themeController.activeTheme.accentGoldColor,
+                              color: themeController.activeTheme.textColor,
                             ),
                             SizedBox(width: 6),
                             Text(
                               'Thigh:',
                               style: getTextStyle(
                                 fontSize: 14,
-                                color: Colors.white,
+                                color: themeController.activeTheme.textColor,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -193,15 +191,14 @@ class _MedicationPopupState extends State<MedicationPopup> {
                             Icon(
                               Icons.circle,
                               size: 8,
-                              color:
-                                  themeController.activeTheme.accentGoldColor,
+                              color: themeController.activeTheme.textColor,
                             ),
                             SizedBox(width: 6),
                             Text(
                               'Upper Arm:',
                               style: getTextStyle(
                                 fontSize: 14,
-                                color: Colors.white,
+                                color: themeController.activeTheme.textColor,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),

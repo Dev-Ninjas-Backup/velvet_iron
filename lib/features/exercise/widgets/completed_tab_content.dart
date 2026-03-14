@@ -52,7 +52,7 @@ class CompletedTabContent extends StatelessWidget {
                 hintText: "How did it feel?",
                 hintStyle: getTextStyle(
                   fontSize: 12,
-                  color: themeController.activeTheme.todoTimeColor.withValues(
+                  color: themeController.activeTheme.textColor.withValues(
                     alpha: 0.9,
                   ),
                 ),
