@@ -241,8 +241,6 @@ class HomeController extends GetxController {
         return IconPath.grass;
       case ScheduleType.meal:
         return IconPath.todo;
-      default:
-        return IconPath.todo;
     }
   }
 }

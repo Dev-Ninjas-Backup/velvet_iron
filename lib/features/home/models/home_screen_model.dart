@@ -530,9 +530,7 @@ class ScheduleItem {
     description: (json['description'] ?? '') as String,
     scheduledAt: (json['scheduledAt'] ?? '') as String,
     earnedXp: (json['earnedXp'] ?? 0) as int,
-    details: ScheduleDetails.fromJson(
-      json['details'] as Map<String, dynamic> ?? {},
-    ),
+    details: ScheduleDetails.fromJson(json['details'] as Map<String, dynamic>),
   );
 
   Map<String, dynamic> toJson() => {
