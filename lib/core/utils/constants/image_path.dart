@@ -62,13 +62,13 @@ class ImagePath {
       'assets/images/welcomebackadventurer.png';
   static const String welcomeBackMage = 'assets/images/welcomebackmage.png';
   static const String welcomeBackGamer = 'assets/images/welcomebackgamer.png';
-  static const String welcomeBackReader = 'assets/images/welcomebackreader.png'; 
+  static const String welcomeBackReader = 'assets/images/welcomebackreader.png';
 
-  //character images for character selection 
-  static const String serKael = 'assets/images/ser_kael.png';
-  static const String rvenAshcroft = 'assets/images/rvenashcroft.png';
-  static const String pyraxis = 'assets/images/py_raxis.png';
-  static const String bramIronledger = 'assets/images/bramironledger.png';
+  //character images for character selection
+  static const String serKael = 'assets/images/premiumprofile.png';
+  static const String rvenAshcroft = 'assets/images/charecter_two.png';
+  static const String pyraxis = 'assets/images/charecter_three.png';
+  static const String bramIronledger = 'assets/images/charecter_four.png';
 
   static const String congratulations = 'assets/images/congratulations.png';
 }
