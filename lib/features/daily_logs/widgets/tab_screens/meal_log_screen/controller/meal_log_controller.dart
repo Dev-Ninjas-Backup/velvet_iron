@@ -21,6 +21,11 @@ class MealLogController extends GetxController {
   final selectedDate = DateTime.now().obs;
   final selectedTime = TimeOfDay.now().obs;
 
+  // Track if nutrition fields are populated from barcode scan
+  final isCarbsFromScan = false.obs;
+  final isProteinFromScan = false.obs;
+  final isFatsFromScan = false.obs;
+
   final isLoading = false.obs;
   final loggedMeal = Rxn<MealLogModel>();
 
@@ -41,6 +46,28 @@ class MealLogController extends GetxController {
 
   void setDate(DateTime date) => selectedDate.value = date;
   void setTime(TimeOfDay time) => selectedTime.value = time;
+
+  /// Populate nutrition fields from barcode scanner (read-only after population)
+  void populateNutritionFromScan({
+    required String carbs,
+    required String protein,
+    required String fats,
+  }) {
+    carbsController.text = carbs;
+    proteinController.text = protein;
+    fatController.text = fats;
+
+    // Mark fields as populated from scan (read-only until cleared)
+    isCarbsFromScan.value = true;
+    isProteinFromScan.value = true;
+    isFatsFromScan.value = true;
+
+    print('[MealLogController] Nutrition fields populated from scan:');
+    print('[MealLogController]   carbs=$carbs');
+    print('[MealLogController]   protein=$protein');
+    print('[MealLogController]   fats=$fats');
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -185,6 +212,11 @@ class MealLogController extends GetxController {
     selectedMealType.value = 0;
     selectedDate.value = DateTime.now();
     selectedTime.value = TimeOfDay.now();
+
+    // Reset scan flags
+    isCarbsFromScan.value = false;
+    isProteinFromScan.value = false;
+    isFatsFromScan.value = false;
   }
 
   @override

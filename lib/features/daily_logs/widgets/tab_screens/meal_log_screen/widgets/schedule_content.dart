@@ -80,51 +80,51 @@ class ScheduleContent extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 10),
-            Text(
-              "What did you eat?",
-              style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              height: 69,
-              child: TextField(
-                maxLines: 3,
-                cursorColor: themeController.activeTheme.accentGoldColor,
-                style: getTextStyle(fontSize: 12, color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: "Grilled chicken salad with olive oil dressing...?",
-                  hintStyle: getTextStyle(
-                    fontSize: 12,
-                    color: themeController.activeTheme.textColor,
-                  ),
-                  filled: true,
-                  fillColor: themeController.activeTheme.textfieldColor,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      color: themeController.activeTheme.borderColor,
-                      width: 1.11,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      color: themeController.activeTheme.accentGoldColor,
-                      width: 1.11,
-                    ),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      color: themeController.activeTheme.accentGoldColor,
-                      width: 1.11,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 14),
+            // const SizedBox(height: 10),
+            // Text(
+            //   "What did you eat?",
+            //   style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+            // ),
+            // const SizedBox(height: 10),
+            // SizedBox(
+            //   height: 69,
+            //   child: TextField(
+            //     maxLines: 3,
+            //     cursorColor: themeController.activeTheme.accentGoldColor,
+            //     style: getTextStyle(fontSize: 12, color: Colors.white),
+            //     decoration: InputDecoration(
+            //       hintText: "Grilled chicken salad with olive oil dressing...?",
+            //       hintStyle: getTextStyle(
+            //         fontSize: 12,
+            //         color: themeController.activeTheme.textColor,
+            //       ),
+            //       filled: true,
+            //       fillColor: themeController.activeTheme.textfieldColor,
+            //       enabledBorder: OutlineInputBorder(
+            //         borderRadius: BorderRadius.circular(10),
+            //         borderSide: BorderSide(
+            //           color: themeController.activeTheme.borderColor,
+            //           width: 1.11,
+            //         ),
+            //       ),
+            //       focusedBorder: OutlineInputBorder(
+            //         borderRadius: BorderRadius.circular(10),
+            //         borderSide: BorderSide(
+            //           color: themeController.activeTheme.accentGoldColor,
+            //           width: 1.11,
+            //         ),
+            //       ),
+            //       border: OutlineInputBorder(
+            //         borderRadius: BorderRadius.circular(10),
+            //         borderSide: BorderSide(
+            //           color: themeController.activeTheme.accentGoldColor,
+            //           width: 1.11,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            // const SizedBox(height: 14),
             // ...existing code...
             const SizedBox(height: 20),
             Obx(

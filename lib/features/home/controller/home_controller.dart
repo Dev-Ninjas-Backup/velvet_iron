@@ -48,18 +48,7 @@ class HomeController extends GetxController {
 
   /// Check if user has logged mood for today
   bool get hasMoodLoggedToday {
-    final todayMood = userProfile.value?.todayMood;
-    if (todayMood == null) return false;
-
-    final today = DateTime.now();
-    final moodDate = DateTime(
-      todayMood.loggedAt.year,
-      todayMood.loggedAt.month,
-      todayMood.loggedAt.day,
-    );
-    final todayDate = DateTime(today.year, today.month, today.day);
-
-    return moodDate.compareTo(todayDate) == 0;
+    return userProfile.value?.todayMood != null;
   }
 
   /// Get today's mood if logged

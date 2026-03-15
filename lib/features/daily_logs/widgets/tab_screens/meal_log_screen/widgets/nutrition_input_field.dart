@@ -6,11 +6,13 @@ import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller
 class NutritionInputField extends StatelessWidget {
   final String hintText;
   final TextEditingController? controller;
+  final bool enabled;
 
   const NutritionInputField({
     super.key,
     required this.hintText,
     this.controller,
+    this.enabled = true,
   });
 
   @override
@@ -22,10 +24,18 @@ class NutritionInputField extends StatelessWidget {
           height: 40, // Fixed height
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: themeController.activeTheme.textfieldColor,
+            color: enabled
+                ? themeController.activeTheme.textfieldColor
+                : themeController.activeTheme.textfieldColor.withValues(
+                    alpha: 0.5,
+                  ),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: themeController.activeTheme.borderColor,
+              color: enabled
+                  ? themeController.activeTheme.borderColor
+                  : themeController.activeTheme.borderColor.withValues(
+                      alpha: 0.3,
+                    ),
               width: 1.11,
             ),
           ),
@@ -35,14 +45,22 @@ class NutritionInputField extends StatelessWidget {
               Expanded(
                 child: TextField(
                   controller: controller,
+                  enabled: enabled,
                   keyboardType: TextInputType.number,
                   cursorColor: themeController.activeTheme.todoTimeColor,
-                  style: getTextStyle(fontSize: 12, color: Colors.white),
+                  style: getTextStyle(
+                    fontSize: 12,
+                    color: enabled ? Colors.white : Colors.white54,
+                  ),
                   decoration: InputDecoration(
                     hintText: hintText,
                     hintStyle: getTextStyle(
                       fontSize: 12,
-                      color: themeController.activeTheme.textColor,
+                      color: enabled
+                          ? themeController.activeTheme.textColor
+                          : themeController.activeTheme.textColor.withValues(
+                              alpha: 0.5,
+                            ),
                     ),
                     border: InputBorder.none,
                     isDense: true,
@@ -50,7 +68,13 @@ class NutritionInputField extends StatelessWidget {
                   ),
                 ),
               ),
-              Text("g", style: getTextStyle(fontSize: 12, color: Colors.white)),
+              Text(
+                "g",
+                style: getTextStyle(
+                  fontSize: 12,
+                  color: enabled ? Colors.white : Colors.white54,
+                ),
+              ),
             ],
           ),
         );
