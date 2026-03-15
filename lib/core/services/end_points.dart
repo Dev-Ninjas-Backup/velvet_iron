@@ -1,6 +1,4 @@
 class Urls {
-  static String markMealAsTaken(String id) =>
-      '$baseUrl/meal-schedule/$id/taken?isTaken=true';
   static const String baseUrl = 'https://velvet.api.softvence.app';
 
   static const String register = '$baseUrl/auth/register';
@@ -37,6 +35,8 @@ class Urls {
   static const String getTodayMoodLog = '$baseUrl/mood-log/today';
   static const String mealLog = '$baseUrl/meal-log';
   static const String mealSchedule = '$baseUrl/meal-schedule';
+    static String markMealAsTaken(String id) =>
+      '$baseUrl/meal-schedule/$id/taken?isTaken=true';
   static String mealLogHistory(int limit, int offset) =>
       '$baseUrl/meal-log/history?limit=$limit&offset=$offset';
   // static const String mealLog = '$baseUrl/meal-log';
