@@ -111,17 +111,26 @@ class TokenContent extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    NutritionInputField(
-                      hintText: "carbs",
-                      controller: controller.carbsController,
+                    Obx(
+                      () => NutritionInputField(
+                        hintText: "carbs",
+                        controller: controller.carbsController,
+                        enabled: !controller.isCarbsFromScan.value,
+                      ),
                     ),
-                    NutritionInputField(
-                      hintText: "protein",
-                      controller: controller.proteinController,
+                    Obx(
+                      () => NutritionInputField(
+                        hintText: "protein",
+                        controller: controller.proteinController,
+                        enabled: !controller.isProteinFromScan.value,
+                      ),
                     ),
-                    NutritionInputField(
-                      hintText: "fats",
-                      controller: controller.fatController,
+                    Obx(
+                      () => NutritionInputField(
+                        hintText: "fats",
+                        controller: controller.fatController,
+                        enabled: !controller.isFatsFromScan.value,
+                      ),
                     ),
                   ],
                 ),

@@ -235,8 +235,8 @@ class MedicationPopup extends StatelessWidget {
                         selectedCompanionImage!.isNotEmpty)
                       Image.asset(
                         selectedCompanionImage!,
-                        width: w(80),
-                        height: h(80),
+                        width: w(90),
+                        height: h(90),
                         fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) =>
                             const Icon(

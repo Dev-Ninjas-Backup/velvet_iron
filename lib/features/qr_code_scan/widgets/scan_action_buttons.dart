@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
+import 'package:velvet_iron/features/qr_code_scan/controller/scan_barcode_controller.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/controller/meal_log_controller.dart';
 
 class ScanActionButtons extends StatelessWidget {
   const ScanActionButtons({super.key});
@@ -34,7 +36,38 @@ class ScanActionButtons extends StatelessWidget {
             const SizedBox(width: 16),
             Expanded(
               child: GestureDetector(
-                onTap: () => Get.back(),
+                onTap: () {
+                  try {
+                    final scanController = Get.find<ScanBarcodeController>();
+                    final mealLogController = Get.find<MealLogController>();
+
+                    final carbs = scanController.carbs.text.trim();
+                    final protein = scanController.protein.text.trim();
+                    final fats = scanController.fats.text.trim();
+
+                    if (carbs.isNotEmpty &&
+                        protein.isNotEmpty &&
+                        fats.isNotEmpty) {
+                      mealLogController.populateNutritionFromScan(
+                        carbs: carbs,
+                        protein: protein,
+                        fats: fats,
+                      );
+                      debugPrint(
+                        '[ScanActionButtons] Data transferred to MealLogController',
+                      );
+                    } else {
+                      debugPrint(
+                        '[ScanActionButtons] ⚠️ Nutrition fields are empty',
+                      );
+                    }
+                  } catch (e) {
+                    debugPrint(
+                      '[ScanActionButtons] ❌ Error transferring data: $e',
+                    );
+                  }
+                  Get.back();
+                },
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
