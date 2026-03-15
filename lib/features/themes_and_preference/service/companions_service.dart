@@ -1,8 +1,10 @@
 // ignore_for_file: avoid_print
 
+import 'package:get/get.dart';
 import 'package:get/get_connect/connect.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
+import 'package:velvet_iron/features/settings/controller/setting_controller.dart';
 
 class CompanionData {
   final String id;
@@ -188,6 +190,14 @@ class CompanionsService extends GetConnect {
       print('Activate Companion Body: ${response.body}');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        try {
+          final controller = Get.find<SettingsController>();
+          await controller.fetchActiveCompanion();
+        } catch (e) {
+          print('Error updating SettingsController: $e');
+          Get.put(SettingsController());
+        }
+
         return {
           'success': true,
           ...?(response.body is Map

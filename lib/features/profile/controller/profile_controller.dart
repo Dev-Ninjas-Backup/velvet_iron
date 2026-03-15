@@ -56,12 +56,15 @@ class ProfileController extends GetxController {
         refreshToken: refreshToken,
       );
 
-      fullName.value = profile.name;
-      fullNameController.text = profile.name;
+      fullName.value = profile.user.name;
+      userName.value = profile.userName;
+
+      fullNameController.text = profile.user.name;
+      usernameController.text = profile.userName;
 
       // ✅ Use profilePhoto if available, otherwise fall back to saved avatar
-      if (profile.profilePhoto.isNotEmpty) {
-        remoteProfilePhoto.value = profile.profilePhoto;
+      if (profile.profilePhoto != null && profile.profilePhoto!.isNotEmpty) {
+        remoteProfilePhoto.value = profile.profilePhoto!;
       } else {
         final savedAvatar = await SharedPreferencesHelper.getAvatar();
         if (savedAvatar != null && savedAvatar.isNotEmpty) {

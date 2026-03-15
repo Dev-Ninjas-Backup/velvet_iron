@@ -36,38 +36,28 @@ class SettingScreen extends StatelessWidget {
                   height: double.infinity,
                 ),
               ),
-              SafeArea(
+              SingleChildScrollView(
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: SettingsAppBar(),
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.only(
-                          left: 10,
-                          right: 10,
-                          top: 20,
-                          bottom: 90,
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 52),
+                          child: SettingsAppBar(),
                         ),
-                        child: Column(
-                          children: [
-                            const UserProfileWidget(),
-                            const SizedBox(height: 20),
-                            const UpcomingLogWidget(),
-                            const SizedBox(height: 20),
-                            const WeightProgress(title: 'Weekly Activity'),
-                            const SizedBox(height: 20),
-                            const GeneralSettingsWidget(),
-                            const SizedBox(height: 22),
-                            const LogoutWidget(),
-                            const SizedBox(height: 20),
-                            const AppVersionWidget(),
-                            const SizedBox(height: 20),
-                          ],
-                        ),
-                      ),
+                        const UserProfileWidget(),
+                        const SizedBox(height: 20),
+                        const UpcomingLogWidget(),
+                        const SizedBox(height: 20),
+                        const WeightProgress(title: 'Weekly Activity'),
+                        const SizedBox(height: 20),
+                        const GeneralSettingsWidget(),
+                        const SizedBox(height: 22),
+                        const LogoutWidget(),
+                        const SizedBox(height: 20),
+                        const AppVersionWidget(),
+                        const SizedBox(height: 20),
+                      ],
                     ),
                   ],
                 ),

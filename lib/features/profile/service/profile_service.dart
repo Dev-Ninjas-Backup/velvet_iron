@@ -4,10 +4,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:velvet_iron/core/services/end_points.dart';
+import 'package:velvet_iron/features/home/models/home_screen_model.dart';
 import 'package:velvet_iron/features/profile/model/update_profile_model.dart';
 
 class ProfileService {
-  Future<DashboardProfileModel> getProfile({
+  Future<UserProfile> getProfile({
     required String accessToken,
     required String refreshToken,
   }) async {
@@ -29,7 +30,7 @@ class ProfileService {
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
-        return DashboardProfileModel.fromJson(json);
+        return UserProfile.fromJson(json);
       }
 
       String errorMessage = 'Failed to fetch profile (${response.statusCode})';

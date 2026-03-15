@@ -27,7 +27,7 @@ class FigmaBackButton extends StatelessWidget {
             : AppColors.textFieldFillColor;
 
         final backButton = GestureDetector(
-          onTap: onPressed ?? () => Navigator.pop(context),
+          onTap: onPressed ?? () => Get.back(),
           child: Container(
             width: size,
             height: size,
