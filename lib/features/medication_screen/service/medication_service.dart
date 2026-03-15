@@ -116,6 +116,53 @@ class MedicationService {
     }
   }
 
+  // PATCH medication-schedule/{id}/taken
+  Future<Medication> markMedicationAsTaken({
+    required String medicationId,
+    required String accessToken,
+    required String refreshToken,
+  }) async {
+    final uri = Uri.parse(Urls.updateMedicationHHistory(medicationId));
+    debugPrint('[MedicationService] Mark taken PATCH: $uri');
+
+    try {
+      final response = await http.patch(
+        uri,
+        headers: {
+          'accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+          'x-refresh-token': refreshToken,
+        },
+      );
+
+      debugPrint(
+        '[MedicationService] Mark taken Response status: ${response.statusCode}',
+      );
+      debugPrint(
+        '[MedicationService] Mark taken Response body: ${response.body}',
+      );
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
+        debugPrint('[MedicationService] Marked as taken! id=$medicationId');
+        return Medication.fromJson(jsonData);
+      } else {
+        final errorData = jsonDecode(response.body) as Map<String, dynamic>;
+        throw MedicationException(
+          errorData['message'] ??
+              'Failed to mark as taken (${response.statusCode})',
+        );
+      }
+    } on SocketException {
+      throw MedicationException('No internet connection.');
+    } on HttpException catch (e) {
+      throw MedicationException('HTTP error: ${e.message}');
+    } catch (e) {
+      if (e is MedicationException) rethrow;
+      throw MedicationException('Unexpected error: $e');
+    }
+  }
+
   // GET medication-history
 
   Future<MedicationHistoryResponse> getMedicationHistory({

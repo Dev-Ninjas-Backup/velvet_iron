@@ -26,6 +26,7 @@ class Urls {
   static const String medication = '$baseUrl/medication';
   static const String medicationHistory = '$baseUrl/medication/history';
   static const String medicationSchedule = '$baseUrl/medication-schedule';
+  static String updateMedicationHHistory(String id) => '$baseUrl/medication-schedule/$id/taken?isTaken=true';
   static const String moodLog = '$baseUrl/mood-log';
   static String getMoodLogHistory(int limit, int offset) =>
       '$baseUrl/mood-log/history?limit=$limit&offset=$offset';

@@ -8,6 +8,7 @@ class CustomLogContainer extends StatelessWidget {
   final String title;
   final String value;
   final String rewardAmount;
+  final VoidCallback? onIconTap;
 
   const CustomLogContainer({
     super.key,
@@ -15,6 +16,7 @@ class CustomLogContainer extends StatelessWidget {
     required this.title,
     required this.value,
     required this.rewardAmount,
+    this.onIconTap,
   });
 
   @override
@@ -36,7 +38,26 @@ class CustomLogContainer extends StatelessWidget {
               /// Top Row
               Row(
                 children: [
-                  Image.asset(iconPath, width: 36, height: 36),
+                  // Medication Icon
+                  onIconTap != null
+                      ? MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: () {
+                              debugPrint('[CustomLogContainer] Icon tapped!');
+                              onIconTap!();
+                            },
+                            child: Opacity(
+                              opacity: 0.8,
+                              child: Image.asset(
+                                iconPath,
+                                width: 36,
+                                height: 36,
+                              ),
+                            ),
+                          ),
+                        )
+                      : Image.asset(iconPath, width: 36, height: 36),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Column(
