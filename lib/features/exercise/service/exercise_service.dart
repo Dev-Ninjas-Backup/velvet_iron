@@ -146,4 +146,45 @@ class ExerciseService {
       return null;
     }
   }
+
+  /// Mark a scheduled exercise as taken (PATCH /exercise-log/{id}/taken?isTaken=true)
+  Future<Map<String, dynamic>?> markExerciseAsTaken({
+    required String exerciseId,
+    required String accessToken,
+    required String refreshToken,
+  }) async {
+    final uri = Uri.parse(Urls.updateExerciseHHistory(exerciseId));
+    print('[ExerciseService] Mark taken PATCH: $uri');
+
+    try {
+      final response = await http.patch(
+        uri,
+        headers: {
+          'accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+          'x-refresh-token': refreshToken,
+        },
+      );
+
+      print(
+        '[ExerciseService] Mark taken Response status: \\${response.statusCode}',
+      );
+      print('[ExerciseService] Mark taken Response body: \\${response.body}');
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
+        print('[ExerciseService] Marked as taken! id=\\$exerciseId');
+        return jsonData;
+      } else {
+        final errorData = jsonDecode(response.body) as Map<String, dynamic>;
+        print(
+          '[ExerciseService] ❌ Mark taken error: \\${errorData['message'] ?? response.body}',
+        );
+        return null;
+      }
+    } catch (e) {
+      print('[ExerciseService] ❌ Mark taken Exception: \\${e.toString()}');
+      return null;
+    }
+  }
 }

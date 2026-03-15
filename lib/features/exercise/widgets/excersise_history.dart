@@ -8,6 +8,8 @@ class ExcersiseHistory extends StatelessWidget {
   final String title, sub, time;
   final String iconPath;
   final RxBool isSelected;
+  final bool isTaken;
+  final VoidCallback? onStatusIconTap;
 
   const ExcersiseHistory({
     super.key,
@@ -16,6 +18,8 @@ class ExcersiseHistory extends StatelessWidget {
     required this.time,
     required this.iconPath,
     required this.isSelected,
+    required this.isTaken,
+    this.onStatusIconTap,
   });
 
   @override
@@ -33,18 +37,47 @@ class ExcersiseHistory extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Image.asset(
-                  themeController.activeTheme.id == 'adventurer'
-                      ? IconPath.doticonAdventure
-                      : themeController.activeTheme.id == 'mage'
-                      ? IconPath.doticonMage
-                      : themeController.activeTheme.id == 'gamer'
-                      ? IconPath.doticonGamer
-                      : IconPath.doticonReader,
-                  width: 22,
-                  height: 22,
-                ),
-
+                // Status Icon - TAPPABLE
+                onStatusIconTap != null && !isTaken
+                    ? MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onTap: () {
+                            debugPrint(
+                              '[ExcersiseHistory] 🖱️ Status icon tapped!',
+                            );
+                            onStatusIconTap!();
+                          },
+                          child: Image.asset(
+                            isTaken
+                                ? (themeController.activeTheme.id ==
+                                          'adventurer'
+                                      ? IconPath.doticonAdventure
+                                      : themeController.activeTheme.id == 'mage'
+                                      ? IconPath.doticonMage
+                                      : themeController.activeTheme.id ==
+                                            'gamer'
+                                      ? IconPath.doticonGamer
+                                      : IconPath.doticonReader)
+                                : IconPath.whitecircle,
+                            width: 22,
+                            height: 22,
+                          ),
+                        ),
+                      )
+                    : Image.asset(
+                        isTaken
+                            ? (themeController.activeTheme.id == 'adventurer'
+                                  ? IconPath.doticonAdventure
+                                  : themeController.activeTheme.id == 'mage'
+                                  ? IconPath.doticonMage
+                                  : themeController.activeTheme.id == 'gamer'
+                                  ? IconPath.doticonGamer
+                                  : IconPath.doticonReader)
+                            : IconPath.whitecircle,
+                        width: 22,
+                        height: 22,
+                      ),
                 const SizedBox(width: 8),
 
                 Image.asset(

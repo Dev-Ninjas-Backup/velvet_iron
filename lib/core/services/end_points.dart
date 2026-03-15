@@ -1,4 +1,6 @@
 class Urls {
+  static String markMealAsTaken(String id) =>
+      '$baseUrl/meal-schedule/$id/taken?isTaken=true';
   static const String baseUrl = 'https://velvet.api.softvence.app';
 
   static const String register = '$baseUrl/auth/register';
@@ -26,7 +28,8 @@ class Urls {
   static const String medication = '$baseUrl/medication';
   static const String medicationHistory = '$baseUrl/medication/history';
   static const String medicationSchedule = '$baseUrl/medication-schedule';
-  static String updateMedicationHHistory(String id) => '$baseUrl/medication-schedule/$id/taken?isTaken=true';
+  static String updateMedicationHHistory(String id) =>
+      '$baseUrl/medication-schedule/$id/taken?isTaken=true';
   static const String moodLog = '$baseUrl/mood-log';
   static String getMoodLogHistory(int limit, int offset) =>
       '$baseUrl/mood-log/history?limit=$limit&offset=$offset';
@@ -43,6 +46,8 @@ class Urls {
   static const String exerciseLog = '$baseUrl/exercise-log';
   static const String exerciseHistory = '$baseUrl/exercise-log/history';
   static const String exerciseLogSchedule = '$baseUrl/exercise-log/schedule';
+  static String updateExerciseHHistory(String id) =>
+      '$baseUrl/exercise-log/$id/taken?isTaken=true';
   static const String firebaseLogin = '$baseUrl/auth/firebase-login';
   static const String quests = '$baseUrl/xp-stats/quests';
   static const String addXP = '$baseUrl/profile/add-xp/log';

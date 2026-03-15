@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/exercise/model/exercise_model.dart';
 import 'package:velvet_iron/features/exercise/service/exercise_service.dart';
 
@@ -190,7 +191,7 @@ class ExerciseController extends GetxController {
       print('✅ Exercise Scheduled Successfully: ${jsonEncode(response)}');
       await fetchExerciseHistory();
       EasyLoading.showSuccess('Exercise scheduled!');
-      _clearFields(); 
+      _clearFields();
     } catch (e) {
       print('❌ Schedule Exercise Error: $e');
       EasyLoading.showError('Failed to schedule exercise. Please try again.');
@@ -198,4 +199,46 @@ class ExerciseController extends GetxController {
       EasyLoading.dismiss();
     }
   }
+
+  /// Mark a scheduled exercise as taken (PATCH)
+  Future<void> markExerciseAsTaken(String exerciseId) async {
+    try {
+      print(
+        '[ExerciseController] 🔄 Starting markExerciseAsTaken for ID: $exerciseId',
+      );
+      EasyLoading.show(status: 'Marking as taken...');
+      final accessToken = await SharedPreferencesHelper.getAccessToken();
+      final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+      if (accessToken == null || refreshToken == null) {
+        print('[ExerciseController] ❌ Tokens are null!');
+        EasyLoading.showError('Session expired. Please log in again.');
+        return;
+      }
+      final response = await _exerciseService.markExerciseAsTaken(
+        exerciseId: exerciseId,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      );
+      if (response == null) {
+        print('[ExerciseController] ❌ Mark as taken failed');
+        EasyLoading.showError('Failed to mark as taken.');
+        return;
+      }
+      print('[ExerciseController] ✅ Marked as taken: $response');
+      await fetchExerciseHistory();
+      EasyLoading.showSuccess('Exercise marked as taken!');
+    } catch (e) {
+      print('[ExerciseController] ❌ MarkExerciseAsTaken Error: $e');
+      EasyLoading.showError('Failed to mark as taken.');
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  // Computed: All scheduled exercises (not taken)
+  List<Exercise> get scheduledExercises =>
+      exercises.where((e) => !e.isTaken).toList();
+  // Computed: All completed exercises (taken)
+  List<Exercise> get completedExercises =>
+      exercises.where((e) => e.isTaken).toList();
 }
