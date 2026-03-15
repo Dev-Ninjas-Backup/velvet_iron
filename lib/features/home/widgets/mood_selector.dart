@@ -84,23 +84,36 @@ class MoodSelector extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ...moods.map(
-                    (m) => Container(
+                  ...moods.map((m) {
+                    final moodLabel = m['label'] as String;
+                    final moodEnumString =
+                        homeController.todayMoodData?.mood.toString() ?? '';
+                    final isLoggedMood =
+                        homeController.hasMoodLoggedToday &&
+                        (moodEnumString.contains(moodLabel.toUpperCase()));
+
+                    return Container(
                       width: 55,
                       height: 80,
                       padding: const EdgeInsets.only(top: 0, bottom: 4),
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: homeController.hasMoodLoggedToday
+                          color: isLoggedMood
+                              ? activeTheme.moodBorderColor
+                              : homeController.hasMoodLoggedToday
                               ? activeTheme.moodBorderColor.withValues(
                                   alpha: 0.5,
                                 )
                               : activeTheme.moodBorderColor,
+                          width: isLoggedMood ? 2 : 1,
                         ),
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: Opacity(
-                        opacity: homeController.hasMoodLoggedToday ? 0.6 : 1.0,
+                        opacity:
+                            homeController.hasMoodLoggedToday && !isLoggedMood
+                            ? 0.3
+                            : 1.0,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -126,8 +139,8 @@ class MoodSelector extends StatelessWidget {
                           ],
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  }),
                   GestureDetector(
                     onTap: homeController.hasMoodLoggedToday
                         ? null
