@@ -183,16 +183,7 @@ class ScheduleContentMedication extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              final allLogs = controller.medicationHistory;
-              final nextSchedule = controller.historyData.value?.nextSchedule;
-
-              // Filter to only show medications that are NOT the next schedule
-              // (only show completed/taken doses)
-              final logs = allLogs
-                  .where(
-                    (med) => nextSchedule == null || med.id != nextSchedule.id,
-                  )
-                  .toList();
+              final logs = controller.completedMedications;
 
               if (logs.isEmpty) {
                 return Center(
@@ -233,9 +224,8 @@ class ScheduleContentMedication extends StatelessWidget {
 
             const SizedBox(height: 14),
             Obx(() {
-              final next = controller.historyData.value?.nextSchedule;
-              if (next == null) return const SizedBox.shrink();
-
+              final scheduled = controller.scheduledMedications;
+              if (scheduled.isEmpty) return const SizedBox.shrink();
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -247,24 +237,27 @@ class ScheduleContentMedication extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  DoseHistory(
-                    title: "${next.name} (${next.doseMg.toInt()}mg)",
-                    sub: next.type[0] + next.type.substring(1).toLowerCase(),
-                    time: next.scheduledAt != null
+                  ...scheduled.map((next) {
+                    final timeStr = next.scheduledAt != null
                         ? _formatDateTime(next.scheduledAt!)
-                        : '',
-                    iconPath: _getMedIcon(next.type),
-                    isSelected: RxBool(false),
-                    isTaken: next.isTaken,
-                    onStatusIconTap: !next.isTaken
-                        ? () {
-                            debugPrint(
-                              '[ScheduleContent] 🖱️ Status icon tapped for next dose ${next.name}',
-                            );
-                            controller.markMedicationAsTaken(next.id);
-                          }
-                        : null,
-                  ),
+                        : '';
+                    return DoseHistory(
+                      title: "${next.name} (${next.doseMg.toInt()}mg)",
+                      sub: next.type[0] + next.type.substring(1).toLowerCase(),
+                      time: timeStr,
+                      iconPath: _getMedIcon(next.type),
+                      isSelected: RxBool(false),
+                      isTaken: next.isTaken,
+                      onStatusIconTap: !next.isTaken
+                          ? () {
+                              debugPrint(
+                                '[ScheduleContent] 🖱️ Status icon tapped for next dose ${next.name}',
+                              );
+                              controller.markMedicationAsTaken(next.id);
+                            }
+                          : null,
+                    );
+                  }).toList(),
                 ],
               );
             }),

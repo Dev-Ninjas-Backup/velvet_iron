@@ -298,4 +298,11 @@ class MedicationController extends GetxController {
       errorMessage.value = e.toString();
     }
   }
+
+  // Computed: All scheduled medications (not taken)
+  List<Medication> get scheduledMedications =>
+      medicationHistory.where((e) => !e.isTaken).toList();
+  // Computed: All completed medications (taken)
+  List<Medication> get completedMedications =>
+      medicationHistory.where((e) => e.isTaken).toList();
 }

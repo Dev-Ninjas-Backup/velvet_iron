@@ -183,13 +183,15 @@ class ExerciseScreen extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
+                          // Exercise History (only completed)
                           ListView.builder(
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: controller.exercises.length,
+                            itemCount: controller.completedExercises.length,
                             itemBuilder: (context, index) {
-                              final exercise = controller.exercises[index];
+                              final exercise =
+                                  controller.completedExercises[index];
                               final loggedAt = exercise.loggedAt.toLocal();
                               final dayName = const [
                                 'Mon',
@@ -220,48 +222,29 @@ class ExerciseScreen extends StatelessWidget {
                                     exercise.name,
                                   ),
                                   isSelected: RxBool(false),
+                                  isTaken: exercise.isTaken,
+                                  onStatusIconTap: !exercise.isTaken
+                                      ? () {
+                                          debugPrint(
+                                            '[ExerciseScreen] 🖱️ Status icon tapped for ${exercise.name}',
+                                          );
+                                          controller.markExerciseAsTaken(
+                                            exercise.id,
+                                          );
+                                        }
+                                      : null,
                                 ),
                               );
                             },
                           ),
 
-                          // Next Exercise section (below history, only on schedule tab)
+                          // Next Exercise section (all scheduled, not just one)
                           Obx(() {
                             if (controller.selectedExerciseTab.value != 1)
                               return const SizedBox.shrink();
-                            final next = controller.nextSchedule.value;
-                            if (next == null || next.scheduledAt == null)
+                            final scheduled = controller.scheduledExercises;
+                            if (scheduled.isEmpty)
                               return const SizedBox.shrink();
-                            final dayName = const [
-                              'Mon',
-                              'Tue',
-                              'Wed',
-                              'Thu',
-                              'Fri',
-                              'Sat',
-                              'Sun',
-                            ][next.scheduledAt!.weekday - 1];
-                            final hour = next.scheduledAt!.hour
-                                .toString()
-                                .padLeft(2, '0');
-                            final minute = next.scheduledAt!.minute
-                                .toString()
-                                .padLeft(2, '0');
-                            final timeStr = "$dayName - $hour:$minute";
-                            String iconPath;
-                            switch (next.name) {
-                              case 'Yoga Meditation':
-                                iconPath = IconPath.yoga;
-                                break;
-                              case 'Running':
-                                iconPath = IconPath.heart;
-                                break;
-                              case 'Squats':
-                                iconPath = IconPath.dumble;
-                                break;
-                              default:
-                                iconPath = IconPath.heart;
-                            }
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -274,13 +257,62 @@ class ExerciseScreen extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 10),
-                                ExcersiseHistory(
-                                  title: next.name,
-                                  sub: "${next.type} - ${next.duration} min",
-                                  time: timeStr,
-                                  iconPath: iconPath,
-                                  isSelected: RxBool(false),
-                                ),
+                                ...scheduled.map((next) {
+                                  final dayName = next.scheduledAt != null
+                                      ? const [
+                                          'Mon',
+                                          'Tue',
+                                          'Wed',
+                                          'Thu',
+                                          'Fri',
+                                          'Sat',
+                                          'Sun',
+                                        ][next.scheduledAt!.weekday - 1]
+                                      : '-';
+                                  final hour = next.scheduledAt != null
+                                      ? next.scheduledAt!.hour
+                                            .toString()
+                                            .padLeft(2, '0')
+                                      : '--';
+                                  final minute = next.scheduledAt != null
+                                      ? next.scheduledAt!.minute
+                                            .toString()
+                                            .padLeft(2, '0')
+                                      : '--';
+                                  final timeStr = "$dayName - $hour:$minute";
+                                  String iconPath;
+                                  switch (next.name) {
+                                    case 'Yoga Meditation':
+                                      iconPath = IconPath.yoga;
+                                      break;
+                                    case 'Running':
+                                      iconPath = IconPath.heart;
+                                      break;
+                                    case 'Squats':
+                                      iconPath = IconPath.dumble;
+                                      break;
+                                    default:
+                                      iconPath = IconPath.heart;
+                                  }
+                                  return ExcersiseHistory(
+                                    title: next.name,
+                                    sub: "${next.type} - ${next.duration} min",
+                                    time: timeStr,
+                                    iconPath: iconPath,
+                                    isSelected: RxBool(false),
+                                    isTaken: next.isTaken,
+                                    onStatusIconTap: !next.isTaken
+                                        ? () {
+                                            debugPrint(
+                                              '[ExerciseScreen] 🖱️ Status icon tapped for next exercise ${next.name}',
+                                            );
+                                            controller.markExerciseAsTaken(
+                                              next.id,
+                                            );
+                                          }
+                                        : null,
+                                  );
+                                }).toList(),
                               ],
                             );
                           }),
