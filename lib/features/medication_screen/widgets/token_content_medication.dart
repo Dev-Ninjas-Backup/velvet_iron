@@ -159,7 +159,17 @@ class TokenContentMedication extends StatelessWidget {
               if (controller.isHistoryLoading.value) {
                 return const Center(child: CircularProgressIndicator());
               }
-              final logs = controller.medicationHistory;
+
+              final allLogs = controller.medicationHistory;
+              final nextSchedule = controller.historyData.value?.nextSchedule;
+
+              // Filter to only show medications that are NOT the next schedule
+              final logs = allLogs
+                  .where(
+                    (med) => nextSchedule == null || med.id != nextSchedule.id,
+                  )
+                  .toList();
+
               if (logs.isEmpty) {
                 return Center(
                   child: Text(
@@ -182,6 +192,14 @@ class TokenContentMedication extends StatelessWidget {
                     iconPath: _getMedIcon(med.type),
                     isSelected: RxBool(false),
                     isTaken: med.isTaken,
+                    onStatusIconTap: !med.isTaken
+                        ? () {
+                            debugPrint(
+                              '[TokenContent] 🖱️ Status icon tapped for ${med.name}',
+                            );
+                            controller.markMedicationAsTaken(med.id);
+                          }
+                        : null,
                   );
                 }).toList(),
               );

@@ -238,4 +238,64 @@ class MedicationController extends GetxController {
   void updateDate(DateTime newDate) {
     selectedDate.value = newDate;
   }
+
+  // PATCH: Mark medication as taken
+  Future<void> markMedicationAsTaken(String medicationId) async {
+    try {
+      debugPrint(
+        '[MedicationController] 🔄 Starting markMedicationAsTaken for ID: $medicationId',
+      );
+
+      EasyLoading.show(status: 'Marking as taken...');
+
+      final accessToken = await SharedPreferencesHelper.getAccessToken();
+      final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+
+      debugPrint(
+        '[MedicationController] ✓ Token check - accessToken: ${accessToken?.isNotEmpty}, refreshToken: ${refreshToken?.isNotEmpty}',
+      );
+
+      if (accessToken == null || refreshToken == null) {
+        debugPrint('[MedicationController] ❌ ERROR: Tokens are null!');
+        EasyLoading.dismiss();
+        EasyLoading.showError('Session expired. Please log in again.');
+        return;
+      }
+
+      debugPrint(
+        '[MedicationController] 📡 Calling API: /medication-schedule/$medicationId/taken?isTaken=true',
+      );
+
+      final medication = await _medicationService.markMedicationAsTaken(
+        medicationId: medicationId,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      );
+
+      debugPrint('[MedicationController] ✅ API Success! Response received');
+      debugPrint('[MedicationController]   - ID: ${medication.id}');
+      debugPrint('[MedicationController]   - isTaken: ${medication.isTaken}');
+      debugPrint(
+        '[MedicationController]   - earnedXp: +${medication.earnedXp} XP',
+      );
+
+      EasyLoading.dismiss();
+      EasyLoading.showSuccess(
+        'Dose marked as taken! +${medication.earnedXp} XP',
+      );
+
+      // Refresh history to update UI with moved item
+      debugPrint('[MedicationController] 🔄 Refreshing medication history...');
+      await fetchMedicationHistory();
+      debugPrint(
+        '[MedicationController] ✅ History refreshed - UI should update',
+      );
+    } catch (e) {
+      debugPrint('[MedicationController] ❌ ERROR: $e');
+      debugPrint('[MedicationController] Error type: ${e.runtimeType}');
+      EasyLoading.dismiss();
+      EasyLoading.showError('Failed: $e');
+      errorMessage.value = e.toString();
+    }
+  }
 }

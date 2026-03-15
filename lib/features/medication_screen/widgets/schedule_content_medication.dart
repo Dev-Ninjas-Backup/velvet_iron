@@ -183,7 +183,16 @@ class ScheduleContentMedication extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              final logs = controller.medicationHistory;
+              final allLogs = controller.medicationHistory;
+              final nextSchedule = controller.historyData.value?.nextSchedule;
+
+              // Filter to only show medications that are NOT the next schedule
+              // (only show completed/taken doses)
+              final logs = allLogs
+                  .where(
+                    (med) => nextSchedule == null || med.id != nextSchedule.id,
+                  )
+                  .toList();
 
               if (logs.isEmpty) {
                 return Center(
@@ -209,6 +218,14 @@ class ScheduleContentMedication extends StatelessWidget {
                     iconPath: _getMedIcon(med.type),
                     isSelected: RxBool(false),
                     isTaken: med.isTaken,
+                    onStatusIconTap: !med.isTaken
+                        ? () {
+                            debugPrint(
+                              '[ScheduleContent] 🖱️ Status icon tapped for ${med.name}',
+                            );
+                            controller.markMedicationAsTaken(med.id);
+                          }
+                        : null,
                   );
                 }).toList(),
               );
@@ -239,6 +256,14 @@ class ScheduleContentMedication extends StatelessWidget {
                     iconPath: _getMedIcon(next.type),
                     isSelected: RxBool(false),
                     isTaken: next.isTaken,
+                    onStatusIconTap: !next.isTaken
+                        ? () {
+                            debugPrint(
+                              '[ScheduleContent] 🖱️ Status icon tapped for next dose ${next.name}',
+                            );
+                            controller.markMedicationAsTaken(next.id);
+                          }
+                        : null,
                   ),
                 ],
               );

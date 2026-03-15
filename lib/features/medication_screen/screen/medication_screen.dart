@@ -136,9 +136,7 @@ class MedicationScreen extends StatelessWidget {
                                   ? IconPath.quillpenGamer
                                   : IconPath.quillpenReader,
                               title: "Next Dose",
-                              // ✅ CHANGE: next dose name + mg
                               value: nextDoseValue,
-                              // ✅ CHANGE: pending count
                               rewardAmount: "$pendingCount",
                             ),
                           ),
