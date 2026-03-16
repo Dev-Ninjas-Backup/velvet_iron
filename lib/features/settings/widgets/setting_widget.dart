@@ -26,94 +26,91 @@ class SettingsAppBar extends StatelessWidget {
       builder: (themeController) {
         return SizedBox(
           height: 60,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () => Get.back(),
-                  child: Container(
-                    width: size,
-                    height: size,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color:
-                          themeController.activeTheme.headerIconBackgroundColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.35),
-                          blurRadius: 6,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.white,
-                        size: size * 0.4,
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () => Get.back(),
+                child: Container(
+                  width: size,
+                  height: size,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color:
+                        themeController.activeTheme.headerIconBackgroundColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.35),
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
                       ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.white,
+                      size: size * 0.4,
                     ),
                   ),
                 ),
+              ),
 
-                const SizedBox(width: 6),
+              const SizedBox(width: 6),
 
-                Expanded(
-                  child: Text(
-                    'Settings',
-                    style: getTextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
+              Expanded(
+                child: Text(
+                  'Settings',
+                  style: getTextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+
+              GestureDetector(
+                onTap: onNotificationTap ?? () {},
+                child: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: themeController.activeTheme.cardBackgroundColor
+                        .withValues(alpha: 0.5),
+                  ),
+                  child: Image.asset(
+                    themeController.activeTheme.id == 'adventurer'
+                        ? IconPath.quillpenAdenture
+                        : themeController.activeTheme.id == 'mage'
+                        ? IconPath.quillpenMage
+                        : themeController.activeTheme.id == 'gamer'
+                        ? IconPath.quillpenGamer
+                        : IconPath.quillpenReader,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+
+              GestureDetector(
+                onTap: onProfileTap ?? () {},
+                child: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: themeController.activeTheme.accentGoldColor,
+                      width: 2,
+                    ),
+                    image: DecorationImage(
+                      image: profileImageUrl != null
+                          ? NetworkImage(profileImageUrl!)
+                          : Image.asset(ImagePath.profile).image,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
-
-                GestureDetector(
-                  onTap: onNotificationTap ?? () {},
-                  child: Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: themeController.activeTheme.cardBackgroundColor
-                          .withValues(alpha: 0.5),
-                    ),
-                    child: Image.asset(
-                      themeController.activeTheme.id == 'adventurer'
-                          ? IconPath.quillpenAdenture
-                          : themeController.activeTheme.id == 'mage'
-                          ? IconPath.quillpenMage
-                          : themeController.activeTheme.id == 'gamer'
-                          ? IconPath.quillpenGamer
-                          : IconPath.quillpenReader,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-
-                GestureDetector(
-                  onTap: onProfileTap ?? () {},
-                  child: Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: themeController.activeTheme.accentGoldColor,
-                        width: 2,
-                      ),
-                      image: DecorationImage(
-                        image: profileImageUrl != null
-                            ? NetworkImage(profileImageUrl!)
-                            : Image.asset(ImagePath.profile).image,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },

@@ -37,29 +37,25 @@ class SettingScreen extends StatelessWidget {
                 ),
               ),
               SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 52),
-                          child: SettingsAppBar(),
-                        ),
-                        const UserProfileWidget(),
-                        const SizedBox(height: 20),
-                        const UpcomingLogWidget(),
-                        const SizedBox(height: 20),
-                        const WeightProgress(title: 'Weekly Activity'),
-                        const SizedBox(height: 20),
-                        const GeneralSettingsWidget(),
-                        const SizedBox(height: 22),
-                        const LogoutWidget(),
-                        const SizedBox(height: 20),
-                        const AppVersionWidget(),
-                        const SizedBox(height: 20),
-                      ],
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 52, left: 16, right: 16),
+                  child: Column(
+                    children: [
+                      SettingsAppBar(),
+                      const UserProfileWidget(),
+                      const SizedBox(height: 20),
+                      const UpcomingLogWidget(),
+                      const SizedBox(height: 20),
+                      const WeightProgress(title: 'Weekly Activity'),
+                      const SizedBox(height: 20),
+                      const GeneralSettingsWidget(),
+                      const SizedBox(height: 22),
+                      const LogoutWidget(),
+                      const SizedBox(height: 20),
+                      const AppVersionWidget(),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
                 ),
               ),
             ],
