@@ -51,6 +51,7 @@ class ScheduleTabContent extends StatelessWidget {
           SizedBox(
             height: 73,
             child: TextField(
+              controller: controller.notesController,
               maxLines: 3,
               cursorColor: themeController.activeTheme.accentGoldColor,
               style: getTextStyle(fontSize: 12, color: Colors.white),
