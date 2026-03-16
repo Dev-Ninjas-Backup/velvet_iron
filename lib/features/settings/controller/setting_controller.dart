@@ -26,8 +26,11 @@ class SettingsController extends GetxController {
   final upcomingLog = 'Breakfast'.obs;
   final upcomingLogXP = 10.obs;
   final upcomingLogTime = 'Wed - 8:30 AM'.obs;
+  final upcomingLogDescription = ''.obs;
+  final upcomingScheduleId = ''.obs;
   final appVersion = 'v1.0'.obs;
   final isLoadingProfile = false.obs;
+  final isSkippingLog = false.obs;
 
   // Active companion image
   final activeCompanionImage = Rx<String?>(null);
@@ -59,6 +62,48 @@ class SettingsController extends GetxController {
       xpRequired.value = p.nextLevel.xpRequired;
       totalEarnXp.value = p.totalEarnXp;
       currentXP.value = p.balanceXp;
+
+      // Update upcoming log if available
+      print('[SettingsController] upcoming object: ${p.upcoming}');
+      print('[SettingsController] upcoming type: ${p.upcoming.runtimeType}');
+
+      try {
+        if (p.upcoming != null) {
+          Map<String, dynamic>? upcomingData;
+
+          // Handle different possible types
+          if (p.upcoming is Map<String, dynamic>) {
+            upcomingData = p.upcoming as Map<String, dynamic>;
+          } else if (p.upcoming is Map) {
+            upcomingData = Map<String, dynamic>.from(p.upcoming as Map);
+          }
+
+          if (upcomingData != null) {
+            upcomingLog.value = upcomingData['title'] ?? 'Upcoming';
+            upcomingLogXP.value = (upcomingData['earnedXp'] ?? 10) as int;
+            upcomingLogDescription.value =
+                (upcomingData['description'] ?? '') as String;
+            final scheduledAt =
+                (upcomingData['scheduledAt'] ?? 'N/A') as String;
+            upcomingLogTime.value = _formatDateTime(scheduledAt);
+            upcomingScheduleId.value = upcomingData['id'] ?? '';
+            print('[SettingsController] ✅ Upcoming log loaded successfully');
+            print('[SettingsController] Title: ${upcomingLog.value}');
+            print(
+              '[SettingsController] Description: ${upcomingLogDescription.value}',
+            );
+            print('[SettingsController] Time: ${upcomingLogTime.value}');
+            print('[SettingsController] XP: ${upcomingLogXP.value}');
+            print('[SettingsController] ID: ${upcomingScheduleId.value}');
+          } else {
+            print('[SettingsController] ⚠️ Could not convert upcoming to Map');
+          }
+        } else {
+          print('[SettingsController] ⚠️ upcoming is null');
+        }
+      } catch (e) {
+        print('[SettingsController] ❌ Error parsing upcoming: $e');
+      }
     }
   }
 
@@ -107,6 +152,36 @@ class SettingsController extends GetxController {
       }
     } catch (e) {
       print('EXCEPTION: $e');
+    }
+  }
+
+  static String _formatDateTime(String isoString) {
+    try {
+      final dt = DateTime.parse(isoString);
+      const months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
+      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      // Use UTC directly from the API, don't convert to local
+      final day = days[dt.weekday - 1];
+      final month = months[dt.month - 1];
+      final hour = dt.hour % 12 == 0 ? 12 : dt.hour % 12;
+      final minute = dt.minute.toString().padLeft(2, '0');
+      final period = dt.hour >= 12 ? 'PM' : 'AM';
+      return "${dt.day} $month, $day - $hour:$minute $period";
+    } catch (e) {
+      return isoString;
     }
   }
 
@@ -265,8 +340,56 @@ class SettingsController extends GetxController {
   }
 
   Future<void> skipUpcomingLog() async {
-    EasyLoading.show(status: 'Skipping log...');
-    await Future.delayed(const Duration(milliseconds: 800));
-    EasyLoading.showSuccess('Log skipped successfully');
+    if (upcomingScheduleId.value.isEmpty) {
+      EasyLoading.showError('No upcoming schedule to skip');
+      return;
+    }
+
+    try {
+      isSkippingLog.value = true;
+      EasyLoading.show(status: 'Skipping log...');
+
+      final token = await SharedPreferencesHelper.getAccessToken();
+      final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+
+      if (token == null || refreshToken == null) {
+        EasyLoading.showError('Authentication tokens not found');
+        isSkippingLog.value = false;
+        return;
+      }
+
+      final response = await http.delete(
+        Uri.parse(Urls.removeMealSchedule(upcomingScheduleId.value)),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'x-refresh-token': refreshToken,
+          'Content-Type': 'application/json',
+        },
+      );
+
+      print(
+        '[SettingsController] Skip meal schedule status: ${response.statusCode}',
+      );
+      print('[SettingsController] Skip meal schedule body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        EasyLoading.dismiss();
+        await Future.delayed(const Duration(milliseconds: 500));
+        EasyLoading.showSuccess('Schedule skipped successfully');
+
+        // Refresh profile data to get the next upcoming schedule
+        await Future.delayed(const Duration(milliseconds: 800));
+        await fetchUserProfile();
+      } else {
+        EasyLoading.showError(
+          'Failed to skip schedule: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      print('[SettingsController] ❌ Error skipping log: $e');
+      EasyLoading.showError('Error: ${e.toString()}');
+    } finally {
+      isSkippingLog.value = false;
+    }
   }
 }

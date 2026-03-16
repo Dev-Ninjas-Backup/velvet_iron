@@ -25,6 +25,7 @@ class UpcomingLogWidget extends StatelessWidget {
             children: [
               _UpcomingLogHeader(
                 themeController: themeController,
+                controller: controller,
                 onSkipTap: controller.skipUpcomingLog,
               ),
               _DividerLine(themeController: themeController),
@@ -42,10 +43,12 @@ class UpcomingLogWidget extends StatelessWidget {
 
 class _UpcomingLogHeader extends StatelessWidget {
   final AppThemeController themeController;
+  final SettingsController controller;
   final VoidCallback onSkipTap;
 
   const _UpcomingLogHeader({
     required this.themeController,
+    required this.controller,
     required this.onSkipTap,
   });
 
@@ -53,42 +56,53 @@ class _UpcomingLogHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Up-coming Log:',
-            style: getTextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-            ),
-          ),
-          GestureDetector(
-            onTap: onSkipTap,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              decoration: BoxDecoration(
-                color: themeController.activeTheme.textfieldColor.withValues(
-                  alpha: 0.6,
-                ),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: themeController.activeTheme.borderColor,
-                  width: 1,
-                ),
-              ),
-              child: Text(
-                'skip',
-                style: getTextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white,
-                ),
+      child: Obx(
+        () => Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Up-coming Log:',
+              style: getTextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: Colors.white,
               ),
             ),
-          ),
-        ],
+            GestureDetector(
+              onTap: controller.isSkippingLog.value ? null : onSkipTap,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: controller.isSkippingLog.value
+                      ? themeController.activeTheme.textfieldColor.withValues(
+                          alpha: 0.3,
+                        )
+                      : themeController.activeTheme.textfieldColor.withValues(
+                          alpha: 0.6,
+                        ),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: themeController.activeTheme.borderColor,
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  controller.isSkippingLog.value ? 'Skipping...' : 'skip',
+                  style: getTextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: controller.isSkippingLog.value
+                        ? Colors.white54
+                        : Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -136,16 +150,16 @@ class _UpcomingLogContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          Center(child: Image.asset(IconPath.todo, height: 25, width: 25)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Obx(
-                  () => Text(
+      child: Obx(
+        () => Row(
+          children: [
+            Center(child: Image.asset(IconPath.todo, height: 25, width: 25)),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
                     controller.upcomingLog.value,
                     style: getTextStyle(
                       fontSize: 16,
@@ -153,26 +167,26 @@ class _UpcomingLogContent extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  '350 kCal',
-                  style: getTextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: themeController.activeTheme.textColor,
+                  const SizedBox(height: 2),
+                  Text(
+                    controller.upcomingLogDescription.value.isNotEmpty
+                        ? controller.upcomingLogDescription.value
+                        : '350 kCal',
+                    style: getTextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: themeController.activeTheme.textColor,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Row(
-                children: [
-                  Obx(
-                    () => Text(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Row(
+                  children: [
+                    Text(
                       '+${controller.upcomingLogXP.value} XP',
                       style: getTextStyle(
                         fontSize: 12,
@@ -180,24 +194,22 @@ class _UpcomingLogContent extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  Image.asset(
-                    themeController.activeTheme.id == 'adventurer'
-                        ? IconPath.starAdventure
-                        : themeController.activeTheme.id == 'mage'
-                        ? IconPath.starMage
-                        : themeController.activeTheme.id == 'gamer'
-                        ? IconPath.starGamer
-                        : IconPath.starReader,
-                    height: 12,
-                    width: 12,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 2),
-              Obx(
-                () => Text(
+                    const SizedBox(width: 4),
+                    Image.asset(
+                      themeController.activeTheme.id == 'adventurer'
+                          ? IconPath.starAdventure
+                          : themeController.activeTheme.id == 'mage'
+                          ? IconPath.starMage
+                          : themeController.activeTheme.id == 'gamer'
+                          ? IconPath.starGamer
+                          : IconPath.starReader,
+                      height: 12,
+                      width: 12,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Text(
                   controller.upcomingLogTime.value,
                   style: getTextStyle(
                     fontSize: 10,
@@ -205,10 +217,10 @@ class _UpcomingLogContent extends StatelessWidget {
                     color: themeController.activeTheme.textColor,
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

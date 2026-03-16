@@ -35,7 +35,7 @@ class Urls {
   static const String getTodayMoodLog = '$baseUrl/mood-log/today';
   static const String mealLog = '$baseUrl/meal-log';
   static const String mealSchedule = '$baseUrl/meal-schedule';
-    static String markMealAsTaken(String id) =>
+  static String markMealAsTaken(String id) =>
       '$baseUrl/meal-schedule/$id/taken?isTaken=true';
   static String mealLogHistory(int limit, int offset) =>
       '$baseUrl/meal-log/history?limit=$limit&offset=$offset';
@@ -63,4 +63,5 @@ class Urls {
       '$baseUrl/companions/$id/unlock';
   static String activateNewCompanion(String id) =>
       '$baseUrl/companions/$id/activate';
+  static String removeMealSchedule(String id) => '$baseUrl/meal-schedule/$id';
 }
