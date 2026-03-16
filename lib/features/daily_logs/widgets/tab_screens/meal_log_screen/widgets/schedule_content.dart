@@ -153,10 +153,8 @@ class ScheduleContent extends StatelessWidget {
             const SizedBox(height: 14),
             Obx(() {
               final logs = controller.history.value?.logs ?? [];
-              final taken = logs.where((e) => e.entryType == 'LOG').toList();
-              final scheduled = logs
-                  .where((e) => e.entryType == 'SCHEDULE')
-                  .toList();
+              final taken = logs.where((e) => e.isTaken == true).toList();
+              final scheduled = logs.where((e) => e.isTaken == false).toList();
 
               if (controller.isHistoryLoading.value) {
                 return const Center(child: CircularProgressIndicator());
@@ -202,16 +200,20 @@ class ScheduleContent extends StatelessWidget {
                               // Left-side status icon
                               Image.asset(
                                 log.isTaken == true
-                                    ? (themeController.activeTheme.name ==
-                                              'adventure'
+                                    ? (themeController.activeTheme.name
+                                                  .toLowerCase() ==
+                                              'adventurer'
                                           ? IconPath.doticonAdventure
-                                          : themeController.activeTheme.name ==
+                                          : themeController.activeTheme.name
+                                                    .toLowerCase() ==
                                                 'mage'
                                           ? IconPath.doticonMage
-                                          : themeController.activeTheme.name ==
+                                          : themeController.activeTheme.name
+                                                    .toLowerCase() ==
                                                 'gamer'
                                           ? IconPath.doticonGamer
-                                          : themeController.activeTheme.name ==
+                                          : themeController.activeTheme.name
+                                                    .toLowerCase() ==
                                                 'reader'
                                           ? IconPath.doticonReader
                                           : IconPath.whitecircle)
@@ -322,25 +324,36 @@ class ScheduleContent extends StatelessWidget {
                           ),
                           child: Row(
                             children: [
-                              // Left-side status icon for schedule
-                              Image.asset(
-                                log.isTaken == true
-                                    ? (themeController.activeTheme.name ==
-                                              'adventure'
-                                          ? IconPath.doticonAdventure
-                                          : themeController.activeTheme.name ==
-                                                'mage'
-                                          ? IconPath.doticonMage
-                                          : themeController.activeTheme.name ==
-                                                'gamer'
-                                          ? IconPath.doticonGamer
-                                          : themeController.activeTheme.name ==
-                                                'reader'
-                                          ? IconPath.doticonReader
-                                          : IconPath.whitecircle)
-                                    : IconPath.whitecircle,
-                                width: 18,
-                                height: 18,
+                              // Left-side status icon - clickable to mark as taken
+                              GestureDetector(
+                                onTap: () {
+                                  if (log.isTaken != true) {
+                                    controller.markMealAsTaken(log.id);
+                                  }
+                                },
+                                child: Image.asset(
+                                  log.isTaken == true
+                                      ? (themeController.activeTheme.name
+                                                    .toLowerCase() ==
+                                                'adventurer'
+                                            ? IconPath.doticonAdventure
+                                            : themeController.activeTheme.name
+                                                      .toLowerCase() ==
+                                                  'mage'
+                                            ? IconPath.doticonMage
+                                            : themeController.activeTheme.name
+                                                      .toLowerCase() ==
+                                                  'gamer'
+                                            ? IconPath.doticonGamer
+                                            : themeController.activeTheme.name
+                                                      .toLowerCase() ==
+                                                  'reader'
+                                            ? IconPath.doticonReader
+                                            : IconPath.whitecircle)
+                                      : IconPath.whitecircle,
+                                  width: 18,
+                                  height: 18,
+                                ),
                               ),
                               const SizedBox(width: 8),
                               Image.asset(

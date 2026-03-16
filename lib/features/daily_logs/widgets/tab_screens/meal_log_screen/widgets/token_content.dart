@@ -145,7 +145,10 @@ class TokenContent extends StatelessWidget {
                   ? const Center(child: CircularProgressIndicator())
                   : CustomButton(
                       label: "Log Meal (+10 XP)",
-                      onPressed: () => controller.submitMealLog(),
+                      onPressed: () {
+                        Get.put(MealLogController());
+                        controller.submitMealLog();
+                      },
                     ),
             ),
             const SizedBox(height: 16),
@@ -192,8 +195,7 @@ class TokenContent extends StatelessWidget {
               }
 
               final logs = controller.history.value?.logs ?? [];
-              logs.where((e) => e.entryType == 'SCHEDULE').toList();
-              final taken = logs.where((e) => e.entryType == 'LOG').toList();
+              final taken = logs.where((e) => e.isTaken == true).toList();
               // Tab 0: Show both sections
               if (controller.selectedMealTab.value == 0) {
                 return Column(
@@ -236,16 +238,20 @@ class TokenContent extends StatelessWidget {
                               // Left-side status icon
                               Image.asset(
                                 log.isTaken == true
-                                    ? (themeController.activeTheme.name ==
-                                              'adventure'
+                                    ? (themeController.activeTheme.name
+                                                  .toLowerCase() ==
+                                              'adventurer'
                                           ? IconPath.doticonAdventure
-                                          : themeController.activeTheme.name ==
+                                          : themeController.activeTheme.name
+                                                    .toLowerCase() ==
                                                 'mage'
                                           ? IconPath.doticonMage
-                                          : themeController.activeTheme.name ==
+                                          : themeController.activeTheme.name
+                                                    .toLowerCase() ==
                                                 'gamer'
                                           ? IconPath.doticonGamer
-                                          : themeController.activeTheme.name ==
+                                          : themeController.activeTheme.name
+                                                    .toLowerCase() ==
                                                 'reader'
                                           ? IconPath.doticonReader
                                           : IconPath.whitecircle)
@@ -326,7 +332,7 @@ class TokenContent extends StatelessWidget {
               // Tab 1: Only show log history section
               else if (controller.selectedMealTab.value == 1) {
                 final logs = controller.history.value?.logs ?? [];
-                final taken = logs.where((e) => e.entryType == 'LOG').toList();
+                final taken = logs.where((e) => e.isTaken == true).toList();
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

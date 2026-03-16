@@ -203,6 +203,30 @@ class MealLogController extends GetxController {
     }
   }
 
+  // Mark a scheduled meal as taken
+  Future<void> markMealAsTaken(String mealScheduleId) async {
+    try {
+      EasyLoading.show(status: 'Marking meal as taken...');
+      final result = await MealLogService.markMealAsTaken(mealScheduleId);
+      EasyLoading.dismiss();
+
+      if (result) {
+        EasyLoading.showSuccess('Meal marked as taken!');
+        print('[MealLogController] Meal $mealScheduleId marked as taken');
+        fetchHistory(); // Refresh history to show updated meal in log section
+      } else {
+        EasyLoading.showError(
+          'Failed to mark meal as taken. Please try again.',
+        );
+        print('[MealLogController] Failed to mark meal as taken');
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showError('Error: ${e.toString()}');
+      print('[MealLogController] Exception in markMealAsTaken: $e');
+    }
+  }
+
   void _clearFields() {
     descriptionController.clear();
     carbsController.clear();
