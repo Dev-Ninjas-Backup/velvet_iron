@@ -208,4 +208,49 @@ class MealLogService {
       return null;
     }
   }
+
+  // PATCH /meal-schedule/{id}/taken?isTaken=true
+  static Future<bool> markMealAsTaken(String mealScheduleId) async {
+    try {
+      final accessToken = await SharedPreferencesHelper.getAccessToken();
+      final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+
+      debugLog('markMealAsTaken Access Token: $accessToken');
+      debugLog('markMealAsTaken Refresh Token: $refreshToken');
+
+      if (accessToken == null || refreshToken == null) {
+        debugLog('Tokens not found in SharedPreferences');
+        return false;
+      }
+
+      final uri = Uri.parse(Urls.markMealAsTaken(mealScheduleId));
+
+      debugLog('Request URL: ${uri.toString()}');
+
+      final response = await http.patch(
+        uri,
+        headers: {
+          'accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+          'x-refresh-token': refreshToken,
+        },
+      );
+
+      debugLog('markMealAsTaken Status Code: ${response.statusCode}');
+      debugLog('markMealAsTaken Response Body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        debugLog('Meal marked as taken successfully!');
+        return true;
+      } else {
+        debugLog('markMealAsTaken API Error: ${response.statusCode}');
+        debugLog('markMealAsTaken Error Body: ${response.body}');
+        return false;
+      }
+    } catch (e, stackTrace) {
+      debugLog('Exception in markMealAsTaken: $e');
+      debugLog('StackTrace: $stackTrace');
+      return false;
+    }
+  }
 }
