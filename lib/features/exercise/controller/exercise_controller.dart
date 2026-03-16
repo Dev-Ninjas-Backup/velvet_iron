@@ -27,6 +27,7 @@ class ExerciseController extends GetxController {
   // Text controllers for clearing fields
   final exerciseNameController = TextEditingController();
   final notesController = TextEditingController();
+  final durationController = TextEditingController();
 
   @override
   void onInit() {
@@ -38,6 +39,7 @@ class ExerciseController extends GetxController {
   void onClose() {
     exerciseNameController.dispose();
     notesController.dispose();
+    durationController.dispose();
     super.onClose();
   }
 
@@ -117,7 +119,7 @@ class ExerciseController extends GetxController {
     notesController.clear();
     exerciseType.value = 'Cardio'; // Reset dropdown
     intensity.value = 'Medium'; // Reset dropdown
-    duration.value = 30;
+    duration.value = 0;
     exerciseName.value = '';
     notes.value = '';
     // Always reset scheduling state to avoid pollution between tabs

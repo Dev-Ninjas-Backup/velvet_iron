@@ -113,14 +113,14 @@ class IntensityAndDuration extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: TextField(
+                                  controller: controller.durationController,
                                   onChanged: (value) {
                                     controller.duration.value =
                                         int.tryParse(value) ?? 30;
                                   },
                                   style: getTextStyle(),
                                   decoration: InputDecoration(
-                                    hintText:
-                                        "${controller.duration.value} min",
+                                    hintText: "0",
                                     hintStyle: TextStyle(
                                       color:
                                           themeController.activeTheme.textColor,

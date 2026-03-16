@@ -105,28 +105,19 @@ class ExerciseScreen extends StatelessWidget {
                               Expanded(
                                 child: GetBuilder<AppThemeController>(
                                   builder: (themeController) {
-                                    String nextScheduleStr = '-';
-                                    final next = controller.nextSchedule.value;
-                                    if (next != null &&
-                                        next.scheduledAt != null) {
-                                      final dayName = const [
-                                        'Mon',
-                                        'Tue',
-                                        'Wed',
-                                        'Thu',
-                                        'Fri',
-                                        'Sat',
-                                        'Sun',
-                                      ][next.scheduledAt!.weekday - 1];
-                                      final hour = next.scheduledAt!.hour
-                                          .toString()
-                                          .padLeft(2, '0');
-                                      final minute = next.scheduledAt!.minute
-                                          .toString()
-                                          .padLeft(2, '0');
-                                      nextScheduleStr =
-                                          "${next.name} - $dayName $hour:$minute";
-                                    }
+                                    final scheduled =
+                                        controller.scheduledExercises;
+                                    final totalDuration = scheduled.fold<int>(
+                                      0,
+                                      (sum, item) => sum + (item.duration),
+                                    );
+                                    final totalScheduledXp = scheduled
+                                        .fold<int>(
+                                          0,
+                                          (sum, item) => sum + (item.earnedXp),
+                                        );
+                                    String nextScheduleStr =
+                                        "$totalDuration min";
                                     return CustomLogContainerExercise(
                                       iconPath:
                                           themeController.activeTheme.id ==
@@ -139,9 +130,9 @@ class ExerciseScreen extends StatelessWidget {
                                                 'gamer'
                                           ? 'assets/icons/time_gamer.png'
                                           : 'assets/icons/time_reader.png',
-                                      title: "Time Exercise ",
+                                      title: "Pending Exercise ",
                                       value: nextScheduleStr,
-                                      rewardAmount: "15+",
+                                      rewardAmount: "$totalScheduledXp+",
                                     );
                                   },
                                 ),
