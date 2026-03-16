@@ -10,6 +10,7 @@ import 'package:velvet_iron/features/daily_logs/widgets/mood_option_widget.dart'
 import 'package:velvet_iron/features/daily_logs/widgets/selectable_option_row.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_screen/controller/mood_log_controller.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_screen/model/mood_log_model.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_screen/widgets/note_textfield.dart';
 
 class MoodLog extends StatelessWidget {
@@ -239,7 +240,20 @@ class MoodLog extends StatelessWidget {
                             const SizedBox(height: 14),
                             CustomButton(
                               label: "Log Entry (+10 XP)",
-                              onPressed: moodLogController.logEntry,
+                              onPressed: () async {
+                                await moodLogController.logEntry();
+                                // Refresh home screen data after logging mood
+                                try {
+                                  final homeController = Get.put(
+                                    HomeController(),
+                                  );
+                                  await homeController.fetchData();
+                                } catch (e) {
+                                  print(
+                                    '[MoodLog] Error refreshing HomeController: $e',
+                                  );
+                                }
+                              },
                             ),
                           ],
                         ),
