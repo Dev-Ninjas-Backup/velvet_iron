@@ -8,48 +8,48 @@ import 'package:velvet_iron/features/daily_macro_goal/model/daily_goal_model.dar
 class MacroGoalService {
   // get macro goals for current user
 
-  Future<MacroGoalListResponse> getMacroGoals({
-    required String accessToken,
-    required String refreshToken,
-  }) async {
-    final uri = Uri.parse(Urls.macroGoal);
-    debugPrint('MacroGoal GET $uri');
+  // Future<MacroGoalListResponse> getMacroGoals({
+  //   required String accessToken,
+  //   required String refreshToken,
+  // }) async {
+  //   final uri = Uri.parse(Urls.macroGoal);
+  //   debugPrint('MacroGoal GET $uri');
 
-    try {
-      final response = await http.get(
-        uri,
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-          'x-refresh-token': refreshToken,
-        },
-      );
+  //   try {
+  //     final response = await http.get(
+  //       uri,
+  //       headers: {
+  //         'Authorization': 'Bearer $accessToken',
+  //         'x-refresh-token': refreshToken,
+  //       },
+  //     );
 
-      debugPrint('MacroGoal GET Status: ${response.statusCode}');
-      debugPrint('MacroGoal GET Body  : ${response.body}');
+  //     debugPrint('MacroGoal GET Status: ${response.statusCode}');
+  //     debugPrint('MacroGoal GET Body  : ${response.body}');
 
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        final json = jsonDecode(response.body) as Map<String, dynamic>;
-        return MacroGoalListResponse.fromJson(json);
-      }
+  //     if (response.statusCode >= 200 && response.statusCode < 300) {
+  //       final json = jsonDecode(response.body) as Map<String, dynamic>;
+  //       return MacroGoalListResponse.fromJson(json);
+  //     }
 
-      String errorMessage =
-          'Failed to fetch macro goals (${response.statusCode})';
-      try {
-        final body = jsonDecode(response.body) as Map<String, dynamic>;
-        errorMessage = body['message'] as String? ?? errorMessage;
-      } catch (_) {}
-      throw MacroGoalException(errorMessage, statusCode: response.statusCode);
-    } on SocketException {
-      throw MacroGoalException(
-        'No internet connection. Please check your network.',
-      );
-    } on HttpException catch (e) {
-      throw MacroGoalException('HTTP error: ${e.message}');
-    } catch (e) {
-      if (e is MacroGoalException) rethrow;
-      throw MacroGoalException('Unexpected error: $e');
-    }
-  }
+  //     String errorMessage =
+  //         'Failed to fetch macro goals (${response.statusCode})';
+  //     try {
+  //       final body = jsonDecode(response.body) as Map<String, dynamic>;
+  //       errorMessage = body['message'] as String? ?? errorMessage;
+  //     } catch (_) {}
+  //     throw MacroGoalException(errorMessage, statusCode: response.statusCode);
+  //   } on SocketException {
+  //     throw MacroGoalException(
+  //       'No internet connection. Please check your network.',
+  //     );
+  //   } on HttpException catch (e) {
+  //     throw MacroGoalException('HTTP error: ${e.message}');
+  //   } catch (e) {
+  //     if (e is MacroGoalException) rethrow;
+  //     throw MacroGoalException('Unexpected error: $e');
+  //   }
+  // }
 
   // create new macro goal for current user
 
