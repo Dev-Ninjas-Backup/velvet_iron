@@ -312,7 +312,7 @@ class ExerciseScreen extends StatelessWidget {
                                           }
                                         : null,
                                   );
-                                }).toList(),
+                                }),
                               ],
                             );
                           }),

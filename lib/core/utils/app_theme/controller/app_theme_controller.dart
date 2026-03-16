@@ -27,6 +27,7 @@ class AppThemeController extends GetxController {
   /// Reload the active theme from API or local storage
   /// Use this when auth state changes or user returns to app
   Future<void> reloadTheme() async {
+    // ignore: avoid_print
     print('Reloading theme...');
     await _loadActiveTheme();
   }

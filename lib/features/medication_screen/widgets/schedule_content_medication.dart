@@ -257,7 +257,7 @@ class ScheduleContentMedication extends StatelessWidget {
                             }
                           : null,
                     );
-                  }).toList(),
+                  }),
                 ],
               );
             }),

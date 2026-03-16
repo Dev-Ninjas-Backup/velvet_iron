@@ -5,9 +5,9 @@ import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/daily_macro_goal/service/daily_macro_goal_service.dart';
 
 class DailyGoalController extends GetxController {
-  var carbs = 120.obs;
-  var protein = 220.obs;
-  var fats = 120.obs;
+  var carbs = 0.obs;
+  var protein = 0.obs;
+  var fats = 0.obs;
   var isLoading = false.obs;
 
   late final TextEditingController carbsController;
@@ -37,7 +37,7 @@ class DailyGoalController extends GetxController {
       () => fats.value = int.tryParse(fatsController.text) ?? 0,
     );
 
-    _fetchMacroGoals(); 
+    //_fetchMacroGoals();
   }
 
   @override
@@ -48,57 +48,57 @@ class DailyGoalController extends GetxController {
     super.onClose();
   }
 
-  //  Fetch existing macro goals 
-  Future<void> _fetchMacroGoals() async {
-    final accessToken = await SharedPreferencesHelper.getAccessToken();
-    final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+  //  Fetch existing macro goals
+  // Future<void> _fetchMacroGoals() async {
+  //   final accessToken = await SharedPreferencesHelper.getAccessToken();
+  //   final refreshToken = await SharedPreferencesHelper.getRefreshToken();
 
-    debugPrint('MacroGoal accessToken : $accessToken');
-    debugPrint('MacroGoal refreshToken: $refreshToken');
+  //   debugPrint('MacroGoal accessToken : $accessToken');
+  //   debugPrint('MacroGoal refreshToken: $refreshToken');
 
-    if (accessToken == null || refreshToken == null) {
-      debugPrint('MacroGoal Token missing — cannot fetch');
-      return;
-    }
+  //   if (accessToken == null || refreshToken == null) {
+  //     debugPrint('MacroGoal Token missing — cannot fetch');
+  //     return;
+  //   }
 
-    isLoading.value = true;
+  //   isLoading.value = true;
 
-    try {
-      final result = await _service.getMacroGoals(
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-      );
+  //   try {
+  //     final result = await _service.getMacroGoals(
+  //       accessToken: accessToken,
+  //       refreshToken: refreshToken,
+  //     );
 
-      debugPrint('MacroGoal Fetched ${result.data.length} goal(s)');
+  //     debugPrint('MacroGoal Fetched ${result.data.length} goal(s)');
 
-      final latest = result.latest;
-      if (latest != null) {
-        carbs.value = latest.carbs;
-        protein.value = latest.protein;
-        fats.value = latest.fat;
+  //     final latest = result.latest;
+  //     if (latest != null) {
+  //       carbs.value = latest.carbs;
+  //       protein.value = latest.protein;
+  //       fats.value = latest.fat;
 
-        carbsController.text = latest.carbs.toString();
-        proteinController.text = latest.protein.toString();
-        fatsController.text = latest.fat.toString();
+  //       carbsController.text = latest.carbs.toString();
+  //       proteinController.text = latest.protein.toString();
+  //       fatsController.text = latest.fat.toString();
 
-        debugPrint('carbs   : ${latest.carbs} g');
-        debugPrint('protein : ${latest.protein} g');
-        debugPrint('fat     : ${latest.fat} g');
-        debugPrint('calories: ${latest.calories} kcal');
-      } else {
-        debugPrint('No saved goals — keeping defaults');
-      }
-    } on MacroGoalException catch (e) {
-      debugPrint('MacroGoal Fetch MacroGoalException: $e');
-    } catch (e, stackTrace) {
-      debugPrint('MacroGoal Fetch unexpected error: $e');
-      debugPrint('StackTrace:\n$stackTrace');
-    } finally {
-      isLoading.value = false;
-    }
-  }
+  //       debugPrint('carbs   : ${latest.carbs} g');
+  //       debugPrint('protein : ${latest.protein} g');
+  //       debugPrint('fat     : ${latest.fat} g');
+  //       debugPrint('calories: ${latest.calories} kcal');
+  //     } else {
+  //       debugPrint('No saved goals — keeping defaults');
+  //     }
+  //   } on MacroGoalException catch (e) {
+  //     debugPrint('MacroGoal Fetch MacroGoalException: $e');
+  //   } catch (e, stackTrace) {
+  //     debugPrint('MacroGoal Fetch unexpected error: $e');
+  //     debugPrint('StackTrace:\n$stackTrace');
+  //   } finally {
+  //     isLoading.value = false;
+  //   }
+  // }
 
-  //  Save goals 
+  //  Save goals
   Future<void> saveGoals() async {
     if (carbs.value <= 0 || protein.value <= 0 || fats.value <= 0) {
       EasyLoading.showInfo('Please enter valid values for all macros');

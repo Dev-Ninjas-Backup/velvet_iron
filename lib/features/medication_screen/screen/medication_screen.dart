@@ -4,11 +4,11 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
-import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/calorie_consumption_card.dart'
-    hide IconPath;
 import 'package:velvet_iron/features/medication_screen/controller/medication_controller.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/log_container.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/meal_tab_switcher_medication.dart';
+import 'package:velvet_iron/features/medication_screen/widgets/medicine_consumption_card.dart'
+    hide IconPath;
 import 'package:velvet_iron/features/medication_screen/widgets/schedule_content_medication.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/token_content_medication.dart';
 
@@ -95,7 +95,7 @@ class MedicationScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CalorieConsumptionCard(),
+                    MedicineConsumptionCard(),
                     const SizedBox(height: 8),
                     Obx(() {
                       final h = controller.historyData.value;
