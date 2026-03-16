@@ -46,13 +46,22 @@ class ScheduleContent extends StatelessWidget {
       'Dec',
     ];
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    final local = dt.toLocal();
-    final day = days[local.weekday - 1];
-    final month = months[local.month - 1];
-    final hour = local.hour % 12 == 0 ? 12 : local.hour % 12;
-    final minute = local.minute.toString().padLeft(2, '0');
-    final period = local.hour >= 12 ? 'PM' : 'AM';
-    return "${local.day} $month, $day - $hour:$minute $period";
+    // Use UTC directly from the API, don't convert to local
+    final day = days[dt.weekday - 1];
+    final month = months[dt.month - 1];
+    final hour = dt.hour % 12 == 0 ? 12 : dt.hour % 12;
+    final minute = dt.minute.toString().padLeft(2, '0');
+    final period = dt.hour >= 12 ? 'PM' : 'AM';
+    return "${dt.day} $month, $day - $hour:$minute $period";
+  }
+
+  String _formatIsoString(String isoString) {
+    try {
+      final dt = DateTime.parse(isoString);
+      return _formatDateTime(dt);
+    } catch (e) {
+      return isoString;
+    }
   }
 
   @override
