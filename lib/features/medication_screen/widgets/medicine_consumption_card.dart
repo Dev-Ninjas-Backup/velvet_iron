@@ -32,7 +32,6 @@ class MedicineConsumptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Initialize controller if not already registered
     if (!Get.isRegistered<MedicationController>()) {
       Get.put(MedicationController());
     }
@@ -54,14 +53,13 @@ class MedicineConsumptionCard extends StatelessWidget {
             final completed = medicationController.completedMedications.length;
             final scheduled = medicationController.scheduledMedications.length;
 
-            // Compute which days have completed medications
             final Map<String, bool> weeklyPresent = {};
             for (final med in medicationController.completedMedications) {
               if (med.loggedAt != null) {
-                final weekday = med.loggedAt!.weekday; // 1=Monday, 7=Sunday
+                final weekday = med.loggedAt!.weekday; 
                 final dayIndex = weekday == 7
                     ? 0
-                    : weekday; // Convert to 0-6 where 0=Sunday
+                    : weekday; 
                 final dayName = _weekDayKeys[dayIndex];
                 weeklyPresent[dayName] = true;
               }

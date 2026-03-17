@@ -171,7 +171,6 @@ class LogoutWidget extends GetView<SettingsController> {
   }
 }
 
-// app version widget
 
 class AppVersionWidget extends GetView<SettingsController> {
   const AppVersionWidget({super.key});
