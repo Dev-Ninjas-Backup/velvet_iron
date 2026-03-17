@@ -14,6 +14,7 @@ import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_scr
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_screen/model/mood_log_model.dart';
 import 'package:velvet_iron/features/home/controller/home_controller.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_screen/widgets/note_textfield.dart';
+import 'package:velvet_iron/features/settings/controller/setting_controller.dart';
 
 class MoodLog extends StatelessWidget {
   const MoodLog({
@@ -250,9 +251,16 @@ class MoodLog extends StatelessWidget {
                                     HomeController(),
                                   );
                                   await homeController.fetchData();
+
+                                  // Also refresh SettingsController if it exists
+                                  if (Get.isRegistered<SettingsController>()) {
+                                    final settingsController =
+                                        Get.find<SettingsController>();
+                                    await settingsController.fetchUserProfile();
+                                  }
                                 } catch (e) {
                                   print(
-                                    '[MoodLog] Error refreshing HomeController: $e',
+                                    '[MoodLog] Error refreshing controllers: $e',
                                   );
                                 }
                               },

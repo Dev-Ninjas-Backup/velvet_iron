@@ -10,6 +10,7 @@ import 'package:velvet_iron/features/medication_screen/controller/medication_con
 import 'package:velvet_iron/features/medication_screen/widgets/custom_drop_down.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/dose_history.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/dose_name_textfield.dart';
+import 'package:velvet_iron/features/settings/controller/setting_controller.dart';
 
 class TokenContentMedication extends StatelessWidget {
   String _formatDateTime(DateTime dateTime) {
@@ -146,8 +147,26 @@ class TokenContentMedication extends StatelessWidget {
             ),
             SizedBox(height: 14),
             CustomButton(
-              label: "Log Meal (+10 XP)",
-              onPressed: () => controller.logMedication(),
+              label: "Log Medication (+10 XP)",
+              onPressed: () async {
+                await controller.logMedication();
+
+                // Refresh home screen data
+                try {
+                  if (Get.isRegistered<HomeController>()) {
+                    await Get.find<HomeController>().fetchData();
+                  }
+
+                  // Refresh SettingsController if it exists
+                  if (Get.isRegistered<SettingsController>()) {
+                    await Get.find<SettingsController>().fetchUserProfile();
+                  }
+                } catch (e) {
+                  debugPrint(
+                    '[TokenContentMedication] Error refreshing controllers: $e',
+                  );
+                }
+              },
             ),
             SizedBox(height: 16),
             Text(
