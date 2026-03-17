@@ -235,7 +235,6 @@ class TokenContent extends StatelessWidget {
                           ),
                           child: Row(
                             children: [
-                              // Left-side status icon
                               Image.asset(
                                 log.isTaken == true
                                     ? (themeController.activeTheme.name
@@ -329,7 +328,6 @@ class TokenContent extends StatelessWidget {
                   ],
                 );
               }
-              // Tab 1: Only show log history section
               else if (controller.selectedMealTab.value == 1) {
                 final logs = controller.history.value?.logs ?? [];
                 final taken = logs.where((e) => e.isTaken == true).toList();

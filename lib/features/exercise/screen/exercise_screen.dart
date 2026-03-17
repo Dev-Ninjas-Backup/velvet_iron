@@ -174,7 +174,6 @@ class ExerciseScreen extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          // Exercise History (only completed)
                           ListView.builder(
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
@@ -229,7 +228,6 @@ class ExerciseScreen extends StatelessWidget {
                             },
                           ),
 
-                          // Next Exercise section (all scheduled, not just one)
                           Obx(() {
                             if (controller.selectedExerciseTab.value != 1)
                               return const SizedBox.shrink();

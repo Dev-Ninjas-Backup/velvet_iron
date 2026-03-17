@@ -131,12 +131,10 @@ class UserProfileWidget extends StatelessWidget {
 
                 const SizedBox(width: 16),
 
-                /// Profile Details
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      /// Header
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -150,7 +148,6 @@ class UserProfileWidget extends StatelessWidget {
                             ),
                           ),
 
-                          /// Level Badge
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 12,
@@ -187,7 +184,6 @@ class UserProfileWidget extends StatelessWidget {
 
                       const SizedBox(height: 9),
 
-                      /// Progress Bar
                       Obx(
                         () => ClipRRect(
                           borderRadius: BorderRadius.circular(4),
@@ -222,7 +218,6 @@ class UserProfileWidget extends StatelessWidget {
 
                       const SizedBox(height: 8),
 
-                      /// Progress Info
                       Row(
                         children: [
                           Expanded(

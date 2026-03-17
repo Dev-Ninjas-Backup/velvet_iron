@@ -22,7 +22,6 @@ class IntensityAndDuration extends StatelessWidget {
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
         return Obx(() {
-          // Ensure only valid intensity value is set
           if (!_intensities.contains(controller.intensity.value)) {
             controller.intensity.value = "Moderate";
           }
