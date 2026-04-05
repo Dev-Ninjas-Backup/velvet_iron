@@ -63,8 +63,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '492471411308',
     projectId: 'velvetand-iron-training-mhr8qv',
     storageBucket: 'velvetand-iron-training-mhr8qv.firebasestorage.app',
-    androidClientId: '492471411308-acd2s7cmob9152e2q2i89hlc0ip03mag.apps.googleusercontent.com',
+    androidClientId: '492471411308-9tlv6ic6fb9im8k81hu2vqtnku69jlle.apps.googleusercontent.com',
     iosClientId: '492471411308-3ejvn2ceighl6e215kqojlni97i4hn35.apps.googleusercontent.com',
     iosBundleId: 'com.velvet.velvetiron',
   );
+
 }

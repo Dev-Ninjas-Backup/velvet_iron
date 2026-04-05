@@ -14,7 +14,20 @@ import 'package:velvet_iron/routes/app_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Initialize Firebase with duplicate app error handling
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } on FirebaseException catch (e) {
+    if (e.code == 'duplicate-app') {
+      debugPrint('Firebase already initialized, skipping initialization');
+    } else {
+      rethrow;
+    }
+  }
+
   initDeepLinks();
   runApp(VelvetIron());
   configLoading();

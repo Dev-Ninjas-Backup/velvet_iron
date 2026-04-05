@@ -1,48 +1,48 @@
 {
   "project_info": {
-    "project_number": "492471411308",
-    "project_id": "velvetand-iron-training-mhr8qv",
-    "storage_bucket": "velvetand-iron-training-mhr8qv.firebasestorage.app"
+    "project_number": "61854665332",
+    "project_id": "adel-d2a96",
+    "storage_bucket": "adel-d2a96.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:492471411308:android:7782a40c72934bace92e49",
+        "mobilesdk_app_id": "1:61854665332:android:818f3d429589cad9addf21",
         "android_client_info": {
           "package_name": "com.velvet.velvetiron"
         }
       },
       "oauth_client": [
         {
-          "client_id": "492471411308-acd2s7cmob9152e2q2i89hlc0ip03mag.apps.googleusercontent.com",
+          "client_id": "61854665332-8p2r21mn79dm831abrvhat4mbck0dqpm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.velvet.velvetiron",
-            "certificate_hash": "601dd1b6cf698fda23ef0d2e8f08a11b56e20aca"
+            "certificate_hash": "2f6231ebfb4d754540d1a6b28adf0222db6b4054"
           }
         },
         {
-          "client_id": "492471411308-dmdge0krngun4oa41rs5d9db4rko9o1i.apps.googleusercontent.com",
+          "client_id": "61854665332-3na2ma7on2snsrn3hag7g9sohs6vqcg8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAovqpGPZuAjjBDNtyGuLtoOryI2AVA3u8"
+          "current_key": "AIzaSyBcWfh1RfeI1lm-5_N-dX3oU7PdKyWktPk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "492471411308-dmdge0krngun4oa41rs5d9db4rko9o1i.apps.googleusercontent.com",
+              "client_id": "61854665332-3na2ma7on2snsrn3hag7g9sohs6vqcg8.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "492471411308-3ejvn2ceighl6e215kqojlni97i4hn35.apps.googleusercontent.com",
+              "client_id": "61854665332-3o46jd6gngl6qfa15g6fb9bpo9vs6uo6.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.velvet.velvetiron"
+                "bundle_id": "com.anonymous.communicationapp"
               }
             }
           ]
