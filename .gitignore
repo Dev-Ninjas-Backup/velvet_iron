@@ -29,7 +29,6 @@ temp_auto_push.bat
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-.vscode/
 /build/
 /coverage/
 
