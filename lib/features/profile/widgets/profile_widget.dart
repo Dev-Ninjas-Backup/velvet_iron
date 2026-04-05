@@ -121,19 +121,13 @@ class ProfileWidget extends StatelessWidget {
                                   ),
                                 );
                               },
-                              errorBuilder: (_, __, ___) => Image.asset(
-                                ImagePath.profile,
-                                width: 102,
-                                height: 102,
-                                fit: BoxFit.cover,
-                              ),
+                              errorBuilder: (_, __, ___) =>
+                                  const Icon(Icons.person, color: Colors.white),
                             );
                           } else {
-                            return Image.asset(
-                              ImagePath.profile,
-                              width: 102,
-                              height: 102,
-                              fit: BoxFit.cover,
+                            return const Icon(
+                              Icons.person,
+                              color: Colors.white,
                             );
                           }
                         }),
