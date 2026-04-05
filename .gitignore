@@ -45,3 +45,4 @@ app.*.map.json
 /lib/secrets/secrets.dart
 .gitignore
 temp_interactive_push.bat
+branch_structure.json
