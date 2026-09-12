@@ -114,13 +114,13 @@ class PackageSelectionWidget extends StatelessWidget {
                                 textBaseline: TextBaseline.alphabetic,
                                 children: [
                                   _buildGradientText(
-                                    'USD \$9.00',
+                                    controller.priceText,
                                     fontSize: 24,
                                     themeController: themeController,
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    '/ per months',
+                                    controller.billingPeriodText,
                                     style: getTextStyle(
                                       fontSize: 10,
                                       color: Colors.white38,

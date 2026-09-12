@@ -70,29 +70,31 @@ class OnboardingScreen11 extends StatelessWidget {
                           padding: EdgeInsets.symmetric(
                             horizontal: screenWidth * 0.06,
                           ),
-                          child: CustomButton(
-                            label: 'Continue Subscription (\$9.00)',
-                            onPressed: () async {
-                              // Fetch active companion first
-                              await controller.fetchActiveCompanion();
+                          child: Obx(
+                            () => CustomButton(
+                              label: controller.buttonLabel,
+                              onPressed: () async {
+                                // Fetch active companion first
+                                await controller.fetchActiveCompanion();
 
-                              if (!context.mounted) return;
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) => Obx(
-                                  () => SubscriptionCompletionPopup(
-                                    selectedCompanionName:
-                                        controller.activeCompanionName.value,
-                                    selectedCompanionImage:
-                                        controller.activeCompanionImage.value,
-                                    onCollectRewards: () {
-                                      controller.onContinueSubscription();
-                                    },
+                                if (!context.mounted) return;
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) => Obx(
+                                    () => SubscriptionCompletionPopup(
+                                      selectedCompanionName:
+                                          controller.activeCompanionName.value,
+                                      selectedCompanionImage:
+                                          controller.activeCompanionImage.value,
+                                      onCollectRewards: () {
+                                        controller.onContinueSubscription();
+                                      },
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
                         ),
                         SizedBox(height: screenHeight * 0.04),

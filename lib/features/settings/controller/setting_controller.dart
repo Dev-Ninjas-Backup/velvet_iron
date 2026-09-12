@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
+import 'package:velvet_iron/core/services/revenuecat_service.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
@@ -294,6 +295,7 @@ class SettingsController extends GetxController {
                         EasyLoading.show(status: 'Leaving the Codex...');
                         final settingsService = SettingsService();
                         final result = await settingsService.logout();
+                        await RevenueCatService.logOut();
                         await Future.delayed(
                           const Duration(milliseconds: 1200),
                         );

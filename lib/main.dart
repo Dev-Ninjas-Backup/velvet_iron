@@ -7,6 +7,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/app.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:velvet_iron/core/services/revenuecat_service.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/auth/services/onboarding_status_service.dart';
 import 'package:velvet_iron/firebase_options.dart';
@@ -14,6 +16,16 @@ import 'package:velvet_iron/routes/app_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Load environment variables
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    debugPrint("Failed to load .env: $e");
+  }
+
+  // Initialize RevenueCat
+  await RevenueCatService.init();
 
   // Initialize Firebase with duplicate app error handling
   try {

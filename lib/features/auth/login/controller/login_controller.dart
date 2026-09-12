@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:velvet_iron/core/services/revenuecat_service.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/auth/login/validation/login_validation.dart';
@@ -97,16 +98,21 @@ class LoginController extends GetxController {
         final user = data['user'];
 
         if (user != null) {
+          final uid = user['id'] ?? '';
           await SharedPreferencesHelper.saveLoginData(
             accessToken: accessToken,
             refreshToken: refreshToken,
-            userId: user['id'] ?? '',
+            userId: uid,
             email: user['email'] ?? '',
             name: user['name'] ?? '',
             avatar: user['avatar'] ?? '',
             role: user['role'] ?? '',
             rememberMe: rememberMe.value,
           );
+
+          if (uid.isNotEmpty) {
+            await RevenueCatService.logIn(uid);
+          }
         }
 
         print('DEBUG: Firebase Login Response: $data');
@@ -283,16 +289,21 @@ class LoginController extends GetxController {
         print('Onboarded: ${userData['onBoarded']}');
 
         print('Saving login data to SharedPreferences...');
+        final uid = userData['id']?.toString() ?? '';
         await SharedPreferencesHelper.saveLoginData(
           accessToken: accessToken,
           refreshToken: refreshToken,
-          userId: userData['id'],
+          userId: uid,
           email: userData['email'],
           name: userData['name'],
           avatar: userData['avatar'] ?? '',
           role: userData['role'],
           rememberMe: rememberMe.value,
         );
+
+        if (uid.isNotEmpty) {
+          await RevenueCatService.logIn(uid);
+        }
         print('Login data saved successfully!');
 
         EasyLoading.showSuccess('Login successful!');

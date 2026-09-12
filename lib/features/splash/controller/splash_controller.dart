@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/services/revenuecat_service.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/auth/services/onboarding_status_service.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
@@ -22,10 +24,16 @@ class SplashController extends GetxController {
         accessToken.isNotEmpty &&
         refreshToken != null &&
         refreshToken.isNotEmpty) {
-      // User is logged in, check onboarding status
+      debugPrint("AccessToken: $accessToken");
+      debugPrint("RefreshToken: $refreshToken");
+
+      final userId = await SharedPreferencesHelper.getUserId();
+      if (userId != null && userId.isNotEmpty) {
+        await RevenueCatService.logIn(userId);
+      }
+
       await _checkOnboardingStatus();
     } else {
-      // No tokens, go to login
       Get.offAllNamed(AppRoute.getLoginScreen());
     }
   }

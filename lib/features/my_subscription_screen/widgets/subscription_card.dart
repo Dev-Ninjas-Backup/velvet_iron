@@ -32,44 +32,75 @@ class SubscriptionCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _premiumBadge(themeController),
+                    Obx(() => _planBadge(themeController, controller.planName.value)),
                     const SizedBox(height: 8),
-                    _info("Last Renewed", controller.renewDate),
-                    _info("Expire Date", controller.expireDate),
-                    const SizedBox(height: 10),
-                    _cancelButton(controller),
+                    Obx(() {
+                      if (controller.isPremium.value) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (controller.renewDate.value.isNotEmpty)
+                              _info("Last Renewed", controller.renewDate.value),
+                            if (controller.expireDate.value.isNotEmpty)
+                              _info("Expire Date", controller.expireDate.value),
+                            const SizedBox(height: 10),
+                            _cancelButton(controller),
+                          ],
+                        );
+                      } else {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _info("Status", "No active subscription"),
+                            const SizedBox(height: 4),
+                            Text(
+                              "Upgrade to unlock full access",
+                              style: getTextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white70,
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    }),
                   ],
                 ),
               ),
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ShaderMask(
-                    blendMode: BlendMode.srcIn,
-                    shaderCallback: (bounds) => LinearGradient(
-                      colors: themeController
-                          .activeTheme
-                          .progressBarGradient
-                          .colors,
-                    ).createShader(bounds),
-                    child: Text.rich(
-                      TextSpan(
-                        text: controller.price,
-                        style: getTextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: " / per month",
-                            style: getTextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
-                            ),
+                  Obx(
+                    () => ShaderMask(
+                      blendMode: BlendMode.srcIn,
+                      shaderCallback: (bounds) => LinearGradient(
+                        colors: themeController
+                            .activeTheme
+                            .progressBarGradient
+                            .colors,
+                      ).createShader(bounds),
+                      child: Text.rich(
+                        TextSpan(
+                          text: controller.price.value,
+                          style: getTextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
                           ),
-                        ],
+                          children: controller.billingPeriod.value.isNotEmpty
+                              ? [
+                                  TextSpan(
+                                    text: " ${controller.billingPeriod.value}",
+                                    style: getTextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ]
+                              : [],
+                        ),
                       ),
                     ),
                   ),
@@ -88,7 +119,7 @@ class SubscriptionCard extends StatelessWidget {
     );
   }
 
-  Widget _premiumBadge(AppThemeController themeController) {
+  Widget _planBadge(AppThemeController themeController, String badgeText) {
     String? selectedDotIcon =
         IconPath.doticonAdventure; // Default or based on logic
 
@@ -108,7 +139,7 @@ class SubscriptionCard extends StatelessWidget {
           Image.asset(selectedDotIcon, height: 20, width: 25),
           const SizedBox(width: 4),
           Text(
-            "Premium",
+            badgeText,
             style: getTextStyle(
               color: Colors.white,
               fontSize: 12,

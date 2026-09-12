@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
+import 'package:velvet_iron/routes/app_routes.dart';
 import '../controller/my_subscription_controller.dart';
 import '../widgets/membership_benefits.dart';
 import '../widgets/subscription_card.dart';
@@ -53,9 +54,19 @@ class MySubscriptionScreen extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 10,
                               ),
-                              child: CustomButton(
-                                label: "Renew Subscription",
-                                onPressed: () {},
+                              child: Obx(
+                                () => CustomButton(
+                                  label: controller.isPremium.value
+                                      ? "Renew Subscription"
+                                      : "Upgrade to Premium",
+                                  onPressed: () {
+                                    if (controller.isPremium.value) {
+                                      controller.renewSubscription();
+                                    } else {
+                                      Get.toNamed(AppRoute.onboardingScreen11);
+                                    }
+                                  },
+                                ),
                               ),
                             ),
                           ],

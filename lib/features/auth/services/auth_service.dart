@@ -4,11 +4,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:velvet_iron/core/models/response_data.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
-// import 'package:velvet_iron/secrets/secrets.dart';
 
 class AuthService {
-
-
   Future<ResponseData> firebaseLogin({required String token}) async {
     try {
       final url = Uri.parse(Urls.firebaseLogin);
@@ -58,7 +55,6 @@ class AuthService {
       );
     }
   }
-
 
   Future<String?> getDiscordOAuthUrl() async {
     try {
