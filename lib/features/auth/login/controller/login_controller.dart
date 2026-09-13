@@ -1,6 +1,9 @@
 // ignore_for_file: avoid_print, unnecessary_nullable_for_final_variable_declarations, await_only_futures, unnecessary_overrides
 
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -48,14 +51,45 @@ class LoginController extends GetxController {
       final UserCredential userCredential = await FirebaseAuth.instance
           .signInWithCredential(firebaseCredential);
 
+      print(
+        'DEBUG: Firebase App ProjectId: ${Firebase.app().options.projectId}',
+      );
+      print(
+        'DEBUG: User Email: ${userCredential.user?.email}, UID: ${userCredential.user?.uid}',
+      );
+
       final String? firebaseIdToken = await userCredential.user?.getIdToken(
         true,
       );
 
       print('DEBUG: Firebase ID Token obtained: ${firebaseIdToken != null}');
-      print(
-        'DEBUG: Firebase ID Token preview: ${firebaseIdToken?.substring(0, 50)}...',
-      );
+      if (firebaseIdToken != null) {
+        try {
+          final parts = firebaseIdToken.split('.');
+          if (parts.length >= 2) {
+            final payload = utf8.decode(
+              base64Url.decode(base64Url.normalize(parts[1])),
+            );
+            print('DEBUG: Firebase ID Token Claims: $payload');
+          }
+        } catch (e) {
+          print('DEBUG: Failed to decode Firebase token: $e');
+        }
+        print('DEBUG: RAW_FIREBASE_TOKEN: $firebaseIdToken');
+      }
+
+      try {
+        final parts = googleIdToken.split('.');
+        if (parts.length >= 2) {
+          final payload = utf8.decode(
+            base64Url.decode(base64Url.normalize(parts[1])),
+          );
+          print('DEBUG: Google ID Token Claims: $payload');
+        }
+      } catch (e) {
+        print('DEBUG: Failed to decode Google token: $e');
+      }
+      print('DEBUG: RAW_GOOGLE_TOKEN: $googleIdToken');
 
       if (firebaseIdToken == null) {
         isLoading.value = false;
