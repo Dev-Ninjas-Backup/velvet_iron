@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/core/services/revenuecat_service.dart';
@@ -14,7 +15,7 @@ import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/settings/services/logout_service.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
-class SettingsController extends GetxController {
+class SettingsController extends GetxController with WidgetsBindingObserver {
   final _profileService = UserProfileService();
 
   final userName = ''.obs;
@@ -36,6 +37,7 @@ class SettingsController extends GetxController {
   // Active companion image
   final activeCompanionImage = Rx<String?>(null);
   final activeCompanionName = Rx<String?>(null);
+  final profilePhotoUrl = Rx<String?>(null);
 
   // Progress bar uses totalEarnXp / xpRequired
   String get progressText => 'Progress to level ${nextLevel.value}';
@@ -46,8 +48,30 @@ class SettingsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    WidgetsBinding.instance.addObserver(this);
+    _loadCachedProfilePhoto();
     fetchUserProfile();
     fetchActiveCompanion();
+  }
+
+  Future<void> _loadCachedProfilePhoto() async {
+    final cached = await SharedPreferencesHelper.getAvatar();
+    if (cached != null && cached.isNotEmpty) {
+      profilePhotoUrl.value = cached;
+    }
+  }
+
+  @override
+  void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.onClose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _checkAndProcessAccountDeletion();
+    }
   }
 
   Future<void> fetchUserProfile() async {
@@ -58,6 +82,18 @@ class SettingsController extends GetxController {
     if (result.isSuccess && result.data != null) {
       final p = result.data!;
       userName.value = p.userName;
+
+      final effectiveImage = p.effectiveProfileImage;
+      if (effectiveImage != null && effectiveImage.isNotEmpty) {
+        profilePhotoUrl.value = effectiveImage;
+        await SharedPreferencesHelper.saveAvatar(effectiveImage);
+      } else {
+        final cached = await SharedPreferencesHelper.getAvatar();
+        if (cached != null && cached.isNotEmpty) {
+          profilePhotoUrl.value = cached;
+        }
+      }
+
       nextLevel.value = p.nextLevel.level;
       levelStatus.value = p.levelStatus;
       xpRequired.value = p.nextLevel.xpRequired;
@@ -392,6 +428,195 @@ class SettingsController extends GetxController {
       EasyLoading.showError('Error: ${e.toString()}');
     } finally {
       isSkippingLog.value = false;
+    }
+  }
+
+  Future<void> _checkAndProcessAccountDeletion() async {
+    final awaitingDeletion =
+        await SharedPreferencesHelper.getString('awaiting_account_deletion');
+    if (awaitingDeletion == 'true') {
+      await SharedPreferencesHelper.setString(
+        'awaiting_account_deletion',
+        'false',
+      );
+      await executeLogoutAfterDeletion();
+    }
+  }
+
+  Future<void> executeLogoutAfterDeletion() async {
+    try {
+      EasyLoading.show(status: 'Logging out...');
+      final settingsService = SettingsService();
+      await settingsService.logout();
+      await RevenueCatService.logOut();
+      await Future.delayed(const Duration(milliseconds: 800));
+    } catch (e) {
+      print('Error during deletion logout: $e');
+    } finally {
+      await SharedPreferencesHelper.clearAll();
+      EasyLoading.dismiss();
+      Get.offAllNamed(AppRoute.getLoginScreen());
+      EasyLoading.showSuccess(
+        'Account deletion request submitted. You have been logged out.',
+      );
+    }
+  }
+
+  Future<void> deleteAccount() async {
+    final themeController = Get.find<AppThemeController>();
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Container(
+          decoration: BoxDecoration(
+            color: themeController.activeTheme.dropdownBackgroundColor,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: themeController.activeTheme.accentGoldColor,
+              width: 1.5,
+            ),
+          ),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ShaderMask(
+                blendMode: BlendMode.srcIn,
+                shaderCallback: (bounds) => LinearGradient(
+                  colors:
+                      themeController.activeTheme.progressBarGradient.colors,
+                ).createShader(bounds),
+                child: const Icon(
+                  Icons.delete_forever_rounded,
+                  color: Colors.white,
+                  size: 48,
+                ),
+              ),
+              const SizedBox(height: 12),
+              ShaderMask(
+                blendMode: BlendMode.srcIn,
+                shaderCallback: (bounds) => LinearGradient(
+                  colors:
+                      themeController.activeTheme.progressBarGradient.colors,
+                ).createShader(bounds),
+                child: Text(
+                  'Delete Account',
+                  style: getTextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'You will be redirected to the account deletion request form.\n\nAfter submitting the form and returning to the app, you will be automatically logged out and all session data cleared.',
+                textAlign: TextAlign.center,
+                style: getTextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white.withValues(alpha: 0.9),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => Get.back(),
+                      child: Container(
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: themeController
+                              .activeTheme
+                              .dropdownBackgroundColor
+                              .withValues(alpha: 0.9),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: themeController.activeTheme.accentGoldColor
+                                .withValues(alpha: 0.3),
+                            width: 1,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Cancel',
+                            style: getTextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () async {
+                        Get.back();
+                        await _launchAccountDeletionForm();
+                      },
+                      child: Container(
+                        height: 48,
+                        decoration: BoxDecoration(
+                          gradient:
+                              themeController.activeTheme.progressBarGradient,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: themeController.activeTheme.accentGoldColor
+                                  .withValues(alpha: 0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Proceed',
+                            style: getTextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _launchAccountDeletionForm() async {
+    const urlString = 'https://forms.gle/N8tbvmScmqegYdCS8';
+    final uri = Uri.parse(urlString);
+    await SharedPreferencesHelper.setString(
+      'awaiting_account_deletion',
+      'true',
+    );
+
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        await launchUrl(uri);
+      }
+    } catch (e) {
+      print('Could not launch account deletion URL: $e');
+      await SharedPreferencesHelper.setString(
+        'awaiting_account_deletion',
+        'false',
+      );
+      EasyLoading.showError('Could not open deletion form. Please try again.');
     }
   }
 }

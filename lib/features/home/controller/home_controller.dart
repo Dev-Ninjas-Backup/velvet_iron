@@ -2,6 +2,7 @@
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
 import 'package:velvet_iron/features/home/models/home_screen_model.dart';
@@ -12,6 +13,7 @@ class HomeController extends GetxController {
   final isLoading = true.obs;
 
   final Rx<UserProfile?> userProfile = Rx<UserProfile?>(null);
+  final profilePhotoUrl = Rx<String?>(null);
   final todos = <HomeScreenModel>[].obs;
 
   // ── Chart filter: 'currentWeek' | 'lastWeek' ────────────────
@@ -101,6 +103,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _loadCachedProfilePhoto();
     fetchData();
     fetchActiveCompanion();
 
@@ -108,6 +111,13 @@ class HomeController extends GetxController {
     ever(selectedTodoFilter, (_) {
       _buildTodos();
     });
+  }
+
+  Future<void> _loadCachedProfilePhoto() async {
+    final cached = await SharedPreferencesHelper.getAvatar();
+    if (cached != null && cached.isNotEmpty) {
+      profilePhotoUrl.value = cached;
+    }
   }
 
   // ── Data fetching ────────────────────────────────────────────
@@ -122,6 +132,17 @@ class HomeController extends GetxController {
       try {
         userProfile.value = await HomeService().getProfile();
         print('[HomeController] API Response received and parsed successfully');
+
+        final effectiveImage = userProfile.value?.effectiveProfileImage;
+        if (effectiveImage != null && effectiveImage.isNotEmpty) {
+          profilePhotoUrl.value = effectiveImage;
+          await SharedPreferencesHelper.saveAvatar(effectiveImage);
+        } else {
+          final cached = await SharedPreferencesHelper.getAvatar();
+          if (cached != null && cached.isNotEmpty) {
+            profilePhotoUrl.value = cached;
+          }
+        }
       } catch (e) {
         print('[HomeController] API Error: $e');
         print('[HomeController] Falling back to mock data...');

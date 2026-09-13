@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
+import 'package:velvet_iron/core/common/widgets/empty_state_card.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/app_theme/model/app_theme_model.dart';
 import 'package:velvet_iron/features/home/controller/home_controller.dart';
@@ -82,7 +83,13 @@ class WeightProgress extends StatelessWidget {
 
             final data = controller.chartData;
             if (data.isEmpty) {
-              return const Center(child: Text('No data'));
+              return const EmptyStateCard(
+                icon: Icons.bar_chart_rounded,
+                title: 'No activity recorded',
+                subtitle: 'Complete tasks to earn XP and view your weekly chart.',
+                height: 150,
+                padding: EdgeInsets.all(12),
+              );
             }
 
             final rawMaxY = data.fold<double>(

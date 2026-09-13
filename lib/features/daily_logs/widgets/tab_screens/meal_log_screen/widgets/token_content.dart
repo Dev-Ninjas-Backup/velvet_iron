@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
+import 'package:velvet_iron/core/common/widgets/empty_state_card.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/scan_code_button.dart';
@@ -212,14 +213,11 @@ class TokenContent extends StatelessWidget {
                     if (controller.isHistoryLoading.value)
                       const Center(child: CircularProgressIndicator())
                     else if (taken.isEmpty)
-                      Center(
-                        child: Text(
-                          "No history found",
-                          style: getTextStyle(
-                            fontSize: 14,
-                            color: Colors.white54,
-                          ),
-                        ),
+                      const EmptyStateCard(
+                        icon: Icons.restaurant_rounded,
+                        title: "No meal logs recorded yet",
+                        subtitle:
+                            "Log your breakfast, lunch, or dinner above to track your meals.",
                       )
                     else
                       ...taken.map(
@@ -345,14 +343,11 @@ class TokenContent extends StatelessWidget {
                     if (controller.isHistoryLoading.value)
                       const Center(child: CircularProgressIndicator())
                     else if (taken.isEmpty)
-                      Center(
-                        child: Text(
-                          "No history found",
-                          style: getTextStyle(
-                            fontSize: 14,
-                            color: Colors.white54,
-                          ),
-                        ),
+                      const EmptyStateCard(
+                        icon: Icons.restaurant_rounded,
+                        title: "No meal logs recorded yet",
+                        subtitle:
+                            "Log your breakfast, lunch, or dinner above to track your meals.",
                       )
                     else
                       ...taken.map(

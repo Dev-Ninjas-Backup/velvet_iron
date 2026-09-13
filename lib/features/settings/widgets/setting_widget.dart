@@ -5,6 +5,7 @@ import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/settings/controller/setting_controller.dart';
+import 'package:velvet_iron/routes/app_routes.dart';
 
 class SettingsAppBar extends StatelessWidget {
   final VoidCallback? onNotificationTap;
@@ -91,7 +92,8 @@ class SettingsAppBar extends StatelessWidget {
               const SizedBox(width: 12),
 
               GestureDetector(
-                onTap: onProfileTap ?? () {},
+                onTap: onProfileTap ??
+                    () => Get.toNamed(AppRoute.getprofileScreen()),
                 child: Container(
                   width: 36,
                   height: 36,
@@ -102,8 +104,11 @@ class SettingsAppBar extends StatelessWidget {
                       width: 2,
                     ),
                     image: DecorationImage(
-                      image: profileImageUrl != null
-                          ? NetworkImage(profileImageUrl!)
+                      image: (profileImageUrl != null &&
+                              profileImageUrl!.isNotEmpty)
+                          ? (profileImageUrl!.startsWith('http')
+                              ? NetworkImage(profileImageUrl!) as ImageProvider
+                              : AssetImage(profileImageUrl!))
                           : Image.asset(ImagePath.profile).image,
                       fit: BoxFit.cover,
                     ),
@@ -171,6 +176,58 @@ class LogoutWidget extends GetView<SettingsController> {
   }
 }
 
+class DeleteAccountWidget extends GetView<SettingsController> {
+  const DeleteAccountWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<AppThemeController>(
+      builder: (themeController) {
+        return InkWell(
+          onTap: controller.deleteAccount,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: themeController.activeTheme.textfieldColor.withValues(
+                alpha: 0.8,
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 22,
+                  height: 22,
+                  child: ShaderMask(
+                    shaderCallback: (bounds) => themeController
+                        .activeTheme
+                        .progressBarGradient
+                        .createShader(bounds),
+                    child: const Icon(
+                      Icons.delete_forever_outlined,
+                      color: Colors.white,
+                      size: 22,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Text(
+                  'Delete Account',
+                  style: getTextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: themeController.activeTheme.textColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
 
 class AppVersionWidget extends GetView<SettingsController> {
   const AppVersionWidget({super.key});

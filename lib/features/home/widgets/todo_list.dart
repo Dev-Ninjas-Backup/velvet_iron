@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
+import 'package:velvet_iron/core/common/widgets/empty_state_card.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/home/controller/home_controller.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
@@ -71,13 +72,22 @@ class TodoSection extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            Obx(
-              () => Column(
+            Obx(() {
+              if (homeController.todos.isEmpty) {
+                return EmptyStateCard(
+                  icon: Icons.checklist_rtl_rounded,
+                  title:
+                      "No to-dos scheduled for ${homeController.selectedTodoFilter.value.toLowerCase()}",
+                  subtitle:
+                      "Complete quests and log daily activities to build your streak!",
+                );
+              }
+              return Column(
                 children: homeController.todos
                     .map((todo) => _TodoTile(todo: todo, theme: activeTheme))
                     .toList(),
-              ),
-            ),
+              );
+            }),
           ],
         );
       },

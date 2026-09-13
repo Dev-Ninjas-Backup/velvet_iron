@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
+import 'package:velvet_iron/core/common/widgets/empty_state_card.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
@@ -294,17 +295,11 @@ class MoodLog extends StatelessWidget {
                         }
 
                         if (moodLogController.historyLogs.isEmpty) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            child: Center(
-                              child: Text(
-                                'No mood logs yet',
-                                style: getTextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white54,
-                                ),
-                              ),
-                            ),
+                          return const EmptyStateCard(
+                            icon: Icons.mood_rounded,
+                            title: "No mood logs recorded yet",
+                            subtitle:
+                                "Select how you're feeling above to log your mood.",
                           );
                         }
                         return ListView.separated(

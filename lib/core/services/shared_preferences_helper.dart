@@ -118,6 +118,11 @@ class SharedPreferencesHelper {
     return prefs.getString(_avatarKey);
   }
 
+  static Future<void> saveAvatar(String avatar) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_avatarKey, avatar);
+  }
+
   static Future<String?> getRole() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(_roleKey);

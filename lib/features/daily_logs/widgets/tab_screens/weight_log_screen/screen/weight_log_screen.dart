@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
+import 'package:velvet_iron/core/common/widgets/empty_state_card.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
 import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
@@ -232,19 +233,11 @@ class WeightLog extends StatelessWidget {
                           const SizedBox(height: 10),
                           Obx(() {
                             if (weightLogController.historyList.isEmpty) {
-                              return Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 20,
-                                  ),
-                                  child: Text(
-                                    "No logs yet. Start logging your weight!",
-                                    style: getTextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white54,
-                                    ),
-                                  ),
-                                ),
+                              return const EmptyStateCard(
+                                icon: Icons.monitor_weight_outlined,
+                                title: "No weight logs recorded",
+                                subtitle:
+                                    "Log your current weight above to track your journey over time.",
                               );
                             }
 
@@ -268,6 +261,7 @@ class WeightLog extends StatelessWidget {
                               },
                             );
                           }),
+                          const SizedBox(height: 20),
                         ],
                       ),
                     ),

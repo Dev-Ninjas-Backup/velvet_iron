@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
+import 'package:velvet_iron/core/common/widgets/empty_state_card.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/date_and_time_picker.dart';
@@ -169,7 +170,7 @@ class ScheduleContentMedication extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             CustomButton(
-              label: "Log Meal (+10 XP)",
+              label: "Schedule Medication (+10 XP)",
               onPressed: () => controller.scheduleMedication(),
             ),
             const SizedBox(height: 14),
@@ -186,11 +187,11 @@ class ScheduleContentMedication extends StatelessWidget {
               final logs = controller.completedMedications;
 
               if (logs.isEmpty) {
-                return Center(
-                  child: Text(
-                    "No dose history found",
-                    style: getTextStyle(fontSize: 14, color: Colors.white54),
-                  ),
+                return const EmptyStateCard(
+                  icon: Icons.medication_outlined,
+                  title: "No medication doses logged yet",
+                  subtitle:
+                      "Log or schedule medications above to track your regimen.",
                 );
               }
 
@@ -225,7 +226,6 @@ class ScheduleContentMedication extends StatelessWidget {
             const SizedBox(height: 14),
             Obx(() {
               final scheduled = controller.scheduledMedications;
-              if (scheduled.isEmpty) return const SizedBox.shrink();
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -237,7 +237,15 @@ class ScheduleContentMedication extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  ...scheduled.map((next) {
+                  if (scheduled.isEmpty)
+                    const EmptyStateCard(
+                      icon: Icons.event_note_rounded,
+                      title: "No upcoming scheduled doses",
+                      subtitle:
+                          "Schedule your medications to receive reminders and earn XP.",
+                    )
+                  else
+                    ...scheduled.map((next) {
                     final timeStr = next.scheduledAt != null
                         ? _formatDateTime(next.scheduledAt!)
                         : '';

@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
+import 'package:velvet_iron/core/common/widgets/empty_state_card.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/weight_log_screen/controller/weight_log_controller.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/weight_log_screen/model/weight_log_model.dart';
@@ -10,30 +11,55 @@ class Graph extends StatelessWidget {
   const Graph({super.key});
 
   /// Build spots from weekly entries, mapping each entry's date to its
-  /// day-of-week index (0=Sun … 6=Sat). Days without data are skipped
-  /// so the line only connects logged days.
+  /// day-of-week index (0=Sun … 6=Sat).
   List<FlSpot> _buildSpots(List<WeeklyWeightEntry> entries) {
-    List<FlSpot> spots = [];
+    final Map<int, double> daySpots = {};
     for (final entry in entries) {
       try {
         final date = DateTime.parse(entry.date);
         final dayIndex = date.weekday % 7; // DateTime: Mon=1…Sun=7 → Sun=0
         final weight = double.tryParse(entry.weight);
-        if (weight != null) {
-          spots.add(FlSpot(dayIndex.toDouble(), weight));
+        if (weight != null && weight > 0) {
+          daySpots[dayIndex] = weight;
         }
       } catch (_) {}
     }
-    spots.sort((a, b) => a.x.compareTo(b.x));
-    // Fill missing days with 0.1 so all 7 days have a point
-    final existing = {for (final s in spots) s.x.toInt()};
-    for (int i = 0; i < 7; i++) {
-      if (!existing.contains(i)) {
-        spots.add(FlSpot(i.toDouble(), 0.01));
-      }
-    }
+    final spots = daySpots.entries
+        .map((e) => FlSpot(e.key.toDouble(), e.value))
+        .toList();
     spots.sort((a, b) => a.x.compareTo(b.x));
     return spots;
+  }
+
+  /// Partition entries accurately based on calendar week (Sunday–Saturday).
+  List<WeeklyWeightEntry> _getEntriesForFilter(
+    List<WeeklyWeightEntry> allEntries,
+    String selectedValue,
+  ) {
+    final now = DateTime.now();
+    // Sunday as start of week (matching Sunday=0 in the chart's dayLabels)
+    final daysSinceSunday = now.weekday % 7;
+    final startOfThisWeek =
+        DateTime(now.year, now.month, now.day).subtract(Duration(days: daysSinceSunday));
+    final startOfLastWeek = startOfThisWeek.subtract(const Duration(days: 7));
+
+    return allEntries.where((entry) {
+      try {
+        final date = DateTime.parse(entry.date);
+        final entryDay = DateTime(date.year, date.month, date.day);
+        if (selectedValue == "this week") {
+          return (entryDay.isAtSameMomentAs(startOfThisWeek) ||
+                  entryDay.isAfter(startOfThisWeek)) &&
+              entryDay.isBefore(startOfThisWeek.add(const Duration(days: 7)));
+        } else {
+          return (entryDay.isAtSameMomentAs(startOfLastWeek) ||
+                  entryDay.isAfter(startOfLastWeek)) &&
+              entryDay.isBefore(startOfThisWeek);
+        }
+      } catch (_) {
+        return false;
+      }
+    }).toList();
   }
 
   /// Compute nice axis bounds from the data.
@@ -61,9 +87,29 @@ class Graph extends StatelessWidget {
         return Obx(() {
           final chartData = weightLogController.weeklyChartData.value;
           final selectedValue = weightLogController.selectedChart.value;
-          final entries = selectedValue == "this week"
-              ? (chartData?.thisWeek ?? [])
-              : (chartData?.lastWeek ?? []);
+
+          // Collect all known entries from chartData and historyList (converted to kg)
+          final allEntries = <WeeklyWeightEntry>[];
+          if (chartData != null) {
+            allEntries.addAll(chartData.thisWeek);
+            allEntries.addAll(chartData.lastWeek);
+          }
+
+          final existingDates = {for (final e in allEntries) e.date};
+          for (final h in weightLogController.historyList) {
+            final dateStr =
+                h.loggedAt.toLocal().toIso8601String().split('T').first;
+            if (!existingDates.contains(dateStr)) {
+              final lbs = double.tryParse(h.weight);
+              if (lbs != null && lbs > 0) {
+                final kg = (lbs / 2.20462).toStringAsFixed(1);
+                allEntries.add(WeeklyWeightEntry(date: dateStr, weight: kg));
+                existingDates.add(dateStr);
+              }
+            }
+          }
+
+          final entries = _getEntriesForFilter(allEntries, selectedValue);
           final spots = _buildSpots(entries);
           final (minY, maxY, rightTitleValues) = _computeYAxis(spots);
 
@@ -118,16 +164,15 @@ class Graph extends StatelessWidget {
               const SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
-                height: 150,
+                height: 155,
                 child: spots.isEmpty
-                    ? Center(
-                        child: Text(
-                          'No data for $selectedValue',
-                          style: getTextStyle(
-                            color: Colors.white54,
-                            fontSize: 12,
-                          ),
-                        ),
+                    ? EmptyStateCard(
+                        icon: Icons.show_chart_rounded,
+                        title: 'No weight data for $selectedValue',
+                        subtitle:
+                            'Log your weight below to view your weekly progress chart.',
+                        height: 150,
+                        padding: const EdgeInsets.all(12),
                       )
                     : LineChart(
                         LineChartData(
@@ -197,7 +242,19 @@ class Graph extends StatelessWidget {
                                   .progressBarGradient,
                               barWidth: 4.5,
                               isStrokeCapRound: true,
-                              dotData: const FlDotData(show: false),
+                              dotData: FlDotData(
+                                show: true,
+                                getDotPainter: (spot, percent, barData, index) {
+                                  return FlDotCirclePainter(
+                                    radius: 5,
+                                    color: themeController
+                                        .activeTheme
+                                        .accentGoldColor,
+                                    strokeWidth: 2,
+                                    strokeColor: Colors.white,
+                                  );
+                                },
+                              ),
                               belowBarData: BarAreaData(show: false),
                             ),
                           ],

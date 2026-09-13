@@ -19,6 +19,7 @@ class VelvetIron extends StatelessWidget {
       splitScreenMode: true,
       builder: (_, child) {
         return GetMaterialApp(
+          title: 'Velvet & Iron',
           debugShowCheckedModeBanner: false,
           translations: AppTranslations(),
           initialRoute: AppRoute.getSplashScreen(),

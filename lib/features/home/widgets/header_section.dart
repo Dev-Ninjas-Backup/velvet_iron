@@ -25,23 +25,26 @@ class HeaderSection extends StatelessWidget {
             return const SizedBox.shrink();
           }
 
-          final profilePhoto = controller.userProfile.value?.profilePhoto;
-          final imageProvider =
-              (profilePhoto != null && profilePhoto.isNotEmpty)
-              ? (profilePhoto.startsWith('http')
-                    ? NetworkImage(profilePhoto) as ImageProvider
-                    : AssetImage(profilePhoto))
+          final photoUrl = controller.profilePhotoUrl.value ??
+              controller.userProfile.value?.effectiveProfileImage;
+          final imageProvider = (photoUrl != null && photoUrl.isNotEmpty)
+              ? (photoUrl.startsWith('http')
+                    ? NetworkImage(photoUrl) as ImageProvider
+                    : AssetImage(photoUrl))
               : null;
 
           return Row(
             children: [
-              CircleAvatar(
-                radius: 22,
-                backgroundImage: imageProvider,
-                backgroundColor: activeTheme.headerIconBackgroundColor,
-                child: imageProvider == null
-                    ? const Icon(Icons.person, color: Colors.white)
-                    : null,
+              GestureDetector(
+                onTap: () => Get.toNamed(AppRoute.getprofileScreen()),
+                child: CircleAvatar(
+                  radius: 22,
+                  backgroundImage: imageProvider,
+                  backgroundColor: activeTheme.headerIconBackgroundColor,
+                  child: imageProvider == null
+                      ? const Icon(Icons.person, color: Colors.white)
+                      : null,
+                ),
               ),
               const SizedBox(width: 12),
               Column(

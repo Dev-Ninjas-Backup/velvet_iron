@@ -59,6 +59,19 @@ class UserProfile {
     required this.user,
   });
 
+  String? get effectiveProfileImage {
+    if (profilePhoto != null && profilePhoto!.isNotEmpty) {
+      return profilePhoto;
+    }
+    if (user.profilePhoto != null && user.profilePhoto!.isNotEmpty) {
+      return user.profilePhoto;
+    }
+    if (user.avatar != null && user.avatar!.isNotEmpty) {
+      return user.avatar;
+    }
+    return null;
+  }
+
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
       id: (json['id'] ?? '') as String,
@@ -215,19 +228,30 @@ class TodayMood {
 
 class UserInfo {
   final String name;
+  final String? avatar;
+  final String? profilePhoto;
   final UserProfileXp userProfile;
 
-  const UserInfo({required this.name, required this.userProfile});
+  const UserInfo({
+    required this.name,
+    this.avatar,
+    this.profilePhoto,
+    required this.userProfile,
+  });
 
   factory UserInfo.fromJson(Map<String, dynamic> json) => UserInfo(
     name: (json['name'] ?? 'User') as String,
-    userProfile: UserProfileXp.fromJson(
-      json['userProfile'] as Map<String, dynamic>,
-    ),
+    avatar: json['avatar'] as String?,
+    profilePhoto: json['profilePhoto'] as String?,
+    userProfile: json['userProfile'] != null
+        ? UserProfileXp.fromJson(json['userProfile'] as Map<String, dynamic>)
+        : const UserProfileXp(balanceXp: 0),
   );
 
   Map<String, dynamic> toJson() => {
     'name': name,
+    if (avatar != null) 'avatar': avatar,
+    if (profilePhoto != null) 'profilePhoto': profilePhoto,
     'userProfile': userProfile.toJson(),
   };
 }

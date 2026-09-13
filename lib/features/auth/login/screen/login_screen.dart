@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -106,72 +108,74 @@ class LoginScreen extends StatelessWidget {
                         controller.login();
                       },
                     ),
-                    SizedBox(height: 30),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            color: const Color(0xFFE9B86E),
-                            thickness: 1,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            'or continue with',
-                            style: getTextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                              color: AppColors.textColor,
+                    if (Platform.isAndroid) SizedBox(height: 30),
+                    if (Platform.isAndroid)
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Divider(
+                              color: const Color(0xFFE9B86E),
+                              thickness: 1,
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: const Color(0xFFE9B86E),
-                            thickness: 1,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              'or continue with',
+                              style: getTextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: AppColors.textColor,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            controller.signInWithGoogle();
-                          },
-                          child: Image.asset(
-                            IconPath.googleIcon,
-                            height: 46,
-                            width: 46,
+                          Expanded(
+                            child: Divider(
+                              color: const Color(0xFFE9B86E),
+                              thickness: 1,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 26),
-                        GestureDetector(
-                          onTap: () {
-                            debugPrint('Facebook clicked');
-                          },
-                          child: Image.asset(
-                            IconPath.facebookIcon,
-                            height: 46,
-                            width: 46,
+                        ],
+                      ),
+                    if (Platform.isAndroid) SizedBox(height: 30),
+                    if (Platform.isAndroid)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              controller.signInWithGoogle();
+                            },
+                            child: Image.asset(
+                              IconPath.googleIcon,
+                              height: 46,
+                              width: 46,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 26),
-                        GestureDetector(
-                          onTap: () {
-                            controller.signInWithDiscord();
-                          },
-                          child: Image.asset(
-                            IconPath.discordIcon,
-                            height: 46,
-                            width: 46,
+                          const SizedBox(width: 26),
+                          // GestureDetector(
+                          //   onTap: () {
+                          //     debugPrint('Facebook clicked');
+                          //   },
+                          //   child: Image.asset(
+                          //     IconPath.facebookIcon,
+                          //     height: 46,
+                          //     width: 46,
+                          //   ),
+                          // ),
+                          // const SizedBox(width: 26),
+                          GestureDetector(
+                            onTap: () {
+                              controller.signInWithDiscord();
+                            },
+                            child: Image.asset(
+                              IconPath.discordIcon,
+                              height: 46,
+                              width: 46,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                     SizedBox(height: 57),
                     Center(
                       child: RichText(

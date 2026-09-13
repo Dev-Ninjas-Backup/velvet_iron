@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_back_button.dart';
+import 'package:velvet_iron/core/common/widgets/empty_state_card.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
 import 'package:velvet_iron/features/quests/controller/quest_controller.dart';
@@ -105,18 +106,26 @@ class QuestsScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            ...questsData.quests.map(
-                              (quest) => Padding(
-                                padding: const EdgeInsets.only(bottom: 7),
-                                child: TodaysQuestItem(
-                                  id: quest.id,
-                                  header: quest.title,
-                                  title: quest.description,
-                                  xp: quest.xp,
-                                  isActive: quest.isDone,
+                            if (questsData.quests.isEmpty)
+                              const EmptyStateCard(
+                                icon: Icons.military_tech_outlined,
+                                title: "No quests available today",
+                                subtitle:
+                                    "Check back tomorrow for new heroic quests to earn XP!",
+                              )
+                            else
+                              ...questsData.quests.map(
+                                (quest) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 7),
+                                  child: TodaysQuestItem(
+                                    id: quest.id,
+                                    header: quest.title,
+                                    title: quest.description,
+                                    xp: quest.xp,
+                                    isActive: quest.isDone,
+                                  ),
                                 ),
                               ),
-                            ),
                             const SizedBox(height: 20),
                             QuestTips(
                               onXpEarned: (message) {

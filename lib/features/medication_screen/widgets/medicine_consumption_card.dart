@@ -49,7 +49,6 @@ class MedicineConsumptionCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Obx(() {
-            final h = medicationController.historyData.value;
             final completed = medicationController.completedMedications.length;
             final scheduled = medicationController.scheduledMedications.length;
 

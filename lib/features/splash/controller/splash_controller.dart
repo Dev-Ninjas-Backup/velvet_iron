@@ -17,6 +17,19 @@ class SplashController extends GetxController {
   Future<void> _checkAuthAndNavigate() async {
     await Future.delayed(const Duration(seconds: 3));
 
+    final awaitingDeletion =
+        await SharedPreferencesHelper.getString('awaiting_account_deletion');
+    if (awaitingDeletion == 'true') {
+      await SharedPreferencesHelper.setString(
+        'awaiting_account_deletion',
+        'false',
+      );
+      await SharedPreferencesHelper.clearAll();
+      await RevenueCatService.logOut();
+      Get.offAllNamed(AppRoute.getLoginScreen());
+      return;
+    }
+
     final accessToken = await SharedPreferencesHelper.getAccessToken();
     final refreshToken = await SharedPreferencesHelper.getRefreshToken();
 

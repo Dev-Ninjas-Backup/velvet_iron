@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_back_button.dart';
+import 'package:velvet_iron/core/common/widgets/empty_state_card.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
@@ -174,66 +175,74 @@ class ExerciseScreen extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          ListView.builder(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: controller.completedExercises.length,
-                            itemBuilder: (context, index) {
-                              final exercise =
-                                  controller.completedExercises[index];
-                              final loggedAt = exercise.loggedAt.toLocal();
-                              final dayName = const [
-                                'Mon',
-                                'Tue',
-                                'Wed',
-                                'Thu',
-                                'Fri',
-                                'Sat',
-                                'Sun',
-                              ][loggedAt.weekday - 1];
-                              final hour = loggedAt.hour.toString().padLeft(
-                                2,
-                                '0',
-                              );
-                              final minute = loggedAt.minute.toString().padLeft(
-                                2,
-                                '0',
-                              );
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 7.0),
-                                child: ExcersiseHistory(
-                                  title: exercise.name,
-                                  sub:
-                                      "${exercise.type} - ${exercise.duration} min",
-                                  time: "$dayName - $hour:$minute",
-                                  iconPath: _getIconPath(
-                                    exercise.type,
-                                    exercise.name,
+                          const SizedBox(height: 10),
+                          if (controller.completedExercises.isEmpty)
+                            const EmptyStateCard(
+                              icon: Icons.fitness_center_rounded,
+                              title: "No exercise history yet",
+                              subtitle:
+                                  "Log your completed workouts above to earn XP!",
+                            )
+                          else
+                            ListView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: controller.completedExercises.length,
+                              itemBuilder: (context, index) {
+                                final exercise =
+                                    controller.completedExercises[index];
+                                final loggedAt = exercise.loggedAt.toLocal();
+                                final dayName = const [
+                                  'Mon',
+                                  'Tue',
+                                  'Wed',
+                                  'Thu',
+                                  'Fri',
+                                  'Sat',
+                                  'Sun',
+                                ][loggedAt.weekday - 1];
+                                final hour = loggedAt.hour.toString().padLeft(
+                                  2,
+                                  '0',
+                                );
+                                final minute = loggedAt.minute.toString().padLeft(
+                                  2,
+                                  '0',
+                                );
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 7.0),
+                                  child: ExcersiseHistory(
+                                    title: exercise.name,
+                                    sub:
+                                        "${exercise.type} - ${exercise.duration} min",
+                                    time: "$dayName - $hour:$minute",
+                                    iconPath: _getIconPath(
+                                      exercise.type,
+                                      exercise.name,
+                                    ),
+                                    isSelected: RxBool(false),
+                                    isTaken: exercise.isTaken,
+                                    onStatusIconTap: !exercise.isTaken
+                                        ? () {
+                                            debugPrint(
+                                              '[ExerciseScreen] 🖱️ Status icon tapped for ${exercise.name}',
+                                            );
+                                            controller.markExerciseAsTaken(
+                                              exercise.id,
+                                            );
+                                          }
+                                        : null,
                                   ),
-                                  isSelected: RxBool(false),
-                                  isTaken: exercise.isTaken,
-                                  onStatusIconTap: !exercise.isTaken
-                                      ? () {
-                                          debugPrint(
-                                            '[ExerciseScreen] 🖱️ Status icon tapped for ${exercise.name}',
-                                          );
-                                          controller.markExerciseAsTaken(
-                                            exercise.id,
-                                          );
-                                        }
-                                      : null,
-                                ),
-                              );
-                            },
-                          ),
+                                );
+                              },
+                            ),
 
                           Obx(() {
-                            if (controller.selectedExerciseTab.value != 1)
+                            if (controller.selectedExerciseTab.value != 1) {
                               return const SizedBox.shrink();
+                            }
                             final scheduled = controller.scheduledExercises;
-                            if (scheduled.isEmpty)
-                              return const SizedBox.shrink();
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -246,7 +255,15 @@ class ExerciseScreen extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 10),
-                                ...scheduled.map((next) {
+                                if (scheduled.isEmpty)
+                                  const EmptyStateCard(
+                                    icon: Icons.calendar_month_outlined,
+                                    title: "No scheduled exercises",
+                                    subtitle:
+                                        "Schedule your upcoming workouts to plan your routine.",
+                                  )
+                                else
+                                  ...scheduled.map((next) {
                                   final dayName = next.scheduledAt != null
                                       ? const [
                                           'Mon',

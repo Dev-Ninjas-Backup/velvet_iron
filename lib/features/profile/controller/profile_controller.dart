@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
 import 'package:velvet_iron/features/profile/service/profile_service.dart';
+import 'package:velvet_iron/features/settings/controller/setting_controller.dart';
 
 class ProfileController extends GetxController {
   final fullName = ''.obs;
@@ -27,7 +29,7 @@ class ProfileController extends GetxController {
     super.onInit();
     fullNameController = TextEditingController();
     usernameController = TextEditingController();
-    _fetchProfile();
+    getProfile();
   }
 
   @override
@@ -39,12 +41,12 @@ class ProfileController extends GetxController {
 
   // Fetch profile data
 
-  Future<void> _fetchProfile() async {
+  Future<void> getProfile() async {
     final accessToken = await SharedPreferencesHelper.getAccessToken();
     final refreshToken = await SharedPreferencesHelper.getRefreshToken();
 
     if (accessToken == null || refreshToken == null) {
-      debugPrint('Profile Token missing — cannot fetch');
+      debugPrint('Profile Tokens missing in SharedPreferences');
       return;
     }
 
@@ -62,14 +64,26 @@ class ProfileController extends GetxController {
       fullNameController.text = profile.user.name;
       usernameController.text = profile.userName;
 
-      // ✅ Use profilePhoto if available, otherwise fall back to saved avatar
-      if (profile.profilePhoto != null && profile.profilePhoto!.isNotEmpty) {
-        remoteProfilePhoto.value = profile.profilePhoto!;
+      final effectiveImage = profile.effectiveProfileImage;
+      if (effectiveImage != null && effectiveImage.isNotEmpty) {
+        remoteProfilePhoto.value = effectiveImage;
+        await SharedPreferencesHelper.saveAvatar(effectiveImage);
       } else {
         final savedAvatar = await SharedPreferencesHelper.getAvatar();
         if (savedAvatar != null && savedAvatar.isNotEmpty) {
           remoteProfilePhoto.value = savedAvatar;
           debugPrint('Profile using Discord avatar: $savedAvatar');
+        }
+      }
+
+      if (remoteProfilePhoto.value.isNotEmpty) {
+        if (Get.isRegistered<HomeController>()) {
+          Get.find<HomeController>().profilePhotoUrl.value =
+              remoteProfilePhoto.value;
+        }
+        if (Get.isRegistered<SettingsController>()) {
+          Get.find<SettingsController>().profilePhotoUrl.value =
+              remoteProfilePhoto.value;
         }
       }
 
@@ -152,6 +166,18 @@ class ProfileController extends GetxController {
       remoteProfilePhoto.value = result.user.profilePhoto.isNotEmpty
           ? result.user.profilePhoto
           : result.user.avatar;
+
+      if (remoteProfilePhoto.value.isNotEmpty) {
+        await SharedPreferencesHelper.saveAvatar(remoteProfilePhoto.value);
+        if (Get.isRegistered<HomeController>()) {
+          Get.find<HomeController>().profilePhotoUrl.value =
+              remoteProfilePhoto.value;
+        }
+        if (Get.isRegistered<SettingsController>()) {
+          Get.find<SettingsController>().profilePhotoUrl.value =
+              remoteProfilePhoto.value;
+        }
+      }
 
       await SharedPreferencesHelper.saveUsername(result.user.username);
       debugPrint('Profile username saved to prefs: ${result.user.username}');

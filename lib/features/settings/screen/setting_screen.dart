@@ -7,6 +7,7 @@ import 'package:velvet_iron/features/settings/widgets/general_setting_item.dart'
 import 'package:velvet_iron/features/settings/widgets/setting_widget.dart';
 import 'package:velvet_iron/features/settings/widgets/upcoming_widgets.dart';
 import 'package:velvet_iron/features/settings/widgets/user_profile.dart';
+import 'package:velvet_iron/routes/app_routes.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -14,7 +15,7 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.delete<SettingsController>();
-    Get.put(SettingsController());
+    final settingsController = Get.put(SettingsController());
 
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
@@ -41,7 +42,14 @@ class SettingScreen extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 52, left: 16, right: 16),
                   child: Column(
                     children: [
-                      SettingsAppBar(),
+                      Obx(
+                        () => SettingsAppBar(
+                          profileImageUrl:
+                              settingsController.profilePhotoUrl.value,
+                          onProfileTap: () =>
+                              Get.toNamed(AppRoute.getprofileScreen()),
+                        ),
+                      ),
                       const UserProfileWidget(),
                       const SizedBox(height: 20),
                       const UpcomingLogWidget(),
@@ -51,6 +59,8 @@ class SettingScreen extends StatelessWidget {
                       const GeneralSettingsWidget(),
                       const SizedBox(height: 22),
                       const LogoutWidget(),
+                      const SizedBox(height: 12),
+                      const DeleteAccountWidget(),
                       const SizedBox(height: 20),
                       const AppVersionWidget(),
                       const SizedBox(height: 20),

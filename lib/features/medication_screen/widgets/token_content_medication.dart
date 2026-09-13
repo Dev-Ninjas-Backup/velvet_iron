@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
+import 'package:velvet_iron/core/common/widgets/empty_state_card.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/home/controller/home_controller.dart';
@@ -190,11 +191,11 @@ class TokenContentMedication extends StatelessWidget {
                   .toList();
 
               if (logs.isEmpty) {
-                return Center(
-                  child: Text(
-                    "No dose history found",
-                    style: getTextStyle(fontSize: 14, color: Colors.white54),
-                  ),
+                return const EmptyStateCard(
+                  icon: Icons.medication_outlined,
+                  title: "No medication doses logged yet",
+                  subtitle:
+                      "Log or schedule medications above to track your regimen.",
                 );
               }
               return Column(
