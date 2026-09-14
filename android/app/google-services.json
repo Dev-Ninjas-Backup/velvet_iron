@@ -14,11 +14,35 @@
       },
       "oauth_client": [
         {
+          "client_id": "492471411308-34cnlaqc25mk42li9q53rfdjnlbp55le.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.velvet.velvetiron",
+            "certificate_hash": "4b22e37cc585ac9e0c125265012c8d7d479dedc9"
+          }
+        },
+        {
+          "client_id": "492471411308-erjtqgke260ahcj5i6jl8n6fvc2rffgv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.velvet.velvetiron",
+            "certificate_hash": "193e42766c40eed7cb36cb7fa967f1ba15dd67e6"
+          }
+        },
+        {
           "client_id": "492471411308-m9h382465pmcki7ji3b4mpvpioe40sqv.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.velvet.velvetiron",
             "certificate_hash": "15811ddc0e32277404023b401fa19b7f5c7a1f68"
+          }
+        },
+        {
+          "client_id": "492471411308-ukbuhavn0l5uh74i945t6a5t1dtvcg89.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.velvet.velvetiron",
+            "certificate_hash": "1c979234aee336df2bb62df0ef692eb6d4d58800"
           }
         },
         {

@@ -211,7 +211,10 @@ class LoginController extends GetxController {
 
   Future<void> _initializeGoogleSignIn() async {
     try {
-      await GoogleSignIn.instance.initialize();
+      await GoogleSignIn.instance.initialize(
+        serverClientId:
+            '492471411308-dmdge0krngun4oa41rs5d9db4rko9o1i.apps.googleusercontent.com',
+      );
       print('DEBUG: GoogleSignIn initialized successfully');
     } catch (e) {
       print('DEBUG: GoogleSignIn initialization error: $e');
