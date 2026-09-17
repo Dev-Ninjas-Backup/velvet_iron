@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -12,7 +13,19 @@ class RevenueCatService {
   /// Initialize RevenueCat SDK
   static Future<void> init() async {
     try {
-      String apiKey = dotenv.env['REVENUECAT_API_KEY'] ?? '';
+      String apiKey = '';
+
+      if (!kIsWeb && Platform.isIOS) {
+        apiKey = dotenv.env['REVENUECAT_IOS_API_KEY'] ??
+            dotenv.env['REVENUECAT_API_KEY'] ??
+            '';
+      } else if (!kIsWeb && Platform.isAndroid) {
+        apiKey = dotenv.env['REVENUECAT_ANDROID_API_KEY'] ??
+            dotenv.env['REVENUECAT_API_KEY'] ??
+            '';
+      } else {
+        apiKey = dotenv.env['REVENUECAT_API_KEY'] ?? '';
+      }
       
       // Clean up any extra quotes or whitespace
       apiKey = apiKey
@@ -21,8 +34,11 @@ class RevenueCatService {
           .replaceAll(';', '')
           .trim();
 
-      if (apiKey.isEmpty) {
-        debugPrint('RevenueCat Warning: REVENUECAT_API_KEY is empty in .env');
+      if (apiKey.isEmpty ||
+          apiKey == 'appl_REPLACE_WITH_YOUR_REVENUECAT_APPLE_KEY') {
+        debugPrint(
+          'RevenueCat Warning: ${!kIsWeb && Platform.isIOS ? 'REVENUECAT_IOS_API_KEY' : 'REVENUECAT_API_KEY'} is empty or using placeholder in .env. Please update it with your real key.',
+        );
         return;
       }
 

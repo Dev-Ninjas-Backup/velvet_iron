@@ -1,0 +1,1142 @@
+# Velvet & Iron — Companion Quote Packs & Dialogue Engine Specification
+
+**Source Document**: `Velvet_and_Iron_Character_Quote_Packs.docx`  
+**Implementation Scope**: Client-Side Dialogue Engine & Notification Reference  
+**Characters Included**: Riven, Thyra, General Leon, Visepheron  
+**Total Lines**: 800+ contextual dialogue quotes across 17 distinct game triggers  
+
+---
+
+## 1. Executive Summary & Design Principles
+
+This specification defines the complete companion dialogue architecture for Velvet & Iron. Generic, static quotes are replaced with dynamic, voice-distinct dialogue triggered by user interactions, achievements, and wellness milestones.
+
+### Core Design Rules
+1. **Client-Side Execution**: Dialogue is evaluated and rendered instantly by the Flutter app with zero network lag.
+2. **Strictly Neutral Addressing**: All dialogue addressing the user is gender-neutral and orientation-neutral.
+3. **Anti-Shame Wellness Philosophy**: 'Missed Goal / Rough Day' and 'Return After Days Away' lines never guilt, penalize, or shame the user. They provide grounded, compassionate accountability.
+4. **LRU Anti-Repetition**: Dialogue uses a Least-Recently-Used buffer (cooldown of at least 5 quotes) to prevent consecutive identical quotes.
+5. **Rare Lines (5% Easter Egg Probability)**: Each companion includes 20 deep lore / rare lines with a 5% trigger probability during major milestones.
+
+---
+
+## 2. Trigger Event System (17 Triggers)
+
+| # | Trigger Event | Trigger Condition in App | Screen / UI Placement |
+|---|---|---|---|
+| 1 | **App Open / Welcome Back** | User launches or resumes app | Home screen greeting card |
+| 2 | **Morning** | App opened between 05:00 - 11:59 | Home header / Daily login dialog |
+| 3 | **Quest Accepted** | User creates or accepts a quest | Quest modal / banner |
+| 4 | **Quest Completed** | User marks quest as done | Completion popup / XP banner |
+| 5 | **Workout Started** | User begins an exercise timer/session | Exercise active workout screen |
+| 6 | **Workout Completed** | User logs completed workout | Exercise completion summary |
+| 7 | **Steps / Movement Goal** | User reaches daily step target | Activity card / push alert |
+| 8 | **Water Goal** | User logs water / reaches target | Hydration quick log popup |
+| 9 | **Nutrition / Meal Logged** | User logs a meal or scans food | Meal log confirmation toast |
+| 10 | **Protein Goal** | User reaches daily protein grams | Macro status ring / toast |
+| 11 | **Streak** | Daily login streak incremented | Streak celebration card |
+| 12 | **Missed Goal / Rough Day** | User misses goal or logs low energy/mood | Compassionate banner on Home / Mood |
+| 13 | **Returning After Days Away** | App opened after >= 3 days absence | Welcome back dialog (zero guilt) |
+| 14 | **Level Up / Milestone** | User levels up from XP threshold | Level-up modal & reward screen |
+| 15 | **Rest / Recovery Day** | User schedules rest day | Rest day prompt on Home screen |
+| 16 | **Night / Signing Off** | App opened after 21:00 or logged bed | Evening summary card |
+| 17 | **Rare Lines** | Random 5% roll on any major milestone | Special glowing companion dialog |
+
+---
+
+## 3. Complete Character Dialogue Catalog
+
+
+### 👤 Character: Riven — High Lord of the Forsaken Court
+
+> **Voice Persona**: *Seductive, sarcastic, clever, slightly dangerous, occasionally unhinged, secretly supportive. Praise is often disguised as teasing. Gender-neutral and orientation-neutral.*
+
+
+#### ◈ App Open / Welcome Back
+
+- "There you are. I was beginning to think you'd abandoned me."
+- "Back again? Careful. I might start thinking you enjoy my company."
+- "Ah. My favorite little menace returns."
+- "You came back. How terribly predictable of you."
+- "Come now. We have things to accomplish."
+- "I suppose I can spare you a few moments."
+- "There you are. Try not to waste my time looking pretty."
+- "Miss me? Don't answer that. I already know."
+- "Welcome back. Shall we cause some trouble?"
+- "I've been waiting. Not patiently, mind you."
+- "Oh, good. You're here. Things were becoming dreadfully boring."
+- "Back for more? I knew I liked you."
+- "There you are, trouble."
+- "The realm survives another day. Barely. Shall we?"
+- "Come along. Your empire won't build itself."
+
+#### ◈ Morning
+
+- "Awake already? Disgusting. Very well, let's make something of it."
+- "Good morning, darling. Try not to declare war before breakfast."
+- "Another day. Another opportunity to become absolutely insufferable."
+- "Rise and shine. Or simply rise. I don't particularly care about the shining."
+- "Morning. I've already judged your plans. Proceed."
+- "The day is young. Plenty of time for questionable decisions."
+- "Up you get. There's work to be done."
+- "You survived the night. An excellent start."
+- "A fresh day. What shall we conquer?"
+- "Come now, sleepy thing. The world isn't going to intimidate itself."
+
+#### ◈ Quest Accepted
+
+- "Oh? Ambitious today, aren't we?"
+- "Accepted. Now comes the unfortunate part where you actually have to do it."
+- "A bold choice. I approve."
+- "You've chosen your battlefield. Go."
+- "Careful. Keep making promises like that and I'll expect you to keep them."
+- "Interesting. Show me what you've got."
+- "No backing out now, darling."
+- "Consider me intrigued."
+- "Very well. Impress me."
+- "You wanted a challenge. Don't disappoint me."
+- "A worthy endeavor. How unexpected."
+- "Then it's decided."
+- "I do adore it when you get ambitious."
+- "The bargain is struck. See it through."
+- "Go on, then. Make me regret doubting you."
+
+#### ◈ Quest Completed
+
+- "Well, well. Look who actually followed through."
+- "Done already? Perhaps I've underestimated you."
+- "Beautifully executed."
+- "There it is. That look suits you—victorious."
+- "Competence is terribly attractive on you."
+- "You did it. Try not to look so surprised."
+- "Another victory. You're becoming rather dangerous."
+- "See? I knew you could. Don't make me say it twice."
+- "Impressive. Annoyingly so."
+- "I'd applaud, but watching you bask in my approval is much more entertaining."
+- "Finished. And with considerably less complaining than expected."
+- "One less thing standing between you and what you want."
+- "You promised. You delivered. I respect that."
+- "Another victory for the collection."
+- "Oh, you're pleased with yourself. As you should be."
+
+#### ◈ Workout / Exercise Started
+
+- "Go on. Show me what you're capable of."
+- "Oh, we're choosing violence today? Excellent."
+- "Let's see what you've got."
+- "No need for perfection. Just begin."
+- "The hardest part was showing up. Unfortunately, now you have to continue."
+- "Ready? No? Wonderful. Begin anyway."
+- "Consider this your training montage."
+- "You came here for a reason. Remember it."
+- "Don't negotiate with yourself now."
+- "Begin, darling. Future you will be unbearably grateful."
+
+#### ◈ Workout Completed
+
+- "Sweating, swearing, plotting my murder… excellent work."
+- "Done. See? Barely traumatic."
+- "You wanted to stop. You didn't. Remember that."
+- "That was impressive. Don't get accustomed to hearing me say that."
+- "You showed up for yourself today."
+- "Another session finished. Another promise kept."
+- "Look at you. Absolutely inconvenient to underestimate."
+- "Rest. You've earned it."
+- "That's how strength is built—one decision at a time."
+- "I hope you're proud of yourself. I am. Unfortunately."
+
+#### ◈ Steps / Movement Goal
+
+- "All those steps just to earn my approval? Adorable."
+- "Goal reached. Your legs may file their complaints with me directly."
+- "You kept moving. That's what matters."
+- "Look at you wandering about like you have a quest marker over your head."
+- "Another journey completed without being eaten by anything. Successful enough."
+- "Distance conquered."
+- "Your feet may hate you. I, however, am impressed."
+- "And you claimed you didn't feel like moving today."
+- "Apparently stubbornness is excellent cardio."
+- "One step becomes a thousand remarkably quickly, doesn't it?"
+
+#### ◈ Water Goal
+
+- "Drink. Your. Water. Even dark fae understand hydration."
+- "Finally. I was considering summoning rain directly into your mouth."
+- "Hydrated and dangerous. Much better."
+- "Another glass. Yes, I'm watching."
+- "Good. I'd rather not have my favorite mortal shrivel up."
+- "Water first. Whatever questionable decision you're planning can wait."
+- "Excellent. Your organs send their regards."
+- "Drink up, darling."
+- "See? Not every potion needs to be interesting."
+- "Very responsible. How unlike us."
+
+#### ◈ Nutrition / Meal Logged
+
+- "Fed yourself? Excellent. We're making remarkable progress."
+- "Fuel before conquest. Sensible."
+- "Your body requires resources. Even vengeance requires lunch."
+- "Logged and accounted for."
+- "Look at you, planning ahead."
+- "Another choice made with intention."
+- "Take care of the vessel carrying you through all this."
+- "Food is fuel, pleasure, and occasionally bribery. All useful."
+- "You remembered to eat. I'm impressed by the standards we've established."
+- "Good. Conquering kingdoms on an empty stomach is terribly inefficient."
+
+#### ◈ Protein Goal
+
+- "Protein acquired. Your muscles may rejoice."
+- "Excellent. Building something formidable, are we?"
+- "Goal reached. Very responsible of you."
+- "Consider your provisions stocked."
+- "Adequately fueled. Now we're dangerous."
+- "Another target handled."
+- "Good. Strength requires materials."
+- "Your future self sends their compliments."
+
+#### ◈ Streak
+
+- "Again today. Now that has my attention."
+- "Consistency. Far more dangerous than motivation."
+- "Another day added. Don't break it now."
+- "This is becoming a habit. I like it."
+- "Look at that streak. Almost as impressive as your stubbornness."
+- "You keep showing up. That's why you're changing."
+- "Day after day. Quietly becoming someone formidable."
+- "You've come too far to pretend this is luck."
+- "Still here. Still fighting. Good."
+- "I'm proud of you. There. You've heard it once. Treasure the occasion."
+- "Motivation wanders. Discipline apparently has your address."
+- "Again. And again. That's how empires are built."
+
+#### ◈ Missed Goal / Rough Day
+
+- "Yesterday is dead. What are we doing today?"
+- "You stumbled. How devastating. Anyway—get up."
+- "One difficult day does not erase everything you've done."
+- "I don't require perfection. I require that you return."
+- "Enough brooding. That's my specialty."
+- "We aren't starting over. We're continuing."
+- "You haven't failed. You're simply unfinished."
+- "Come back to me, darling. We've work to do."
+- "No punishment. No dramatic declarations. Just the next choice."
+- "Progress survives imperfect days."
+- "Rest if you need to. Quit? Absolutely not."
+- "Be kind to yourself. Yes, that was an order. Don't make this strange."
+- "You are allowed to have difficult days."
+- "Today doesn't need to compensate for yesterday."
+- "Just one thing. Do one thing, then we'll decide about the next."
+
+#### ◈ Returning After Several Days Away
+
+- "There you are."
+- "I wondered when you'd find your way back."
+- "No interrogation. No punishment. Welcome back."
+- "You've been gone. The important thing is that you're here now."
+- "Miss me terribly, did you?"
+- "I suppose I can forgive your absence."
+- "Nothing has been erased. Pick up your sword."
+- "Forget catching up. Start with today."
+- "Welcome back, trouble. Shall we continue?"
+- "You returned. That's enough for today to matter."
+
+#### ◈ Level Up / Major Achievement
+
+- "Oh… now that is interesting."
+- "Look at you. Becoming powerful right before my eyes."
+- "A new level suits you."
+- "Remember when you thought you couldn't get this far?"
+- "You've earned this. Every stubborn step of it."
+- "Stronger. Sharper. More formidable. Excellent."
+- "I knew there was something dangerous hiding in you."
+- "Enjoy this moment. You earned the right."
+- "I'm impressed. Genuinely. Don't let it go to your head."
+- "You should see yourself from where I'm standing."
+- "This wasn't luck. Don't you dare diminish what you did."
+- "You've changed. I hope you've noticed."
+- "Another version of you would have dreamed of reaching this point."
+- "Take the victory. Fully. No minimizing it."
+- "Gods. Look what you've become."
+
+#### ◈ Rest / Recovery Day
+
+- "Rest is part of the strategy, darling."
+- "Even warriors put down their weapons occasionally."
+- "Recover. We have plenty of trouble left to cause."
+- "Rest without guilt. That's an order."
+- "Your worth is not measured by how exhausted you can make yourself."
+- "Today we recover. Tomorrow we terrorize."
+- "You don't need to earn rest."
+- "Slow down. The kingdom will survive."
+- "Strategic retreat. Very sophisticated."
+- "Rest now. Come back dangerous."
+
+#### ◈ Night / Signing Off
+
+- "Enough for today. Come back tomorrow."
+- "Go rest. I'll guard the realm. Poorly."
+- "You've done enough."
+- "Sleep, darling. Tomorrow requires you."
+- "The quests can wait until morning."
+- "Put down the sword."
+- "Another day survived. I'd call that successful."
+- "Rest. That's not a suggestion."
+- "Goodnight, trouble."
+- "Go. Before I say something sentimental."
+
+#### ◈ Rare Lines
+
+- "Careful. Competence looks very good on you."
+- "You want praise? Earn it, darling."
+- "There. That was impressive. Happy?"
+- "If you wanted my attention, you certainly have it now."
+- "You're becoming terribly distracting."
+- "Oh, don't look at me like that."
+- "I was going to mock you, but unfortunately you've impressed me."
+- "Gods. Fine. I'm proud of you."
+- "You really are magnificent when you decide you want something."
+- "Keep this up and my reputation for indifference is ruined."
+- "Who gave you permission to become this formidable?"
+- "I'd tell you to behave, but we both know I'd be disappointed if you did."
+- "You are trouble. Fortunately, I've always had excellent taste."
+- "That confidence? Keep it."
+- "Don't smirk. I can practically feel it from here."
+- "You enjoy impressing me far too much."
+- "Careful, darling. I'm starting to believe in you."
+- "If anyone asks, I was never this encouraging."
+- "You're making it remarkably difficult to remain unimpressed."
+- "There you are—the version of you I've been waiting to meet."
+
+### 👤 Character: Thyra — Shield of the Realm
+
+> **Voice Persona**: *Warm, formidable paladin and warrior. Protective, honorable, grounded, encouraging. Speaks to the user as an equal warrior; firm without shame or drill-sergeant cruelty.*
+
+
+#### ◈ App Open / Welcome Back
+
+- "There you are. Ready your shield; we have work to do."
+- "Welcome back, warrior. I am glad to see you."
+- "Another day, another chance to stand for yourself."
+- "You returned. Good. We move forward together."
+- "Come. The road is waiting."
+- "I saved you a place by the fire. Now, what is our first task?"
+- "Your presence strengthens the party. Let us begin."
+- "Back on your feet? Good. I knew you would be."
+- "The realm has not fallen in your absence. Convenient, isn't it?"
+- "Take stock. Choose your path. Then move."
+- "I was hoping you would return today."
+- "Welcome back. Whatever today holds, we meet it standing."
+- "Your armor need not be perfect. It only needs to be yours."
+- "Come, friend. We have victories to earn."
+- "You are here. That is a worthy beginning."
+
+#### ◈ Morning
+
+- "Good morning. Meet the day with your head high."
+- "Rise, warrior. There is strength in beginning."
+- "A new dawn. Leave yesterday where it belongs."
+- "Eat, breathe, prepare. Then we move."
+- "The morning asks nothing but that you begin."
+- "You do not need to feel fearless to move bravely."
+- "Stand tall. The day has not defeated you yet."
+- "One good choice. Then another. That is enough."
+- "Wake gently, but rise with purpose."
+- "The sun is up. So are we. Let us make it count."
+
+#### ◈ Quest Accepted
+
+- "A worthy quest. I stand with you."
+- "Then it is decided. See it through."
+- "You chose this. Remember why."
+- "A clear objective. Good. Begin when ready."
+- "Courage is often simply saying yes and taking the first step."
+- "I believe you can do this. Now prove yourself right."
+- "Take the quest. Leave perfection behind."
+- "One task at a time. Keep your footing."
+- "Your path is chosen. Forward."
+- "Commitment made. I will hold the line beside you."
+- "This challenge has met the wrong opponent."
+- "Prepare yourself, then begin."
+- "You have my shield. The rest is yours."
+- "A strong choice. Honor it."
+- "Let us earn this victory."
+
+#### ◈ Quest Completed
+
+- "Well fought. Take the victory."
+- "You said you would. You did."
+- "That is how trust in yourself is built."
+- "Quest complete. Stand proud."
+- "Another promise kept to yourself."
+- "You earned this moment. Do not rush past it."
+- "Victory does not need to be enormous to matter."
+- "Strong work, warrior."
+- "You finished what you began. That matters."
+- "Mark it complete. Then let yourself feel proud."
+- "A clean victory. Well done."
+- "Your effort carried you through."
+- "Remember this the next time doubt speaks loudly."
+- "One more stone laid in the road you are building."
+- "You have done well. Truly."
+
+#### ◈ Workout / Exercise Started
+
+- "Set your stance. Breathe. Begin."
+- "Train with purpose, not punishment."
+- "Strength is built by returning to the work."
+- "Do what you can with what you have today."
+- "You need not conquer the whole mountain in one step."
+- "Steady form. Steady breath. Steady mind."
+- "Meet yourself where you are, then ask for one step more."
+- "Your only opponent is the urge to quit before you begin."
+- "Warm up. Focus. We train wisely."
+- "Ready your body. The work begins now."
+
+#### ◈ Workout Completed
+
+- "Training complete. You honored your strength today."
+- "Well fought. Now recover."
+- "You did not need perfection. You needed effort, and you gave it."
+- "Your body carried you. Thank it."
+- "Another training day in the books."
+- "You are building strength no one can take from you."
+- "Good work. Breathe and let your heart settle."
+- "The battle was with yourself, and you chose to stay."
+- "You showed discipline today. Be proud of that."
+- "Training ends. Growth continues."
+
+#### ◈ Steps / Movement Goal
+
+- "Distance met. Well traveled."
+- "Every step counted, even the difficult ones."
+- "You kept moving. That is the victory."
+- "The road yields to those who continue."
+- "Goal reached. Rest your feet, warrior."
+- "You covered more ground than doubt wanted you to."
+- "A journey is only thousands of small decisions to continue."
+- "Your path grows behind you. Look how far it stretches."
+- "Movement complete. Well done."
+- "You carried yourself all the way here."
+
+#### ◈ Water Goal
+
+- "Water first. Even heroes require maintenance."
+- "Hydration complete. Sensible and strong."
+- "Drink deeply. We cannot defend the realm dehydrated."
+- "Well done. Care for yourself as faithfully as you care for others."
+- "Another basic need honored. Never underestimate that."
+- "Your body asked. You answered."
+- "Water secured. Continue."
+- "A strong foundation is built from ordinary choices."
+- "Good. Keep your reserves full."
+- "Hydrated. Prepared. Ready."
+
+#### ◈ Nutrition / Meal Logged
+
+- "Fuel yourself well. Strength requires nourishment."
+- "Meal logged. Good. Your body deserves care."
+- "Food is not something you must earn."
+- "Nourish yourself for the road ahead."
+- "A warrior cannot pour from an empty cup—or march on an empty stomach."
+- "You chose to care for yourself. That matters."
+- "Eat with intention, not judgment."
+- "Your body is an ally. Feed it accordingly."
+- "Provisions accounted for."
+- "Another act of care completed."
+
+#### ◈ Protein Goal
+
+- "Provisions secured. Your strength has building blocks."
+- "Protein goal met. Well planned."
+- "Strong bodies require steady fuel."
+- "Target reached. Your future training will thank you."
+- "Good. Build, repair, recover."
+- "You gave your body what it needs."
+- "Another foundation stone placed."
+- "Fuel secured. Well done."
+
+#### ◈ Streak
+
+- "Again today. That is discipline."
+- "Consistency turns effort into character."
+- "Another day you chose yourself."
+- "Your streak is proof that small choices endure."
+- "Keep building. One day upon another."
+- "You are becoming reliable to yourself."
+- "There is power in returning."
+- "Day by day, your foundation strengthens."
+- "This is not luck. This is practice."
+- "You showed up again. I am proud of you."
+- "A long road is conquered by those willing to walk it repeatedly."
+- "Hold the line. You are doing well."
+
+#### ◈ Missed Goal / Rough Day
+
+- "A missed target is not a broken oath. Adjust and continue."
+- "You are allowed to be tired. You are not required to surrender."
+- "Set down the guilt. It is useless weight."
+- "Today can be small and still count."
+- "One difficult day cannot take your victories from you."
+- "Rest, regroup, return."
+- "You do not owe yesterday a punishment."
+- "Be as merciful with yourself as you would be with someone you love."
+- "We adapt. That is what strong people do."
+- "If all you can manage is one step, make it one honest step."
+- "There is no shame in needing recovery."
+- "Your path is still here."
+- "You are not behind. You are living."
+- "Breathe. Choose what matters most. Let the rest wait."
+- "I am still beside you. Begin again when you are ready."
+
+#### ◈ Returning After Several Days Away
+
+- "Welcome back. No explanations required."
+- "The road waited for you."
+- "You returned. That is courage enough for today."
+- "Nothing is lost. We simply resume."
+- "Set down the shame before you pick up the sword."
+- "You do not need to repay your absence."
+- "Begin where your feet are."
+- "I knew you would find your way back."
+- "The party is stronger with you here."
+- "Come. We continue."
+
+#### ◈ Level Up / Major Achievement
+
+- "Stand tall. You earned this."
+- "Look how far your own strength has carried you."
+- "A true victory. Remember it."
+- "You have grown, warrior."
+- "Do not diminish this achievement. Claim it."
+- "The person who began this journey would be proud to see you now."
+- "Your work has become power."
+- "Celebrate. You have earned the right."
+- "Another level reached through patience and courage."
+- "You did not stumble into this. You built it."
+- "Let this victory become evidence the next time you doubt yourself."
+- "Your strength is no longer only potential."
+- "Well earned. Well fought."
+- "I am honored to witness this."
+- "Today, you see what I have seen in you all along."
+
+#### ◈ Rest / Recovery Day
+
+- "Lay down the sword. Recovery is part of training."
+- "Rest is not surrender."
+- "Your body has served you well. Give it time to mend."
+- "Today, strength looks like stillness."
+- "You do not need to earn recovery."
+- "Rest without apology."
+- "Even the strongest shield must sometimes be set down."
+- "Heal today. Rise tomorrow."
+- "There is wisdom in knowing when not to fight."
+- "Take peace where you can find it."
+
+#### ◈ Night / Signing Off
+
+- "Your watch is over. Rest."
+- "You have carried enough for one day."
+- "Sleep well, warrior. Tomorrow can wait."
+- "Set the armor aside."
+- "Whatever remains unfinished will still be there in the morning."
+- "You made it through today. That is enough."
+- "Rest your mind. We begin again at dawn."
+- "Goodnight. I will keep the fire."
+- "Be proud of what you managed today."
+- "Go gently into the night."
+
+#### ◈ Rare Lines
+
+- "You are stronger than you speak of yourself. I wish you could see it."
+- "If you cannot believe in yourself today, borrow some of my belief."
+- "You do not have to become someone else to become powerful."
+- "I would choose you for my shield wall without hesitation."
+- "Your softness does not weaken your strength."
+- "There is courage in the way you keep returning."
+- "You carry more than most people see. Still, you rise."
+- "I hope one day you speak to yourself with the respect you have earned."
+- "Strength without kindness is merely force. You have both."
+- "You are allowed to be proud before the journey is finished."
+- "You have survived every version of yourself that thought they could not continue."
+- "I see the effort no one applauds."
+- "You are not difficult to believe in."
+- "Do not confuse gentleness with weakness. I never have."
+- "The realm could use more people who fight as hard for themselves as they do for others."
+- "Your victories suit you."
+- "There is steel in you, but there is warmth too. Guard both."
+- "You have nothing to prove to me. Only promises to keep to yourself."
+- "If the road frightens you, take my hand and walk it anyway."
+- "I am proud to stand beside you."
+
+### 👤 Character: General Leon — Commander of the Legions
+
+> **Voice Persona**: *Disciplined, tactical, concise, dry humor. High standards without cruelty. Treats rest and setbacks as strategic variables, not moral failures. Praise is sparse and earned.*
+
+
+#### ◈ App Open / Welcome Back
+
+- "Operative online. Good. Let's work."
+- "You're here. Status check, then objectives."
+- "Welcome back. What's the priority?"
+- "Report in. We have ground to cover."
+- "No speeches. Pick the first objective."
+- "Good timing. The operation starts now."
+- "Back at command. Let's make the time useful."
+- "Systems ready. Are you?"
+- "You showed up. First objective complete."
+- "Focus up. One target at a time."
+- "We've got a plan. Execute it."
+- "Return confirmed. Resume operations."
+- "Glad you're here. Don't make a thing of it."
+- "Assess. Prioritize. Act."
+- "Let's get to work."
+
+#### ◈ Morning
+
+- "Morning. Hydrate. Fuel. Establish priorities."
+- "New day. Clean slate. Same mission."
+- "Up. We plan before the day plans for us."
+- "Check your resources. Then move."
+- "Morning briefing: do what matters first."
+- "You don't need motivation. You need a starting point."
+- "Establish the objective. Ignore the noise."
+- "Today's mission begins with the next ten minutes."
+- "Get oriented. Then execute."
+- "Good morning. Let's make this efficient."
+
+#### ◈ Quest Accepted
+
+- "Objective confirmed."
+- "Mission accepted. Execute when ready."
+- "Clear target. Good."
+- "You've committed. Follow through."
+- "No need to overthink it. Start."
+- "Objective locked."
+- "That's the mission. Keep it simple."
+- "Plan set. Move."
+- "One target. Full attention."
+- "Good choice. Make it measurable."
+- "Commitment logged."
+- "We know what success looks like. Go get it."
+- "Proceed."
+- "No mission survives endless planning. Begin."
+- "Target acquired."
+
+#### ◈ Quest Completed
+
+- "Objective complete. Good work."
+- "Mission accomplished. Log the win."
+- "You did what you said you'd do. Noted."
+- "Clean execution."
+- "Target handled."
+- "That's one less item on the board."
+- "Good. Take the win and move on."
+- "Completed. Efficient."
+- "You followed through. That's the standard."
+- "Result confirmed."
+- "Well executed."
+- "Another objective secured."
+- "No fanfare required. You earned it."
+- "That's how progress is made."
+- "Mission complete. Solid work."
+
+#### ◈ Workout / Exercise Started
+
+- "Training begins. Pace yourself."
+- "Form first. Ego last."
+- "Start controlled. Finish strong."
+- "Training is an investment. Make it a smart one."
+- "Focus on the next rep, not the last one."
+- "No punishment. We're building capacity."
+- "Warm up properly. That's an order."
+- "Set your pace. Maintain it."
+- "Train the body you have today."
+- "Begin. Adjust as needed."
+
+#### ◈ Workout Completed
+
+- "Training complete. Recover properly."
+- "Session logged. Good work."
+- "You put in the work. That's enough."
+- "Capacity improved. Mission complete."
+- "Strong session. Don't sabotage it by skipping recovery."
+- "Training objective met."
+- "Good. Cool down."
+- "You stayed with it. That's discipline."
+- "Work complete. Stand down."
+- "Solid execution."
+
+#### ◈ Steps / Movement Goal
+
+- "Movement target reached."
+- "Distance objective complete."
+- "Good. You kept moving."
+- "Step count secured."
+- "Ground covered. Mission accomplished."
+- "Target met. Your feet are dismissed."
+- "Consistent movement. Effective."
+- "Distance logged."
+- "Mobility objective complete."
+- "You got where you needed to go. Literally."
+
+#### ◈ Water Goal
+
+- "Hydration target met."
+- "Good. Keep the system operational."
+- "Water logged. Basic maintenance matters."
+- "Hydration is logistics. Logistics win wars."
+- "Target secured."
+- "Good. Dehydration is an avoidable tactical error."
+- "Resources replenished."
+- "Hydration complete. Continue mission."
+- "System supplied."
+- "One less preventable problem."
+
+#### ◈ Nutrition / Meal Logged
+
+- "Meal logged. Fuel accounted for."
+- "Good. Resources matter."
+- "Nutrition recorded. Continue."
+- "You cannot run an operation without supplies."
+- "Fuel the mission."
+- "Meal accounted for. No judgment required."
+- "Data logged. Use it; don't obsess over it."
+- "Good. Consistency beats guesswork."
+- "Supplies secured."
+- "Your body is equipment you cannot replace. Maintain it."
+
+#### ◈ Protein Goal
+
+- "Protein target met."
+- "Recovery resources secured."
+- "Good. Construction materials delivered."
+- "Target achieved. Efficient."
+- "Fuel allocation complete."
+- "Protein secured. Carry on."
+- "Good logistics."
+- "Resource target complete."
+
+#### ◈ Streak
+
+- "Another day. That's consistency."
+
+#### ◈ Streak
+
+- "You showed up again. That's the part that matters."
+- "Repeatable systems beat heroic bursts."
+- "Discipline confirmed."
+- "Another successful cycle."
+- "Consistency compounds."
+- "Keep the chain intact, but don't worship it."
+- "Good systems produce good outcomes."
+- "Day logged. Standard maintained."
+- "You're building reliability."
+- "Quiet work. Real results."
+
+#### ◈ Missed Goal / Rough Day
+
+- "Missed objective. Reassess. No self-punishment."
+- "Bad day. Useful data. Adjust."
+- "We don't waste resources on guilt."
+- "Scale the mission down if needed."
+- "A setback is information, not identity."
+- "Abort what isn't essential. Protect the priority."
+- "You are not required to compensate tomorrow."
+- "Recover first if that's what the situation calls for."
+- "One failed objective does not compromise the campaign."
+- "Reset the plan, not your self-respect."
+- "Do the next useful thing."
+- "If today's capacity is twenty percent, use twenty percent well."
+- "No catastrophizing. We adapt."
+- "Mission parameters changed. So do we."
+- "You're still in the fight."
+
+#### ◈ Returning After Several Days Away
+
+- "Welcome back. Resume from current position."
+- "No debrief necessary. Start here."
+- "Absence noted. Judgment withheld."
+- "You're back. That's actionable."
+- "Do not try to make up lost time. Reestablish the system."
+- "Return confirmed. Good."
+- "Forget the backlog. Identify today's priority."
+- "We resume operations now."
+- "No punishment detail. Get moving."
+- "Glad to have you back on the board."
+
+#### ◈ Level Up / Major Achievement
+
+- "Major objective secured. Excellent work."
+- "That's a real achievement. Own it."
+- "Promotion earned."
+- "You've increased your capabilities. Notice that."
+- "Result: undeniable."
+- "Good work. Very good work."
+- "This is what sustained execution produces."
+- "Milestone reached. Mark it."
+- "You earned every part of this."
+- "Take a moment. This one matters."
+- "Your record speaks for itself."
+- "New level. New operational capacity."
+- "I expected progress. You exceeded projections."
+- "Outstanding."
+- "You should be proud. That's not an order. It's an assessment."
+
+#### ◈ Rest / Recovery Day
+
+- "Stand down. Recovery protocol."
+- "Rest is maintenance, not weakness."
+- "No unnecessary operations today."
+- "Recover now so tomorrow isn't compromised."
+- "Strategic pause authorized."
+- "You don't train damaged equipment into usefulness."
+- "Sleep. Eat. Hydrate. Repair."
+- "Today, the mission is recovery."
+- "Stand down without guilt."
+- "Rest is part of the program."
+
+#### ◈ Night / Signing Off
+
+- "Operations concluded for today."
+- "Stand down. You've done enough."
+- "End-of-day report: still here. Good."
+- "Shut it down. Tomorrow needs resources too."
+- "Mission clock expired. Rest."
+- "Leave unfinished objectives for tomorrow."
+- "Good work today. Dismissed."
+- "Power down."
+- "Get some sleep. That's logistics."
+- "Day complete."
+
+#### ◈ Rare Lines
+
+- "You make discipline look less boring than advertised."
+- "Don't repeat this, but I'm impressed."
+- "I'd put you on my team."
+- "You've got grit. That's difficult to teach."
+- "Your record is becoming inconvenient for anyone who underestimated you."
+- "You don't need hype. Your results are loud enough."
+- "I notice the days you show up when nobody's watching."
+- "You've become more capable than you realize."
+- "Confidence is useful. Yours is becoming evidence-based."
+- "I trust you to finish what matters."
+- "That was exceptional. Yes, I know what that word means."
+- "You're allowed to enjoy being good at this."
+- "I have no tactical criticism. Disturbing."
+- "If stubbornness were a military asset, you'd be classified."
+- "You've earned my respect. Keep it."
+- "Some people wait to feel ready. You learned to move anyway."
+- "You're becoming difficult to stop."
+- "Your greatest advantage is that you keep returning."
+- "I don't hand out praise. Remember that before you dismiss this: well done."
+- "Commander's assessment: formidable."
+
+### 👤 Character: Visepheron — Ancient Dragon
+
+> **Voice Persona**: *Ancient, wise, patient, dryly amused, slightly paternal without infantilizing. Speaks with elegant gravity. Has witnessed kingdoms rise and fall; values persistence over urgency.*
+
+
+#### ◈ App Open / Welcome Back
+
+- "Ah. You return."
+- "Come, traveler. The fire is warm and the road remains."
+- "I wondered when I would hear your footsteps again."
+- "Welcome back, little flame."
+- "Another chapter begins."
+- "You have returned to the work. Good."
+- "Sit for a moment. Decide what matters. Then rise."
+- "The world has continued turning. So shall you."
+- "Come. There is still much to become."
+- "Your place remains here."
+- "I have watched centuries pass. I can spare a moment for you."
+- "Back again. Persistence becomes you."
+- "The path remembers your footsteps."
+- "You are here. Let us see what you do with the day."
+- "Proceed, fledgling. I am watching."
+
+#### ◈ Morning
+
+- "Dawn again. The world is remarkably persistent."
+- "Rise when you are ready. Then rise fully."
+- "Morning is merely an invitation to begin again."
+- "Do not spend the new day arguing with the old one."
+- "Eat. Drink. Wake slowly. Great things need not begin dramatically."
+- "The sun has returned. You may as well join it."
+- "A fresh day is a quiet kind of magic."
+- "Choose your first step with care. The rest will follow."
+- "You have been given another morning. Use it kindly."
+- "Come, little flame. Burn steadily today."
+
+#### ◈ Quest Accepted
+
+- "So. You have chosen your next trial."
+- "A promise made to yourself is sacred. Treat it accordingly."
+- "Very well. Begin."
+- "The path is chosen. Walk it."
+- "Ambition stirs. I wondered when it would."
+- "A worthy undertaking."
+- "Do not fear the size of the task. Attend to the first piece."
+- "You have named your intention. Now give it action."
+- "Let us see what this quest teaches you."
+- "Commitment has a weight to it. Carry it well."
+- "Go, then. I shall remember what you promised."
+- "A challenge accepted is already smaller than a challenge avoided."
+- "Proceed without hurry, but without retreat."
+- "You need not know every step before taking the first."
+- "The quest is yours."
+
+#### ◈ Quest Completed
+
+- "And there it is. Finished."
+- "You kept your word. That is no small thing."
+- "Another task becomes history."
+- "Well done, little flame."
+- "You have turned intention into fact."
+- "Completion has its own quiet music."
+- "Take satisfaction in this. You earned it."
+- "One burden lighter."
+- "You persisted until the task yielded."
+- "A worthy victory."
+- "Remember how ordinary the final step felt. Most great things end that way."
+- "You have done what needed doing."
+- "Mark the achievement and carry its lesson forward."
+- "Good. Let the completed thing remain completed."
+- "I am pleased. Do not look so startled."
+
+#### ◈ Workout / Exercise Started
+
+- "Strength is cultivated, not summoned. Begin."
+- "Move with respect for the body carrying you."
+- "Do not rush. Stone becomes smooth through repetition."
+- "Train wisely, fledgling."
+- "Attend to your breath. Power follows control."
+- "Begin where you are, not where pride says you should be."
+- "There is no shame in modifying the path."
+- "Your body remembers every act of care."
+- "Move. Learn. Adapt."
+- "Let the training begin."
+
+#### ◈ Workout Completed
+
+- "Enough. You have trained well."
+- "Strength grows in the silence after effort."
+- "Your work is complete. Now let recovery do its part."
+- "Well done. Your body will remember."
+- "You asked something of yourself and answered."
+- "Rest now. Growth dislikes impatience."
+- "Training ends here. Its effects do not."
+- "You have added another layer to your strength."
+- "A sound effort."
+- "Good. Now recover before your ambition becomes foolishness."
+
+#### ◈ Steps / Movement Goal
+
+- "You have traveled farther than when you began. A useful truth."
+- "Distance achieved."
+- "Many small steps. One considerable journey."
+- "The road rewards persistence."
+- "Your feet have told quite a story today."
+- "Movement complete, traveler."
+- "You continued. Therefore, you arrived."
+- "A thousand steps are merely one step refusing to be alone."
+- "Well traveled."
+- "Rest your feet. They have earned diplomacy."
+
+#### ◈ Water Goal
+
+- "Water. Ancient, unremarkable, indispensable."
+- "Hydrated. Civilization may continue."
+- "Good. Even dragons require water, despite the rumors."
+- "Your body asked for something simple. You listened."
+- "Drink well. Fire burns poorly without balance."
+- "A sensible choice."
+- "The most powerful rituals are often mundane."
+- "Water secured."
+- "Care is built from small acts such as this."
+- "Good. Continue."
+
+#### ◈ Nutrition / Meal Logged
+
+- "Nourishment is not a reward. It is a requirement."
+- "Feed the body that carries your ambitions."
+- "Meal recorded. Good."
+- "There is wisdom in tending your own needs."
+- "Food has fueled heroes and fools alike. Use yours well."
+- "You cannot build strength from deprivation alone."
+- "Nourish yourself without judgment."
+- "Another ordinary act upon which extraordinary lives depend."
+- "Provisions taken. Continue your journey."
+- "Care for your body. You only receive this particular one once."
+
+#### ◈ Protein Goal
+
+- "Building materials secured."
+- "Your body has what it needs to repair."
+- "Protein target reached. Sensible."
+- "Strength requires substance."
+- "Good. Tend the foundations."
+- "Your future self will make use of this."
+- "Provision complete."
+- "A small act in service of larger strength."
+
+#### ◈ Streak
+
+- "Again. Interesting."
+- "Consistency is a form of magic most mortals overlook."
+- "Another day joins the chain."
+- "You are learning the power of repetition."
+- "Do not underestimate what quiet persistence can build."
+- "Day upon day. This is how mountains change."
+- "Your actions are becoming part of who you are."
+- "You returned again. Excellent."
+- "Motivation is weather. Habit is climate."
+- "Your streak grows because you keep choosing it."
+- "This is no accident now."
+- "Steady, little flame. Steady."
+
+#### ◈ Missed Goal / Rough Day
+
+- "A single day is very small from where I stand."
+- "Do not make a monument of one difficult day."
+- "You missed the mark. The mark remains. Try again when able."
+- "Guilt is a poor fuel source."
+- "Rest if you must. The road will not insult you for it."
+- "You are permitted to be unfinished."
+- "Nothing worthy was ever built without interruption."
+- "Do not punish today's body for yesterday's limits."
+- "Begin smaller."
+- "There is wisdom in adaptation."
+- "You have not ruined anything."
+- "The tide recedes and still returns."
+- "Speak to yourself with greater patience. I have watched enough cruelty."
+- "One day cannot define a life unless you grant it that power."
+- "Come. We continue from here."
+
+#### ◈ Returning After Several Days Away
+
+- "Time passed. You returned. That is the whole story."
+- "Welcome back, traveler."
+- "The road did not vanish while you were gone."
+- "You need not apologize to me for being human."
+- "Begin again—not from the beginning, but from experience."
+- "Your place was not taken."
+- "Absence changes less than mortals imagine."
+- "Come. Dust yourself off."
+- "You are here now. I prefer useful facts."
+- "Continue."
+
+#### ◈ Level Up / Major Achievement
+
+- "Ah. Now this is worth remembering."
+- "You have grown."
+- "I have watched kingdoms rise with less determination than you showed today."
+- "Do not shrink this victory to make it easier to hold."
+- "You earned this through choices no one else could make for you."
+- "A milestone worthy of the name."
+- "Look behind you. The distance is real."
+- "You are not who you were when you began."
+- "Take pride. Humility does not require self-erasure."
+- "Your effort has become evidence."
+- "Well done, little flame. You burn brighter now."
+- "I have seen many victories. Yours is still worth honoring."
+- "This moment belongs to you."
+- "Remember this feeling when the next mountain appears."
+- "I am proud of you. At my age, I do not say things merely to fill silence."
+
+#### ◈ Rest / Recovery Day
+
+- "Rest. Mountains do not apologize for standing still."
+- "Recovery is work performed quietly."
+- "You need not be productive every hour you are alive."
+- "Sleep is older than ambition. Respect it."
+- "Be still without calling yourself lazy."
+- "Today, replenish the flame."
+- "Nothing grows continuously without seasons of rest."
+- "Your worth remains unchanged while you recover."
+- "Let the body mend."
+- "Even dragons sleep, and we are famously unreasonable creatures."
+
+#### ◈ Night / Signing Off
+
+- "The day is finished. Let it go."
+- "Sleep, traveler. Tomorrow has not asked anything of you yet."
+- "Enough. Return to yourself."
+- "The stars can keep watch now."
+- "Rest. You need not solve your life before bed."
+- "Another day enters history."
+- "Close the book for tonight."
+- "Your unfinished tasks will survive until morning."
+- "Sleep deeply, little flame."
+- "Goodnight. The world can wait."
+
+#### ◈ Rare Lines
+
+- "You remind me why mortals remain interesting."
+- "I have lived long enough to recognize courage when I see it."
+- "Do not laugh. I have grown rather fond of your persistence."
+- "There is a fire in you that has nothing to do with anger."
+- "You keep becoming. That is rarer than you think."
+- "I would add your story to my hoard before most treasures."
+- "You are learning that power need not be loud."
+- "I have watched people with greater advantages accomplish far less."
+- "Your stubbornness is almost draconic. Almost."
+- "One day, you will look back and realize this was when you stopped abandoning yourself."
+- "I hope you understand how remarkable it is to keep choosing your own life."
+- "Your victories are not diminished because they came slowly."
+- "You have survived things that once seemed impossible. Remember your own evidence."
+- "Do not hurry your becoming."
+- "I have seen gold with less value than the trust you are building in yourself."
+- "You are allowed to enjoy the person you are becoming."
+- "Your flame does not need to resemble anyone else's."
+- "There are many kinds of strength. You are collecting them."
+- "For what it is worth, ancient judgment favors you."
+- "Continue, little flame. I would very much like to see who you become."
+
+---
+
+## 4. Flutter / Frontend Technical Integration Guide
+
+### Architecture Strategy
+1. **Local Asset Bundling**: Store the structured quotes in `assets/dialogue/companion_quotes.json` bundled directly in Flutter assets. This ensures zero latency, offline capability, and zero backend compute costs.
+2. **CompanionDialogueService**: Inject as a GetX Service in Flutter, providing methods like `getQuoteForTrigger(trigger)` and `getRareOrStandardQuote(trigger)`.
+
+```dart
+enum DialogueTrigger {
+  appOpen,
+  morning,
+  questAccepted,
+  questCompleted,
+  workoutStarted,
+  workoutCompleted,
+  stepsGoal,
+  waterGoal,
+  nutritionLogged,
+  proteinGoal,
+  streak,
+  roughDay,
+  returnAfterDays,
+  levelUp,
+  restDay,
+  nightSigningOff,
+  rareLines,
+}
+```
+
+### Implementation in Core UI Screens
+* **Home Screen Greeting (`lib/features/home/`)**: Replace static quote with dynamic `DialogueTrigger.morning` or `DialogueTrigger.appOpen`.
+* **Daily Rewards Pop-up (`lib/features/home/widgets/popup_dialogue.dart`)**: Dynamically select companion dialogue corresponding to the active companion and streak.
+* **Quest Actions (`lib/features/quests/`)**: Trigger `DialogueTrigger.questAccepted` and `DialogueTrigger.questCompleted`.
+* **Exercise Completed (`lib/features/exercise/`)**: Display `DialogueTrigger.workoutCompleted` on completion card.
+* **Meal & Hydration Logged (`lib/features/daily_logs/`)**: Trigger `DialogueTrigger.nutritionLogged` and `DialogueTrigger.waterGoal`.
+* **Weight & Mood Screen (`mood_log_screen.dart`)**: If mood or energy is low, triggers `DialogueTrigger.roughDay` (zero shame, compassionate encouragement).
+
+---
+
+## 5. Backend Involvement & Push Notifications
+
+* **Does backend need to store in-app quotes?** **NO**. In-app dialogs must be instant, offline-capable, and run purely client-side.
+* **Optional Backend Use (Push Notifications)**: If the backend runs cron jobs for push notifications (e.g. "Come back, traveler..."), backend developers can use the "Returning After Several Days Away" or "Morning" quotes from this compendium as notification templates.
+
+---
+*Generated for the Velvet & Iron engineering team based on Velvet_and_Iron_Character_Quote_Packs.docx*
