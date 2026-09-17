@@ -63,7 +63,7 @@ class CalorieConsumptionCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "Calories Consumption",
+                      "Calorie Intake",
                       style: getTextStyle(fontSize: 16, color: Colors.white),
                     ),
                     const Spacer(),

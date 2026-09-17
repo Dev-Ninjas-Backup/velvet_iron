@@ -29,17 +29,26 @@ class ThemesListWidget extends StatelessWidget {
             itemBuilder: (context, index) {
               final apiTheme = onboardingController.themesList[index];
               final appTheme = themeController.themes.firstWhere(
-                (t) => t.name.toLowerCase() == apiTheme.name.toLowerCase(),
+                (t) =>
+                    t.name.toLowerCase() == apiTheme.name.toLowerCase() ||
+                    (t.name.toLowerCase() == 'scribe' &&
+                        apiTheme.name.toLowerCase() == 'reader') ||
+                    (t.name.toLowerCase() == 'realmwalker' &&
+                        apiTheme.name.toLowerCase() == 'gamer'),
                 orElse: () => themeController.themes[0],
               );
               final isSelected = appTheme == themeController.activeTheme;
               final isOnboardingSelected =
                   onboardingController.selectedThemeId.value == apiTheme.id;
 
+              String displayTitle = apiTheme.name;
+              if (displayTitle.toLowerCase() == 'reader') displayTitle = 'Scribe';
+              if (displayTitle.toLowerCase() == 'gamer') displayTitle = 'Realmwalker';
+
               return Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: Themes(
-                  title: apiTheme.name,
+                  title: displayTitle,
                   badgeText: isSelected ? 'Active Now' : '',
                   gradientColors: _getThemeGradient(appTheme.id),
                   icon: isOnboardingSelected

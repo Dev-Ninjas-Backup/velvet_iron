@@ -79,26 +79,26 @@ class HeaderSection extends StatelessWidget {
               const Spacer(),
               Container(
                 padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: activeTheme.headerIconBackgroundColor,
-                  shape: BoxShape.circle,
+                  decoration: BoxDecoration(
+                    color: activeTheme.headerIconBackgroundColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.asset(
+                    activeTheme.id == 'adventurer'
+                        ? IconPath.quillpenAdenture
+                        : activeTheme.id == 'mage'
+                        ? IconPath.quillpenMage
+                        : activeTheme.id == 'gamer'
+                        ? IconPath.quillpenGamer
+                        : activeTheme.id == 'reader'
+                        ? IconPath.quillpenReader
+                        : IconPath.quillpenAdenture,
+                    width: 24,
+                    height: 24,
+                    color: Colors.white,
+                    colorBlendMode: BlendMode.srcIn,
+                  ),
                 ),
-                child: Image.asset(
-                  activeTheme.id == 'adventurer'
-                      ? IconPath.quillpenAdenture
-                      : activeTheme.id == 'mage'
-                      ? IconPath.quillpenMage
-                      : activeTheme.id == 'gamer'
-                      ? IconPath.quillpenGamer
-                      : activeTheme.id == 'reader'
-                      ? IconPath.quillpenReader
-                      : IconPath.quillpenAdenture,
-                  width: 24,
-                  height: 24,
-                  color: Colors.white,
-                  colorBlendMode: BlendMode.srcIn,
-                ),
-              ),
               const SizedBox(width: 12),
               GestureDetector(
                 onTap: () => Get.toNamed(AppRoute.getsettingScreen()),

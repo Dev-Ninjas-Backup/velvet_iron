@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/weight_log_screen/model/weight_log_model.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/weight_log_screen/service/weight_log_service.dart';
@@ -156,6 +157,10 @@ class WeightLogController extends GetxController {
       // Refresh history and chart
       await fetchWeightLogHistory();
       await fetchWeeklyWeightChart();
+
+      CompanionDialogueEngine.showDialogueSnackbar(
+        trigger: 'Level Up / Major Achievement',
+      );
     } catch (e, stackTrace) {
       EasyLoading.showError(e.toString().replaceFirst('Exception: ', ''));
       debugPrint('║ Error      : $e');

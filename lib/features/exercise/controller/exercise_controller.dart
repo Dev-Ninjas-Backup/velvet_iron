@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/exercise/model/exercise_model.dart';
 import 'package:velvet_iron/features/exercise/service/exercise_service.dart';
@@ -159,6 +160,9 @@ class ExerciseController extends GetxController {
       );
       EasyLoading.showSuccess('Exercise logged! +${logged.earnedXp} XP');
       _clearFields(); // Always clear all state after logging
+      CompanionDialogueEngine.showDialogueSnackbar(
+        trigger: 'Workout Completed',
+      );
     } catch (e) {
       print('❌ Log Exercise Error: $e');
       EasyLoading.showError('Failed to log exercise. Please try again.');
@@ -194,6 +198,9 @@ class ExerciseController extends GetxController {
       await fetchExerciseHistory();
       EasyLoading.showSuccess('Exercise scheduled!');
       _clearFields();
+      CompanionDialogueEngine.showDialogueSnackbar(
+        trigger: 'Workout / Exercise Started',
+      );
     } catch (e) {
       print('❌ Schedule Exercise Error: $e');
       EasyLoading.showError('Failed to schedule exercise. Please try again.');
@@ -229,6 +236,9 @@ class ExerciseController extends GetxController {
       print('[ExerciseController] ✅ Marked as taken: $response');
       await fetchExerciseHistory();
       EasyLoading.showSuccess('Exercise marked as taken!');
+      CompanionDialogueEngine.showDialogueSnackbar(
+        trigger: 'Workout Completed',
+      );
     } catch (e) {
       print('[ExerciseController] ❌ MarkExerciseAsTaken Error: $e');
       EasyLoading.showError('Failed to mark as taken.');

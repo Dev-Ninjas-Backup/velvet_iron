@@ -95,7 +95,7 @@ class ThemesTitleSection extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Choose a Theme',
+            'Choose Your Path',
             textAlign: TextAlign.center,
             style: getTextStyle(
               fontSize: 24,
@@ -105,7 +105,7 @@ class ThemesTitleSection extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Your theme shapes the world around you, setting the mood and visual style of your journey.',
+            'Your path shapes the world around you, setting the mood and visual style of your journey.',
             textAlign: TextAlign.center,
             style: getTextStyle(
               fontSize: 12,

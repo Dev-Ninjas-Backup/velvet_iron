@@ -6,6 +6,8 @@ import 'package:velvet_iron/core/common/widgets/empty_state_card.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
 import 'package:velvet_iron/features/quests/controller/quest_controller.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/features/quests/widgets/progress_card.dart';
 import 'package:velvet_iron/features/quests/widgets/quest_tips.dart';
 import 'package:velvet_iron/features/quests/widgets/todays_quests.dart';
@@ -15,6 +17,146 @@ class QuestsScreen extends StatelessWidget {
 
   BottomNavController get bottomNavController =>
       Get.find<BottomNavController>();
+
+  void _showCreateQuestDialog(BuildContext context, QuestController controller, AppThemeController themeController) {
+    final titleController = TextEditingController();
+    final descController = TextEditingController();
+    int selectedXp = 10;
+
+    Get.dialog(
+      StatefulBuilder(
+        builder: (context, setState) {
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: themeController.activeTheme.popupBackgroundColor ??
+                    themeController.activeTheme.cardBackgroundColor,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: themeController.activeTheme.accentGoldColor,
+                  width: 2,
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Forge New Quest',
+                        style: getTextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close, color: Colors.white70, size: 20),
+                        onPressed: () => Get.back(),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text('Quest Objective', style: getTextStyle(color: Colors.white70, fontSize: 12)),
+                  const SizedBox(height: 6),
+                  TextField(
+                    controller: titleController,
+                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                    decoration: InputDecoration(
+                      hintText: 'e.g. Drink 2L water, 30 min walk...',
+                      hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 13),
+                      filled: true,
+                      fillColor: Colors.black26,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Text('Details / Notes', style: getTextStyle(color: Colors.white70, fontSize: 12)),
+                  const SizedBox(height: 6),
+                  TextField(
+                    controller: descController,
+                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                    decoration: InputDecoration(
+                      hintText: 'e.g. Focus on hydration and recovery',
+                      hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 13),
+                      filled: true,
+                      fillColor: Colors.black26,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text('XP Reward', style: getTextStyle(color: Colors.white70, fontSize: 12)),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [10, 15, 25].map((xp) {
+                      final isSel = selectedXp == xp;
+                      return GestureDetector(
+                        onTap: () => setState(() => selectedXp = xp),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: isSel
+                                ? themeController.activeTheme.accentGoldColor
+                                : Colors.black26,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: themeController.activeTheme.accentGoldColor,
+                              width: 1,
+                            ),
+                          ),
+                          child: Text(
+                            '+$xp XP',
+                            style: getTextStyle(
+                              color: isSel ? Colors.black : Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: CustomButton(
+                      label: 'Create Quest',
+                      onPressed: () {
+                        final title = titleController.text.trim();
+                        if (title.isEmpty) {
+                          EasyLoading.showInfo('Please enter a quest objective');
+                          return;
+                        }
+                        controller.addCustomQuest(
+                          title: title,
+                          description: descController.text.trim().isEmpty ? 'Custom Player Quest' : descController.text.trim(),
+                          xp: selectedXp,
+                        );
+                        Get.back();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,13 +239,46 @@ class QuestsScreen extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(height: 20),
-                            Text(
-                              "Today's Quests",
-                              style: getTextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Today's Quests",
+                                  style: getTextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () => _showCreateQuestDialog(context, controller, themeController),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        color: themeController.activeTheme.accentGoldColor,
+                                        width: 1,
+                                      ),
+                                      color: themeController.activeTheme.cardBackgroundColor.withValues(alpha: 0.3),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.add, size: 16, color: themeController.activeTheme.accentGoldColor),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          "Create Quest",
+                                          style: getTextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                            color: themeController.activeTheme.accentGoldColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             const SizedBox(height: 20),
                             if (questsData.quests.isEmpty)
@@ -123,6 +298,7 @@ class QuestsScreen extends StatelessWidget {
                                     title: quest.description,
                                     xp: quest.xp,
                                     isActive: quest.isDone,
+                                    onTap: () => controller.completeQuest(quest.id),
                                   ),
                                 ),
                               ),

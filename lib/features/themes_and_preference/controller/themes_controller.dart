@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
+import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/themes_and_preference/model/theme_model.dart';
 import 'package:velvet_iron/features/themes_and_preference/model/companion_model.dart';
 import 'package:velvet_iron/features/themes_and_preference/service/themes_service.dart';
@@ -38,7 +39,16 @@ class ThemesController extends GetxController {
         final apiThemes = result.data!.themes;
 
         ThemeData _findApi(String name) => apiThemes.firstWhere(
-          (t) => t.name.toLowerCase() == name.toLowerCase(),
+          (t) =>
+              t.name.toLowerCase() == name.toLowerCase() ||
+              (name.toLowerCase() == 'scribe' &&
+                  t.name.toLowerCase() == 'reader') ||
+              (name.toLowerCase() == 'reader' &&
+                  t.name.toLowerCase() == 'scribe') ||
+              (name.toLowerCase() == 'realmwalker' &&
+                  t.name.toLowerCase() == 'gamer') ||
+              (name.toLowerCase() == 'gamer' &&
+                  t.name.toLowerCase() == 'realmwalker'),
           orElse: () => ThemeData(
             id: '',
             name: name,
@@ -62,16 +72,16 @@ class ThemesController extends GetxController {
             0xFF35065E,
             0xFFBE32FF,
           ], _findApi('mage')),
-          _buildThemeModel('reader', 'Reader', [
+          _buildThemeModel('reader', 'Scribe', [
             0xFF00027B,
             0xFF292CB7,
             0xFF3385FF,
-          ], _findApi('reader')),
-          _buildThemeModel('gamer', 'Gamer', [
+          ], _findApi('scribe')),
+          _buildThemeModel('gamer', 'Realmwalker', [
             0xFF111C18,
             0xFF1E332C,
             0xFFE7C143,
-          ], _findApi('gamer')),
+          ], _findApi('realmwalker')),
         ];
 
         themes.assignAll(mappedThemes);
@@ -79,7 +89,12 @@ class ThemesController extends GetxController {
         // Find and select the active theme
         final activeThemeIndex = mappedThemes.indexWhere((t) {
           final apiTheme = apiThemes.firstWhere(
-            (api) => api.name.toLowerCase() == t.title.toLowerCase(),
+            (api) =>
+                api.name.toLowerCase() == t.title.toLowerCase() ||
+                (t.title.toLowerCase() == 'scribe' &&
+                    api.name.toLowerCase() == 'reader') ||
+                (t.title.toLowerCase() == 'realmwalker' &&
+                    api.name.toLowerCase() == 'gamer'),
             orElse: () => ThemeData(
               id: '',
               name: '',
@@ -169,7 +184,7 @@ class ThemesController extends GetxController {
       ),
       ThemeModel(
         id: 'reader',
-        title: 'Reader',
+        title: 'Scribe',
         badgeText: 'Unlock 250 xp',
         subtitle: null,
         gradientColors: [0xFF00027B, 0xFF292CB7, 0xFF3385FF],
@@ -178,7 +193,7 @@ class ThemesController extends GetxController {
       ),
       ThemeModel(
         id: 'gamer',
-        title: 'Gamer',
+        title: 'Realmwalker',
         badgeText: 'Unlock 250 xp',
         subtitle: null,
         gradientColors: [0xFF111C18, 0xFF1E332C, 0xFFE7C143],
@@ -228,20 +243,45 @@ class ThemesController extends GetxController {
     }
   }
 
-  List<CompanionModel> _mapCompanionData(List<CompanionData> apiCompanions) {
-    final companionMap = {
-      'Ser Kael Thornwatch': 'assets/images/charecter_one.png',
-      'Riven Ashcroft': 'assets/images/charecter_two.png',
-      'Pyraxis': 'assets/images/charecter_three.png',
-      'Bram Ironledger': 'assets/images/charecter_four.png',
-    };
+  static String getCompanionAvatar(String name) {
+    final lower = name.toLowerCase().trim();
+    if (lower.contains('thyra') || lower.contains('kael')) {
+      return ImagePath.thyra;
+    } else if (lower.contains('leon') || lower.contains('bram')) {
+      return ImagePath.generalLeon;
+    } else if (lower.contains('visepheron') ||
+        lower.contains('pyraxis') ||
+        lower.contains('pyrax')) {
+      return ImagePath.visepheron;
+    } else if (lower.contains('riven')) {
+      return ImagePath.riven;
+    }
+    return ImagePath.thyra;
+  }
 
+  static String getCanonicalCompanionName(String name) {
+    final lower = name.toLowerCase().trim();
+    if (lower.contains('thyra') || lower.contains('kael')) {
+      return 'Thyra Valen';
+    } else if (lower.contains('leon') || lower.contains('bram')) {
+      return 'General Leon Vance';
+    } else if (lower.contains('visepheron') ||
+        lower.contains('pyraxis') ||
+        lower.contains('pyrax')) {
+      return 'Visepheron';
+    } else if (lower.contains('riven')) {
+      return 'Riven Ashcroft';
+    }
+    return name;
+  }
+
+  List<CompanionModel> _mapCompanionData(List<CompanionData> apiCompanions) {
     return apiCompanions.map((companion) {
       return CompanionModel(
         id: companion.id,
         apiId: companion.id,
-        name: companion.name,
-        avatarPath: companionMap[companion.name] ?? 'assets/images/serkael.png',
+        name: getCanonicalCompanionName(companion.name),
+        avatarPath: getCompanionAvatar(companion.name),
         leadingIconPath: companion.isActive
             ? 'assets/icons/goldencircle.png'
             : companion.isUnlocked
@@ -255,30 +295,30 @@ class ThemesController extends GetxController {
   void _loadSampleCompanions() {
     companions.assignAll([
       CompanionModel(
-        id: 'serkael',
-        name: 'Ser Kael Thornwatch',
-        avatarPath: 'assets/images/character_two.png',
+        id: 'thyra',
+        name: 'Thyra Valen',
+        avatarPath: ImagePath.thyra,
         leadingIconPath: 'assets/icons/goldencircle.png',
         locked: false,
       ),
       CompanionModel(
         id: 'riven',
         name: 'Riven Ashcroft',
-        avatarPath: 'assets/images/character_three.png',
+        avatarPath: ImagePath.riven,
         leadingIconPath: 'assets/icons/lock.png',
         locked: true,
       ),
       CompanionModel(
-        id: 'pyraxis',
-        name: 'Pyraxis',
-        avatarPath: 'assets/images/character_four.png',
+        id: 'visepheron',
+        name: 'Visepheron',
+        avatarPath: ImagePath.visepheron,
         leadingIconPath: 'assets/icons/lock.png',
         locked: true,
       ),
       CompanionModel(
-        id: 'bram',
-        name: 'Bram Ironledger',
-        avatarPath: 'assets/images/character_two.png',
+        id: 'leon',
+        name: 'General Leon Vance',
+        avatarPath: ImagePath.generalLeon,
         leadingIconPath: 'assets/icons/lock.png',
         locked: true,
       ),

@@ -44,6 +44,7 @@ class ScanActionButtons extends StatelessWidget {
                     final carbs = scanController.carbs.text.trim();
                     final protein = scanController.protein.text.trim();
                     final fats = scanController.fats.text.trim();
+                    final calories = scanController.calories.text.trim();
 
                     if (carbs.isNotEmpty &&
                         protein.isNotEmpty &&
@@ -52,9 +53,10 @@ class ScanActionButtons extends StatelessWidget {
                         carbs: carbs,
                         protein: protein,
                         fats: fats,
+                        calories: calories,
                       );
                       debugPrint(
-                        '[ScanActionButtons] Data transferred to MealLogController',
+                        '[ScanActionButtons] Data transferred to MealLogController with calories: $calories',
                       );
                     } else {
                       debugPrint(

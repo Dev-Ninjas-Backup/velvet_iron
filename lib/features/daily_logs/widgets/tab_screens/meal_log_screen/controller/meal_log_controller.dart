@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/model/meal_log_model.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/model/meal_log_schidule_model.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/service/meal_log_service.dart';
@@ -52,10 +53,20 @@ class MealLogController extends GetxController {
     required String carbs,
     required String protein,
     required String fats,
+    String? calories,
   }) {
     carbsController.text = carbs;
     proteinController.text = protein;
     fatController.text = fats;
+    if (calories != null && calories.isNotEmpty) {
+      caloriesController.text = calories;
+    } else {
+      final c = double.tryParse(carbs) ?? 0;
+      final p = double.tryParse(protein) ?? 0;
+      final f = double.tryParse(fats) ?? 0;
+      final cal = (c * 4 + p * 4 + f * 9).round();
+      if (cal > 0) caloriesController.text = cal.toString();
+    }
 
     // Mark fields as populated from scan (read-only until cleared)
     isCarbsFromScan.value = true;
@@ -66,6 +77,7 @@ class MealLogController extends GetxController {
     print('[MealLogController]   carbs=$carbs');
     print('[MealLogController]   protein=$protein');
     print('[MealLogController]   fats=$fats');
+    print('[MealLogController]   calories=${caloriesController.text}');
   }
 
   @override
@@ -139,6 +151,9 @@ class MealLogController extends GetxController {
       );
       _clearFields();
       fetchHistory();
+      final proteinAmount = double.tryParse(protein) ?? 0;
+      final trigger = proteinAmount >= 25 ? 'Protein Goal' : 'Nutrition / Meal Logged';
+      CompanionDialogueEngine.showDialogueSnackbar(trigger: trigger);
     } else {
       EasyLoading.showError('Failed to log meal. Please try again.');
     }
@@ -214,6 +229,9 @@ class MealLogController extends GetxController {
         EasyLoading.showSuccess('Meal marked as taken!');
         print('[MealLogController] Meal $mealScheduleId marked as taken');
         fetchHistory(); // Refresh history to show updated meal in log section
+        CompanionDialogueEngine.showDialogueSnackbar(
+          trigger: 'Nutrition / Meal Logged',
+        );
       } else {
         EasyLoading.showError(
           'Failed to mark meal as taken. Please try again.',

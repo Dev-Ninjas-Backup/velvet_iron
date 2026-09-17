@@ -191,4 +191,27 @@ class SharedPreferencesHelper {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(_lastDailyLoginTimestampKey);
   }
+
+  // Active Companion persistence
+  static const String _activeCompanionNameKey = 'activeCompanionName';
+  static const String _activeCompanionImageKey = 'activeCompanionImage';
+
+  static Future<void> saveActiveCompanion({
+    required String name,
+    required String imagePath,
+  }) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_activeCompanionNameKey, name);
+    await prefs.setString(_activeCompanionImageKey, imagePath);
+  }
+
+  static Future<Map<String, String>?> getActiveCompanion() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final name = prefs.getString(_activeCompanionNameKey);
+    final image = prefs.getString(_activeCompanionImageKey);
+    if (name != null && image != null) {
+      return {'name': name, 'imagePath': image};
+    }
+    return null;
+  }
 }

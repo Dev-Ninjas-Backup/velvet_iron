@@ -42,7 +42,7 @@ class CompanionModel {
       title: json['title'] ?? '',
       description: json['quote'] ?? '',
       unlockXp: json['unlockXp'] ?? 0,
-      isActive: json['isAcitve'] ?? false,
+      isActive: (json['isActive'] == true || json['isAcitve'] == true),
       isUnlocked: json['isUnlocked'] ?? false,
       imagePath: imagePath,
       bgImage: bgImage,
@@ -52,18 +52,17 @@ class CompanionModel {
   }
 
   static String getImagePath(String name) {
-    switch (name) {
-      case 'Ser Kael Thornwatch':
-        return ImagePath.serkael;
-      case 'Riven Ashcroft':
-        return ImagePath.riven;
-      case 'Pyraxis':
-        return ImagePath.pyrax;
-      case 'Bram Ironledger':
-        return ImagePath.bram;
-      default:
-        return ImagePath.serkael;
+    final lower = name.toLowerCase().trim();
+    if (lower.contains('thyra') || lower.contains('kael')) {
+      return ImagePath.thyra;
+    } else if (lower.contains('leon') || lower.contains('bram')) {
+      return ImagePath.generalLeon;
+    } else if (lower.contains('visepheron') || lower.contains('pyraxis') || lower.contains('pyrax')) {
+      return ImagePath.visepheron;
+    } else if (lower.contains('riven')) {
+      return ImagePath.riven;
     }
+    return ImagePath.thyra;
   }
 
   static LinearGradient getGradient(String name) {

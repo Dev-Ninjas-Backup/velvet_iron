@@ -88,14 +88,6 @@ class FounderInfoWidget extends StatelessWidget {
                     'Jamie Friddle is the architect behind the Velvet & Iron realm. Her vision is rooted in resilience, discipline, and imagination - shaped by real-life experience and the belief that strength is forged through consistent action. Velvet & Iron was created as a living world where growth feels purposeful and progress becomes personal.',
                 themeController: themeController,
               ),
-              const SizedBox(height: 18),
-              FounderCardWidget(
-                name: 'Robert Fox',
-                title: 'Marketing Coordinator',
-                description:
-                    'Developed in collaboration with Robert Fox, combining product strategy, UX design, and technical execution to deliver a focused, scalable, and user-first experience.',
-                themeController: themeController,
-              ),
             ],
           ),
         );

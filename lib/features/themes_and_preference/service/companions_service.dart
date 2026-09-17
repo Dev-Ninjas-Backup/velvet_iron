@@ -29,7 +29,7 @@ class CompanionData {
       name: json['name'] ?? '',
       title: json['title'] ?? '',
       quote: json['quote'] ?? '',
-      isActive: json['isAcitve'] ?? false, // Note: API has typo
+      isActive: (json['isActive'] == true || json['isAcitve'] == true),
       isUnlocked: json['isUnlocked'] ?? false,
       unlockXp: json['unlockXp'] ?? 0,
     );

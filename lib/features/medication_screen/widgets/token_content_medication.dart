@@ -6,6 +6,7 @@ import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/common/widgets/empty_state_card.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
+import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/home/controller/home_controller.dart';
 import 'package:velvet_iron/features/medication_screen/controller/medication_controller.dart';
 import 'package:velvet_iron/features/medication_screen/widgets/custom_drop_down.dart';
@@ -76,23 +77,31 @@ class TokenContentMedication extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 GestureDetector(
+                  behavior: HitTestBehavior.opaque,
                   onTap: () {
-                    final homeController = Get.find<HomeController>();
+                    final homeController = Get.isRegistered<HomeController>()
+                        ? Get.find<HomeController>()
+                        : null;
                     showDialog(
                       context: context,
                       builder: (context) => MedicationPopup(
                         selectedCompanionImage:
-                            homeController.activeCompanionImage.value,
+                            homeController?.activeCompanionImage.value ??
+                                ImagePath.thyra,
                         selectedCompanionName:
-                            homeController.activeCompanionName.value,
+                            homeController?.activeCompanionName.value ??
+                                'Thyra',
                       ),
                     );
                   },
-                  child: Image.asset(
-                    IconPath.exclametory,
-                    width: 18,
-                    height: 18,
-                    fit: BoxFit.contain,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(
+                      IconPath.exclametory,
+                      width: 18,
+                      height: 18,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               ],

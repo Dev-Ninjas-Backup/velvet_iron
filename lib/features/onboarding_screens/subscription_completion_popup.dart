@@ -101,17 +101,17 @@ class SubscriptionCompletionPopup extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Diamond icon
+                      // Theme Sigil / Diamond icon
                       Image.asset(
                         themeController.activeTheme.id == 'adventurer'
-                            ? ImagePath.congratulations
+                            ? ImagePath.diamondAdventurer
                             : themeController.activeTheme.id == 'mage'
-                            ? ImagePath.congratulations
+                            ? ImagePath.diamondMage
                             : themeController.activeTheme.id == 'gamer'
-                            ? ImagePath.congratulations
-                            : ImagePath.congratulations,
-                        width: 85,
-                        height: 85,
+                            ? ImagePath.diamondGamer
+                            : ImagePath.diamondReader,
+                        width: 70,
+                        height: 70,
                         fit: BoxFit.contain,
                       ),
                       SizedBox(height: h(5)),
@@ -123,14 +123,24 @@ class SubscriptionCompletionPopup extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
 
-                      // Subtitle
-                      Text(
-                        '"Your subscription is activated and will expire at Sept 15,2025. You can renew or cancel anytime from your profile settings ."',
-                        style: getTextStyle(
-                          fontSize: 12,
-                          color: Colors.white.withValues(alpha: .85),
-                        ),
-                        textAlign: TextAlign.center,
+                      // Subtitle with Dynamic Expiration Date
+                      Builder(
+                        builder: (context) {
+                          final expiryDate = DateTime.now().add(const Duration(days: 3));
+                          const months = [
+                            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+                          ];
+                          final dateStr = '${months[expiryDate.month - 1]} ${expiryDate.day}, ${expiryDate.year}';
+                          return Text(
+                            '"Your subscription trial is activated and will renew on $dateStr. You can renew or cancel anytime from your profile settings."',
+                            style: getTextStyle(
+                              fontSize: 12,
+                              color: Colors.white.withValues(alpha: .85),
+                            ),
+                            textAlign: TextAlign.center,
+                          );
+                        },
                       ),
                       SizedBox(height: h(8)),
 
@@ -176,31 +186,37 @@ class SubscriptionCompletionPopup extends StatelessWidget {
                 top: h(157),
                 left: 0,
                 right: 0,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Image.asset(
-                      themeController.activeTheme.id == 'adventurer'
-                          ? ImagePath.topframeAdventurer
-                          : themeController.activeTheme.id == 'mage'
-                          ? ImagePath.topframeMage
-                          : themeController.activeTheme.id == 'gamer'
-                          ? ImagePath.topframeGamer
-                          : ImagePath.topframeReader,
-                      width: w(290),
-                      height: h(98),
-                      fit: BoxFit.contain,
-                    ),
-                    // Companion image displayed in the center of topframe
-                    if (selectedCompanionImage != null &&
-                        selectedCompanionImage!.isNotEmpty)
+                child: SizedBox(
+                  width: w(290),
+                  height: h(100),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
                       Image.asset(
-                        selectedCompanionImage!,
-                        width: w(80),
-                        height: h(80),
+                        themeController.activeTheme.id == 'adventurer'
+                            ? ImagePath.topframeAdventurer
+                            : themeController.activeTheme.id == 'mage'
+                            ? ImagePath.topframeMage
+                            : themeController.activeTheme.id == 'gamer'
+                            ? ImagePath.topframeGamer
+                            : ImagePath.topframeReader,
+                        width: w(290),
+                        height: h(100),
                         fit: BoxFit.contain,
                       ),
-                  ],
+                      // Companion image displayed in the center of topframe
+                      if (selectedCompanionImage != null &&
+                          selectedCompanionImage!.isNotEmpty)
+                        Positioned(
+                          top: h(6),
+                          bottom: h(8),
+                          child: Image.asset(
+                            selectedCompanionImage!,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ],

@@ -44,9 +44,15 @@ class AppThemeController extends GetxController {
           orElse: () => response.themes.first,
         );
 
-        // Find matching theme by name and select it
+        // Find matching theme by name (supporting both new V1 and legacy names)
         final themeIndex = themes.indexWhere(
-          (t) => t.name.toLowerCase() == activeThemeFromApi.name.toLowerCase(),
+          (t) =>
+              t.name.toLowerCase() ==
+                  activeThemeFromApi.name.toLowerCase() ||
+              (t.name.toLowerCase() == 'scribe' &&
+                  activeThemeFromApi.name.toLowerCase() == 'reader') ||
+              (t.name.toLowerCase() == 'realmwalker' &&
+                  activeThemeFromApi.name.toLowerCase() == 'gamer'),
         );
 
         if (themeIndex != -1) {
@@ -56,7 +62,7 @@ class AppThemeController extends GetxController {
             activeThemeFromApi.id,
           );
           await SharedPreferencesHelper.saveActiveThemeName(
-            activeThemeFromApi.name,
+            themes[themeIndex].name,
           );
           return;
         }
@@ -67,7 +73,12 @@ class AppThemeController extends GetxController {
       if (savedThemeName != null && savedThemeName.isNotEmpty) {
         // Find the hardcoded theme by name
         final themeIndex = themes.indexWhere(
-          (t) => t.name.toLowerCase() == savedThemeName.toLowerCase(),
+          (t) =>
+              t.name.toLowerCase() == savedThemeName.toLowerCase() ||
+              (t.name.toLowerCase() == 'scribe' &&
+                  savedThemeName.toLowerCase() == 'reader') ||
+              (t.name.toLowerCase() == 'realmwalker' &&
+                  savedThemeName.toLowerCase() == 'gamer'),
         );
         if (themeIndex != -1) {
           selectTheme(themeIndex);

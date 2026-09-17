@@ -31,24 +31,24 @@ class AboutTrainingData {
 
   static final List<AboutTrainingModel> partnerFeatures = [
     AboutTrainingModel(
-      title: 'Increased User Activity:',
+      title: 'Consistent Discipline:',
       description:
-          'Gamified XP and leveling mechanics encourage users to spend more time on the platform.',
+          'Transform small daily habits into lasting momentum with rewarding progression systems.',
     ),
     AboutTrainingModel(
-      title: 'Better Retention:',
+      title: 'Habit Mastery:',
       description:
-          'Users who are engaged and earning rewards are less likely to churn.',
+          'Strengthen your physical, nutritional, and mental stamina through balanced daily quests.',
     ),
     AboutTrainingModel(
-      title: 'Data Insights:',
+      title: 'Companion Guidance:',
       description:
-          'Partner organizations can track user progress, engagement patterns, and popular features unlocked through XP.',
+          'Your chosen realm ally walks alongside you, offering motivation and lore throughout your journey.',
     ),
     AboutTrainingModel(
-      title: 'Promotional Opportunities:',
+      title: 'Heroic Purpose:',
       description:
-          'XP-based unlocks can be aligned with partner offers or exclusive content, driving more visibility and interaction for partners.',
+          'Every rep, meal logged, and step taken builds toward legendary growth in your personal training codex.',
     ),
   ];
 }

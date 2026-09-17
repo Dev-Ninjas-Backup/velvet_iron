@@ -10,11 +10,18 @@ class OnboardingController4 extends GetxController {
 
   final selectedGender = RxnInt();
 
-  final List<String> genders = ['Male', 'Female', 'Non-binary'];
+  final List<String> genders = [
+    'Male',
+    'Female',
+    'Non-binary',
+    'Prefer not to say',
+  ];
 
   String get genderForApi {
     if (selectedGender.value == null) return '';
     switch (genders[selectedGender.value!]) {
+      case 'Prefer not to say':
+        return 'OTHER';
       case 'Non-binary':
         return 'OTHER';
       case 'Male':
@@ -22,7 +29,7 @@ class OnboardingController4 extends GetxController {
       case 'Female':
         return 'FEMALE';
       default:
-        return genders[selectedGender.value!].toUpperCase();
+        return 'OTHER';
     }
   }
 

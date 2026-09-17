@@ -64,11 +64,25 @@ class ImagePath {
   static const String welcomeBackGamer = 'assets/images/welcomebackgamer.png';
   static const String welcomeBackReader = 'assets/images/welcomebackreader.png';
 
-  //character images for character selection
-  static const String serKael = 'assets/images/premiumprofile.png';
-  static const String rvenAshcroft = 'assets/images/charecter_two.png';
-  static const String pyraxis = 'assets/images/charecter_three.png';
-  static const String bramIronledger = 'assets/images/charecter_four.png';
+  // New Master Path Artworks
+  static const String pathAdventurer = 'assets/images/paths/path_adventurer.png';
+  static const String pathMage = 'assets/images/paths/path_mage.png';
+  static const String pathRealmwalker = 'assets/images/paths/path_realmwalker.png';
+  static const String pathScribe = 'assets/images/paths/path_scribe.png';
+
+  // Master Companion Artworks
+  static const String thyra = 'assets/images/companions/thyra_portrait.png';
+  static const String thyraFull = 'assets/images/companions/thyra_full.png';
+  static const String generalLeon = 'assets/images/companions/general_leon_portrait.png';
+  static const String generalLeonFull = 'assets/images/companions/general_leon_full.png';
+  static const String visepheron = 'assets/images/companions/visepheron_portrait.png';
+  static const String visepheronFull = 'assets/images/companions/visepheron_full.png';
+
+  // Backward compatibility alias / mappings
+  static const String serKael = 'assets/images/companions/thyra_portrait.png';
+  static const String rvenAshcroft = 'assets/images/riven.png';
+  static const String pyraxis = 'assets/images/companions/visepheron_portrait.png';
+  static const String bramIronledger = 'assets/images/companions/general_leon_portrait.png';
 
   static const String congratulations = 'assets/images/congratulations.png';
 }

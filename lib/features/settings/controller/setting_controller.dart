@@ -175,11 +175,16 @@ class SettingsController extends GetxController with WidgetsBindingObserver {
 
         // Find the active companion
         for (var companion in companions) {
-          if (companion['isAcitve'] == true) {
+          final isActive = companion['isActive'] == true || companion['isAcitve'] == true;
+          if (isActive) {
             final name = companion['name'] ?? '';
             final imagePath = _getCompanionImagePath(name);
             activeCompanionImage.value = imagePath;
             activeCompanionName.value = name;
+            await SharedPreferencesHelper.saveActiveCompanion(
+              name: name,
+              imagePath: imagePath,
+            );
             print('Active Companion: $name -> $imagePath');
             break;
           }
@@ -224,18 +229,17 @@ class SettingsController extends GetxController with WidgetsBindingObserver {
 
   /// Map companion name to image path
   static String _getCompanionImagePath(String name) {
-    switch (name) {
-      case 'Ser Kael Thornwatch':
-        return ImagePath.serKael;
-      case 'Riven Ashcroft':
-        return ImagePath.rvenAshcroft;
-      case 'Pyraxis':
-        return ImagePath.pyraxis;
-      case 'Bram Ironledger':
-        return ImagePath.bramIronledger;
-      default:
-        return ImagePath.serKael;
+    final lower = name.toLowerCase().trim();
+    if (lower.contains('thyra') || lower.contains('kael')) {
+      return ImagePath.thyra;
+    } else if (lower.contains('leon') || lower.contains('bram')) {
+      return ImagePath.generalLeon;
+    } else if (lower.contains('visepheron') || lower.contains('pyraxis') || lower.contains('pyrax')) {
+      return ImagePath.visepheron;
+    } else if (lower.contains('riven')) {
+      return ImagePath.riven;
     }
+    return ImagePath.thyra;
   }
 
   void navigateToProfile() => Get.toNamed('/profileScreen');

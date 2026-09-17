@@ -37,7 +37,28 @@ class DailyGoalController extends GetxController {
       () => fats.value = int.tryParse(fatsController.text) ?? 0,
     );
 
-    //_fetchMacroGoals();
+    // Load cached macro goals first to prevent showing 0s
+    _loadCachedGoals();
+    _fetchMacroGoals();
+  }
+
+  Future<void> _loadCachedGoals() async {
+    final c = await SharedPreferencesHelper.getString('macro_carbs');
+    final p = await SharedPreferencesHelper.getString('macro_protein');
+    final f = await SharedPreferencesHelper.getString('macro_fats');
+
+    if (c != null && c.isNotEmpty) {
+      carbs.value = int.tryParse(c) ?? 0;
+      carbsController.text = c;
+    }
+    if (p != null && p.isNotEmpty) {
+      protein.value = int.tryParse(p) ?? 0;
+      proteinController.text = p;
+    }
+    if (f != null && f.isNotEmpty) {
+      fats.value = int.tryParse(f) ?? 0;
+      fatsController.text = f;
+    }
   }
 
   @override
@@ -48,55 +69,59 @@ class DailyGoalController extends GetxController {
     super.onClose();
   }
 
-  //  Fetch existing macro goals
-  // Future<void> _fetchMacroGoals() async {
-  //   final accessToken = await SharedPreferencesHelper.getAccessToken();
-  //   final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+  // Fetch existing macro goals from API
+  Future<void> _fetchMacroGoals() async {
+    final accessToken = await SharedPreferencesHelper.getAccessToken();
+    final refreshToken = await SharedPreferencesHelper.getRefreshToken();
 
-  //   debugPrint('MacroGoal accessToken : $accessToken');
-  //   debugPrint('MacroGoal refreshToken: $refreshToken');
+    debugPrint('MacroGoal accessToken : $accessToken');
+    debugPrint('MacroGoal refreshToken: $refreshToken');
 
-  //   if (accessToken == null || refreshToken == null) {
-  //     debugPrint('MacroGoal Token missing — cannot fetch');
-  //     return;
-  //   }
+    if (accessToken == null || refreshToken == null) {
+      debugPrint('MacroGoal Token missing — cannot fetch');
+      return;
+    }
 
-  //   isLoading.value = true;
+    isLoading.value = true;
 
-  //   try {
-  //     final result = await _service.getMacroGoals(
-  //       accessToken: accessToken,
-  //       refreshToken: refreshToken,
-  //     );
+    try {
+      final result = await _service.getMacroGoals(
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      );
 
-  //     debugPrint('MacroGoal Fetched ${result.data.length} goal(s)');
+      debugPrint('MacroGoal Fetched ${result.data.length} goal(s)');
 
-  //     final latest = result.latest;
-  //     if (latest != null) {
-  //       carbs.value = latest.carbs;
-  //       protein.value = latest.protein;
-  //       fats.value = latest.fat;
+      final latest = result.latest;
+      if (latest != null) {
+        carbs.value = latest.carbs;
+        protein.value = latest.protein;
+        fats.value = latest.fat;
 
-  //       carbsController.text = latest.carbs.toString();
-  //       proteinController.text = latest.protein.toString();
-  //       fatsController.text = latest.fat.toString();
+        carbsController.text = latest.carbs.toString();
+        proteinController.text = latest.protein.toString();
+        fatsController.text = latest.fat.toString();
 
-  //       debugPrint('carbs   : ${latest.carbs} g');
-  //       debugPrint('protein : ${latest.protein} g');
-  //       debugPrint('fat     : ${latest.fat} g');
-  //       debugPrint('calories: ${latest.calories} kcal');
-  //     } else {
-  //       debugPrint('No saved goals — keeping defaults');
-  //     }
-  //   } on MacroGoalException catch (e) {
-  //     debugPrint('MacroGoal Fetch MacroGoalException: $e');
-  //   } catch (e, stackTrace) {
-  //     debugPrint('MacroGoal Fetch unexpected error: $e');
-  //     debugPrint('StackTrace:\n$stackTrace');
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
+        await SharedPreferencesHelper.setString('macro_carbs', latest.carbs.toString());
+        await SharedPreferencesHelper.setString('macro_protein', latest.protein.toString());
+        await SharedPreferencesHelper.setString('macro_fats', latest.fat.toString());
+
+        debugPrint('carbs   : ${latest.carbs} g');
+        debugPrint('protein : ${latest.protein} g');
+        debugPrint('fat     : ${latest.fat} g');
+        debugPrint('calories: ${latest.calories} kcal');
+      } else {
+        debugPrint('No saved goals — keeping defaults');
+      }
+    } on MacroGoalException catch (e) {
+      debugPrint('MacroGoal Fetch MacroGoalException: $e');
+    } catch (e, stackTrace) {
+      debugPrint('MacroGoal Fetch unexpected error: $e');
+      debugPrint('StackTrace:\n$stackTrace');
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   //  Save goals
   Future<void> saveGoals() async {
@@ -137,6 +162,10 @@ class DailyGoalController extends GetxController {
       debugPrint('MacroGoal Saved →');
       debugPrint('id      : ${result.data.id}');
       debugPrint('calories: ${result.data.calories} kcal');
+
+      await SharedPreferencesHelper.setString('macro_carbs', carbs.value.toString());
+      await SharedPreferencesHelper.setString('macro_protein', protein.value.toString());
+      await SharedPreferencesHelper.setString('macro_fats', fats.value.toString());
 
       EasyLoading.showSuccess(
         result.message.isNotEmpty ? result.message : 'Daily goals updated!',

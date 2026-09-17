@@ -215,39 +215,49 @@ class MedicationPopup extends StatelessWidget {
                 top: h(157),
                 left: 0,
                 right: 0,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Image.asset(
-                      themeController.activeTheme.id == 'adventurer'
-                          ? ImagePath.topframeAdventurer
-                          : themeController.activeTheme.id == 'mage'
-                          ? ImagePath.topframeMage
-                          : themeController.activeTheme.id == 'gamer'
-                          ? ImagePath.topframeGamer
-                          : ImagePath.topframeReader,
-                      width: w(290),
-                      height: h(98),
-                      fit: BoxFit.contain,
-                    ),
-                    // Companion image displayed in the center of topframe
-                    if (selectedCompanionImage != null &&
-                        selectedCompanionImage!.isNotEmpty)
+                child: SizedBox(
+                  width: w(290),
+                  height: h(100),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
                       Image.asset(
-                        selectedCompanionImage!,
-                        width: w(90),
-                        height: h(90),
+                        themeController.activeTheme.id == 'adventurer'
+                            ? ImagePath.topframeAdventurer
+                            : themeController.activeTheme.id == 'mage'
+                            ? ImagePath.topframeMage
+                            : themeController.activeTheme.id == 'gamer'
+                            ? ImagePath.topframeGamer
+                            : ImagePath.topframeReader,
+                        width: w(290),
+                        height: h(100),
                         fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Icon(
-                              Icons.person,
-                              size: 60,
-                              color: Colors.white,
-                            ),
-                      )
-                    else
-                      const Icon(Icons.person, size: 60, color: Colors.white),
-                  ],
+                      ),
+                      // Companion image displayed in the center of topframe
+                      if (selectedCompanionImage != null &&
+                          selectedCompanionImage!.isNotEmpty)
+                        Positioned(
+                          top: h(6),
+                          bottom: h(8),
+                          child: Image.asset(
+                            selectedCompanionImage!,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(
+                                  Icons.medical_services_outlined,
+                                  size: 40,
+                                  color: Colors.white,
+                                ),
+                          ),
+                        )
+                      else
+                        const Icon(
+                          Icons.medical_services_outlined,
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ],

@@ -55,7 +55,7 @@ class AboutTrainingAppBar extends StatelessWidget {
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
-                    'About Training Codex',
+                    'About Velvet & Iron',
                     style: getTextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,

@@ -29,10 +29,12 @@ class NutritionFields extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(child: _buildLabel("Carbs")),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 6),
                     Expanded(child: _buildLabel("Protein")),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 6),
                     Expanded(child: _buildLabel("Fats")),
+                    const SizedBox(width: 6),
+                    Expanded(child: _buildLabel("Calories")),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -47,7 +49,7 @@ class NutritionFields extends StatelessWidget {
                         'Carbs',
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 6),
                     Expanded(
                       child: _buildTextField(
                         themeController,
@@ -55,12 +57,21 @@ class NutritionFields extends StatelessWidget {
                         'Protein',
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 6),
                     Expanded(
                       child: _buildTextField(
                         themeController,
                         scanController.fats,
                         'Fats',
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: _buildTextField(
+                        themeController,
+                        scanController.calories,
+                        'Calories',
+                        unit: 'kcal',
                       ),
                     ),
                   ],
@@ -83,11 +94,12 @@ class NutritionFields extends StatelessWidget {
   Widget _buildTextField(
     AppThemeController themeController,
     TextEditingController controller,
-    String fieldName,
-  ) {
+    String fieldName, {
+    String unit = 'g',
+  }) {
     return Container(
       height: 40,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         color: themeController.activeTheme.textfieldColor,
         borderRadius: BorderRadius.circular(10),
@@ -104,7 +116,7 @@ class NutritionFields extends StatelessWidget {
             child: TextField(
               controller: controller,
               keyboardType: TextInputType.number,
-              style: const TextStyle(color: Colors.white, fontSize: 14),
+              style: const TextStyle(color: Colors.white, fontSize: 13),
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 isDense: true,
@@ -117,7 +129,7 @@ class NutritionFields extends StatelessWidget {
               },
             ),
           ),
-          const Text("g", style: TextStyle(color: Colors.white, fontSize: 14)),
+          Text(unit, style: const TextStyle(color: Colors.white, fontSize: 11)),
         ],
       ),
     );

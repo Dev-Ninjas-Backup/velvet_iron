@@ -12,6 +12,7 @@ class ScanBarcodeController extends GetxController {
   final carbs = TextEditingController();
   final protein = TextEditingController();
   final fats = TextEditingController();
+  final calories = TextEditingController();
 
   String lastScannedValue = '';
   bool isProcessing = false;
@@ -80,13 +81,28 @@ class ScanBarcodeController extends GetxController {
           final proteinVal = nutriments['proteins_100g']?.toString() ?? '';
           final fatsVal = nutriments['fat_100g']?.toString() ?? '';
 
+          final energyKcal = nutriments['energy-kcal_100g'] ??
+              nutriments['energy-kcal'] ??
+              nutriments['energy_100g'];
+          String caloriesVal = '';
+          if (energyKcal != null) {
+            caloriesVal = (double.tryParse(energyKcal.toString())?.round() ?? energyKcal).toString();
+          } else {
+            final c = double.tryParse(carbsVal) ?? 0;
+            final p = double.tryParse(proteinVal) ?? 0;
+            final f = double.tryParse(fatsVal) ?? 0;
+            final calc = (c * 4 + p * 4 + f * 9).round();
+            if (calc > 0) caloriesVal = calc.toString();
+          }
+
           debugPrint(
-            '[_fetchNutritionFromApi] carbs=$carbsVal, protein=$proteinVal, fats=$fatsVal',
+            '[_fetchNutritionFromApi] carbs=$carbsVal, protein=$proteinVal, fats=$fatsVal, calories=$caloriesVal',
           );
 
           carbs.text = carbsVal;
           protein.text = proteinVal;
           fats.text = fatsVal;
+          calories.text = caloriesVal;
 
           update();
         } else {
@@ -238,6 +254,7 @@ class ScanBarcodeController extends GetxController {
     carbs.dispose();
     protein.dispose();
     fats.dispose();
+    calories.dispose();
     super.onClose();
   }
 }

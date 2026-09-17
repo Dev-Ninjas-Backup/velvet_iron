@@ -78,7 +78,7 @@ class IntroSectionWidget extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'The XP and leveling system motivates users to stay consistent with their health and fitness goals by rewarding progress and milestones, while partners gain insights into user engagement and can support healthier lifestyles. This gamified approach encourages sustained adherence, better outcomes, and meaningful interactions for both users and partners.',
+            'The XP and leveling system motivates you to stay consistent with your health and fitness goals by rewarding daily actions, habits, and heroic milestones. This gamified approach turns your personal training into an epic adventure, encouraging sustained discipline, progress, and personal mastery.',
             style: getTextStyle(
               fontSize: 13,
               color: Colors.white.withValues(alpha: 0.9),

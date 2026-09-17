@@ -185,7 +185,7 @@ class ExpandableSectionsContainer extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         ExpandableSectionWidget(
-          sectionTitle: 'Why to be a partner?',
+          sectionTitle: 'The Codex Philosophy',
           features: partnerFeatures,
           isExpanded: expandedSections.contains(1),
           onToggle: () => onSectionToggle(1),

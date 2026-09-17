@@ -87,10 +87,10 @@ class AppThemeModel {
     textColor: Color(0xFFB43737),
   );
 
-  /// Theme 2: Blue theme (Reader theme)
+  /// Theme 2: Blue & Metallic Silver theme (Scribe theme)
   static AppThemeModel readerTheme = AppThemeModel(
     id: 'reader',
-    name: 'Reader',
+    name: 'Scribe',
     backgroundGradient: const LinearGradient(
       colors: [Color(0xFF001A47), Color(0xFF1C1E8F)],
       begin: Alignment.topCenter,
@@ -100,34 +100,32 @@ class AppThemeModel {
     cardBackgroundColor: const Color(0xFF292DA9),
     headerIconBackgroundColor: const Color(0xCC0A1F47),
     progressBarGradient: const LinearGradient(
-      colors: [Color(0xFF001A47), Color(0xFFFFFFFF)],
+      colors: [Color(0xFF8A95A5), Color(0xFFE2E6EF), Color(0xFF9FAAB9)],
       begin: Alignment.bottomLeft,
       end: Alignment.bottomRight,
     ),
     dropdownBackgroundColor: const Color(0xFF001A47),
-    borderColor: const Color(0xFF1C1E8F),
-    accentGoldColor: const Color(0xFF5FB3E5),
-    moodBorderColor: const Color(0xFF1C1E8F),
+    borderColor: const Color(0xFF384370),
+    accentGoldColor: const Color(0xFFDDE2ED), // Metallic silver accent
+    moodBorderColor: const Color(0xFF384370),
     todoSubtitleColor: const Color(0xFF292DA9),
-    todoTimeColor: const Color(0xFF2A7AAD),
+    todoTimeColor: const Color(0xFF4B6B94),
     popupBackgroundColor: const Color(0xFF808080),
-    graphColor: const Color(0xFFBBBBBB),
+    graphColor: const Color(0xFFC0C7D8), // Polished silver
     selectedColors: const [
-      // Color(0xFFFFFFFF),
-      Color(0xFFBBBBBB),
-      // Color(0xFFFFFFFF),
-      Color(0xFFBBBBBB),
-      // Color(0xFFFFFFFF),
+      Color(0xFFC0C7D8),
+      Color(0xFFE2E6EF),
+      Color(0xFF8A95A5),
     ],
     textfieldColor: Color(0xFF141694),
-    dateNameborder: Color(0xFFFFFFFF),
-    textColor: Color(0xFF1D7FFF),
+    dateNameborder: Color(0xFFC0C7D8),
+    textColor: Color(0xFFDDE2ED),
   );
 
-  /// Theme 3: Green theme (Gamer theme)
+  /// Theme 3: Green theme (Realmwalker theme)
   static AppThemeModel gamerTheme = AppThemeModel(
     id: 'gamer',
-    name: 'Gamer',
+    name: 'Realmwalker',
     backgroundGradient: const LinearGradient(
       colors: [Color(0xFF0E2D22), Color(0xFF105234)],
       begin: Alignment.topCenter,

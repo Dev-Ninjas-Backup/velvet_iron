@@ -74,11 +74,22 @@ class Quest {
   });
 
   factory Quest.fromJson(Map<String, dynamic> json) {
+    String title = json['title'] as String? ?? '';
+    String description = json['description'] as String? ?? '';
+
+    // Sanitize unrealistic 120g single meal protein preset
+    if (title.contains('120g') || title.contains('120 g')) {
+      title = title.replaceAll(RegExp(r'120\s*g\+?\s*protein', caseSensitive: false), '30g+ protein');
+    }
+    if (description.contains('120g') || description.contains('120 g')) {
+      description = description.replaceAll(RegExp(r'120\s*g\+?\s*protein', caseSensitive: false), '30g+ protein');
+    }
+
     return Quest(
       id: json['id'] as String,
-      title: json['title'] as String,
+      title: title,
       xp: json['xp'] as int,
-      description: json['description'] as String,
+      description: description,
       isDone: json['isDone'] as bool,
     );
   }

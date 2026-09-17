@@ -10,6 +10,7 @@ class TodaysQuestItem extends StatelessWidget {
   final String title;
   final int xp;
   final bool isActive;
+  final VoidCallback? onTap;
 
   const TodaysQuestItem({
     super.key,
@@ -18,6 +19,7 @@ class TodaysQuestItem extends StatelessWidget {
     required this.title,
     required this.xp,
     required this.isActive,
+    this.onTap,
   });
 
   static const Map<String, _TagData> _tagMap = {
@@ -66,98 +68,102 @@ class TodaysQuestItem extends StatelessWidget {
             _tagMap[id] ??
             const _TagData('Quest', [Color(0xFF555555), Color(0xFF999999)]);
 
-        return Container(
-          width: double.infinity,
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-          decoration: BoxDecoration(
-            color: themeController.activeTheme.textfieldColor.withValues(
-              alpha: 0.6,
+        return GestureDetector(
+          onTap: onTap,
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+            decoration: BoxDecoration(
+              color: themeController.activeTheme.textfieldColor.withValues(
+                alpha: 0.6,
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.white.withValues(alpha: .2)),
             ),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white.withValues(alpha: .2)),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset(
-                isActive ? dotIcon : IconPath.whitecircle,
-                width: 24,
-                height: 24,
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      header,
-                      style: getTextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      title,
-                      style: getTextStyle(
-                        color: themeController.activeTheme.textColor,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ],
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  isActive ? dotIcon : IconPath.whitecircle,
+                  width: 24,
+                  height: 24,
                 ),
-              ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerRight,
+                const SizedBox(width: 10),
+                Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(colors: tag.gradient),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          tag.label,
-                          style: getTextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        ),
+                      Text(
+                        header,
+                        style: getTextStyle(color: Colors.white, fontSize: 14),
                       ),
                       const SizedBox(height: 4),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '+$xp',
+                      Text(
+                        title,
+                        style: getTextStyle(
+                          color: themeController.activeTheme.textColor,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(colors: tag.gradient),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            tag.label,
                             style: getTextStyle(
                               color: Colors.white,
                               fontSize: 12,
                             ),
                           ),
-                          const SizedBox(width: 2),
-                          Text(
-                            'XP',
-                            style: getTextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '+$xp',
+                              style: getTextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 4),
-                          Image.asset(starIcon, width: 12, height: 12),
-                        ],
-                      ),
-                    ],
+                            const SizedBox(width: 2),
+                            Text(
+                              'XP',
+                              style: getTextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Image.asset(starIcon, width: 12, height: 12),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

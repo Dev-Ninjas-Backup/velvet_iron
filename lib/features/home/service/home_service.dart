@@ -63,9 +63,14 @@ class HomeService {
 
         // Find the active companion
         for (var companion in companions) {
-          if (companion['isAcitve'] == true) {
+          final isActive = companion['isActive'] == true || companion['isAcitve'] == true;
+          if (isActive) {
             final name = companion['name'] ?? '';
             final imagePath = _getCompanionImagePath(name);
+            await SharedPreferencesHelper.saveActiveCompanion(
+              name: name,
+              imagePath: imagePath,
+            );
             return {
               'name': name,
               'imagePath': imagePath,
@@ -73,30 +78,29 @@ class HomeService {
             };
           }
         }
-        return null;
+        return await SharedPreferencesHelper.getActiveCompanion();
       } else {
         print('ERROR: Failed to fetch companions. ${response.body}');
-        return null;
+        return await SharedPreferencesHelper.getActiveCompanion();
       }
     } catch (e) {
       print('EXCEPTION: $e');
-      return null;
+      return await SharedPreferencesHelper.getActiveCompanion();
     }
   }
 
-  /// Map companion name to image path
+  /// Map companion name to image path with canonical & legacy alias support
   static String _getCompanionImagePath(String name) {
-    switch (name) {
-      case 'Ser Kael Thornwatch':
-        return ImagePath.serKael;
-      case 'Riven Ashcroft':
-        return ImagePath.rvenAshcroft;
-      case 'Pyraxis':
-        return ImagePath.pyraxis;
-      case 'Bram Ironledger':
-        return ImagePath.bramIronledger;
-      default:
-        return ImagePath.serKael;
+    final lower = name.toLowerCase().trim();
+    if (lower.contains('thyra') || lower.contains('kael')) {
+      return ImagePath.thyra;
+    } else if (lower.contains('leon') || lower.contains('bram')) {
+      return ImagePath.generalLeon;
+    } else if (lower.contains('visepheron') || lower.contains('pyraxis') || lower.contains('pyrax')) {
+      return ImagePath.visepheron;
+    } else if (lower.contains('riven')) {
+      return ImagePath.riven;
     }
+    return ImagePath.thyra;
   }
 }

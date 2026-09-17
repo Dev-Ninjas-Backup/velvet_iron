@@ -82,6 +82,7 @@ class PopUpDialogue extends StatelessWidget {
   final String refreshToken;
   final String? selectedCompanionName;
   final String? selectedCompanionImage;
+  final String? quote;
 
   PopUpDialogue({
     super.key,
@@ -90,12 +91,24 @@ class PopUpDialogue extends StatelessWidget {
     required this.refreshToken,
     this.selectedCompanionName,
     this.selectedCompanionImage,
+    this.quote,
   });
 
   final RxBool _isLoading = false.obs;
 
   Future<void> _handleCollectRewards(BuildContext context) async {
     if (_isLoading.value) return;
+
+    if (accessToken.isEmpty || refreshToken.isEmpty) {
+      await SharedPreferencesHelper.saveLastDailyLoginTimestamp(DateTime.now());
+      onCollectRewards?.call();
+      EasyLoading.showSuccess('✓ You earned $dailyLoginXpAmount XP!');
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context, rootNavigator: true).pop();
+      });
+      return;
+    }
+
     _isLoading.value = true;
 
     final response = await _XpService.addDailyRewardXP(
@@ -224,7 +237,7 @@ class PopUpDialogue extends StatelessWidget {
                       const SizedBox(height: 4),
 
                       Text(
-                        '"Discipline is the blade - sharpen it daily."',
+                        quote ?? '"Discipline is the blade - sharpen it daily."',
                         style: getTextStyle(
                           fontSize: 9,
                           color: Colors.white.withValues(alpha: .85),
@@ -283,31 +296,62 @@ class PopUpDialogue extends StatelessWidget {
                 top: h(157),
                 left: 0,
                 right: 0,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Image.asset(
-                      themeController.activeTheme.id == 'adventurer'
-                          ? ImagePath.topframeAdventurer
-                          : themeController.activeTheme.id == 'mage'
-                          ? ImagePath.topframeMage
-                          : themeController.activeTheme.id == 'gamer'
-                          ? ImagePath.topframeGamer
-                          : ImagePath.topframeReader,
-                      width: w(290),
-                      height: h(98),
-                      fit: BoxFit.contain,
-                    ),
-                    // Companion image displayed in the center of topframe
-                    if (selectedCompanionImage != null &&
-                        selectedCompanionImage!.isNotEmpty)
+                child: SizedBox(
+                  width: w(290),
+                  height: h(100),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
                       Image.asset(
-                        selectedCompanionImage!,
-                        width: w(80),
-                        height: h(80),
+                        themeController.activeTheme.id == 'adventurer'
+                            ? ImagePath.topframeAdventurer
+                            : themeController.activeTheme.id == 'mage'
+                            ? ImagePath.topframeMage
+                            : themeController.activeTheme.id == 'gamer'
+                            ? ImagePath.topframeGamer
+                            : ImagePath.topframeReader,
+                        width: w(290),
+                        height: h(100),
                         fit: BoxFit.contain,
                       ),
-                  ],
+                      // Companion image displayed in the center of topframe
+                      if (selectedCompanionImage != null &&
+                          selectedCompanionImage!.isNotEmpty)
+                        Positioned(
+                          top: h(6),
+                          bottom: h(8),
+                          child: Image.asset(
+                            selectedCompanionImage!,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Close button
+              Positioned(
+                top: h(190),
+                right: w(8),
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context, rootNavigator: true).pop(),
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.6),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: themeController.activeTheme.accentGoldColor,
+                        width: 1.5,
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      size: 16,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ],

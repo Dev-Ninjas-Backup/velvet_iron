@@ -2,6 +2,7 @@
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
@@ -22,9 +23,11 @@ class HomeController extends GetxController {
   // ── Todo filter: 'Today' | 'Weekly' | 'Monthly' ──────────────
   final selectedTodoFilter = 'Today'.obs;
 
-  // Active companion image
+  // Active companion image & dialogue
   final activeCompanionImage = Rx<String?>(null);
   final activeCompanionName = Rx<String?>(null);
+  final dailyRewardQuote = Rx<String?>(null);
+  final companionGreeting = Rx<String?>(null);
 
   // ── Convenience getters ──────────────────────────────────────
 
@@ -104,6 +107,7 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     _loadCachedProfilePhoto();
+    _loadCachedCompanion();
     fetchData();
     fetchActiveCompanion();
 
@@ -118,6 +122,27 @@ class HomeController extends GetxController {
     if (cached != null && cached.isNotEmpty) {
       profilePhotoUrl.value = cached;
     }
+  }
+
+  Future<void> _loadCachedCompanion() async {
+    final cached = await SharedPreferencesHelper.getActiveCompanion();
+    if (cached != null) {
+      activeCompanionName.value = cached['name'];
+      activeCompanionImage.value = cached['imagePath'];
+      await _updateDialogueQuotes();
+    }
+  }
+
+  Future<void> _updateDialogueQuotes() async {
+    final companion = activeCompanionName.value ?? 'Thyra';
+    dailyRewardQuote.value = await CompanionDialogueEngine().getDialogue(
+      companionName: companion,
+      trigger: 'Streak',
+    );
+    companionGreeting.value = await CompanionDialogueEngine().getDialogue(
+      companionName: companion,
+      trigger: 'App Open / Welcome Back',
+    );
   }
 
   // ── Data fetching ────────────────────────────────────────────
@@ -190,6 +215,7 @@ class HomeController extends GetxController {
       if (companionData != null) {
         activeCompanionImage.value = companionData['imagePath'] as String?;
         activeCompanionName.value = companionData['name'] as String?;
+        await _updateDialogueQuotes();
         print(
           '[HomeController] Active Companion: ${activeCompanionName.value} → ${activeCompanionImage.value}',
         );

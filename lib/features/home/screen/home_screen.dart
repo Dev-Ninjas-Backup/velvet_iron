@@ -6,6 +6,7 @@ import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller
 import 'package:velvet_iron/features/home/widgets/mood_selector.dart';
 import 'package:velvet_iron/features/home/widgets/todo_list.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
+import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
 import 'package:velvet_iron/features/home/widgets/popup_dialogue.dart';
 import '../widgets/header_section.dart';
 import '../widgets/welcome_card.dart';
@@ -78,13 +79,36 @@ class HomeScreenContent extends StatefulWidget {
   State<HomeScreenContent> createState() => _HomeScreenContentState();
 }
 
-class _HomeScreenContentState extends State<HomeScreenContent> {
+class _HomeScreenContentState extends State<HomeScreenContent>
+    with WidgetsBindingObserver {
   bool _popupShown = false;
+  DateTime? _lastGreetingTime;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _showDailyRewardsPopup();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      final now = DateTime.now();
+      if (_lastGreetingTime == null ||
+          now.difference(_lastGreetingTime!).inMinutes >= 5) {
+        _lastGreetingTime = now;
+        CompanionDialogueEngine.showDialogueSnackbar(
+          trigger: 'App Open / Welcome Back',
+        );
+      }
+    }
   }
 
   /// Check if 24 hours have passed since last daily login XP collection
@@ -115,8 +139,8 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
     // Only show the popup once per screen load
     if (_popupShown) return;
 
-    // Small delay to let the screen render first
-    await Future.delayed(const Duration(milliseconds: 500));
+    // Delay to let screen transition fully finish
+    await Future.delayed(const Duration(milliseconds: 1500));
 
     if (!mounted) return;
 
@@ -124,7 +148,13 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
     final canShowPopup = await _can24HoursPassed();
 
     if (!canShowPopup) {
-      debugPrint('Daily XP popup already collected within 24 hours');
+      debugPrint('Daily XP popup already collected within 24 hours - Triggering automatic companion greeting');
+      _popupShown = true;
+      _lastGreetingTime = DateTime.now();
+      // Automatically greet the user on app launch / restart
+      CompanionDialogueEngine.showDialogueSnackbar(
+        trigger: 'App Open / Welcome Back',
+      );
       return;
     }
 
@@ -133,6 +163,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
 
     if (accessToken != null && refreshToken != null && mounted) {
       _popupShown = true;
+      _lastGreetingTime = DateTime.now();
       final homeController = Get.find<HomeController>();
       showDialog(
         context: context,
@@ -140,7 +171,9 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
           () => PopUpDialogue(
             accessToken: accessToken,
             refreshToken: refreshToken,
+            selectedCompanionName: homeController.activeCompanionName.value,
             selectedCompanionImage: homeController.activeCompanionImage.value,
+            quote: homeController.dailyRewardQuote.value,
             onCollectRewards: () {
               // Called on successful XP collection
               debugPrint('Daily rewards collected successfully');

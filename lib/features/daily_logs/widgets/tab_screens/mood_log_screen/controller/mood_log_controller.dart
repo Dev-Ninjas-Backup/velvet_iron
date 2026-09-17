@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/daily_logs/models/log_option_model.dart';
+import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_screen/model/mood_log_model.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_screen/service/mood_log_service.dart';
@@ -270,6 +271,14 @@ class MoodLogController extends GetxController {
       await Future.delayed(const Duration(milliseconds: 100));
       Get.back();
       EasyLoading.showSuccess('Mood logged Successfully');
+
+      final isRough = (mood == MoodType.tired ||
+          mood == MoodType.pissed ||
+          mood == MoodType.poor);
+      final trigger = isRough
+          ? 'Missed Goal / Rough Day'
+          : 'App Open / Welcome Back';
+      CompanionDialogueEngine.showDialogueSnackbar(trigger: trigger);
     } on MoodLogException catch (e) {
       debugPrint('MoodLog MoodLogException: $e');
       EasyLoading.showError(e.message);

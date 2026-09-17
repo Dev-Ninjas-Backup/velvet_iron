@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:app_links/app_links.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/app.dart';
@@ -99,10 +98,25 @@ void initDeepLinks() {
 
 void configLoading() {
   EasyLoading.instance
-    ..displayDuration = const Duration(milliseconds: 1000)
+    ..displayDuration = const Duration(milliseconds: 1800)
     ..indicatorType = EasyLoadingIndicatorType.ring
-    ..loadingStyle = EasyLoadingStyle.dark
-    ..maskType = EasyLoadingMaskType.black
+    ..loadingStyle = EasyLoadingStyle.custom
+    ..backgroundColor = const Color(0xFF1E1724)
+    ..indicatorColor = const Color(0xFFE9B86E)
+    ..textColor = const Color(0xFFFDE7BB)
+    ..progressColor = const Color(0xFFE9B86E)
+    ..maskColor = Colors.black.withValues(alpha: 0.55)
+    ..maskType = EasyLoadingMaskType.custom
+    ..radius = 16.0
+    ..boxShadow = [
+      const BoxShadow(
+        color: Color(0x55D4AF37),
+        blurRadius: 16,
+        spreadRadius: 1,
+      ),
+    ]
+    ..fontSize = 14.0
+    ..indicatorSize = 42.0
     ..userInteractions = false
     ..dismissOnTap = false;
 }

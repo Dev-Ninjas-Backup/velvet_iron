@@ -235,6 +235,7 @@ class ThemeScreen extends StatelessWidget {
           Color(0xFFBE32FF),
         ];
       case 'reader':
+      case 'scribe':
         return const [
           Color(0xFF00027B),
           Color(0xFF292CB7),
@@ -243,6 +244,7 @@ class ThemeScreen extends StatelessWidget {
           Color(0xFF3385FF),
         ];
       case 'gamer':
+      case 'realmwalker':
         return const [
           Color(0xFF111C18),
           Color(0xFF1E332C),

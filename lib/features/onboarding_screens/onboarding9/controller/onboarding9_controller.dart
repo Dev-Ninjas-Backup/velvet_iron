@@ -79,6 +79,10 @@ class OnboardingController9 extends GetxController {
     }
   }
 
+  void onSkipMedication() {
+    Get.toNamed(AppRoute.getonboardingScreen11());
+  }
+
   void onBackPressed() {
     Get.back();
   }
