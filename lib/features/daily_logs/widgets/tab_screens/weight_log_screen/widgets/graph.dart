@@ -102,8 +102,7 @@ class Graph extends StatelessWidget {
             if (!existingDates.contains(dateStr)) {
               final lbs = double.tryParse(h.weight);
               if (lbs != null && lbs > 0) {
-                final kg = (lbs / 2.20462).toStringAsFixed(1);
-                allEntries.add(WeeklyWeightEntry(date: dateStr, weight: kg));
+                allEntries.add(WeeklyWeightEntry(date: dateStr, weight: lbs.toStringAsFixed(1)));
                 existingDates.add(dateStr);
               }
             }
@@ -119,7 +118,7 @@ class Graph extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Weight Chart (kg)',
+                    'Weight Chart (lbs)',
                     style: getTextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,

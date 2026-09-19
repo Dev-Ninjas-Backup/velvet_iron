@@ -8,6 +8,8 @@ import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
 import 'package:velvet_iron/features/home/models/home_screen_model.dart';
 import 'package:velvet_iron/features/home/service/home_service.dart';
+import 'package:velvet_iron/features/quests/controller/quest_controller.dart';
+import 'package:velvet_iron/features/quests/model/quest_model.dart';
 
 class HomeController extends GetxController {
   final selectedMood = 1.obs;
@@ -111,8 +113,18 @@ class HomeController extends GetxController {
     fetchData();
     fetchActiveCompanion();
 
+    // Ensure QuestController is active
+    final questController = Get.isRegistered<QuestController>()
+        ? Get.find<QuestController>()
+        : Get.put(QuestController(), permanent: true);
+
     // Rebuild todos when filter changes
     ever(selectedTodoFilter, (_) {
+      _buildTodos();
+    });
+
+    // Rebuild todos when quests update
+    ever(questController.questsData, (_) {
       _buildTodos();
     });
   }
@@ -231,37 +243,88 @@ class HomeController extends GetxController {
 
   void _buildTodos() {
     final profile = userProfile.value;
-    if (profile == null) {
-      todos.clear();
-      return;
-    }
-
     List<ScheduleItem> scheduleItems = [];
 
-    // Get the appropriate schedule based on filter
-    if (selectedTodoFilter.value == 'Weekly') {
-      scheduleItems = profile.thisWeek.combined;
-    } else if (selectedTodoFilter.value == 'Monthly') {
-      scheduleItems = profile.thisMonth.combined;
-    } else {
-      // Default: 'Today'
-      scheduleItems = profile.todaySchedules.combined;
+    if (profile != null) {
+      if (selectedTodoFilter.value == 'Weekly') {
+        scheduleItems = profile.thisWeek.combined;
+      } else if (selectedTodoFilter.value == 'Monthly') {
+        scheduleItems = profile.thisMonth.combined;
+      } else {
+        // Default: 'Today'
+        scheduleItems = profile.todaySchedules.combined;
+      }
     }
 
-    // Convert ScheduleItem to HomeScreenModel
-    todos.assignAll(
-      scheduleItems.map((item) {
-        final iconPath = _getIconPathForScheduleType(item.type);
-        return HomeScreenModel(
+    final items = <HomeScreenModel>[];
+
+    // 1. Scheduled activities (medication, exercise, meals)
+    for (final item in scheduleItems) {
+      final iconPath = _getIconPathForScheduleType(item.type);
+      items.add(
+        HomeScreenModel(
+          id: item.id,
           title: item.title,
           sub: item.description,
           time: item.scheduledAt,
           iconPath: iconPath,
           xp: item.earnedXp,
           isChecked: item.details.isTaken.obs,
-        );
-      }).toList(),
-    );
+        ),
+      );
+    }
+
+    // 2. Active daily quests from QuestController (populate on Home screen)
+    final questController = Get.isRegistered<QuestController>()
+        ? Get.find<QuestController>()
+        : Get.put(QuestController(), permanent: true);
+
+    var quests = questController.questsData.value?.quests;
+    if (quests == null || quests.isEmpty) {
+      // Heroic daily quests fallback so Today's Quests is always populated
+      quests = const [
+        Quest(
+          id: 'daily_water',
+          title: 'Hydration of the Ancients',
+          description: 'Drink 8 glasses of water throughout the day',
+          xp: 15,
+          isDone: false,
+        ),
+        Quest(
+          id: 'daily_steps',
+          title: 'Stride of the Ranger',
+          description: 'Walk 5,000 steps or complete active movement',
+          xp: 25,
+          isDone: false,
+        ),
+        Quest(
+          id: 'daily_mindful',
+          title: 'Codex Reflection',
+          description: 'Log your daily mood & check in with your companion',
+          xp: 10,
+          isDone: false,
+        ),
+      ];
+    }
+
+    for (final quest in quests) {
+      items.add(
+        HomeScreenModel(
+          id: quest.id,
+          title: quest.title,
+          sub: quest.description,
+          time: 'Active Quest',
+          iconPath: IconPath.todo,
+          xp: quest.xp,
+          isChecked: quest.isDone.obs,
+          onToggle: () {
+            questController.completeQuest(quest.id);
+          },
+        ),
+      );
+    }
+
+    todos.assignAll(items);
 
     print(
       '[HomeController] _buildTodos() → ${todos.length} items built for ${selectedTodoFilter.value}',

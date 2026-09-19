@@ -5,6 +5,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:velvet_iron/core/services/revenuecat_service.dart';
+import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
+import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding11/service/onboarding11_service.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
@@ -37,6 +39,33 @@ class OnboardingController11 extends GetxController {
   void onInit() {
     super.onInit();
     loadOfferings();
+    loadActiveCompanion();
+  }
+
+  Future<void> loadActiveCompanion() async {
+    final cached = await SharedPreferencesHelper.getActiveCompanion();
+    if (cached != null && cached['imagePath'] != null && cached['imagePath']!.isNotEmpty) {
+      activeCompanionImage.value = cached['imagePath'];
+      activeCompanionName.value = cached['name'];
+    }
+    await fetchActiveCompanion();
+  }
+
+  static String resolveCompanionImage({
+    String? explicitPath,
+    String? themeId,
+  }) {
+    if (explicitPath != null && explicitPath.isNotEmpty) {
+      return explicitPath;
+    }
+    if (themeId == 'gamer') {
+      return ImagePath.generalLeon;
+    } else if (themeId == 'mage') {
+      return ImagePath.visepheron;
+    } else if (themeId == 'reader') {
+      return ImagePath.riven;
+    }
+    return ImagePath.thyra;
   }
 
   Future<void> loadOfferings() async {

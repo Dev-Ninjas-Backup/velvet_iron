@@ -78,7 +78,7 @@ class MedicationScreen extends StatelessWidget {
                             ),
                             const SizedBox(width: 10),
                             Text(
-                              "GLP-1 Medication",
+                              "Medication",
                               style: getTextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,

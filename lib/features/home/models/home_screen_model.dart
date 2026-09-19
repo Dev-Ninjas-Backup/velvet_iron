@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class UserProfile {
@@ -608,19 +609,23 @@ class ScheduleDetails {
 }
 
 class HomeScreenModel {
+  final String? id;
   final String title;
   final String sub;
   final String time;
   final String iconPath;
   final int xp;
   final RxBool isChecked;
+  final VoidCallback? onToggle;
 
   HomeScreenModel({
+    this.id,
     required this.title,
     required this.sub,
     required this.time,
     required this.iconPath,
     this.xp = 10,
     RxBool? isChecked,
+    this.onToggle,
   }) : isChecked = isChecked ?? false.obs;
 }

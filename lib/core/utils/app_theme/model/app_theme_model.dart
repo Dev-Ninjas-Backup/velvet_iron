@@ -131,7 +131,7 @@ class AppThemeModel {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
     ),
-    backgroundImage: ImagePath.backgroundThree,
+    backgroundImage: ImagePath.backgroundFour,
     cardBackgroundColor: const Color(0xFF1A4D3F),
     headerIconBackgroundColor: const Color(0xCC0D3A2E),
     progressBarGradient: const LinearGradient(
@@ -166,7 +166,7 @@ class AppThemeModel {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
     ),
-    backgroundImage: ImagePath.backgroundFour,
+    backgroundImage: ImagePath.backgroundThree,
     cardBackgroundColor: const Color(0xFF2D0E4A),
     headerIconBackgroundColor: const Color(0xCC1C0036),
     progressBarGradient: const LinearGradient(

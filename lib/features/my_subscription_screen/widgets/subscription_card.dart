@@ -4,6 +4,8 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
+import 'package:velvet_iron/features/settings/controller/setting_controller.dart';
 import '../controller/my_subscription_controller.dart';
 
 class SubscriptionCard extends StatelessWidget {
@@ -105,11 +107,46 @@ class SubscriptionCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.black26,
-                    child: Image.asset(ImagePath.premiumprofile),
-                  ),
+                  Obx(() {
+                    final companionImg = controller.activeCompanionImage.value ??
+                        (Get.isRegistered<HomeController>()
+                            ? Get.find<HomeController>().activeCompanionImage.value
+                            : null) ??
+                        (Get.isRegistered<SettingsController>()
+                            ? Get.find<SettingsController>().activeCompanionImage.value
+                            : null) ??
+                        (themeController.activeTheme.id == 'gamer'
+                            ? ImagePath.generalLeon
+                            : themeController.activeTheme.id == 'mage'
+                            ? ImagePath.visepheron
+                            : themeController.activeTheme.id == 'reader'
+                            ? ImagePath.riven
+                            : ImagePath.thyra);
+
+                    return Container(
+                      height: 95,
+                      width: 95,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: const Color(0xFFDCAA64),
+                          width: 1.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.5),
+                            blurRadius: 10,
+                          ),
+                        ],
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          companionImg,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  }),
                 ],
               ),
             ],

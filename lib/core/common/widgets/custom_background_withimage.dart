@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
+import 'package:velvet_iron/core/utils/constants/image_path.dart';
 
 class CustomBackgroundWithImage extends StatelessWidget {
   final Widget child;
@@ -12,38 +15,50 @@ class CustomBackgroundWithImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF1E0000), Color(0xFF680B0B)],
-        ),
-      ),
-
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          if (imageAsset != null)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Opacity(
-                opacity: .99,
-                child: Image.asset(
-                  imageAsset!,
-                  height: 378,
-                  width: 411,
-                  fit: BoxFit.contain,
-                  color: Color(0xFF680B0B),
+    return GetBuilder<AppThemeController>(
+      builder: (themeController) {
+        return Container(
+          decoration: BoxDecoration(
+            gradient: themeController.activeTheme.backgroundGradient,
+          ),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Positioned.fill(
+                child: Opacity(
+                  opacity: 0.2,
+                  child: Image.asset(
+                    themeController.activeTheme.backgroundImage,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-
-          child,
-        ],
-      ),
+              if (imageAsset != null)
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Opacity(
+                    opacity: 1.0,
+                    child: Image.asset(
+                      themeController.activeTheme.id == 'reader'
+                          ? ImagePath.magicImageBlue
+                          : themeController.activeTheme.id == 'mage'
+                          ? ImagePath.magicImagePurple
+                          : themeController.activeTheme.id == 'gamer'
+                          ? ImagePath.magicImageGreen
+                          : ImagePath.magicImageRed,
+                      height: 378,
+                      width: 411,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              child,
+            ],
+          ),
+        );
+      },
     );
   }
 }

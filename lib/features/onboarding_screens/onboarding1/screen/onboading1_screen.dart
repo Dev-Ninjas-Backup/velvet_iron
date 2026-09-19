@@ -23,6 +23,15 @@ class OnboadingScreen1 extends StatelessWidget {
             ),
             child: Stack(
               children: [
+                Positioned.fill(
+                  child: Opacity(
+                    opacity: 0.2,
+                    child: Image.asset(
+                      themeController.activeTheme.backgroundImage,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
                 Positioned(
                   top: 0,
                   left: 0,

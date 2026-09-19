@@ -63,7 +63,7 @@ class ScheduleContentMedication extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Dose Name:",
+              "Medication Name:",
               style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
             ),
             const SizedBox(height: 10),
@@ -75,7 +75,7 @@ class ScheduleContentMedication extends StatelessWidget {
               children: [
                 Flexible(
                   child: Text(
-                    "Medicine Type:",
+                    "Medication Type:",
                     style: getTextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,

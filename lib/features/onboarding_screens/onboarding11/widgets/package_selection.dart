@@ -5,7 +5,6 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
-import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding11/controller/onboarding11_controller.dart';
 
@@ -52,16 +51,26 @@ class PackageSelectionWidget extends StatelessWidget {
                         style: getTextStyle(fontSize: 16, color: Colors.white),
                       ),
                       const Spacer(),
-                      _buildGradientText(
-                        'Free Trial',
-                        fontSize: 20,
-                        themeController: themeController,
-                      ),
-                      Text(
-                        ' / 3 days',
-                        style: getTextStyle(
-                          fontSize: 12,
-                          color: Colors.white54,
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _buildGradientText(
+                                'Free Trial',
+                                fontSize: 20,
+                                themeController: themeController,
+                              ),
+                              Text(
+                                ' / 3 days',
+                                style: getTextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white54,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -86,7 +95,7 @@ class PackageSelectionWidget extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Padding(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: const EdgeInsets.fromLTRB(16, 18, 10, 18),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -109,24 +118,28 @@ class PackageSelectionWidget extends StatelessWidget {
                                 ],
                               ),
                               const SizedBox(height: 12),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.baseline,
-                                textBaseline: TextBaseline.alphabetic,
-                                children: [
-                                  _buildGradientText(
-                                    controller.priceText,
-                                    fontSize: 24,
-                                    themeController: themeController,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    controller.billingPeriodText,
-                                    style: getTextStyle(
-                                      fontSize: 10,
-                                      color: Colors.white38,
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                                  textBaseline: TextBaseline.alphabetic,
+                                  children: [
+                                    _buildGradientText(
+                                      controller.priceText,
+                                      fontSize: 24,
+                                      themeController: themeController,
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      controller.billingPeriodText,
+                                      style: getTextStyle(
+                                        fontSize: 10,
+                                        color: Colors.white38,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                               const SizedBox(height: 16),
 
@@ -222,14 +235,19 @@ class PackageSelectionWidget extends StatelessWidget {
                                     ],
                                   ),
                                   child: ClipOval(
-                                    child: Image.asset(
-                                      ImagePath.premiumprofile,
-                                      fit: BoxFit.cover,
-                                      color: themeController
-                                          .activeTheme
-                                          .accentGoldColor,
-                                      colorBlendMode: BlendMode.overlay,
-                                    ),
+                                    child: Obx(() {
+                                      final companionImg = controller
+                                              .activeCompanionImage.value ??
+                                          OnboardingController11
+                                              .resolveCompanionImage(
+                                            themeId:
+                                                themeController.activeTheme.id,
+                                          );
+                                      return Image.asset(
+                                        companionImg,
+                                        fit: BoxFit.cover,
+                                      );
+                                    }),
                                   ),
                                 ),
                               ),

@@ -28,7 +28,7 @@ class ScanCodeButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Scan Code',
+              'Scan Barcode',
               style: getTextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w400,

@@ -125,7 +125,7 @@ class CompanionDialogueEngine {
         return ImagePath.visepheronFull;
       case 'riven':
       default:
-        return ImagePath.riven;
+        return ImagePath.rivenFull;
     }
   }
 
@@ -151,29 +151,138 @@ class CompanionDialogueEngine {
       );
       final portrait = getPortraitPath(effectiveName);
       final displayName = getDisplayName(effectiveName);
+      final displayTitle = getDisplayTitle(effectiveName);
 
       debugPrint(
-        '[CompanionDialogueEngine] Displaying snackbar for $displayName: "$quote"',
+        '[CompanionDialogueEngine] Displaying banner for $displayName: "$quote"',
       );
 
-      Get.snackbar(
-        displayName,
-        '"$quote"',
+      Get.rawSnackbar(
         snackPosition: SnackPosition.TOP,
-        backgroundColor: const Color(0xFF161922),
-        colorText: const Color(0xFFF1E5CD),
-        icon: Padding(
-          padding: const EdgeInsets.all(6),
-          child: CircleAvatar(
-            backgroundImage: AssetImage(portrait),
-            backgroundColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
+        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        padding: EdgeInsets.zero,
+        borderRadius: 16,
+        duration: duration,
+        animationDuration: const Duration(milliseconds: 350),
+        messageText: Container(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF1B1E29), Color(0xFF10121A)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFFECC266), width: 1.5),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.6),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+              BoxShadow(
+                color: const Color(0xFFECC266).withValues(alpha: 0.18),
+                blurRadius: 8,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Prominent Companion Bust (72x72)
+              Container(
+                width: 72,
+                height: 72,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFFECC266), width: 2),
+                  gradient: RadialGradient(
+                    colors: [
+                      const Color(0xFFECC266).withValues(alpha: 0.25),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+                child: ClipOval(
+                  child: Image.asset(
+                    portrait,
+                    fit: BoxFit.cover,
+                    width: 72,
+                    height: 72,
+                    errorBuilder: (_, __, ___) => const Icon(
+                      Icons.person,
+                      color: Color(0xFFECC266),
+                      size: 36,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              // Companion Dialogue Content
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            displayName,
+                            style: const TextStyle(
+                              color: Color(0xFFECC266),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFECC266).withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                              color: const Color(0xFFECC266).withValues(alpha: 0.4),
+                              width: 0.8,
+                            ),
+                          ),
+                          child: Text(
+                            displayTitle,
+                            style: const TextStyle(
+                              color: Color(0xFFD4AF37),
+                              fontSize: 9.5,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '"$quote"',
+                      style: const TextStyle(
+                        color: Color(0xFFF1E5CD),
+                        fontSize: 13,
+                        fontStyle: FontStyle.italic,
+                        height: 1.25,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
-        duration: duration,
-        borderColor: const Color(0xFFECC266),
-        borderWidth: 1.5,
-        margin: const EdgeInsets.all(12),
-        borderRadius: 16,
       );
     } catch (e) {
       debugPrint('[CompanionDialogueEngine] Error showing snackbar: $e');

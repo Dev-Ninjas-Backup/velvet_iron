@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 // ignore_for_file: avoid_print
@@ -148,6 +147,30 @@ class QuestController extends GetxController {
     questsData.value = current.copyWith(quests: combined);
   }
 
+  static const List<Quest> defaultDailyQuests = [
+    Quest(
+      id: 'daily_water',
+      title: 'Hydration of the Ancients',
+      description: 'Drink 8 glasses of water throughout the day',
+      xp: 15,
+      isDone: false,
+    ),
+    Quest(
+      id: 'daily_steps',
+      title: 'Stride of the Ranger',
+      description: 'Walk 5,000 steps or complete active movement',
+      xp: 25,
+      isDone: false,
+    ),
+    Quest(
+      id: 'daily_mindful',
+      title: 'Codex Reflection',
+      description: 'Log your daily mood & check in with your companion',
+      xp: 10,
+      isDone: false,
+    ),
+  ];
+
   Future<void> fetchQuests() async {
     try {
       isLoading(true);
@@ -155,10 +178,26 @@ class QuestController extends GetxController {
       await _loadCustomQuests();
       try {
         final data = await _service.getQuests();
-        questsData(data);
+        if (data.quests.isEmpty) {
+          questsData(
+            DailyQuestResponse(
+              todayTotalXp: data.todayTotalXp,
+              todayLogCount: data.todayLogCount,
+              quests: List.from(defaultDailyQuests),
+            ),
+          );
+        } else {
+          questsData(data);
+        }
       } catch (e) {
         print('Using local custom quests fallback: $e');
-        questsData(DailyQuestResponse(todayTotalXp: 0, todayLogCount: 0, quests: []));
+        questsData(
+          DailyQuestResponse(
+            todayTotalXp: 0,
+            todayLogCount: 0,
+            quests: List.from(defaultDailyQuests),
+          ),
+        );
       }
       _mergeCustomQuestsIntoData();
     } catch (e) {
@@ -208,31 +247,11 @@ class QuestController extends GetxController {
         try {
           final cached = await SharedPreferencesHelper.getActiveCompanion();
           final companionName = cached?['name'] ?? 'Thyra';
-          final quote = await CompanionDialogueEngine().getDialogue(
+          // Companion dialogue celebration with enlarged portrait bust
+          CompanionDialogueEngine.showDialogueSnackbar(
             trigger: 'Quest Completed',
             companionName: companionName,
-          );
-          final portrait = CompanionDialogueEngine.getPortraitPath(companionName);
-          final displayName = CompanionDialogueEngine.getDisplayName(companionName);
-
-          Get.snackbar(
-            '$displayName • +${quest.xp} XP',
-            '"$quote"',
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: const Color(0xFF161922),
-            colorText: const Color(0xFFF1E5CD),
-            icon: Padding(
-              padding: const EdgeInsets.all(6),
-              child: CircleAvatar(
-                backgroundImage: AssetImage(portrait),
-                backgroundColor: Colors.transparent,
-              ),
-            ),
             duration: const Duration(seconds: 4),
-            borderColor: const Color(0xFFECC266),
-            borderWidth: 1.5,
-            margin: const EdgeInsets.all(12),
-            borderRadius: 16,
           );
         } catch (e) {
           print('Could not display companion quest dialogue: $e');

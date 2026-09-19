@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:velvet_iron/core/services/revenuecat_service.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
+import 'package:velvet_iron/features/home/service/home_service.dart';
 
 class MySubscriptionController extends GetxController {
   RxBool isPremium = false.obs;
@@ -17,10 +18,30 @@ class MySubscriptionController extends GetxController {
   RxString renewDate = "".obs;
   RxString expireDate = "".obs;
 
+  final Rx<String?> activeCompanionImage = Rx<String?>(null);
+  final Rx<String?> activeCompanionName = Rx<String?>(null);
+
   @override
   void onInit() {
     super.onInit();
     fetchSubscriptionStatus();
+    loadCompanion();
+  }
+
+  Future<void> loadCompanion() async {
+    final cached = await SharedPreferencesHelper.getActiveCompanion();
+    if (cached != null && cached['imagePath'] != null && cached['imagePath']!.isNotEmpty) {
+      activeCompanionImage.value = cached['imagePath'];
+      activeCompanionName.value = cached['name'];
+    } else {
+      try {
+        final companionData = await HomeService().fetchActiveCompanion();
+        if (companionData != null && companionData['imagePath'] != null) {
+          activeCompanionImage.value = companionData['imagePath'] as String?;
+          activeCompanionName.value = companionData['name'] as String?;
+        }
+      } catch (_) {}
+    }
   }
 
   Future<void> fetchSubscriptionStatus() async {

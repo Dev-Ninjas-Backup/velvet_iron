@@ -59,11 +59,16 @@ class SplashController extends GetxController {
       if (isComplete) {
         Get.offAllNamed(AppRoute.bottomNavScreen);
       } else {
-        Get.offAllNamed(AppRoute.welcomeScreen);
+        final isLoggedIn = await SharedPreferencesHelper.checkLogin();
+        if (isLoggedIn) {
+          Get.offAllNamed(AppRoute.bottomNavScreen);
+        } else {
+          Get.offAllNamed(AppRoute.welcomeScreen);
+        }
       }
     } catch (e) {
-      // On error, default to home screen
-      Get.offAllNamed(AppRoute.getHomeScreen());
+      // On error, default to bottomNavScreen
+      Get.offAllNamed(AppRoute.bottomNavScreen);
     }
   }
 }

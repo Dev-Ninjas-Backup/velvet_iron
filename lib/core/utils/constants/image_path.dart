@@ -69,6 +69,10 @@ class ImagePath {
   static const String pathMage = 'assets/images/paths/path_mage.png';
   static const String pathRealmwalker = 'assets/images/paths/path_realmwalker.png';
   static const String pathScribe = 'assets/images/paths/path_scribe.png';
+  static const String emblemAdventurer = 'assets/images/paths/emblem_adventurer.png';
+  static const String emblemMage = 'assets/images/paths/emblem_mage.png';
+  static const String emblemRealmwalker = 'assets/images/paths/emblem_realmwalker.png';
+  static const String emblemScribe = 'assets/images/paths/emblem_scribe.png';
 
   // Master Companion Artworks
   static const String thyra = 'assets/images/companions/thyra_portrait.png';
@@ -77,6 +81,7 @@ class ImagePath {
   static const String generalLeonFull = 'assets/images/companions/general_leon_full.png';
   static const String visepheron = 'assets/images/companions/visepheron_portrait.png';
   static const String visepheronFull = 'assets/images/companions/visepheron_full.png';
+  static const String rivenFull = 'assets/images/companions/riven_full.png';
 
   // Backward compatibility alias / mappings
   static const String serKael = 'assets/images/companions/thyra_portrait.png';

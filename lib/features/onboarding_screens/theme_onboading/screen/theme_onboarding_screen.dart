@@ -28,6 +28,15 @@ class ThemeOnboardingScreen extends StatelessWidget {
             ),
             child: Stack(
               children: [
+                Positioned.fill(
+                  child: Opacity(
+                    opacity: 0.2,
+                    child: Image.asset(
+                      themeController.activeTheme.backgroundImage,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
                 // Background image with theme color
                 Positioned(
                   top: 0,

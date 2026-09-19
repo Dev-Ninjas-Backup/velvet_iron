@@ -55,7 +55,7 @@ class TokenContentMedication extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Dose Name:",
+              "Medication Name:",
               style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
             ),
             const SizedBox(height: 10),
@@ -67,7 +67,7 @@ class TokenContentMedication extends StatelessWidget {
               children: [
                 Flexible(
                   child: Text(
-                    "Medicine Type:",
+                    "Medication Type:",
                     style: getTextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,

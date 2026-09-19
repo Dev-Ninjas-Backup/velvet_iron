@@ -24,9 +24,9 @@ class MedicineFormWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Dose Name
+              // Medication Name
               Text(
-                'Dose Name:',
+                'Medication Name:',
                 style: getTextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -48,7 +48,7 @@ class MedicineFormWidget extends StatelessWidget {
                   controller: controller.doseNameController,
                   style: getTextStyle(fontSize: 14, color: Colors.white),
                   decoration: InputDecoration(
-                    hintText: 'Enter medicine name',
+                    hintText: 'Enter medication name',
                     hintStyle: getTextStyle(
                       fontSize: 12,
                       color: Colors.white.withValues(alpha: 0.4),
@@ -64,7 +64,7 @@ class MedicineFormWidget extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Medicine Type:',
+                    'Medication Type:',
                     style: getTextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,

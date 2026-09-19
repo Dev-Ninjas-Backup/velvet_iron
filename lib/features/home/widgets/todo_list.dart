@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/empty_state_card.dart';
+import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/home/controller/home_controller.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
@@ -28,7 +29,7 @@ class TodoSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "To-do Lists",
+                  "Today's Quests",
                   style: getTextStyle(color: Colors.white, fontSize: 18),
                 ),
                 Container(
@@ -77,7 +78,7 @@ class TodoSection extends StatelessWidget {
                 return EmptyStateCard(
                   icon: Icons.checklist_rtl_rounded,
                   title:
-                      "No to-dos scheduled for ${homeController.selectedTodoFilter.value.toLowerCase()}",
+                      "No quests scheduled for ${homeController.selectedTodoFilter.value.toLowerCase()}",
                   subtitle:
                       "Complete quests and log daily activities to build your streak!",
                 );
@@ -115,20 +116,31 @@ class _TodoTile extends StatelessWidget {
           ? IconPath.doticonGamer
           : IconPath.doticonReader;
 
-      return Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: theme.cardBackgroundColor.withValues(alpha: .7),
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Row(
-          children: [
-            Image.asset(
-              todo.isChecked.value ? dotIcon : IconPath.whitecircle,
-              width: 24,
-              height: 24,
-            ),
+      return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          if (!todo.isChecked.value) {
+            todo.isChecked.value = true;
+            todo.onToggle?.call();
+            CompanionDialogueEngine.showDialogueSnackbar(
+              trigger: 'Quest Completed',
+            );
+          }
+        },
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: theme.cardBackgroundColor.withValues(alpha: .7),
+            borderRadius: BorderRadius.circular(18),
+          ),
+          child: Row(
+            children: [
+              Image.asset(
+                todo.isChecked.value ? dotIcon : IconPath.whitecircle,
+                width: 24,
+                height: 24,
+              ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -178,7 +190,8 @@ class _TodoTile extends StatelessWidget {
             ),
           ],
         ),
-      );
-    });
-  }
+      ),
+    );
+  });
+}
 }

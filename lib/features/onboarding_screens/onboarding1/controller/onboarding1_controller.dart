@@ -1,5 +1,6 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding1/model/companion_model.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding1/service/onboarding1_service.dart';
@@ -67,6 +68,12 @@ class OnboardingController1 extends GetxController {
 
     final selected = companions[selectedIndex.value!];
 
+    // Save locally immediately so downstream onboarding screens know the selection
+    await SharedPreferencesHelper.saveActiveCompanion(
+      name: selected.name,
+      imagePath: selected.imagePath,
+    );
+
     try {
       EasyLoading.show(status: 'Binding soul with ${selected.name}...');
 
@@ -75,10 +82,11 @@ class OnboardingController1 extends GetxController {
       if (success) {
         Get.toNamed(AppRoute.getonboadingScreen2());
       } else {
-        Get.snackbar('Error', 'Could not bind companion. Try again.');
+        // Fallback: still proceed since companion is saved locally
+        Get.toNamed(AppRoute.getonboadingScreen2());
       }
     } catch (e) {
-      Get.snackbar('Error', 'Something went wrong: $e');
+      Get.toNamed(AppRoute.getonboadingScreen2());
     } finally {
       EasyLoading.dismiss();
     }

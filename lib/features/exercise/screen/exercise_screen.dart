@@ -91,7 +91,7 @@ class ExerciseScreen extends StatelessWidget {
                                                 'gamer'
                                           ? 'assets/icons/letter_gamer.png'
                                           : 'assets/icons/letter_reader.png',
-                                      title: "Logged Exercise",
+                                      title: "Exercises Logged",
                                       value: controller.totalCount.value
                                           .toString(),
                                       rewardAmount: controller
@@ -131,7 +131,7 @@ class ExerciseScreen extends StatelessWidget {
                                                 'gamer'
                                           ? 'assets/icons/time_gamer.png'
                                           : 'assets/icons/time_reader.png',
-                                      title: "Pending Exercise ",
+                                      title: "Time Trained",
                                       value: nextScheduleStr,
                                       rewardAmount: "$totalScheduledXp+",
                                     );
@@ -142,7 +142,7 @@ class ExerciseScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
                           Text(
-                            "Log a Exercise",
+                            "Log an Exercise",
                             style: getTextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,

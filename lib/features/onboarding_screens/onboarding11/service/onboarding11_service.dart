@@ -111,17 +111,16 @@ class Onboarding11Service {
 
   /// Map companion name to image path
   static String _getImagePath(String name) {
-    switch (name) {
-      case 'Ser Kael Thornwatch':
-        return ImagePath.serKael;
-      case 'Riven Ashcroft':
-        return ImagePath.rvenAshcroft;
-      case 'Pyraxis':
-        return ImagePath.pyraxis;
-      case 'Bram Ironledger':
-        return ImagePath.bramIronledger;
-      default:
-        return ImagePath.serKael;
+    final lower = name.toLowerCase();
+    if (lower.contains('thyra') || lower.contains('kael')) {
+      return ImagePath.thyra;
+    } else if (lower.contains('leon') || lower.contains('bram')) {
+      return ImagePath.generalLeon;
+    } else if (lower.contains('visepheron') || lower.contains('pyraxis') || lower.contains('pyrax')) {
+      return ImagePath.visepheron;
+    } else if (lower.contains('riven')) {
+      return ImagePath.riven;
     }
+    return ImagePath.thyra;
   }
 }

@@ -62,7 +62,6 @@ class AboutTrainingScreen extends StatelessWidget {
                                     controller.selectedSection.value,
                                 onSectionChanged: controller.selectSection,
                                 features: controller.features,
-                                partnerFeatures: controller.partnerFeatures,
                                 expandedSections: controller.expandedSections,
                                 onSectionToggle: controller.toggleSection,
                                 selectedFeatureIndices:
@@ -70,8 +69,6 @@ class AboutTrainingScreen extends StatelessWidget {
                                 onFeatureToggle: controller.toggleFeature,
                               ),
                             ),
-                            const SizedBox(height: 20),
-                            const IntroSectionWidget(),
                             const SizedBox(height: 40),
                           ],
                         ),

@@ -506,7 +506,7 @@
 				DEVELOPMENT_TEAM = 5A886TX42V;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Velvet & Iron";
+				INFOPLIST_KEY_CFBundleDisplayName = "Velvet & Iron Training Codex";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -698,7 +698,7 @@
 				DEVELOPMENT_TEAM = 5A886TX42V;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Velvet & Iron";
+				INFOPLIST_KEY_CFBundleDisplayName = "Velvet & Iron Training Codex";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -730,7 +730,7 @@
 				DEVELOPMENT_TEAM = 5A886TX42V;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Velvet & Iron";
+				INFOPLIST_KEY_CFBundleDisplayName = "Velvet & Iron Training Codex";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -153,7 +153,6 @@ class ExpandableSectionsContainer extends StatelessWidget {
   final int selectedSection;
   final Function(int) onSectionChanged;
   final List<AboutTrainingModel> features;
-  final List<AboutTrainingModel> partnerFeatures;
   final Set<int> expandedSections;
   final Function(int) onSectionToggle;
   final Map<int, Set<int>> selectedFeatureIndices;
@@ -163,7 +162,6 @@ class ExpandableSectionsContainer extends StatelessWidget {
     required this.selectedSection,
     required this.onSectionChanged,
     required this.features,
-    required this.partnerFeatures,
     required this.expandedSections,
     required this.onSectionToggle,
     required this.selectedFeatureIndices,
@@ -176,21 +174,12 @@ class ExpandableSectionsContainer extends StatelessWidget {
     return Column(
       children: [
         ExpandableSectionWidget(
-          sectionTitle: 'Why to use Velvet & Iron Training Codex?',
+          sectionTitle: 'Why Velvet & Iron?',
           features: features,
           isExpanded: expandedSections.contains(0),
           onToggle: () => onSectionToggle(0),
           selectedIndices: selectedFeatureIndices[0] ?? {},
           onFeatureToggle: (featureIndex) => onFeatureToggle(0, featureIndex),
-        ),
-        const SizedBox(height: 8),
-        ExpandableSectionWidget(
-          sectionTitle: 'The Codex Philosophy',
-          features: partnerFeatures,
-          isExpanded: expandedSections.contains(1),
-          onToggle: () => onSectionToggle(1),
-          selectedIndices: selectedFeatureIndices[1] ?? {},
-          onFeatureToggle: (featureIndex) => onFeatureToggle(1, featureIndex),
         ),
       ],
     );

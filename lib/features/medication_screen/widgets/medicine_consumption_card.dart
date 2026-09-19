@@ -73,7 +73,7 @@ class MedicineConsumptionCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "Medicine Consumption",
+                      "Medication Tracking",
                       style: getTextStyle(fontSize: 16, color: Colors.white),
                     ),
                     const Spacer(),
