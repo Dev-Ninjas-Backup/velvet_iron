@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/widgets/custom_back_button.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
-import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding4/controller/onboarding4_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding4/widgets/gender_selection.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding4/widgets/onboarding4_widget.dart';
@@ -30,26 +29,6 @@ class OnboardingScreen4 extends StatelessWidget {
                     child: Image.asset(
                       themeController.activeTheme.backgroundImage,
                       fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: Opacity(
-                    opacity: 1.0,
-                    child: Image.asset(
-                      themeController.activeTheme.id == 'reader'
-                          ? ImagePath.magicImageBlue
-                          : themeController.activeTheme.id == 'mage'
-                          ? ImagePath.magicImagePurple
-                          : themeController.activeTheme.id == 'gamer'
-                          ? ImagePath.magicImageGreen
-                          : ImagePath.magicImageRed,
-                      height: 378,
-                      width: 411,
-                      fit: BoxFit.contain,
                     ),
                   ),
                 ),

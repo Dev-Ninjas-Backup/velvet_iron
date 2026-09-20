@@ -3,7 +3,6 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:velvet_iron/core/common/widgets/custom_background_withimage.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button_two.dart';
-import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/onboarding_screens/welcome_boarding/controller/user_boarding_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/welcome_boarding/widgets/user_boarding_widget.dart';
 
@@ -16,7 +15,6 @@ class WelcomeScreen extends StatelessWidget {
 
     return Scaffold(
       body: CustomBackgroundWithImage(
-        imageAsset: ImagePath.magicImage,
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
