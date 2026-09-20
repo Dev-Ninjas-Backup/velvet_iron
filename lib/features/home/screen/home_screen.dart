@@ -8,6 +8,7 @@ import 'package:velvet_iron/features/home/widgets/todo_list.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
 import 'package:velvet_iron/features/home/widgets/popup_dialogue.dart';
+import 'package:velvet_iron/features/home/widgets/companion_full_body_dialogue.dart';
 import '../widgets/header_section.dart';
 import '../widgets/welcome_card.dart';
 import '../widgets/weight_progress.dart';
@@ -47,7 +48,7 @@ class HomeScreen extends StatelessWidget {
                   right: 0,
                   bottom: 0,
                   child: Opacity(
-                    opacity: 0.2,
+                    opacity: 0.40,
                     child: Image.asset(
                       themeController.activeTheme.backgroundImage,
                       fit: BoxFit.cover,
@@ -144,42 +145,72 @@ class _HomeScreenContentState extends State<HomeScreenContent>
 
     if (!mounted) return;
 
-    // Check if 24 hours have passed since last collection
-    final canShowPopup = await _can24HoursPassed();
+    final isShownToday =
+        await SharedPreferencesHelper.isFullBodyGreetingShownToday();
+    final canCollectXp = await _can24HoursPassed();
+    final homeController =
+        Get.isRegistered<HomeController>() ? Get.find<HomeController>() : null;
+    final compNameVal = homeController?.activeCompanionName.value;
+    final String activeCompanion = (compNameVal != null && compNameVal.isNotEmpty)
+        ? compNameVal
+        : 'Thyra';
 
-    if (!canShowPopup) {
-      debugPrint('Daily XP popup already collected within 24 hours - Triggering automatic companion greeting');
+    final accessToken = await SharedPreferencesHelper.getAccessToken() ?? '';
+    final refreshToken = await SharedPreferencesHelper.getRefreshToken() ?? '';
+
+    if (!isShownToday) {
       _popupShown = true;
       _lastGreetingTime = DateTime.now();
-      // Automatically greet the user on app launch / restart
-      CompanionDialogueEngine.showDialogueSnackbar(
+
+      // Retrieve dynamic daily open quote
+      final quote = await CompanionDialogueEngine().getDialogue(
         trigger: 'App Open / Welcome Back',
+        companionName: activeCompanion,
       );
-      return;
-    }
 
-    final accessToken = await SharedPreferencesHelper.getAccessToken();
-    final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+      if (!mounted) return;
 
-    if (accessToken != null && refreshToken != null && mounted) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => CompanionFullBodyDialogue(
+          companionName: activeCompanion,
+          contextMoment: 'daily_greeting',
+          quote: quote,
+          xpReward: canCollectXp ? 25 : 0,
+          accessToken: accessToken.isNotEmpty ? accessToken : null,
+          refreshToken: refreshToken.isNotEmpty ? refreshToken : null,
+          onClaim: () {
+            debugPrint('Daily full-body greeting completed');
+          },
+        ),
+      );
+    } else if (canCollectXp && accessToken.isNotEmpty && refreshToken.isNotEmpty) {
+      if (!mounted) return;
+      // If already greeted with full body today, but 24h XP cooldown reset, show standard collect dialog
       _popupShown = true;
       _lastGreetingTime = DateTime.now();
-      final homeController = Get.find<HomeController>();
       showDialog(
         context: context,
         builder: (BuildContext context) => Obx(
           () => PopUpDialogue(
             accessToken: accessToken,
             refreshToken: refreshToken,
-            selectedCompanionName: homeController.activeCompanionName.value,
-            selectedCompanionImage: homeController.activeCompanionImage.value,
-            quote: homeController.dailyRewardQuote.value,
+            selectedCompanionName: activeCompanion,
+            selectedCompanionImage: homeController?.activeCompanionImage.value,
+            quote: homeController?.dailyRewardQuote.value,
             onCollectRewards: () {
-              // Called on successful XP collection
               debugPrint('Daily rewards collected successfully');
             },
           ),
         ),
+      );
+    } else {
+      // Return to app later in the day: show smaller portrait dialogue banner as requested
+      _popupShown = true;
+      _lastGreetingTime = DateTime.now();
+      CompanionDialogueEngine.showDialogueSnackbar(
+        trigger: 'App Open / Welcome Back',
       );
     }
   }

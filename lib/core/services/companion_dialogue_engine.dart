@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/home/controller/home_controller.dart';
+import 'package:velvet_iron/features/home/widgets/companion_full_body_dialogue.dart';
 
 class CompanionDialogueEngine {
   static final CompanionDialogueEngine _instance =
@@ -286,6 +287,51 @@ class CompanionDialogueEngine {
       );
     } catch (e) {
       debugPrint('[CompanionDialogueEngine] Error showing snackbar: $e');
+    }
+  }
+
+  /// Display a full-body companion dialogue modal for major achievements / special moments
+  /// e.g. 'quest_complete' (All Quests Completed), 'level_up' (Leveling up), 'streak' (Streak Milestone)
+  static Future<void> showFullBodySpecialMoment({
+    required BuildContext context,
+    required String contextMoment,
+    String? trigger,
+    String? companionName,
+    String? customQuote,
+    int xpReward = 0,
+    VoidCallback? onContinue,
+  }) async {
+    try {
+      final homeController = Get.isRegistered<HomeController>()
+          ? Get.find<HomeController>()
+          : null;
+      final cached = await SharedPreferencesHelper.getActiveCompanion();
+      final effectiveName = companionName ??
+          homeController?.activeCompanionName.value ??
+          cached?['name'] ??
+          'Thyra';
+
+      final quote = customQuote ??
+          await CompanionDialogueEngine().getDialogue(
+            trigger: trigger ?? 'All Quests Completed',
+            companionName: effectiveName,
+          );
+
+      if (!context.mounted) return;
+
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (dialogCtx) => CompanionFullBodyDialogue(
+          companionName: effectiveName,
+          quote: quote,
+          contextMoment: contextMoment,
+          xpReward: xpReward,
+          onClaim: onContinue,
+        ),
+      );
+    } catch (e) {
+      debugPrint('[CompanionDialogueEngine] Error showing full-body modal: $e');
     }
   }
 

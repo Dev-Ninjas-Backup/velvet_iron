@@ -37,14 +37,14 @@ class SelectCompanion extends StatelessWidget {
                 name,
                 style: getTextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-
-            const Spacer(),
+            const SizedBox(width: 8),
             if (badgeText != null)
               GetBuilder<AppThemeController>(
                 builder: (themeController) {

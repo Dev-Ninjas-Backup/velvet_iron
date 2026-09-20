@@ -5,7 +5,7 @@ class ImagePath {
   static const String demoGraph = 'assets/images/graph_demo.png';
   static const String bram = 'assets/images/bram.png';
   static const String pyrax = 'assets/images/pyraxis.png';
-  static const String riven = 'assets/images/riven.png';
+  static const String legacyRiven = 'assets/images/riven.png';
   static const String serkael = 'assets/images/serkael.png';
   static const String profile = 'assets/images/Profilepic.png';
   static const String tree = 'assets/images/tree.png';
@@ -74,14 +74,36 @@ class ImagePath {
   static const String emblemRealmwalker = 'assets/images/paths/emblem_realmwalker.png';
   static const String emblemScribe = 'assets/images/paths/emblem_scribe.png';
 
-  // Master Companion Artworks
+  // Master Companion Artworks & Full Poses
   static const String thyra = 'assets/images/companions/thyra_portrait.png';
   static const String thyraFull = 'assets/images/companions/thyra_full.png';
+  static const String thyraPose1 = 'assets/images/companions/thyra_pose_1.png';
+  static const String thyraPose2 = 'assets/images/companions/thyra_pose_2.png';
+  static const String thyraPose3 = 'assets/images/companions/thyra_pose_3.png';
+  static const String thyraPose4 = 'assets/images/companions/thyra_pose_4.png';
+  static const String thyraPose5 = 'assets/images/companions/thyra_pose_5.png';
+
   static const String generalLeon = 'assets/images/companions/general_leon_portrait.png';
   static const String generalLeonFull = 'assets/images/companions/general_leon_full.png';
+  static const String leonPose1 = 'assets/images/companions/leon_pose_1.png';
+  static const String leonPose2 = 'assets/images/companions/leon_pose_2.png';
+  static const String leonPose3 = 'assets/images/companions/leon_pose_3.png';
+  static const String leonPose4 = 'assets/images/companions/leon_pose_4.png';
+  static const String leonPose5 = 'assets/images/companions/leon_pose_5.png';
+
   static const String visepheron = 'assets/images/companions/visepheron_portrait.png';
   static const String visepheronFull = 'assets/images/companions/visepheron_full.png';
+  static const String visepheronPose1 = 'assets/images/companions/visepheron_pose_1.png';
+  static const String visepheronPose2 = 'assets/images/companions/visepheron_pose_2.png';
+  static const String visepheronPose3 = 'assets/images/companions/visepheron_pose_3.png';
+  static const String visepheronPose4 = 'assets/images/companions/visepheron_pose_4.png';
+
+  static const String riven = 'assets/images/companions/riven_portrait.png';
   static const String rivenFull = 'assets/images/companions/riven_full.png';
+  static const String rivenPose1 = 'assets/images/companions/riven_pose_1.png';
+  static const String rivenPose2 = 'assets/images/companions/riven_pose_2.png';
+  static const String rivenPose3 = 'assets/images/companions/riven_pose_3.png';
+  static const String rivenPose4 = 'assets/images/companions/riven_pose_4.png';
 
   // Backward compatibility alias / mappings
   static const String serKael = 'assets/images/companions/thyra_portrait.png';

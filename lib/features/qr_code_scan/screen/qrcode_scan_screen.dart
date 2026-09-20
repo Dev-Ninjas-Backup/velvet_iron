@@ -37,7 +37,7 @@ class QrcodeScanScreen extends StatelessWidget {
                 left: 0,
                 right: 0,
                 child: Opacity(
-                  opacity: 0.2,
+                  opacity: 0.40,
                   child: Image.asset(
                     themeController.activeTheme.backgroundImage,
                     width: 378,

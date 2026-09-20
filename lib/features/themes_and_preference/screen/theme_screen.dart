@@ -28,7 +28,7 @@ class ThemeScreen extends StatelessWidget {
                 ),
               ),
               Opacity(
-                opacity: 0.2,
+                opacity: 0.40,
                 child: Image.asset(
                   themeController.activeTheme.backgroundImage,
                   fit: BoxFit.cover,
@@ -115,7 +115,7 @@ class ThemeScreen extends StatelessWidget {
                                                 )
                                               : isUnlocked
                                               ? Image.asset(
-                                                  IconPath.goldencircle,
+                                                  IconPath.whitecircle,
                                                 )
                                               : Image.asset(IconPath.lock),
                                           onTap: isActive
@@ -172,9 +172,11 @@ class ThemeScreen extends StatelessWidget {
                                       children: [
                                         SelectCompanion(
                                           leadingIcon: Image.asset(
-                                            isActive || isUnlocked
-                                                ? 'assets/icons/goldencircle.png'
-                                                : 'assets/icons/lock.png',
+                                            isActive
+                                                ? IconPath.goldencircle
+                                                : isUnlocked
+                                                ? IconPath.whitecircle
+                                                : IconPath.lock,
                                             fit: BoxFit.contain,
                                           ),
                                           avatar: Image.asset(

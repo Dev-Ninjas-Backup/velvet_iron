@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/features/home/models/home_screen_model.dart';
 import 'package:velvet_iron/features/profile/model/update_profile_model.dart';
@@ -87,11 +88,27 @@ class ProfileService {
       final file = File(profilePhotoPath);
       if (await file.exists()) {
         final ext = profilePhotoPath.split('.').last.toLowerCase();
-        final mimeType = ext == 'png' ? 'image/png' : 'image/jpeg';
+        String mimeType = 'image/jpeg';
+        if (ext == 'png') {
+          mimeType = 'image/png';
+        } else if (ext == 'webp') {
+          mimeType = 'image/webp';
+        } else if (ext == 'gif') {
+          mimeType = 'image/gif';
+        }
+
+        final fileName = profilePhotoPath.split('/').last;
+        final safeFileName = fileName.contains('.') ? fileName : '$fileName.jpg';
+
         request.files.add(
-          await http.MultipartFile.fromPath('profilePhoto', profilePhotoPath),
+          await http.MultipartFile.fromPath(
+            'profilePhoto',
+            profilePhotoPath,
+            filename: safeFileName,
+            contentType: MediaType.parse(mimeType),
+          ),
         );
-        debugPrint('Attaching image: $profilePhotoPath ($mimeType)');
+        debugPrint('Attaching image: $profilePhotoPath ($mimeType, filename: $safeFileName)');
       } else {
         debugPrint('Profile Image file not found: $profilePhotoPath');
       }

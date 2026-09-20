@@ -27,7 +27,7 @@ class ThemeData {
     return ThemeData(
       id: json['id'] ?? '',
       name: json['name'] ?? '',
-      isActive: json['isAcitve'] ?? false, // Note: API has typo
+      isActive: (json['isActive'] == true || json['isAcitve'] == true),
       isUnlocked: json['isUnlocked'] ?? false,
       tagline: json['tagline'] ?? '',
       description: json['description'] ?? '',

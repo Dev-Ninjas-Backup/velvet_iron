@@ -9,6 +9,8 @@ import 'package:velvet_iron/features/themes_and_preference/model/theme_model.dar
 import 'package:velvet_iron/features/themes_and_preference/model/companion_model.dart';
 import 'package:velvet_iron/features/themes_and_preference/service/themes_service.dart';
 import 'package:velvet_iron/features/themes_and_preference/service/companions_service.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
+import 'package:velvet_iron/features/settings/controller/setting_controller.dart';
 
 class ThemesController extends GetxController {
   // index of selected theme
@@ -90,6 +92,7 @@ class ThemesController extends GetxController {
         final activeThemeIndex = mappedThemes.indexWhere((t) {
           final apiTheme = apiThemes.firstWhere(
             (api) =>
+                api.id == t.apiId ||
                 api.name.toLowerCase() == t.title.toLowerCase() ||
                 (t.title.toLowerCase() == 'scribe' &&
                     api.name.toLowerCase() == 'reader') ||
@@ -214,10 +217,12 @@ class ThemesController extends GetxController {
         final companionModels = _mapCompanionData(apiCompanions);
         companions.assignAll(companionModels);
 
-        // Find and select the active companion
-        final activeCompanionIndex = companionModels.indexWhere((c) {
+        // Find and select the active companion by apiId or isActive flag
+        int activeCompanionIndex = companionModels.indexWhere((c) {
           final apiCompanion = apiCompanions.firstWhere(
-            (api) => api.name.toLowerCase() == c.name.toLowerCase(),
+            (api) =>
+                api.id == c.apiId ||
+                (api.id.isNotEmpty && api.id == c.id),
             orElse: () => CompanionData(
               id: '',
               name: '',
@@ -230,6 +235,36 @@ class ThemesController extends GetxController {
           );
           return apiCompanion.isActive;
         });
+
+        if (activeCompanionIndex == -1) {
+          // Fallback: check directly if any in apiCompanions has isActive == true
+          final directApiIndex =
+              apiCompanions.indexWhere((api) => api.isActive);
+          if (directApiIndex != -1 &&
+              directApiIndex < companionModels.length) {
+            activeCompanionIndex = directApiIndex;
+          }
+        }
+
+        if (activeCompanionIndex == -1) {
+          // Fallback: check cached active companion from SharedPreferences
+          final cached = await SharedPreferencesHelper.getActiveCompanion();
+          if (cached != null && cached['name'] != null) {
+            final cachedName = cached['name']!.toLowerCase();
+            final cachedIndex = companionModels.indexWhere((c) =>
+                c.name.toLowerCase().contains(cachedName) ||
+                cachedName.contains(c.name.toLowerCase()) ||
+                (cachedName.contains('pyrax') &&
+                    c.name.toLowerCase().contains('visepheron')) ||
+                (cachedName.contains('kael') &&
+                    c.name.toLowerCase().contains('thyra')) ||
+                (cachedName.contains('bram') &&
+                    c.name.toLowerCase().contains('leon')));
+            if (cachedIndex != -1) {
+              activeCompanionIndex = cachedIndex;
+            }
+          }
+        }
 
         if (activeCompanionIndex != -1) {
           selectedCompanionIndex.value = activeCompanionIndex;
@@ -433,6 +468,28 @@ class ThemesController extends GetxController {
       if (result['success'] == true) {
         EasyLoading.showSuccess('Companion activated!');
         selectedCompanionIndex.value = index;
+
+        // Persist active companion locally so all screens update immediately
+        await SharedPreferencesHelper.saveActiveCompanion(
+          name: companion.name,
+          imagePath: companion.avatarPath,
+        );
+
+        // Update HomeController if registered
+        if (Get.isRegistered<HomeController>()) {
+          final home = Get.find<HomeController>();
+          home.activeCompanionName.value = companion.name;
+          home.activeCompanionImage.value = companion.avatarPath;
+          home.fetchData();
+        }
+
+        // Update SettingsController if registered
+        if (Get.isRegistered<SettingsController>()) {
+          final settings = Get.find<SettingsController>();
+          settings.activeCompanionName.value = companion.name;
+          settings.activeCompanionImage.value = companion.avatarPath;
+        }
+
         await _loadCompanionsFromApi();
       } else {
         EasyLoading.showError(

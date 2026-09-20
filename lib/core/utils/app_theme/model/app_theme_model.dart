@@ -49,7 +49,7 @@ class AppThemeModel {
     id: 'adventurer',
     name: 'Adventurer',
     backgroundGradient: const LinearGradient(
-      colors: [Color(0xFF1E0000), Color(0xFF680B0B)],
+      colors: [Color(0xFF120303), Color(0xFF2C0707)],
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
     ),
@@ -92,7 +92,7 @@ class AppThemeModel {
     id: 'reader',
     name: 'Scribe',
     backgroundGradient: const LinearGradient(
-      colors: [Color(0xFF001A47), Color(0xFF1C1E8F)],
+      colors: [Color(0xFF030D1E), Color(0xFF0C1B3E)],
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
     ),
@@ -127,7 +127,7 @@ class AppThemeModel {
     id: 'gamer',
     name: 'Realmwalker',
     backgroundGradient: const LinearGradient(
-      colors: [Color(0xFF0E2D22), Color(0xFF105234)],
+      colors: [Color(0xFF04140D), Color(0xFF0B2418)],
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
     ),
@@ -162,7 +162,7 @@ class AppThemeModel {
     id: 'mage',
     name: 'Mage',
     backgroundGradient: const LinearGradient(
-      colors: [Color(0xFF1C0036), Color(0xFF360B5E)],
+      colors: [Color(0xFF10021F), Color(0xFF22083D)],
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
     ),

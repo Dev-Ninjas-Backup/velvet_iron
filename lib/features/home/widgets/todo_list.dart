@@ -122,9 +122,20 @@ class _TodoTile extends StatelessWidget {
           if (!todo.isChecked.value) {
             todo.isChecked.value = true;
             todo.onToggle?.call();
-            CompanionDialogueEngine.showDialogueSnackbar(
-              trigger: 'Quest Completed',
-            );
+            final homeController = Get.find<HomeController>();
+            final allDone = homeController.todos.isNotEmpty &&
+                homeController.todos.every((t) => t.isChecked.value);
+            if (allDone) {
+              CompanionDialogueEngine.showFullBodySpecialMoment(
+                context: context,
+                contextMoment: 'quest_complete',
+                trigger: 'All Quests Completed',
+              );
+            } else {
+              CompanionDialogueEngine.showDialogueSnackbar(
+                trigger: 'Quest Completed',
+              );
+            }
           }
         },
         child: Container(

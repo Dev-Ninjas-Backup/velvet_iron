@@ -29,7 +29,7 @@ class ThemeOnboardingScreen extends StatelessWidget {
               children: [
                 Positioned.fill(
                   child: Opacity(
-                    opacity: 0.2,
+                    opacity: 0.40,
                     child: Image.asset(
                       themeController.activeTheme.backgroundImage,
                       fit: BoxFit.cover,

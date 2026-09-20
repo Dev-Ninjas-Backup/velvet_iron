@@ -214,4 +214,20 @@ class SharedPreferencesHelper {
     }
     return null;
   }
+
+  // Full-body daily greeting tracking
+  static const String _lastFullBodyGreetingDateKey = 'lastFullBodyGreetingDate';
+
+  static Future<bool> isFullBodyGreetingShownToday() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final lastDate = prefs.getString(_lastFullBodyGreetingDateKey);
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    return lastDate == today;
+  }
+
+  static Future<void> markFullBodyGreetingShownToday() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    await prefs.setString(_lastFullBodyGreetingDateKey, today);
+  }
 }
