@@ -62,7 +62,7 @@ class RevenueCatService {
     try {
       if (!_isConfigured) await init();
       Offerings offerings = await Purchases.getOfferings();
-      return offerings.current;
+      return offerings.current ?? offerings.all.values.firstOrNull;
     } catch (e) {
       debugPrint('Error fetching offerings: $e');
       return null;

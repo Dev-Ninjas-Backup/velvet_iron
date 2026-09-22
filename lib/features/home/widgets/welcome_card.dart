@@ -15,10 +15,10 @@ class WelcomeCard extends StatelessWidget {
         final activeTheme =
             themeController.currentTheme.value ?? AppThemeModel.adventurerTheme;
 
-        // Path-specific decorative symbol, codex book, title, and subtitle
+        // Path-specific decorative symbol, codex book, role name, and subtitle
         String leftImage = ImagePath.emblemAdventurer;
         String rightImage = 'assets/images/book.png';
-        String title = "Welcome Back, Adventurer";
+        String themeRole = "Adventurer";
         String subtitle =
             "Your journey to wellness is a heroic quest. Track your daily progress.";
 
@@ -26,42 +26,43 @@ class WelcomeCard extends StatelessWidget {
           case 'mage': // Purple theme
             leftImage = ImagePath.emblemMage;
             rightImage = 'assets/images/book.png';
-            title = "Welcome Back, Mage";
+            themeRole = "Mage";
             subtitle = "Mastery grows quiet before it grows visible.";
             break;
           case 'reader': // Scribe (Blue) theme
             leftImage = ImagePath.emblemScribe;
             rightImage = ImagePath.blueBook;
-            title = "Welcome Back, Scribe";
+            themeRole = "Scribe";
             subtitle =
                 "The librarian closes the book and whispers: 'It's your turn now.'";
             break;
           case 'gamer': // Realmwalker (Green) theme
             leftImage = ImagePath.emblemRealmwalker;
             rightImage = ImagePath.greenBook;
-            title = "Welcome Back, Realmwalker";
+            themeRole = "Realmwalker";
             subtitle = "Your stamina bar isn't going to refill itself.";
             break;
           default: // Adventurer (Red) theme
             leftImage = ImagePath.emblemAdventurer;
             rightImage = 'assets/images/book.png';
-            title = "Welcome Back, Adventurer";
+            themeRole = "Adventurer";
             subtitle =
                 "Your journey to wellness is a heroic quest. Track your daily progress.";
         }
 
         return Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
             color: activeTheme.cardBackgroundColor,
             borderRadius: BorderRadius.circular(15),
           ),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(
                 leftImage,
-                height: 92,
-                width: 92,
+                height: 68,
+                width: 68,
                 fit: BoxFit.contain,
               ),
               const SizedBox(width: 10),
@@ -71,34 +72,50 @@ class WelcomeCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      title,
+                      "Welcome Back,",
                       textAlign: TextAlign.start,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                       style: getTextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        color: Colors.white.withValues(alpha: 0.95),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 1),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        themeRole,
+                        textAlign: TextAlign.start,
+                        style: getTextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
                     Text(
                       subtitle,
                       textAlign: TextAlign.start,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: getTextStyle(
-                        color: Colors.white.withValues(alpha: 0.9),
+                        color: Colors.white.withValues(alpha: 0.85),
                         fontSize: 10,
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(width: 6),
+              const SizedBox(width: 8),
               SizedBox(
-                width: 90,
-                child: Image.asset(rightImage, height: 110, fit: BoxFit.contain),
+                width: 68,
+                height: 85,
+                child: Image.asset(
+                  rightImage,
+                  fit: BoxFit.contain,
+                ),
               ),
             ],
           ),

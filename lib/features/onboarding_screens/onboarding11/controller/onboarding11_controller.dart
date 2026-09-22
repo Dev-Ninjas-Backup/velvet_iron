@@ -1,12 +1,14 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:velvet_iron/core/services/revenuecat_service.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
+import 'package:velvet_iron/core/utils/helpers/app_helper.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding11/service/onboarding11_service.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
@@ -150,56 +152,94 @@ class OnboardingController11 extends GetxController {
     }
   }
 
-  Future<void> onContinueSubscription() async {
+  /// Attempts to purchase the selected package via RevenueCat.
+  /// Returns `true` if purchase succeeds.
+  /// Returns `false` if cancelled, failed, or products unavailable.
+  Future<bool> purchaseSelectedPackage() async {
     try {
-      // 1. If user selected paid Premium, trigger RevenueCat purchase
-      if (selectedPackage.value == PackageType.premium) {
-        EasyLoading.show(status: 'Processing subscription...');
+      Package? packageToBuy = selectedBilling.value == BillingType.monthly
+          ? monthlyPackage
+          : annualPackage;
 
-        Package? packageToBuy = selectedBilling.value == BillingType.monthly
-            ? monthlyPackage
-            : annualPackage;
+      // If not loaded yet, fetch now
+      if (packageToBuy == null) {
+        EasyLoading.show(status: 'Loading subscription options...');
+        final offering = await RevenueCatService.getCurrentOffering();
+        if (offering != null) {
+          monthlyPackage ??= offering.monthly ??
+              offering.availablePackages.firstWhereOrNull(
+                (p) =>
+                    p.identifier == '\$rc_monthly' ||
+                    p.storeProduct.identifier.contains('monthly'),
+              );
+          annualPackage ??= offering.annual ??
+              offering.availablePackages.firstWhereOrNull(
+                (p) =>
+                    p.identifier == '\$rc_annual' ||
+                    p.storeProduct.identifier.contains('annual'),
+              );
+          update();
 
-        // If not loaded yet, fetch now
-        if (packageToBuy == null) {
-          final offering = await RevenueCatService.getCurrentOffering();
-          if (offering != null) {
-            packageToBuy = selectedBilling.value == BillingType.monthly
-                ? (offering.monthly ??
-                    offering.availablePackages.firstWhereOrNull(
-                      (p) =>
-                          p.identifier == '\$rc_monthly' ||
-                          p.storeProduct.identifier.contains('monthly'),
-                    ))
-                : (offering.annual ??
-                    offering.availablePackages.firstWhereOrNull(
-                      (p) =>
-                          p.identifier == '\$rc_annual' ||
-                          p.storeProduct.identifier.contains('annual'),
-                    ));
-          }
+          packageToBuy = selectedBilling.value == BillingType.monthly
+              ? monthlyPackage
+              : annualPackage;
         }
-
-        if (packageToBuy != null) {
-          final customerInfo = await RevenueCatService.purchasePackage(
-            packageToBuy,
-          );
-
-          // If user cancelled, dismiss and stop
-          if (customerInfo == null) {
-            EasyLoading.dismiss();
-            return;
-          }
-        } else {
-          debugPrint(
-            'RevenueCat: Package not found in offering, proceeding with registration flow',
-          );
-        }
-      } else {
-        EasyLoading.show(status: 'Activating Free Trial...');
       }
 
-      // 2. Call backend service to complete onboarding
+      // If still null, do NOT silently bypass. Show error dialog to user.
+      if (packageToBuy == null) {
+        EasyLoading.dismiss();
+        AppHelperFunctions.showAlert(
+          'Subscription Unavailable',
+          'Unable to load subscription products from the App Store / Google Play. Please check your internet connection or try again later.',
+        );
+        return false;
+      }
+
+      EasyLoading.show(status: 'Processing subscription...');
+      final customerInfo = await RevenueCatService.purchasePackage(
+        packageToBuy,
+      );
+      EasyLoading.dismiss();
+
+      if (customerInfo == null) {
+        // User cancelled the store purchase modal
+        return false;
+      }
+
+      return true;
+    } on PlatformException catch (e) {
+      EasyLoading.dismiss();
+      final errorCode = PurchasesErrorHelper.getErrorCode(e);
+      if (errorCode == PurchasesErrorCode.purchaseCancelledError) {
+        debugPrint('User cancelled purchase');
+        return false;
+      }
+      AppHelperFunctions.showAlert(
+        'Purchase Error',
+        e.message ?? 'An error occurred during purchase. Please try again.',
+      );
+      return false;
+    } catch (e) {
+      EasyLoading.dismiss();
+      AppHelperFunctions.showAlert(
+        'Purchase Error',
+        'An error occurred: ${e.toString()}',
+      );
+      return false;
+    }
+  }
+
+  /// Finalizes onboarding on the backend and navigates to the home screen
+  Future<void> completeOnboardingFlow() async {
+    try {
+      EasyLoading.show(
+        status: selectedPackage.value == PackageType.free
+            ? 'Activating Free Trial...'
+            : 'Finalizing account...',
+      );
+
+      // Call backend service to complete onboarding
       final result = await _service.completeOnboarding();
 
       if (result['success'] == true) {
@@ -220,5 +260,10 @@ class OnboardingController11 extends GetxController {
     } catch (e) {
       EasyLoading.showError('Error: ${e.toString()}');
     }
+  }
+
+  /// Alias for backward compatibility
+  Future<void> onContinueSubscription() async {
+    await completeOnboardingFlow();
   }
 }

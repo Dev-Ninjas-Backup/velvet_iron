@@ -54,7 +54,7 @@ class AppThemeModel {
       end: Alignment.bottomCenter,
     ),
     backgroundImage: ImagePath.backgroundOne,
-    cardBackgroundColor: const Color(0xFF5A1515).withValues(alpha: .5),
+    cardBackgroundColor: const Color(0xFF421313),
     headerIconBackgroundColor: const Color(0xCC521212),
     progressBarGradient: const LinearGradient(
       colors: [
@@ -97,7 +97,7 @@ class AppThemeModel {
       end: Alignment.bottomCenter,
     ),
     backgroundImage: ImagePath.backgroundTwo,
-    cardBackgroundColor: const Color(0xFF292DA9),
+    cardBackgroundColor: const Color(0xFF162544),
     headerIconBackgroundColor: const Color(0xCC0A1F47),
     progressBarGradient: const LinearGradient(
       colors: [Color(0xFF8A95A5), Color(0xFFE2E6EF), Color(0xFF9FAAB9)],
@@ -108,7 +108,7 @@ class AppThemeModel {
     borderColor: const Color(0xFF384370),
     accentGoldColor: const Color(0xFFDDE2ED), // Metallic silver accent
     moodBorderColor: const Color(0xFF384370),
-    todoSubtitleColor: const Color(0xFF292DA9),
+    todoSubtitleColor: const Color(0xFF263B66),
     todoTimeColor: const Color(0xFF4B6B94),
     popupBackgroundColor: const Color(0xFF808080),
     graphColor: const Color(0xFFC0C7D8), // Polished silver
@@ -117,7 +117,7 @@ class AppThemeModel {
       Color(0xFFE2E6EF),
       Color(0xFF8A95A5),
     ],
-    textfieldColor: Color(0xFF141694),
+    textfieldColor: Color(0xFF101B30),
     dateNameborder: Color(0xFFC0C7D8),
     textColor: Color(0xFFDDE2ED),
   );

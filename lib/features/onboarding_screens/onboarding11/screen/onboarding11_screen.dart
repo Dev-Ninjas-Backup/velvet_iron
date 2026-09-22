@@ -62,9 +62,21 @@ class OnboardingScreen11 extends StatelessWidget {
                             () => CustomButton(
                               label: controller.buttonLabel,
                               onPressed: () async {
-                                // Fetch active companion first
+                                // 1. Preload active companion details
                                 await controller.fetchActiveCompanion();
 
+                                // 2. If Premium is selected, trigger StoreKit / Google Play purchase FIRST
+                                if (controller.selectedPackage.value ==
+                                    PackageType.premium) {
+                                  final success =
+                                      await controller.purchaseSelectedPackage();
+                                  if (!success) {
+                                    // User cancelled, purchase failed, or product unavailable
+                                    return;
+                                  }
+                                }
+
+                                // 3. Only show SubscriptionCompletionPopup AFTER payment succeeds (or for free trial)
                                 if (!context.mounted) return;
                                 showDialog(
                                   context: context,
@@ -76,7 +88,7 @@ class OnboardingScreen11 extends StatelessWidget {
                                       selectedCompanionImage:
                                           controller.activeCompanionImage.value,
                                       onCollectRewards: () {
-                                        controller.onContinueSubscription();
+                                        controller.completeOnboardingFlow();
                                       },
                                     ),
                                   ),
