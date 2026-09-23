@@ -95,7 +95,7 @@ class UserProfileWidget extends StatelessWidget {
           }
 
           return Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(vertical: 16),
             child: Row(
               children: [
                 /// Avatar
@@ -142,7 +142,7 @@ class UserProfileWidget extends StatelessWidget {
                             () => Text(
                               controller.levelStatus.value,
                               style: getTextStyle(
-                                fontSize: 20,
+                                fontSize: 18,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),

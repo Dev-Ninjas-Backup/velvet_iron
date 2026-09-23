@@ -17,7 +17,8 @@ class ScanActionButtons extends StatelessWidget {
               child: GestureDetector(
                 child: OutlinedButton(
                   onPressed: () {
-                    Get.back();
+                    final scanController = Get.find<ScanBarcodeController>();
+                    scanController.clearFields();
                   },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.white),
@@ -46,18 +47,20 @@ class ScanActionButtons extends StatelessWidget {
                     final fats = scanController.fats.text.trim();
                     final calories = scanController.calories.text.trim();
 
-                    if (carbs.isNotEmpty &&
-                        protein.isNotEmpty &&
-                        fats.isNotEmpty) {
+                    if (carbs.isNotEmpty ||
+                        protein.isNotEmpty ||
+                        fats.isNotEmpty ||
+                        calories.isNotEmpty) {
                       mealLogController.populateNutritionFromScan(
-                        carbs: carbs,
-                        protein: protein,
-                        fats: fats,
-                        calories: calories,
+                        carbs: carbs.isNotEmpty ? carbs : '0',
+                        protein: protein.isNotEmpty ? protein : '0',
+                        fats: fats.isNotEmpty ? fats : '0',
+                        calories: calories.isNotEmpty ? calories : null,
                       );
                       debugPrint(
                         '[ScanActionButtons] Data transferred to MealLogController with calories: $calories',
                       );
+                      Get.back();
                     } else {
                       debugPrint(
                         '[ScanActionButtons] ⚠️ Nutrition fields are empty',
@@ -67,8 +70,8 @@ class ScanActionButtons extends StatelessWidget {
                     debugPrint(
                       '[ScanActionButtons] ❌ Error transferring data: $e',
                     );
+                    Get.back();
                   }
-                  Get.back();
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 12),

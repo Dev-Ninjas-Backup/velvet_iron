@@ -617,6 +617,7 @@ class HomeScreenModel {
   final int xp;
   final RxBool isChecked;
   final VoidCallback? onToggle;
+  final VoidCallback? onTap;
 
   HomeScreenModel({
     this.id,
@@ -627,5 +628,6 @@ class HomeScreenModel {
     this.xp = 10,
     RxBool? isChecked,
     this.onToggle,
+    this.onTap,
   }) : isChecked = isChecked ?? false.obs;
 }

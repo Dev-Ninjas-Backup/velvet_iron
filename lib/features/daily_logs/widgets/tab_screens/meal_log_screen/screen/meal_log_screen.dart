@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
+import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
 import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
-import 'package:velvet_iron/features/daily_logs/widgets/gradient_option_button.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/daily_log_tab_bar.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/meal_tab_switcher.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/controller/meal_log_controller.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/calorie_consumption_card.dart';
@@ -39,7 +40,13 @@ class MealLog extends StatelessWidget {
                   children: [
                     const SizedBox(width: 16),
                     GestureDetector(
-                      onTap: () => Get.back(),
+                      onTap: () {
+                        if (Navigator.canPop(context)) {
+                          Get.back();
+                        } else if (Get.isRegistered<BottomNavController>()) {
+                          Get.find<BottomNavController>().changeTabIndex(0);
+                        }
+                      },
                       child: Container(
                         decoration: BoxDecoration(
                           color: themeController.activeTheme.todoSubtitleColor
@@ -78,36 +85,7 @@ class MealLog extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Obx(
-                                () => CustomGradientOptionButton(
-                                  text: "Weight Log",
-                                  isSelected:
-                                      dailyLogController.selectedTab.value == 0,
-                                  onPressed: () => dailyLogController.setTab(0),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Obx(
-                                () => CustomGradientOptionButton(
-                                  text: "Mood Log",
-                                  isSelected:
-                                      dailyLogController.selectedTab.value == 1,
-                                  onPressed: () => dailyLogController.setTab(1),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Obx(
-                                () => CustomGradientOptionButton(
-                                  text: "Meal Log",
-                                  isSelected:
-                                      dailyLogController.selectedTab.value == 2,
-                                  onPressed: () => dailyLogController.setTab(2),
-                                ),
-                              ),
-                            ],
-                          ),
+                          DailyLogTabBar(controller: dailyLogController),
                           const SizedBox(height: 20),
                           const CalorieConsumptionCard(),
                           const SizedBox(height: 15),

@@ -103,4 +103,33 @@ class HomeService {
     }
     return ImagePath.thyra;
   }
+
+  /// Fetch dynamic contextual companion dialogue from backend
+  Future<Map<String, dynamic>?> fetchCompanionDialogue() async {
+    try {
+      final token = await SharedPreferencesHelper.getAccessToken();
+      final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+      if (token == null || token.isEmpty) return null;
+
+      final response = await http.get(
+        Uri.parse(Urls.companionDialogue),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'x-refresh-token': refreshToken ?? '',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        if (data['status'] == 'success' && data['data'] != null) {
+          return data['data'] as Map<String, dynamic>;
+        }
+      }
+      return null;
+    } catch (e) {
+      print('[HomeService] Error fetching companion dialogue: $e');
+      return null;
+    }
+  }
 }

@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class ScanBarcodeController extends GetxController {
@@ -14,6 +16,7 @@ class ScanBarcodeController extends GetxController {
   final fats = TextEditingController();
   final calories = TextEditingController();
 
+  String productName = '';
   String lastScannedValue = '';
   bool isProcessing = false;
 
@@ -32,7 +35,7 @@ class ScanBarcodeController extends GetxController {
     debugPrint('[ScanBarcodeController] MobileScannerController initialized');
   }
 
-  /// Called from CameraBox when a barcode is detected.
+  /// Called from CameraBox or manual test when a barcode is detected.
   void onBarcodeDetected(String rawValue) {
     debugPrint('[onBarcodeDetected] Raw value: "$rawValue"');
 
@@ -48,35 +51,61 @@ class ScanBarcodeController extends GetxController {
     isProcessing = true;
     lastScannedValue = rawValue;
 
-    mobileScannerController.stop();
+    try {
+      mobileScannerController.stop();
+    } catch (_) {}
     debugPrint('[onBarcodeDetected] Scanner paused');
 
-    // FIX: Look up nutrition from Open Food Facts API
-    _fetchNutritionFromApi(rawValue);
+    // Check if it's formatted query/colon/json string
+    if (_isFormattedString(rawValue)) {
+      setNutritionFromBarcode(rawValue);
+      isProcessing = false;
+    } else {
+      // Look up nutrition from Open Food Facts API
+      _fetchNutritionFromApi(rawValue);
+    }
+  }
+
+  bool _isFormattedString(String s) {
+    return s.contains('carbs') || s.contains('protein') || s.contains('fats');
   }
 
   Future<void> _fetchNutritionFromApi(String barcode) async {
     debugPrint('[_fetchNutritionFromApi] Looking up barcode: $barcode');
+    EasyLoading.show(status: 'Scanning product...');
 
     try {
       final uri = Uri.parse(
         'https://world.openfoodfacts.org/api/v0/product/$barcode.json',
       );
 
-      final response = await http.get(uri);
+      final response = await http.get(
+        uri,
+        headers: {
+          'User-Agent': 'VelvetIronApp/1.0 (contact@velvetiron.com)',
+        },
+      ).timeout(const Duration(seconds: 12));
+
       debugPrint(
         '[_fetchNutritionFromApi] Status code: ${response.statusCode}',
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        debugPrint('[_fetchNutritionFromApi] Full response: $data');
+        debugPrint('[_fetchNutritionFromApi] Full response status: ${data['status']}');
 
-        if (data['status'] == 1) {
-          final nutriments = data['product']['nutriments'];
+        if (data['status'] == 1 && data['product'] != null) {
+          final product = data['product'];
+          final pName = product['product_name'] ??
+              product['product_name_en'] ??
+              product['generic_name'] ??
+              'Product Found';
+          productName = pName.toString();
+
+          final nutriments = product['nutriments'] ?? {};
           debugPrint('[_fetchNutritionFromApi] Nutriments: $nutriments');
 
-          // Values are per 100g — adjust key names if needed
+          // Values are per 100g
           final carbsVal = nutriments['carbohydrates_100g']?.toString() ?? '';
           final proteinVal = nutriments['proteins_100g']?.toString() ?? '';
           final fatsVal = nutriments['fat_100g']?.toString() ?? '';
@@ -105,25 +134,65 @@ class ScanBarcodeController extends GetxController {
           calories.text = caloriesVal;
 
           update();
+          EasyLoading.showSuccess('Found: $productName');
         } else {
-          debugPrint(
-            '[_fetchNutritionFromApi] ❌ Product not found in database',
-          );
+          debugPrint('[_fetchNutritionFromApi] ❌ Product not found in database');
+          productName = '';
+          update();
+          EasyLoading.showInfo('Product not found. You can enter nutrition manually.');
         }
       } else {
-        debugPrint(
-          '[_fetchNutritionFromApi] ❌ HTTP error: ${response.statusCode}',
-        );
+        debugPrint('[_fetchNutritionFromApi] ❌ HTTP error: ${response.statusCode}');
+        EasyLoading.showError('Could not reach food database (${response.statusCode})');
       }
     } catch (e) {
       debugPrint('[_fetchNutritionFromApi] ❌ Exception: $e');
+      EasyLoading.showError('Failed to fetch product data');
     } finally {
-      // FIX: Reset so the same barcode can be scanned again if needed
-      lastScannedValue = '';
       isProcessing = false;
+    }
+  }
 
+  void clearFields() {
+    carbs.clear();
+    protein.clear();
+    fats.clear();
+    calories.clear();
+    productName = '';
+    lastScannedValue = '';
+    isProcessing = false;
+    try {
       mobileScannerController.start();
-      debugPrint('[_fetchNutritionFromApi] Scanner resumed');
+    } catch (_) {}
+    update();
+  }
+
+  void testSampleBarcode([String barcode = '3017620422003']) {
+    lastScannedValue = '';
+    onBarcodeDetected(barcode);
+  }
+
+  Future<void> pickImageAndScan() async {
+    try {
+      final picker = ImagePicker();
+      final picked = await picker.pickImage(source: ImageSource.gallery);
+      if (picked != null) {
+        EasyLoading.show(status: 'Analyzing barcode...');
+        final capture = await mobileScannerController.analyzeImage(picked.path);
+        EasyLoading.dismiss();
+        if (capture != null && capture.barcodes.isNotEmpty) {
+          final first = capture.barcodes.first.rawValue;
+          if (first != null && first.isNotEmpty) {
+            onBarcodeDetected(first);
+            return;
+          }
+        }
+        EasyLoading.showInfo('No barcode recognized in the image.');
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+      debugPrint('[pickImageAndScan] Error: $e');
+      EasyLoading.showError('Could not process image.');
     }
   }
 

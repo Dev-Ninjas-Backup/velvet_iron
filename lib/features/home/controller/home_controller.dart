@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
+import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
 import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.dart';
 import 'package:velvet_iron/features/home/models/home_screen_model.dart';
 import 'package:velvet_iron/features/home/service/home_service.dart';
@@ -32,6 +33,7 @@ class HomeController extends GetxController {
   final activeCompanionName = Rx<String?>(null);
   final dailyRewardQuote = Rx<String?>(null);
   final companionGreeting = Rx<String?>(null);
+  final contextualDialogue = Rx<Map<String, dynamic>?>(null);
 
   // ── Convenience getters ──────────────────────────────────────
 
@@ -87,23 +89,35 @@ class HomeController extends GetxController {
     print('[HomeController] Chart data → $chartData');
   }
 
-  /// Navigate to MoodLog tab in Daily Logs screen
-  void navigateToMoodLog() {
+  /// Navigate to any Daily Logs tab
+  void navigateToDailyLogTab(int tabIndex) {
     try {
-      Get.toNamed('/dailyLogScreen');
-      Future.delayed(const Duration(milliseconds: 100), () {
-        try {
-          final dailyLogController = Get.find<DailyLogController>();
-          dailyLogController.setTab(1);
-          print('[HomeController] Navigated to MoodLog tab');
-        } catch (e) {
-          print('[HomeController] Error setting MoodLog tab: $e');
-        }
-      });
+      if (Get.isRegistered<DailyLogController>()) {
+        Get.find<DailyLogController>().setTab(tabIndex);
+      }
+      if (Get.isRegistered<BottomNavController>()) {
+        Get.find<BottomNavController>().changeTabIndex(1);
+      } else {
+        Get.toNamed('/dailyLogScreen');
+        Future.delayed(const Duration(milliseconds: 100), () {
+          try {
+            Get.find<DailyLogController>().setTab(tabIndex);
+          } catch (_) {}
+        });
+      }
     } catch (e) {
-      print('[HomeController] Error navigating to MoodLog: $e');
+      print('[HomeController] Error navigating to Daily Log tab $tabIndex: $e');
     }
   }
+
+  /// Navigate to MoodLog tab in Daily Logs screen
+  void navigateToMoodLog() => navigateToDailyLogTab(1);
+
+  /// Navigate to WaterLog tab in Daily Logs screen
+  void navigateToWaterLog() => navigateToDailyLogTab(3);
+
+  /// Navigate to StepJourney tab in Daily Logs screen
+  void navigateToStepJourney() => navigateToDailyLogTab(4);
 
   // ── Lifecycle ────────────────────────────────────────────────
 
@@ -250,6 +264,16 @@ class HomeController extends GetxController {
           '[HomeController] Active Companion: ${activeCompanionName.value} → ${activeCompanionImage.value}',
         );
       }
+
+      // Fetch dynamic backend dialogue if available
+      final dialogueData = await HomeService().fetchCompanionDialogue();
+      if (dialogueData != null) {
+        contextualDialogue.value = dialogueData;
+        final speech = dialogueData['speechText'] as String?;
+        if (speech != null && speech.isNotEmpty) {
+          companionGreeting.value = speech;
+        }
+      }
     } catch (e) {
       print('[HomeController] Error fetching companion: $e');
     }
@@ -326,15 +350,36 @@ class HomeController extends GetxController {
     }
 
     for (final quest in quests) {
+      final titleLower = quest.title.toLowerCase();
+      final isWater = quest.id.contains('water') ||
+          titleLower.contains('water') ||
+          titleLower.contains('hydration') ||
+          titleLower.contains('mana');
+      final isSteps = quest.id.contains('step') ||
+          titleLower.contains('step') ||
+          titleLower.contains('stride') ||
+          titleLower.contains('walk');
+
+      VoidCallback? tapAction;
+      String subText = quest.description;
+      if (isWater) {
+        tapAction = () => navigateToWaterLog();
+        subText = '${quest.description} • Tap to drink potion';
+      } else if (isSteps) {
+        tapAction = () => navigateToStepJourney();
+        subText = '${quest.description} • Tap to view map';
+      }
+
       items.add(
         HomeScreenModel(
           id: quest.id,
           title: quest.title,
-          sub: quest.description,
+          sub: subText,
           time: 'Active Quest',
           iconPath: IconPath.todo,
           xp: quest.xp,
           isChecked: quest.isDone.obs,
+          onTap: tapAction,
           onToggle: () {
             questController.completeQuest(quest.id);
           },

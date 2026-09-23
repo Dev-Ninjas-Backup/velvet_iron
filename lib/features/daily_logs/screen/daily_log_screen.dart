@@ -10,6 +10,9 @@ import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/weight_log_s
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/weight_log_screen/screen/weight_log_screen.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_screen/screen/mood_log_screen.dart';
 
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/water_log_screen/screen/water_log_screen.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/step_journey_screen/screen/step_journey_screen.dart';
+
 class DailyLogScreen extends StatelessWidget {
   const DailyLogScreen({super.key});
 
@@ -63,10 +66,21 @@ class DailyLogScreen extends StatelessWidget {
                       dailyLogController: controller,
                       mealLogController: mealLogController,
                     );
-                  default:
-                    return MoodLog(
+                  case 3:
+                    return WaterLogScreen(
                       dailyLogController: controller,
-                      moodLogController: moodLogController,
+                      navController: navController,
+                    );
+                  case 4:
+                    return StepJourneyScreen(
+                      dailyLogController: controller,
+                      navController: navController,
+                    );
+                  default:
+                    return WeightLog(
+                      dailyLogController: controller,
+                      navController: navController,
+                      weightLogController: weightLogController,
                     );
                 }
               }),

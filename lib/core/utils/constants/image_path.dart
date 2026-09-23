@@ -112,4 +112,7 @@ class ImagePath {
   static const String bramIronledger = 'assets/images/companions/general_leon_portrait.png';
 
   static const String congratulations = 'assets/images/congratulations.png';
+  static const String potionFlaskBlue = 'assets/images/potion_flask_blue.png';
+  static const String fantasyAdventureMap = 'assets/images/fantasy_adventure_map.png';
+  static const String campTentFire = 'assets/images/camp_tent_fire.png';
 }

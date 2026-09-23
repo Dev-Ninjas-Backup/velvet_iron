@@ -119,6 +119,10 @@ class _TodoTile extends StatelessWidget {
       return GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
+          if (todo.onTap != null) {
+            todo.onTap?.call();
+            return;
+          }
           if (!todo.isChecked.value) {
             todo.isChecked.value = true;
             todo.onToggle?.call();
@@ -147,12 +151,38 @@ class _TodoTile extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Image.asset(
-                todo.isChecked.value ? dotIcon : IconPath.whitecircle,
-                width: 24,
-                height: 24,
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  if (!todo.isChecked.value) {
+                    todo.isChecked.value = true;
+                    todo.onToggle?.call();
+                    final homeController = Get.find<HomeController>();
+                    final allDone = homeController.todos.isNotEmpty &&
+                        homeController.todos.every((t) => t.isChecked.value);
+                    if (allDone) {
+                      CompanionDialogueEngine.showFullBodySpecialMoment(
+                        context: context,
+                        contextMoment: 'quest_complete',
+                        trigger: 'All Quests Completed',
+                      );
+                    } else {
+                      CompanionDialogueEngine.showDialogueSnackbar(
+                        trigger: 'Quest Completed',
+                      );
+                    }
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Image.asset(
+                    todo.isChecked.value ? dotIcon : IconPath.whitecircle,
+                    width: 24,
+                    height: 24,
+                  ),
+                ),
               ),
-            const SizedBox(width: 12),
+              const SizedBox(width: 8),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

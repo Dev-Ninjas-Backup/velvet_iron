@@ -64,4 +64,21 @@ class Urls {
   static String activateNewCompanion(String id) =>
       '$baseUrl/companions/$id/activate';
   static String removeMealSchedule(String id) => '$baseUrl/meal-schedule/$id';
+
+  // Water Tracking Endpoints
+  static const String waterLogToday = '$baseUrl/water-log/today';
+  static const String waterLog = '$baseUrl/water-log';
+  static const String waterLogGoal = '$baseUrl/water-log/goal';
+  static String deleteWaterLog(String id) => '$baseUrl/water-log/$id';
+
+  // Step Tracking & Fantasy Journey Endpoints
+  static const String stepLogToday = '$baseUrl/step-log/today';
+  static const String stepLog = '$baseUrl/step-log';
+  static const String stepLogSetUpCamp = '$baseUrl/step-log/set-up-camp';
+  static const String stepLogGoal = '$baseUrl/step-log/goal';
+  static String stepLogHistory([int limit = 30]) =>
+      '$baseUrl/step-log/history?limit=$limit';
+
+  // Companion Contextual Dialogue
+  static const String companionDialogue = '$baseUrl/companions/current/dialogue';
 }
