@@ -1,0 +1,34 @@
+Hi! We finished testing the newest build and overall we are really happy with the direction. The
+expedition/campsite system is fantastic, and we LOVE the water tracker It feels immersive and fits
+the fantasy experience perfectly.
+A tew notes:
+1. EXPEDITION
+I'm attaching our V1 Expedition & Campsite Content document. It includes the finalized 1,000,000-
+step journey, milestone locations, progression logic, lore, campsite dialogue, and companion dialogue.
+Daily step progress and cumulative journey progress need to remain separate. For example,
+8,547/8,000 can show 107% for the Daily Expedition, but 8,547 cumulative steps should only equal
+about 0.85% of the 1,000,000-step journey.
+Please also change "Lifetime Steps" to "Journey Steps" or "Cumulative Journey Steps."
+Could you also confirm how the +1,000/+2,500/+5,000 manual walking buttons work? We want to
+make sure users cannot repeatedly use them to artificially complete the journey.
+2. CAMP COMPLETION
+We love the navy/gold "Campfire Lit!" popup. However, we don't love the bright green styling after
+camp is pitched. The green pill, outlined box, and large green button feel out of place with the
+fantasy/Scribe theme.
+Please keep the completed state navy/antique gold instead. The bottom button could become a
+muted/disabled "Camp Pitched • Rest Until Dawn" state rather than bright green.
+3. BARCODE SCANNER
+Regarding your earlier database question, we would like BOTH Open Food Facts and USDA FoodData
+Central for broader coverage. Ideally, use Open Food Facts as the primary barcode lookup and USDA
+FoodData Central as a secondary/fallback when a product is missing or incomplete. We do not need
+a paid commercial database at this time.
+We love that the current scanner populates calories/macros while still allowing manual editing.
+4. RIVEN
+We love seeing Riven incorporated! His current fire effect is visibly pixelated, though. Please replace
+it with your own clean, high-resolution magical fire effect. Purple magical flame would work perfectly
+and can be created/implemented by your team.
+5. CAMPSITE ART
+We have also created new resting/campsite poses for Riven, Thyra, Leon, and Visepheron to use with
+the campsite dialogue. I'll send those assets as well.
+Overall, this update is really exciting. The walk → expedition → pitch camp → bank cumulative steps
+→ earn XP flow is exactly the game-like experience we wanted. Thank you!

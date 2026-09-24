@@ -1,0 +1,365 @@
+VELVET & IRON
+TRAINING CODEX
+V1 Expedition & Campsite Content Pack
+Progression logic • Journey lore • Milestone dialogue • Daily campsite dialogue • V1 ending
+Scope note: 
+No additional gameplay features are requested in this document. This package supplies progression rules and narrative content for the expedition/campsite system already implemented. V2 references are story handoff notes only and are not requests for V1 development.
+1. Developer Logic
+Core rule: 
+Daily step goals and cumulative expedition progress are separate systems. The daily goal remains the user's personal daily target. Actual steps banked when the user pitches camp are added to a persistent cumulative journey total.
+Cumulative calculation: 
+Example: if the daily goal is 8,000 and the user walks 8,547 steps, pitching camp banks 8,547 cumulative expedition steps. The user has completed the daily goal, but has progressed only 8,547 steps along the 1,000,000-step journey.
+Milestones: 
+A location is reached when the persistent cumulative total crosses that location's threshold. Daily goal percentage must not be used to calculate world-map position.
+Pitching camp: 
+Pitching camp closes/banks the current day's expedition as already implemented. Existing XP, camp confirmation, lock-until-next-day behavior, and campsite flow can remain unchanged.
+V1 endpoint: 
+The Shattered Citadel is reached at 1,000,000 cumulative steps. It is the final V1 destination.
+2. Journey Milestones
+Cumulative Steps
+Location
+Narrative Purpose
+25,000
+The Wayfarer's Arch
+First undeniable anomaly
+75,000
+Whisperwood
+Nature reacts to something foreign
+150,000
+Blackwater Crossing
+Evidence that something crossed into Aevaryn
+250,000
+The Ruins of Vael
+Proof the phenomenon has happened before
+375,000
+The Witchlight Marsh
+Foreign energies and Aevarynian magic begin bleeding together
+500,000
+The Hollow Watchtower
+Midpoint revelation: the signs match records from before the Shattering
+625,000
+The Ashen Pass
+The disturbances are worsening and becoming dangerous
+750,000
+The Fallen King's Road
+History reveals why the Citadel matters
+875,000
+The Obsidian Keep
+The crisis is realm-wide and accelerating
+1,000,000
+The Shattered Citadel
+The summons is revealed; the original portal is stirring again
+3. Canonical V1 Story
+The portals
+Portals have existed in Aevaryn for generations, but they are rare and normally dormant, stable, or predictable enough to be studied and avoided. Recently, that has changed. Known portals are behaving unpredictably and new tears are appearing where none should exist.
+The crisis
+The disturbances are linking Aevaryn to multiple worlds. Foreign people, creatures, objects, technologies, and unfamiliar energies are appearing across the realm. Some arrivals are harmless and confused; others are causing havoc. Leon is living proof that the phenomenon can pull someone from an entirely different world.
+The summons
+The High King and Queen have quietly summoned their strongest adventurers, warriors, mages, scholars, and other useful individuals to the Shattered Citadel. The player and their chosen companion are among those called. The summons acknowledges disturbances but does not explain the full scale of the crisis, partly to avoid panic and partly because the Crown does not yet know the cause.
+The first portal
+The first known portal in Aevaryn appeared at the site of the Citadel. The original fortification was built around the portal so it could be guarded, studied, and contained. Over generations the structure expanded into the Citadel.
+The Shattering
+Long ago, the original portal catastrophically destabilized. The resulting magical explosion tore through the Citadel and scarred the surrounding region. The event became known as the Shattering. The portal then collapsed, disappeared, or fell dormant, and the Citadel was never fully restored.
+V1 mystery
+The V1 question is: What is happening? During the journey, the player learns that the current disturbances mirror the signs recorded before the original Shattering and that the barriers between worlds are weakening.
+Reserved for later
+V1 does not answer why the barriers are failing or whether a person, creature, cycle, or other force is responsible. Those questions remain available for V2 and later story development.
+4. Companion Narrative Voices
+Riven: 
+High Lord of the Forsaken Court. Observant, dry, elegant, knowledgeable about old magic, High Fae history, courts, ancient languages, and stories most people dismiss as myth. He dislikes admitting when something unsettles him.
+Thyra: 
+Shield of the Realm. Practical, disciplined, protective, and tactically minded. She notices fortifications, battle evidence, troop movement, political implications, and failures of defense. Her concern usually presents as preparation rather than panic.
+General Leon: 
+A soldier displaced from a technologically advanced world. Analytical, skeptical, and trained to treat unfamiliar phenomena as intelligence problems. He lacks Aevaryn's cultural context and often describes magic in scientific or military terms, sometimes revealing patterns the others overlook.
+Visepheron: 
+An ancient navy-blue dragon. Patient, sardonic, watchful, and frustratingly selective with what he reveals. He recognizes old magical signatures and instincts that he should not necessarily know. His hints should feel meaningful without making him an exposition machine.
+5. Location Lore & Milestone Dialogue
+Implementation suggestion: on reaching a milestone, show the arrival/lore text and one companion-specific line or short sequence. The canonical clue is the same regardless of companion; the companion changes the interpretation and personality of the reveal.
+The Wayfarer's Arch - 25,000 Steps
+Arrival / lore: 
+An old stone arch straddles the road, its weathered runes faintly lit despite the absence of any spellcaster. The air beneath it tastes metallic and the space inside the arch seems to shimmer for a heartbeat, showing a sky that does not belong to Aevaryn.
+Canonical clue: 
+The first physical sign that the disturbances are affecting places that were never known to contain portals.
+Riven
+“That arch has been dead longer than most bloodlines have names. It should not be glowing.”
+“For a moment, I saw stars through it. Not our stars. Keep that detail between us until we know what we are dealing with.”
+“The Crown's summons suddenly feels less ceremonial.”
+Thyra
+“No scorch marks. No tracks. Nothing approached the arch, yet something happened here.”
+“If this can open on a traveled road without warning, every trade route in the realm becomes a vulnerability.”
+“We keep moving. I want the Citadel's reports before I decide how worried to be.”
+Leon
+“That looked like a spatial breach. Short duration, unstable edge, no visible power source.”
+“You call these things portals. Fine. Whatever that was, it behaved like one - and I don't think this arch was built to do that.”
+“If the same phenomenon brought me here, I want to know why it is spreading.”
+Visepheron
+“The stone remembers being a doorway, though no mason intended it to be one.”
+“Do not look so alarmed. If it had wished to swallow you, we would be having a much shorter conversation.”
+“...Still. It should not have awakened.”
+Whisperwood - 75,000 Steps
+Arrival / lore: 
+The forest grows unnaturally quiet as the road disappears beneath silver roots. Birds refuse to cross a narrow stretch of trees. Small animals gather on one side as if an invisible boundary blocks them, while leaves nearest the disturbance curl toward empty air.
+Canonical clue: 
+Living things can sense the weakening boundary before people can. The disturbance is not confined to old structures.
+Riven
+“Listen. Nothing is singing.”
+“Whisperwood has survived curses, wars, and enough foolish mages to fill a cemetery. I have never known it to go silent like this.”
+“The trees are leaning away from something we cannot see. I suggest we respect their judgment.”
+Thyra
+“The animals have made their own perimeter. Interesting.”
+“Soldiers learn quickly to watch what horses refuse to approach. I see no reason to be less sensible than a horse.”
+“Whatever crossed this forest left no road, no camp, and no trail. That troubles me more than tracks would.”
+Leon
+“Every animal is reacting to the same invisible boundary. That's data, not superstition.”
+“My wrist unit is picking up interference at the exact point they refuse to cross.”
+“Different world, same rule: when every sensor starts screaming, don't stand in the middle of the anomaly.”
+Visepheron
+“The forest hears a note that your little ears cannot.”
+“It is not fear that makes them silent. It is recognition.”
+“No, I will not explain recognition of what. You have legs. Continue using them.”
+Blackwater Crossing - 150,000 Steps
+Arrival / lore: 
+At the river crossing, the mud holds tracks unlike any local beast. A broken object lies half-buried nearby, made from a material none of the travelers recognize. The water around it ripples against the current.
+Canonical clue: 
+Something tangible has crossed into Aevaryn from elsewhere. The anomalies are transporting matter, not merely producing magical effects.
+Riven
+“Those prints belong to nothing native to this region. Before you ask, no, they are not Fae.”
+“And this object carries no enchantment I recognize. That may be the most unsettling part.”
+“Something came through. The question is whether it meant to.”
+Thyra
+“Tracks enter the river. None leave it.”
+“Whatever made them was heavy, four-limbed, and moving fast. We warn the next settlement before we continue.”
+“If creatures can simply appear behind our borders, walls become considerably less comforting.”
+Leon
+“This material isn't medieval, magical, or anything I can identify from my world either.”
+“That's important. If it isn't yours and it isn't mine, we're not dealing with one bridge between two worlds.”
+“We may be looking at a network.”
+Visepheron
+“Foreign scent. Foreign earth still clings to it.”
+“You are beginning to understand, yes? The door does not open onto a single room.”
+“Careful, little traveler. Curiosity has teeth.”
+The Ruins of Vael - 250,000 Steps
+Arrival / lore: 
+Among the collapsed halls of Vael, weathered inscriptions describe 'false skies,' creatures appearing after flashes of light, and nights when the stars seemed to shift. The records predate the Shattering.
+Canonical clue: 
+The current phenomenon is not unprecedented. Similar disturbances were recorded before the first portal catastrophe.
+Riven
+“I know this dialect. These carvings are older than the Shattering.”
+“'The sky opened where no gate stood.' That phrase appears three times.”
+“We have been calling this new. It is not new. It was forgotten.”
+Thyra
+“These ruins weren't destroyed by siege. The damage radiates outward from several points inside the city.”
+“Look at the dates. These reports begin before the Citadel fell.”
+“If the same signs came first last time, the Crown needs to know immediately.”
+Leon
+“Multiple localized events, escalating frequency, then a major catastrophic event somewhere else.”
+“That's a pattern. Not proof of cause, but enough that I'd stop treating these incidents independently.”
+“Your ancestors documented a system failure without having the vocabulary for it.”
+Visepheron
+“Ah. Vael remembered after all.”
+“Mortals are very good at carving warnings into stone and even better at forgetting why they bothered.”
+“Read carefully. The old dead are trying to save you time.”
+The Witchlight Marsh - 375,000 Steps
+Arrival / lore: 
+Blue witchlights flicker in impossible colors and spells behave strangely. A simple flame bends toward empty space. Leon's technology reacts at the same moments Aevarynian magic surges.
+Canonical clue: 
+The boundaries are not only moving matter. Energies from different worlds are interacting and interfering with one another.
+Riven
+“My magic is being pulled sideways.”
+“That is not how magic behaves in Aevaryn. Something beyond the veil is answering it.”
+“If foreign energies can alter our own, the danger is larger than unwanted visitors.”
+Thyra
+“My blade's ward flared without a threat in sight.”
+“I dislike enemies I cannot put on a map.”
+“We should assume enchanted defenses may fail near these disturbances. I would rather plan for that now than discover it during a battle.”
+Leon
+“My device spikes every time your witchlights flare. Two completely different systems are coupling somehow.”
+“Back home we'd call that interference. Here, apparently, interference glows and tries to lure you into a swamp.”
+“Whatever separates our worlds is getting thin enough for energy to cross before matter does.”
+Visepheron
+“Magic is tasting unfamiliar waters.”
+“See how the lights change when the air trembles? Aevaryn is touching places it was never meant to touch.”
+“And before you ask - yes. That is bad.”
+The Hollow Watchtower - 500,000 Steps
+Arrival / lore: 
+Inside the abandoned watchtower are preserved reports from the months preceding the Shattering: silent forests, false skies, foreign creatures, unstable spells, and spontaneous openings. The descriptions match the journey almost exactly.
+Canonical clue: 
+Major midpoint revelation: the present crisis mirrors the warning signs immediately before the original portal exploded and shattered the Citadel.
+Riven
+“No. Read that line again.”
+“Silent woods. Unbidden gates. Foreign beasts. Magic turning against its own shape. These are not similarities. They are the same warnings.”
+“The Citadel did not shatter without warning. Aevaryn simply failed to understand the warning the first time.”
+Thyra
+“These are watch reports. Dates, locations, witness counts. Someone was tracking it.”
+“The final entry is three days before the Shattering.”
+“We stop treating this as an investigation. From here onward, we travel as though another catastrophe is possible.”
+Leon
+“This is an incident log.”
+“Same sequence we're seeing now, right down to increasing frequency. Your portal disaster had a lead-up.”
+“If the pattern continues, then the question isn't whether the system is destabilizing. It's how much time we have before the next failure.”
+Visepheron
+“So. You have finally found the page everyone should have remembered.”
+“I wondered how long it would take you to see the shape of it.”
+“Do not waste your anger asking why I suspected. Save it for the thing making history rhyme.”
+The Ashen Pass - 625,000 Steps
+Arrival / lore: 
+The pass bears fresh damage: glassed stone, unfamiliar residue, and signs of a violent creature that appeared without warning. Refugees and travelers speak of flashes in the mountains and things falling from clear air.
+Canonical clue: 
+The instability is accelerating. Portal events are becoming more frequent, larger, and more dangerous.
+Riven
+“This stone was melted, but not by dragonfire and not by any spell I know.”
+“The intervals are shortening. We heard of one disturbance weeks ago. Now there are three stories from this pass alone.”
+“Whatever is building is no longer patient.”
+Thyra
+“Fresh evacuation tracks. Families, carts, wounded animals. This is no longer an obscure magical problem.”
+“If the Crown has not already mobilized the roads around the Citadel, I will recommend it the moment we arrive.”
+“We move at first light.”
+Leon
+“The event intensity is increasing with the frequency. That's a bad combination.”
+“I've seen systems cascade. Small failures stop being isolated, then everything starts feeding everything else.”
+“I really hope magic has an emergency shutoff.”
+Visepheron
+“The veil tears more easily each time.”
+“A wound repeatedly opened does not become stronger.”
+“Sleep while you can. Tomorrow's road smells of ash.”
+The Fallen King's Road - 750,000 Steps
+Arrival / lore: 
+Broken monuments along the old royal road preserve the oldest public account of the Citadel: the fortress was constructed around Aevaryn's first known portal, not the other way around. The portal was the reason the Citadel existed.
+Canonical clue: 
+The Citadel is not merely where a portal catastrophe happened. It was deliberately built around the first known portal and has always been tied to the boundary between worlds.
+Riven
+“There. The oldest inscription names the portal before it names the fortress.”
+“The Citadel was not unfortunate enough to contain the first gate. It was built because the gate was already there.”
+“Which means the Crown has summoned us toward the one place in Aevaryn most intimately connected to all of this.”
+Thyra
+“That changes the strategic picture.”
+“The walls were containment before they were a seat of power. Every tower, every inner gate - designed around whatever sat at the center.”
+“The Citadel wasn't simply shattered by the portal. Guarding the portal was its original purpose.”
+Leon
+“So they built a containment facility around the anomaly, then expanded the facility until history started calling it a fortress.”
+“That makes sense. What doesn't make sense is bringing everyone back to ground zero unless something there has changed.”
+“I think your King and Queen know more than the summons said.”
+Visepheron
+“At last, the road tells you why it was laid.”
+“Kings built walls around what frightened them and eventually forgot which came first: the crown or the cage.”
+“The Citadel has always been a lock. Consider what that implies about the door.”
+The Obsidian Keep - 875,000 Steps
+Arrival / lore: 
+Messengers, abandoned dispatches, and ward records reveal simultaneous disturbances across distant parts of Aevaryn. The reports mention strangers speaking unknown languages, creatures never catalogued, unfamiliar weapons, and openings appearing faster than they can be investigated.
+Canonical clue: 
+The crisis is realm-wide and connects to more than one foreign world. The Crown has summoned many people, not only the player.
+Riven
+“These reports came from opposite ends of the realm on the same night.”
+“Different creatures. Different magic. Different descriptions of the sky beyond the openings.”
+“Leon was never the anomaly. He was merely the first one we happened to meet.”
+Thyra
+“The Crown is redirecting soldiers everywhere at once. That is why they summoned specialists instead of armies to the Citadel.”
+“We cannot defend every place a doorway might appear if the doorway can appear anywhere.”
+“Whatever council awaits us, we will not be the only ones at the table.”
+Leon
+“Different technologies. Different atmospheric descriptions. Different species.”
+“That kills the two-world theory.”
+“Whatever is happening isn't connecting Aevaryn to my world. It's connecting Aevaryn to many of them.”
+Visepheron
+“Now you see the web.”
+“Many doors. Many worlds. One disturbance pulling at all their hinges.”
+“And ahead of us sits the oldest door of all.”
+The Shattered Citadel - 1,000,000 Steps
+Arrival / lore: 
+After one million cumulative steps, the player reaches the shattered fortress. The Citadel is crowded with summoned warriors, adventurers, mages, scholars, strange creatures, and displaced foreigners. Some belong to Aevaryn. Some unmistakably do not. The High King and Queen reveal that the disturbances are occurring throughout the realm and that the original portal beneath the Citadel - dormant since the Shattering - has begun showing signs of activity again.
+Canonical clue: 
+V1 resolves the 'what': the barriers between worlds are destabilizing. It ends on the larger mystery: why is the original portal waking, and what is causing the failures?
+Riven
+“Look at them. Half the realm's old rivalries standing shoulder to shoulder... and several faces that belong to no realm at all.”
+“So this is why the summons was vague. Panic would have reached the Citadel before we did.”
+“The old gate is waking. Wonderful. I was concerned our journey might end peacefully.”
+Thyra
+“Warriors, scholars, mages, foreign weapons... the Crown has assembled capability, not ceremony.”
+“If the original portal is active again, this fortress becomes the most important defensive position in Aevaryn.”
+“We made it. Now we find out what we're being asked to defend the realm from.”
+Leon
+“I recognize that look on some of their faces. They're displaced.”
+“Not from my world, either. Different equipment. Different languages. Different everything.”
+“If the original portal under this place is waking up, I think we just found the center of the problem - not the cause.”
+Visepheron
+“One million steps, little traveler, and at last you have reached the first door.”
+“Do you feel it beneath the stone? Sleeping things do not stir without reason.”
+“Go on. The Crown is waiting... and I suspect our journey has only just begun.”
+6. Normal Daily Campsite Dialogue
+These lines are for ordinary nights between major milestones. They should make the companion feel present without advancing required lore. They can be randomized. A small number lightly foreshadow the larger mystery, but no daily line should reveal a milestone clue early.
+Riven
+“You've done enough for one day. Sit. The road will still be insufferably long in the morning.”
+“I saved you the tolerable side of the fire. Do try to appreciate the sacrifice.”
+“Your feet hurt, don't they? I can tell by the way you're pretending they don't.”
+“Eat something before you fall asleep. I refuse to explain to the others that I let my traveling companion perish from stubbornness.”
+“I've marked tomorrow's route. You may admire my competence after breakfast.”
+“The stars are clear tonight. Enjoy them while the worlds are still courteous enough to keep their own skies.”
+“You walked farther than you thought you could. Remember that the next time your mind tells you to stop early.”
+“Come sit. You needn't earn every moment of rest.”
+“If you snore, I will deny ever having traveled with you.”
+“There are worse places to end a day. I've slept in several of them.”
+“I'll take first watch. No, this is not kindness. Your vigilance becomes questionable after sunset.”
+“Another day closer to the Citadel. Try not to look so eager; mysterious royal summons rarely end in excellent wine and no complications.”
+Thyra
+“Boots off. Check your feet. Small injuries become large ones when ignored.”
+“Good work today. Rest is part of the march, not a reward for surviving it.”
+“I'll check the perimeter before I sleep.”
+“You kept moving when the road got difficult. That's the kind of strength that matters.”
+“Drink your water. Yes, I noticed.”
+“Tomorrow's terrain looks manageable. We'll take it steadily.”
+“A campfire, a dry bedroll, and no one shooting at us. Luxurious.”
+“Leave your gear where you can reach it in the dark. Habit keeps you alive.”
+“You don't need to race the road. Consistency will carry you farther.”
+“I'll take first watch tonight. You take the second only if I wake you.”
+“Another day's distance behind us. The Citadel is closer.”
+“Whatever waits ahead, we'll meet it better rested than exhausted.”
+Leon
+“Today's step count would get you respectable numbers in basic training.”
+“Sit down before your legs file a formal complaint.”
+“I still can't believe your world has magic but apparently hasn't invented decent field rations.”
+“My wrist unit says we made good distance. My knees independently confirm the finding.”
+“I've got the perimeter. You get some sleep.”
+“Back home I'd have a satellite map. Here I have parchment, stars, and a dragon with opinions.”
+“Progress doesn't care whether today felt impressive. Distance is distance.”
+“Hydrate. That's not a suggestion from another world; that's universal.”
+“I cleaned the rifle. Again. There's something deeply wrong with me.”
+“I keep looking at your moons and expecting them to be mine.”
+“Every day here feels a little less impossible. I'm not sure how I feel about that.”
+“One more day toward the Citadel. Maybe somebody there can finally explain why I got drafted by a hole in reality.”
+Visepheron
+“You walked well today. For a creature with only two legs.”
+“The fire is adequate. I have endured worse.”
+“Sleep. I assure you, anything foolish enough to approach this camp will reconsider.”
+“No, you may not use my tail as a pillow.”
+“You smell tired.”
+“Mortals are strange. You exhaust yourselves crossing the world and call the exhaustion progress. ...I suppose it is.”
+“Another day, another little piece of Aevaryn beneath your feet.”
+“I am not staring into the darkness. The darkness is staring at me. It will lose.”
+“Rest is not surrender. Even dragons close their eyes.”
+“You have improved. Do not become unbearable about it.”
+“The air has been restless lately. No, that was not an invitation for questions.”
+“The Citadel grows nearer. I wonder whether it remembers me.”
+7. Campsite Character Asset Usage
+Riven: 
+Relaxed evening clothing: cream loose tunic with open V neckline, brown trousers, simple boots. Suggested pose use: reading for reflective lines; tree-resting for quiet dialogue; dagger-sharpening for wary/ominous dialogue; lying back for rest/recovery dialogue.
+Thyra: 
+Relaxed knight camp clothing with cream laced blouse, dark/brown trousers, boots and light practical gear. Suggested pose use: reading/resting for calm lines; tree-resting for reflective lines; sword sharpening for tactical/ominous lines; reclining for recovery dialogue.
+Leon: 
+Dark olive/charcoal military base-layer top, tactical trousers, combat boots, dog tags/wrist device. Suggested pose use: wrist-device pose for anomaly/technology lines; rifle-cleaning for military dialogue; seated-alert for watch/security lines; bedroll pose for rest/personal dialogue.
+Visepheron: 
+Four camp poses: curled asleep; curled/resting with head raised; sitting upright on watch; faintly smirking. Use sleeping/resting for recovery lines, head-raised for observations, upright for warnings/watch dialogue, and smirk for dry/sardonic lines.
+8. V1 Ending & V2 Story Handoff
+At 1,000,000 cumulative steps, the player reaches the Shattered Citadel. This should feel like a genuine V1 completion milestone. The player learns that the Crown has summoned many of Aevaryn's most capable people because portal disturbances are occurring across the realm.
+The Citadel also contains foreigners and creatures who were not summoned at all - they were displaced into Aevaryn by unstable portals. This provides a natural introduction point for additional characters in future content. Leon is revealed to be one example of a much larger phenomenon.
+The High King and Queen reveal the final V1 cliffhanger: the original portal beneath the Citadel, dormant since the Shattering, has begun showing signs of activity again.
+V1 development boundary: 
+V1 can end on this reveal. The future council, formation of a larger party, new character arcs, missions, cutscenes, and explanation of why the portals are failing are reserved for V2. They do not need to be built as part of this handoff.
+9. Content Implementation Notes
+Canonical lore must remain the same regardless of which companion is selected.
+Companion dialogue may vary, but no companion should be required to understand the main V1 plot.
+Milestone dialogue should unlock only when the corresponding cumulative-step threshold is reached.
+Normal campsite dialogue can be randomized on non-milestone nights and should not reveal future milestone information early.
+Visepheron may foreshadow that he recognizes more than he explains, but he should not reveal the cause of the portal crisis in V1.
+Leon should gradually recognize that his displacement is part of a multi-world phenomenon rather than a single connection between his world and Aevaryn.
+The Hollow Watchtower at 500,000 steps is the major midpoint revelation: current events match the recorded lead-up to the Shattering.
+The Shattered Citadel at 1,000,000 steps resolves the V1 question of what is happening while preserving why it is happening for V2.
