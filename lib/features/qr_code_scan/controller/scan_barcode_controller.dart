@@ -124,33 +124,101 @@ class ScanBarcodeController extends GetxController {
             if (calc > 0) caloriesVal = calc.toString();
           }
 
-          debugPrint(
-            '[_fetchNutritionFromApi] carbs=$carbsVal, protein=$proteinVal, fats=$fatsVal, calories=$caloriesVal',
-          );
+          if (carbsVal.isNotEmpty || proteinVal.isNotEmpty || fatsVal.isNotEmpty) {
+            carbs.text = carbsVal;
+            protein.text = proteinVal;
+            fats.text = fatsVal;
+            calories.text = caloriesVal;
 
-          carbs.text = carbsVal;
-          protein.text = proteinVal;
-          fats.text = fatsVal;
-          calories.text = caloriesVal;
-
-          update();
-          EasyLoading.showSuccess('Found: $productName');
-        } else {
-          debugPrint('[_fetchNutritionFromApi] ❌ Product not found in database');
-          productName = '';
-          update();
-          EasyLoading.showInfo('Product not found. You can enter nutrition manually.');
+            update();
+            EasyLoading.showSuccess('Found: $productName');
+            return;
+          }
         }
-      } else {
-        debugPrint('[_fetchNutritionFromApi] ❌ HTTP error: ${response.statusCode}');
-        EasyLoading.showError('Could not reach food database (${response.statusCode})');
+      }
+
+      // Secondary Fallback: USDA FoodData Central API
+      final usdaSuccess = await _fetchNutritionFromUsda(barcode);
+      if (!usdaSuccess) {
+        productName = '';
+        update();
+        EasyLoading.showInfo('Product not found. You can enter nutrition manually.');
       }
     } catch (e) {
       debugPrint('[_fetchNutritionFromApi] ❌ Exception: $e');
-      EasyLoading.showError('Failed to fetch product data');
+      final usdaSuccess = await _fetchNutritionFromUsda(barcode);
+      if (!usdaSuccess) {
+        EasyLoading.showError('Product not found. You can enter nutrition manually.');
+      }
     } finally {
       isProcessing = false;
     }
+  }
+
+  /// Secondary fallback barcode lookup using USDA FoodData Central API
+  Future<bool> _fetchNutritionFromUsda(String barcode) async {
+    try {
+      debugPrint('[_fetchNutritionFromUsda] Fallback search for barcode: $barcode');
+      final candidates = <String>[barcode];
+      final trimmed = barcode.replaceFirst(RegExp(r'^0+'), '');
+      if (trimmed.isNotEmpty && trimmed != barcode) {
+        candidates.add(trimmed);
+      }
+
+      for (final query in candidates) {
+        final uri = Uri.parse(
+          'https://api.nal.usda.gov/fdc/v1/foods/search?query=$query&dataType=Branded&pageSize=1&api_key=DEMO_KEY',
+        );
+        final response = await http.get(uri).timeout(const Duration(seconds: 8));
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          final foods = data['foods'] as List?;
+          if (foods != null && foods.isNotEmpty) {
+            final food = foods.first;
+            productName = (food['description'] ?? 'Product Found').toString();
+            final nutrients = (food['foodNutrients'] as List?) ?? [];
+            String carbsVal = '';
+            String proteinVal = '';
+            String fatsVal = '';
+            String caloriesVal = '';
+
+            for (final n in nutrients) {
+              final name = (n['nutrientName'] ?? '').toString().toLowerCase();
+              final val = n['value']?.toString() ?? '';
+              if (name.contains('carbohydrate')) {
+                carbsVal = val;
+              } else if (name.contains('protein')) {
+                proteinVal = val;
+              } else if (name.contains('total lipid') || name.contains('fat')) {
+                fatsVal = val;
+              } else if (name.contains('energy') && (n['unitName'] == 'KCAL' || caloriesVal.isEmpty)) {
+                caloriesVal = (double.tryParse(val)?.round() ?? val).toString();
+              }
+            }
+
+            if (caloriesVal.isEmpty && (carbsVal.isNotEmpty || proteinVal.isNotEmpty || fatsVal.isNotEmpty)) {
+              final c = double.tryParse(carbsVal) ?? 0;
+              final p = double.tryParse(proteinVal) ?? 0;
+              final f = double.tryParse(fatsVal) ?? 0;
+              final calc = (c * 4 + p * 4 + f * 9).round();
+              if (calc > 0) caloriesVal = calc.toString();
+            }
+
+            carbs.text = carbsVal;
+            protein.text = proteinVal;
+            fats.text = fatsVal;
+            calories.text = caloriesVal;
+
+            update();
+            EasyLoading.showSuccess('Found: $productName');
+            return true;
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('[_fetchNutritionFromUsda] Error: $e');
+    }
+    return false;
   }
 
   void clearFields() {

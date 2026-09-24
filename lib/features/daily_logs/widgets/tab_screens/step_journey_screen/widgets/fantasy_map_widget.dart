@@ -92,31 +92,38 @@ class FantasyMapWidget extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.75),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFD6B36A), width: 1),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.navigation_rounded,
-                          size: 13,
-                          color: Color(0xFFD6B36A),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          metadata.nextLandmark,
-                          style: getTextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                  Flexible(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      margin: const EdgeInsets.only(right: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.75),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: const Color(0xFFD6B36A), width: 1),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.navigation_rounded,
+                            size: 13,
+                            color: Color(0xFFD6B36A),
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              metadata.nextLandmark,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: getTextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
 
@@ -125,11 +132,11 @@ class FantasyMapWidget extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
                       color: isCampSet
-                          ? const Color(0xFF2E7D32).withValues(alpha: 0.85)
+                          ? const Color(0xFF0F1B2B).withValues(alpha: 0.9)
                           : Colors.black.withValues(alpha: 0.75),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: isCampSet ? const Color(0xFF81C784) : const Color(0xFFD6B36A),
+                        color: const Color(0xFFD6B36A),
                         width: 1,
                       ),
                     ),
@@ -139,7 +146,7 @@ class FantasyMapWidget extends StatelessWidget {
                         Icon(
                           isCampSet ? Icons.nightlight_round : Icons.directions_walk,
                           size: 12,
-                          color: Colors.white,
+                          color: const Color(0xFFD6B36A),
                         ),
                         const SizedBox(width: 4),
                         Text(
@@ -147,7 +154,7 @@ class FantasyMapWidget extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: Color(0xFFD6B36A),
                           ),
                         ),
                       ],
@@ -190,7 +197,7 @@ class FantasyMapWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${(metadata.progressRatio * 100).toStringAsFixed(0)}%',
+                      '${(metadata.progressRatio * 100).toStringAsFixed(1)}%',
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,

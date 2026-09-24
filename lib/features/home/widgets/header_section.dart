@@ -47,36 +47,44 @@ class HeaderSection extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    controller.userProfile.value?.user.name ?? 'User',
-                    style: getTextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      controller.userProfile.value?.user.name ?? 'User',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: getTextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.asset(
-                        IconPath.trophyAdventure,
-                        width: 14,
-                        height: 14,
-                        fit: BoxFit.contain,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        "${controller.levelStatus} | ${controller.balanceXp} xp",
-                        style: getTextStyle(color: Colors.white, fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ],
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(
+                          IconPath.trophyAdventure,
+                          width: 14,
+                          height: 14,
+                          fit: BoxFit.contain,
+                        ),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            "${controller.levelStatus} | ${controller.balanceXp} xp",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: getTextStyle(color: Colors.white, fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              const Spacer(),
+              const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(

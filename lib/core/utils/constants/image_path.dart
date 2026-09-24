@@ -115,4 +115,11 @@ class ImagePath {
   static const String potionFlaskBlue = 'assets/images/potion_flask_blue.png';
   static const String fantasyAdventureMap = 'assets/images/fantasy_adventure_map.png';
   static const String campTentFire = 'assets/images/camp_tent_fire.png';
+
+  // Campsite Art & Resting Companions
+  static const String campsiteScene = 'assets/images/campsite/campsite_scene.png';
+  static const String rivenResting = 'assets/images/campsite/riven_resting.png';
+  static const String thyraResting = 'assets/images/campsite/thyra_resting.png';
+  static const String leonResting = 'assets/images/campsite/leon_resting.png';
+  static const String visepheronResting = 'assets/images/campsite/visepheron_resting.png';
 }

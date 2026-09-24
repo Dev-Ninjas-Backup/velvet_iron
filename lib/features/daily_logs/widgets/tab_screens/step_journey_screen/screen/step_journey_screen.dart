@@ -420,14 +420,14 @@ class StepJourneyScreen extends StatelessWidget {
                       const SizedBox(height: 12),
                       const Divider(color: Colors.white12, height: 1),
                       const SizedBox(height: 12),
-                      // Lifetime Expedition Stats
+                      // Cumulative Expedition Stats
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Column(
                             children: [
                               Text(
-                                'Lifetime Steps',
+                                'Cumulative Journey Steps',
                                 style: getTextStyle(fontSize: 11, color: Colors.white60),
                               ),
                               const SizedBox(height: 2),
@@ -457,7 +457,7 @@ class StepJourneyScreen extends StatelessWidget {
                                   style: getTextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold,
-                                    color: const Color(0xFFE5A93C),
+                                    color: const Color(0xFFD6B36A),
                                   ),
                                 ),
                               ),
@@ -465,55 +465,130 @@ class StepJourneyScreen extends StatelessWidget {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 14),
+                      // Grand Journey Progress Bar (1,000,000 Steps Season Finish Line)
+                      Obx(() {
+                        const int grandJourneyGoal = 1000000;
+                        final currentLifetime = controller.lifetimeSteps.value;
+                        final ratio = (currentLifetime / grandJourneyGoal).clamp(0.0, 1.0);
+                        final percentStr = (ratio * 100).toStringAsFixed(2);
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Grand Journey: The Long March',
+                                  style: getTextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: const Color(0xFFD6B36A),
+                                  ),
+                                ),
+                                Text(
+                                  '$percentStr%',
+                                  style: getTextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFFD6B36A),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(6),
+                              child: LinearProgressIndicator(
+                                value: ratio,
+                                minHeight: 6,
+                                backgroundColor: Colors.white12,
+                                valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFD6B36A)),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${currentLifetime.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} / 1,000,000 steps to The World\'s Edge',
+                              style: getTextStyle(fontSize: 10, color: Colors.white54),
+                            ),
+                          ],
+                        );
+                      }),
                     ],
                   ),
                 ),
                 const SizedBox(height: 16),
 
-                // Camp Status Banner (if camp is already set)
+                // Camp Status Banner (if camp is already set) - Navy & Antique Gold
                 Obx(() {
                   if (!controller.isCampSet.value) return const SizedBox.shrink();
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF2E7D32).withValues(alpha: 0.2),
+                  return Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () => controller.showCampDetails(context),
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: const Color(0xFF81C784)),
-                    ),
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          ImagePath.campTentFire,
-                          width: 36,
-                          height: 36,
-                          fit: BoxFit.contain,
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0F1B2B).withValues(alpha: 0.9),
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: const Color(0xFFD6B36A).withValues(alpha: 0.7)),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Camp Pitched for the Night',
-                                style: getTextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF81C784),
-                                ),
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              ImagePath.campTentFire,
+                              width: 36,
+                              height: 36,
+                              fit: BoxFit.contain,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Camp Pitched for the Night',
+                                        style: getTextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: const Color(0xFFD6B36A),
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            'View Camp',
+                                            style: getTextStyle(
+                                              fontSize: 10,
+                                              color: const Color(0xFFD6B36A),
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 2),
+                                          const Icon(Icons.arrow_forward_ios, size: 10, color: Color(0xFFD6B36A)),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    'Today\'s journey is locked. Rest well traveler; a new path opens at sunrise.',
+                                    style: getTextStyle(
+                                      fontSize: 11,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: 2),
-                              Text(
-                                'Today\'s journey is locked. Rest well traveler; a new path opens at sunrise.',
-                                style: getTextStyle(
-                                  fontSize: 11,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   );
                 }),
@@ -613,11 +688,14 @@ class StepJourneyScreen extends StatelessWidget {
                   return Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
+                      border: isCamp
+                          ? Border.all(color: const Color(0xFFD6B36A).withValues(alpha: 0.5), width: 1.5)
+                          : null,
                       gradient: isCamp
                           ? LinearGradient(
                               colors: [
-                                const Color(0xFF1B5E20).withValues(alpha: 0.8),
-                                const Color(0xFF2E7D32).withValues(alpha: 0.8),
+                                const Color(0xFF0F1B2B).withValues(alpha: 0.85),
+                                const Color(0xFF16253B).withValues(alpha: 0.85),
                               ],
                             )
                           : const LinearGradient(
@@ -630,7 +708,7 @@ class StepJourneyScreen extends StatelessWidget {
                       boxShadow: [
                         BoxShadow(
                           color: isCamp
-                              ? const Color(0xFF2E7D32).withValues(alpha: 0.3)
+                              ? Colors.black26
                               : const Color(0xFFD4AF37).withValues(alpha: 0.35),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
@@ -640,7 +718,9 @@ class StepJourneyScreen extends StatelessWidget {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: isCamp ? null : () => controller.confirmSetUpCamp(context),
+                        onTap: isCamp
+                            ? () => controller.showCampDetails(context)
+                            : () => controller.confirmSetUpCamp(context),
                         borderRadius: BorderRadius.circular(16),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
@@ -655,11 +735,11 @@ class StepJourneyScreen extends StatelessWidget {
                               ),
                               const SizedBox(width: 12),
                               Text(
-                                isCamp ? 'Camp Pitched for Tonight' : 'Set Up Camp (+20 XP)',
+                                isCamp ? 'Camp Pitched • Rest Until Dawn' : 'Set Up Camp (+20 XP)',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: isCamp ? Colors.white : Colors.black,
+                                  color: isCamp ? const Color(0xFFD6B36A) : Colors.black,
                                 ),
                               ),
                             ],

@@ -39,4 +39,18 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 .env
+/velvet_iron-attachments (1)
+/extracted_expedition_pack.txt
+/client_text2.txt
+/client_text.txt
+/BACKEND_COMPANION_QUOTES_NOTICE.md
+/BACKEND_MILESTONE3_AND_EXPEDITION_SPEC.md
+/BACKEND_REQUIREMENTS_V1.md
+/REMAINING_WORK_AND_BACKEND_ALIGNMENT_GUIDE.md
+/RESTORE_WELCOME_CARD_INSTRUCTIONS.md
+/STEP_TRACKING_WORKFLOW.md
+/Velvet_and_Iron_Character_Quote_Packs.docx
+/WATER_TRACKING_WORKFLOW.md
+/velvet_iron-attachments
+/COMPANION_QUOTE_PACKS_SPECIFICATION.md
 .gitignore

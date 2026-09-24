@@ -84,6 +84,7 @@ flutter:
     - assets/images/
     - assets/images/paths/
     - assets/images/companions/
+    - assets/images/campsite/
     - assets/dialogue/
     - assets/icons/
     - .env
