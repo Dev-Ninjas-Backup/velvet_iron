@@ -26,7 +26,9 @@ class StepTodayResponse {
   factory StepTodayResponse.fromJson(Map<String, dynamic> json) {
     return StepTodayResponse(
       steps: (json['steps'] as num?)?.toInt() ?? 0,
-      goal: (json['goal'] as num?)?.toInt() ?? 8000,
+      goal: (json['dailyStepGoal'] as num?)?.toInt() ??
+          (json['goal'] as num?)?.toInt() ??
+          8000,
       display: json['display']?.toString() ?? '0 / 8,000 steps',
       percentage: (json['percentage'] as num?)?.toDouble() ?? 0.0,
       isGoalReached: json['isGoalReached'] == true,

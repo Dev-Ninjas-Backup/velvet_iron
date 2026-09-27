@@ -25,6 +25,7 @@ class StepJourneyService {
     debugPrint('[StepJourneyService] GET $url');
     final response = await http.get(url, headers: headers);
     debugPrint('[StepJourneyService] Status: ${response.statusCode}');
+    debugPrint('[StepJourneyService] Body: ${response.body}');
 
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body) as Map<String, dynamic>;

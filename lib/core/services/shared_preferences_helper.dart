@@ -230,4 +230,17 @@ class SharedPreferencesHelper {
     final today = DateTime.now().toIso8601String().substring(0, 10);
     await prefs.setString(_lastFullBodyGreetingDateKey, today);
   }
+
+  // Daily Step Goal persistence
+  static const String _dailyStepGoalKey = 'dailyStepGoal';
+
+  static Future<void> saveDailyStepGoal(int goal) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_dailyStepGoalKey, goal);
+  }
+
+  static Future<int?> getDailyStepGoal() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_dailyStepGoalKey);
+  }
 }

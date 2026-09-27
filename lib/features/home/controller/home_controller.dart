@@ -212,6 +212,12 @@ class HomeController extends GetxController {
             profilePhotoUrl.value = cached;
           }
         }
+
+        if (userProfile.value?.dailyStepGoal != null) {
+          await SharedPreferencesHelper.saveDailyStepGoal(
+            userProfile.value!.dailyStepGoal!,
+          );
+        }
       } catch (e) {
         print('[HomeController] API Error: $e');
         print('[HomeController] Falling back to mock data...');

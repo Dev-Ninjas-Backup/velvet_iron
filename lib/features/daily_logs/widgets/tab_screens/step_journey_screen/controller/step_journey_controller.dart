@@ -34,6 +34,11 @@ class StepJourneyController extends GetxController {
   void onInit() {
     super.onInit();
     ExpeditionContentService().init();
+    SharedPreferencesHelper.getDailyStepGoal().then((g) {
+      if (g != null && g > 0) {
+        goal.value = g;
+      }
+    });
     fetchTodaySteps();
   }
 
@@ -42,11 +47,14 @@ class StepJourneyController extends GetxController {
       if (showLoading) isLoading.value = true;
       final res = await _service.getTodaySteps();
 
+      final savedGoal = await SharedPreferencesHelper.getDailyStepGoal();
+      final effectiveGoal = (savedGoal != null && savedGoal > 0) ? savedGoal : res.goal;
+
       steps.value = res.steps;
-      goal.value = res.goal;
-      display.value = res.display;
-      percentage.value = res.percentage;
-      isGoalReached.value = res.isGoalReached;
+      goal.value = effectiveGoal;
+      percentage.value = effectiveGoal > 0 ? (res.steps / effectiveGoal) * 100 : res.percentage;
+      display.value = '${res.steps.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} / ${effectiveGoal.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} steps';
+      isGoalReached.value = res.steps >= effectiveGoal;
       isCampSet.value = res.isCampSet;
       campSetAt.value = res.campSetAt;
       lifetimeSteps.value = res.lifetimeSteps;
@@ -144,6 +152,13 @@ class StepJourneyController extends GetxController {
   Future<void> updateGoal(int newGoal) async {
     try {
       EasyLoading.show(status: 'Updating goal...');
+      // Optimistic update
+      goal.value = newGoal;
+      percentage.value = newGoal > 0 ? (steps.value / newGoal) * 100 : 0.0;
+      isGoalReached.value = steps.value >= newGoal;
+      display.value = '${steps.value.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} / ${newGoal.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} steps';
+      await SharedPreferencesHelper.saveDailyStepGoal(newGoal);
+
       await _service.updateStepGoal(newGoal);
       EasyLoading.showSuccess('Step goal updated!');
       await fetchTodaySteps(showLoading: false);

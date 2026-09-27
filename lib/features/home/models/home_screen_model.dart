@@ -14,6 +14,7 @@ class UserProfile {
   final int level;
   final bool onBoardingCompleted;
   final String fitnessGoal;
+  final int? dailyStepGoal;
   final DateTime createdAt;
   final DateTime updatedAt;
   final String? profilePhoto;
@@ -43,6 +44,7 @@ class UserProfile {
     required this.level,
     required this.onBoardingCompleted,
     required this.fitnessGoal,
+    this.dailyStepGoal,
     required this.createdAt,
     required this.updatedAt,
     this.profilePhoto,
@@ -87,6 +89,7 @@ class UserProfile {
       level: (json['level'] ?? 0) as int,
       onBoardingCompleted: (json['onBoardingCompleted'] ?? false) as bool,
       fitnessGoal: (json['fitnessGoal'] ?? '') as String,
+      dailyStepGoal: (json['dailyStepGoal'] as num?)?.toInt(),
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'] as String)
           : DateTime.now(),

@@ -195,3 +195,9 @@ The app features "The Long March" Grand Journey. The full Season 1 journey culmi
 - Award **+20 XP** once per calendar day.
 - Increment `totalCampsites` counter on the user profile.
 - Return the unlocked milestone index and cumulative steps in the response body.
+
+### Step Goal Synchronization (`PUT /step-log/goal`)
+- When a user updates their daily step goal:
+  1. Update `dailyStepGoal` in `user_profiles`.
+  2. **Crucial:** Also update `goal` in the active `step_logs` record for today (`date = CURRENT_DATE`), so that immediate subsequent calls to `GET /step-log/today` return the updated `goal`, `display` string, and calculated `percentage` without remaining stuck on the prior snapshot value (e.g. 8,000).
+
