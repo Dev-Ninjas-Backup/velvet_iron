@@ -13,9 +13,15 @@ class DailyGoalController extends GetxController {
   late final TextEditingController carbsController;
   late final TextEditingController proteinController;
   late final TextEditingController fatsController;
+  late final TextEditingController manualCaloriesController;
+  final isManualCalories = false.obs;
 
-  int get totalCalories =>
-      (carbs.value * 4) + (protein.value * 4) + (fats.value * 9);
+  int get totalCalories {
+    if (isManualCalories.value) {
+      return int.tryParse(manualCaloriesController.text) ?? 0;
+    }
+    return (carbs.value * 4) + (protein.value * 4) + (fats.value * 9);
+  }
 
   final MacroGoalService _service = MacroGoalService();
 
@@ -25,6 +31,7 @@ class DailyGoalController extends GetxController {
     carbsController = TextEditingController(text: carbs.value.toString());
     proteinController = TextEditingController(text: protein.value.toString());
     fatsController = TextEditingController(text: fats.value.toString());
+    manualCaloriesController = TextEditingController();
 
     // Sync observable when user types — totalCalories updates reactively
     carbsController.addListener(
@@ -36,6 +43,9 @@ class DailyGoalController extends GetxController {
     fatsController.addListener(
       () => fats.value = int.tryParse(fatsController.text) ?? 0,
     );
+    manualCaloriesController.addListener(() {
+      update();
+    });
 
     // Load cached macro goals first to prevent showing 0s
     _loadCachedGoals();
@@ -46,6 +56,8 @@ class DailyGoalController extends GetxController {
     final c = await SharedPreferencesHelper.getString('macro_carbs');
     final p = await SharedPreferencesHelper.getString('macro_protein');
     final f = await SharedPreferencesHelper.getString('macro_fats');
+    final savedManual = await SharedPreferencesHelper.getString('macro_manual_calories');
+    final isManual = await SharedPreferencesHelper.getBool('macro_is_manual_calories');
 
     if (c != null && c.isNotEmpty) {
       carbs.value = int.tryParse(c) ?? 0;
@@ -59,6 +71,12 @@ class DailyGoalController extends GetxController {
       fats.value = int.tryParse(f) ?? 0;
       fatsController.text = f;
     }
+    if (isManual == true) {
+      isManualCalories.value = true;
+      if (savedManual != null && savedManual.isNotEmpty) {
+        manualCaloriesController.text = savedManual;
+      }
+    }
   }
 
   @override
@@ -66,6 +84,7 @@ class DailyGoalController extends GetxController {
     carbsController.dispose();
     proteinController.dispose();
     fatsController.dispose();
+    manualCaloriesController.dispose();
     super.onClose();
   }
 
@@ -166,6 +185,8 @@ class DailyGoalController extends GetxController {
       await SharedPreferencesHelper.setString('macro_carbs', carbs.value.toString());
       await SharedPreferencesHelper.setString('macro_protein', protein.value.toString());
       await SharedPreferencesHelper.setString('macro_fats', fats.value.toString());
+      await SharedPreferencesHelper.saveBool('macro_is_manual_calories', isManualCalories.value);
+      await SharedPreferencesHelper.saveString('macro_manual_calories', manualCaloriesController.text);
 
       EasyLoading.showSuccess(
         result.message.isNotEmpty ? result.message : 'Daily goals updated!',

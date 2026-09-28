@@ -201,4 +201,79 @@ class AuthService {
       );
     }
   }
+
+  /// Hits GET /profile with access and refresh tokens to check if the session is still valid.
+  /// Returns true if the token is valid (HTTP 200-299 and success != false).
+  /// Returns false if 401, expired, invalid, or error.
+  Future<bool> validateProfileToken({
+    required String accessToken,
+    required String refreshToken,
+  }) async {
+    try {
+      final url = Uri.parse(Urls.homeScreen);
+      final response = await http.get(
+        url,
+        headers: {
+          'accept': '*/*',
+          'Authorization': 'Bearer $accessToken',
+          'x-refresh-token': refreshToken,
+        },
+      );
+
+      print('Validate Profile Token Status: ${response.statusCode}');
+      print('Validate Profile Token Body: ${response.body}');
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final decodedData = jsonDecode(response.body);
+        if (decodedData is Map<String, dynamic> && decodedData['success'] == false) {
+          return false;
+        }
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('Validate Profile Token Error: $e');
+      return false;
+    }
+  }
+
+  /// Hits POST /auth/refresh-token to exchange an expired access token for a new pair.
+  /// Body: {"refreshToken": refreshToken}
+  /// Returns the parsed Map on success, or null on failure/expiration.
+  Future<Map<String, dynamic>?> refreshAuthToken({
+    required String refreshToken,
+  }) async {
+    try {
+      final url = Uri.parse(Urls.refreshToken);
+      final response = await http.post(
+        url,
+        headers: {
+          'accept': '*/*',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'refreshToken': refreshToken,
+        }),
+      );
+
+      print('Refresh Token Status: ${response.statusCode}');
+      print('Refresh Token Body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final decodedData = jsonDecode(response.body);
+        if (decodedData is Map<String, dynamic>) {
+          final isSuccess = decodedData['success'] ?? true;
+          final newAccessToken = decodedData['access_token'];
+          final newRefreshToken = decodedData['refresh_token'];
+          if (isSuccess && newAccessToken != null && newRefreshToken != null) {
+            return decodedData;
+          }
+        }
+      }
+      return null;
+    } catch (e) {
+      print('Refresh Token Error: $e');
+      return null;
+    }
+  }
 }

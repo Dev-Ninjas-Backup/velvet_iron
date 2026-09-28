@@ -39,6 +39,7 @@ class Urls {
       '$baseUrl/meal-schedule/$id/taken?isTaken=true';
   static String mealLogHistory(int limit, int offset) =>
       '$baseUrl/meal-log/history?limit=$limit&offset=$offset';
+  static String updateMealLog(String id) => '$baseUrl/meal-log/$id';
   // static const String mealLog = '$baseUrl/meal-log';
   static const String discordSignIn = '$baseUrl/auth/discord-auth-url';
   static const String discordCallback = '$baseUrl/auth/discord/callback';
@@ -50,6 +51,10 @@ class Urls {
       '$baseUrl/exercise-log/$id/taken?isTaken=true';
   static const String firebaseLogin = '$baseUrl/auth/firebase-login';
   static const String quests = '$baseUrl/xp-stats/quests';
+  static const String questsToday = '$baseUrl/quests/today';
+  static const String completeQuestToday = '$baseUrl/quests/today/complete';
+  static const String customQuests = '$baseUrl/quests/custom';
+  static String deleteCustomQuest(String id) => '$baseUrl/quests/custom/$id';
   static const String addXP = '$baseUrl/profile/add-xp/log';
   static const String homeScreen = '$baseUrl/profile';
   static const String onboardingStatus = '$baseUrl/onboarding';
@@ -80,5 +85,7 @@ class Urls {
       '$baseUrl/step-log/history?limit=$limit';
 
   // Companion Contextual Dialogue
-  static const String companionDialogue = '$baseUrl/companions/current/dialogue';
+  static const String companionDialogue =
+      '$baseUrl/companions/current/dialogue';
+  static const String refreshToken = '$baseUrl/auth/refresh-token';
 }

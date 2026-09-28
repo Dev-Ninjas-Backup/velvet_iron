@@ -102,10 +102,10 @@ class OnboardingController11 extends GetxController {
   }
 
   final benefits = [
-    'Full Advance health tracking features',
-    'Playful & gamified personalized theme and companions',
-    'Daily quote and tips for healths',
-    'Free access in advance discord community for  more advance activity',
+    'Full health & wellness tracking',
+    'Fantasy themes and selectable companions',
+    'Quests, XP, achievements & 1,000,000-step journey',
+    'Private Discord community with challenges, events, and prizes',
   ];
 
   double get progressValue => currentStep.value / totalSteps.value;

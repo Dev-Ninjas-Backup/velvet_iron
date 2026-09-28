@@ -7,12 +7,16 @@ class NutritionInputField extends StatelessWidget {
   final String hintText;
   final TextEditingController? controller;
   final bool enabled;
+  final String unit;
+  final double? width;
 
   const NutritionInputField({
     super.key,
     required this.hintText,
     this.controller,
     this.enabled = true,
+    this.unit = "g",
+    this.width,
   });
 
   @override
@@ -20,9 +24,9 @@ class NutritionInputField extends StatelessWidget {
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
         return Container(
-          width: 98.33, // Fill width as requested
-          height: 40, // Fixed height
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          width: width,
+          height: 40,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           decoration: BoxDecoration(
             color: enabled
                 ? themeController.activeTheme.textfieldColor
@@ -69,9 +73,9 @@ class NutritionInputField extends StatelessWidget {
                 ),
               ),
               Text(
-                "g",
+                unit,
                 style: getTextStyle(
-                  fontSize: 12,
+                  fontSize: 11,
                   color: enabled ? Colors.white : Colors.white54,
                 ),
               ),

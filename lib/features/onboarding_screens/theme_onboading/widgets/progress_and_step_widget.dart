@@ -105,7 +105,7 @@ class ThemesTitleSection extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Your path shapes the world around you, setting the mood and visual style of your journey.',
+            'Your Path determines the visual atmosphere and theme of your Codex. Your companion will be selected separately in the next step.',
             textAlign: TextAlign.center,
             style: getTextStyle(
               fontSize: 12,

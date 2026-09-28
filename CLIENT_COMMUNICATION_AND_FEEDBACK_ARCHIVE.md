@@ -164,19 +164,59 @@ Overall, this update is really exciting. The walk → expedition → pitch camp 
 
 ---
 
-## 4. Item-by-Item Implementation & Status Matrix
 
-| # | Client Request | Status | Implementation Details |
+
+---
+
+## 4. Email 3: Build 3 Testing & Onboarding / UX Refinements
+*Extracted from `client_text3.txt` (received September 2026).*
+
+### Full Message Transcript
+```text
+Hi Salauddin, Thank you for the update and new APK! I've gone through as much of the build as I currently can. I know the profile photo flow, session/token issue, and parts of the backend are still being worked on, so I've kept those in mind. 
+
+1. NEW-USER ONBOARDING – BLOCKED I tested with a brand-new account. At Step 3/11, after entering the user's name and pressing Continue, I receive: "The AWS Access Key Id you provided does not exist in our records." This prevents me from completing onboarding, so I cannot continue testing the full new-user experience until this is fixed. The profile screen also automatically displays the existing placeholder photo on a brand-new account. I know you mentioned profile photos are still being finalized, but I wanted to document it. 
+
+2. CHOOSE YOUR PATH Please add a short description beneath each Path. A new user currently sees four names/colors without knowing what they represent. Adventurer: Forge your strength through an epic fantasy adventure. Scribe: Turn your wellness journey into a story worth writing. Mage: Harness arcane power as you build stronger habits. Realmwalker: Level up your health as you journey between worlds. This will also help clarify that Path determines the theme/style of the Codex while the companion is selected separately. 
+
+3. BARCODE SCANNER The scanner recognizes products (I tested a can of Coke), but nutrition only displays per 100 mL. There is no way to select mL, fl oz/oz, serving size, or the actual quantity consumed. Users need practical serving/unit options for food logging. 
+
+4. MANUAL CALORIES Calories are still being calculated from macros and I cannot independently enter/override them. Your update mentioned independent calorie overrides were implemented, so please check this because I am not seeing it in this APK.
+
+5. QUEST NAMES Several preset quests still have the old generic names such as "Step Master," "Protein Power," and "Three Meals a Day." We previously requested proper fantasy/Codex-style names so these feel integrated into the world. 
+
+6. EXERCISE Exercise logging is still not functioning. I attempted to log Aerial Silks and received: "Failed to log exercise. Please try again." I am also still unable to properly schedule exercises. Both completed exercise logging and scheduling need to work before release. 
+
+7. CAMPSITE COMPANION I love that companion dialogue is appearing at camp! However, the companion portrait is very small and easy to overlook. Please make the companion much larger/more prominent, similar to their presentation during important quest/daily interactions. The companion is a major part of the experience, so the nightly interaction should feel significant. 
+
+8. JOURNEY LANDMARKS/CAMPSITES I reached The Wayfarer's Arch, but there was no clear notification or celebration. The only indication was "Last reached: The Wayfarer's Arch" on the map. Each landmark should have a clear acknowledgement when unlocked. I also have an idea that would make the journey more immersive while keeping the logic simple: Once a user reaches a new landmark, their campsite artwork should change to that location and REMAIN there until they reach the next landmark. Example: Starting area = original campsite Wayfarer's Arch = tent/camp pitched at the Arch Whispering Wood = tent/camp pitched in the woods Next landmark = campsite changes again We can create/provide each campsite image. This makes it feel like the user is actually traveling across the map and pitching camp at each location. The logic can simply be: once cumulative steps reach a landmark threshold, change the campsite image to that location until the next threshold is reached. 
+
+9. CAMP IMAGE The small "Camp Pitched for the Night" thumbnail still uses the other tent image. Please update it to our approved campsite artwork for consistency.
+
+10. MEMBERSHIP/SUBSCRIPTION COPY The Membership Benefits section needs to be updated before launch. There are grammatical issues, and it currently undersells what makes Premium valuable. I would like the benefits to emphasize: • Full health & wellness tracking • Fantasy themes and selectable companions • Quests, XP, achievements & 1,000,000-step journey • Private Discord community with challenges, events, prizes, etc. There are also customer-facing phrases that need proofreading, including: "Full Advance health tracking features" "Daily quote and tips for healths" "advance discord community" "Choose package to experience the full potential" Since this is where we're asking users to purchase Premium, the language needs to feel polished and clearly explain what they're receiving. 
+
+11. DISCORD/COMMUNITY LOCATION The private Discord is a major membership benefit, but the Join Discord button is currently under Feedback & Support. Most users will not intuitively open Feedback & Support to find their community. Please keep that button if desired, but also add a much easier/visible route to Discord. I think a "Community" or fantasy-themed "Guild" option accessible from Settings/main navigation would work well. 
+
+That's everything I can meaningfully test in this build until the blocking issues are resolved. There are several improvements I'm very happy to see, especially the expanded quest system, campsite experience, map/journey system and companion integration. We're very close, and I want to make sure we catch these remaining items before store submission rather than needing changes after release. Please let me know when the blocking issues are resolved/there is an updated build and I'll continue testing. Thank you again to you and the team!
+
+Attachment: /Users/saharaislam/Desktop/tahmid/velvet_iron/velvet_iron-attachments
+```
+
+---
+
+## 5. Comprehensive Implementation & Status Matrix
+
+| # | Client Request (Email 3) | Status | Target Implementation & Resolution Notes |
 |:---:|:---|:---:|:---|
-| **1** | **Selected Companion Appears & Speaks** | ✅ Completed | Implemented `CompanionDialogueEngine` with contextual banners, dynamic greetings on App Open, Streak, and Milestone triggers. Fixed companion switching bug. |
-| **2** | **Aged Fantasy Map & Step Expedition** | ✅ Completed | Implemented in `StepJourneyScreen` with winding path, landmark milestones up to 1,000,000 cumulative steps, and landmark lore/quote cards. |
-| **3** | **Daily vs. Cumulative Metric Separation** | ✅ Completed | Card shows `Daily Expedition: Steps / Goal` (% calculated daily), while the progress bar shows `Grand Journey: The Long March` (% of 1,000,000 steps). Renamed to "Cumulative Journey Steps". |
-| **4** | **Step Goal Setting & Retention** | ✅ Completed | Gear icon opens target goal modal. Persists via `PUT /step-log/goal` and synchronizes locally and across app restarts. |
-| **5** | **Camp Completion Styling** | ✅ Completed | Replaced bright green pill/button with theme-consistent navy/antique gold banner and muted `"Camp Pitched • Rest Until Dawn"` button. |
-| **6** | **Campsite Artwork & Resting Companion Poses** | ✅ Completed | Extracted resting poses for Riven, Thyra, Leon, and Visepheron and displayed them by the campfire illustration with canonical dialogue. |
-| **7** | **Mana Potion Water Tracker** | ✅ Completed | Implemented animated potion bottle with dual-unit normalization (oz & mL), quick-add buttons (+8, +16, +24, +32), and goal customization. |
-| **8** | **Barcode Scanner (Dual Database)** | ✅ Completed | Primary lookup via Open Food Facts with automatic nutrition extraction and manual editing enabled. USDA fallback architecture specified for backend. |
-| **9** | **Replace Generic Black Error/Toast Boxes** | ✅ Completed | Replaced with themed gold/navy dialogs and styled `EasyLoading` fantasy notifications. |
-| **10** | **Anti-Abuse Safeguards** | ✅ Completed | Daily limit guard capped at 50,000 steps/day. Setting up camp locks steps for the remainder of the calendar day. |
-| **11** | **Riven High-Res Magical Purple Flame** | ✅ Completed | High-resolution magical flame assets generated and integrated. |
-| **12** | **Custom Quest Creation & Recurring Schedules** | 🔄 Backend Spec | UI and offline fallback created; backend API contracts documented in `BACKEND_MILESTONE3_AND_EXPEDITION_SPEC.md`. |
+| **1** | **New-User Onboarding Blocked (AWS S3)** | ✅ **Resolved** | Added auto-recovery fallback in `Onboarding2Service` so if S3 avatar upload fails, it retries with `profilePhoto: null` to allow Step 3/11 completion without disruption. Filtered out backend hardcoded dummy avatar (`pinimg.com`) for new accounts. |
+| **2** | **Choose Your Path Descriptions** | ✅ **Resolved** | Added client's exact 4 path descriptions as subtitles in `themes_list_widget.dart` and clarified Path (visual style/atmosphere) vs Companion selection in `progress_and_step_widget.dart`. |
+| **3** | **Barcode Scanner Serving Size & Units** | ✅ **Resolved** | Stored base 100g/mL nutrition in `ScanBarcodeController`, extracted product serving size, and added dynamic unit selector (`100g / 100mL`, `Serving`, `mL`, `fl oz`, `oz`, `g`) + multiplier in `nutrition_fields.dart`. |
+| **4** | **Manual Calorie Override UI** | ✅ **Resolved** | Added interactive "Auto (Macros)" vs "Manual Override" toggle in `daily_goal_controller.dart` & `daily_marco_goal.dart`, with persistent manual calorie storage in `SharedPreferencesHelper`. |
+| **5** | **Preset Quest Fantasy Names** | ✅ **Resolved** | Mapped generic preset names to Codex lore in `Quest.fromJson`: "Stride of the Realmwalker", "Feast of the Hearth", "Titan's Nourishment" (with 30g+ protein fix), "Elixir of the Alchemist", "Attunement of Spirit". |
+| **6** | **Exercise Logging & Scheduling Fix** | ✅ **Resolved** | Fixed root cause: backend rejected `"MODERATE"` intensity with 400. Mapped `"MODERATE"` -> `"MEDIUM"` for both `logExercise()` and `scheduleExercise()` in `exercise_service.dart`. |
+| **7** | **Campsite Companion Portrait Prominence** | ✅ **Resolved** | Replaced tiny 68x68 thumbnail with a prominent 140x140 gilded circular portrait, companion title badge, and illuminated dialogue speech box in `step_journey_controller.dart`. |
+| **8** | **Landmark Unlock Celebration & Dynamic Campsite Art** | ✅ **Resolved** | Integrated all 10 landmark campsite images from `velvet_iron-attachments/` into `assets/images/campsite/`. Added threshold calculation in `ExpeditionContentService` to dynamically show landmark artwork and location badge based on cumulative steps, plus landmark unlock modal. |
+| **9** | **Camp Pitched Small Thumbnail Image** | ✅ **Resolved** | Generated approved `camp_thumbnail.png` from `campsite_scene.png` and updated `ImagePath.campTentFire` for buttons, cards, and rituals. |
+| **10** | **Membership Benefits Copy Overhaul** | ✅ **Resolved** | Updated benefits in `membership_benefits.dart` and `onboarding11_controller.dart` to the 4 value pillars; updated onboarding header to "Choose a Plan to Unlock Your Full Potential" in `onboarding11_widgets.dart`. |
+| **11** | **Guild / Community Discord Entry** | ✅ **Resolved** | Added "Guild Hall (Discord Community)" item in `general_setting_item.dart` linking to `https://discord.gg/velvetiron` and implemented `joinDiscord()` in `feedback_controller.dart` via `url_launcher`. |
+

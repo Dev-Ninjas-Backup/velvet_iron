@@ -114,7 +114,8 @@ class ImagePath {
   static const String congratulations = 'assets/images/congratulations.png';
   static const String potionFlaskBlue = 'assets/images/potion_flask_blue.png';
   static const String fantasyAdventureMap = 'assets/images/fantasy_adventure_map.png';
-  static const String campTentFire = 'assets/images/camp_tent_fire.png';
+  static const String campTentFire = 'assets/images/campsite/camp_thumbnail.png';
+  static const String campThumbnail = 'assets/images/campsite/camp_thumbnail.png';
 
   // Campsite Art & Resting Companions
   static const String campsiteScene = 'assets/images/campsite/campsite_scene.png';
@@ -122,4 +123,16 @@ class ImagePath {
   static const String thyraResting = 'assets/images/campsite/thyra_resting.png';
   static const String leonResting = 'assets/images/campsite/leon_resting.png';
   static const String visepheronResting = 'assets/images/campsite/visepheron_resting.png';
+
+  // Dynamic Landmark Campsite Artwork
+  static const String landmarkArch = 'assets/images/campsite/landmark_1_arch.png';
+  static const String landmarkWhisperwood = 'assets/images/campsite/landmark_2_whisperwood.png';
+  static const String landmarkCrossing = 'assets/images/campsite/landmark_3_crossing.png';
+  static const String landmarkVael = 'assets/images/campsite/landmark_4_vael.png';
+  static const String landmarkMarsh = 'assets/images/campsite/landmark_5_marsh.png';
+  static const String landmarkWatchtower = 'assets/images/campsite/landmark_6_watchtower.png';
+  static const String landmarkAshenPass = 'assets/images/campsite/landmark_7_ashen_pass.png';
+  static const String landmarkKingsRoad = 'assets/images/campsite/landmark_8_kings_road.png';
+  static const String landmarkObsidianKeep = 'assets/images/campsite/landmark_9_obsidian_keep.png';
+  static const String landmarkCitadel = 'assets/images/campsite/landmark_10_citadel.png';
 }

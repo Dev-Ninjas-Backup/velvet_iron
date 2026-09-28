@@ -165,7 +165,7 @@ class ProfileController extends GetxController {
       userName.value = result.user.username;
       remoteProfilePhoto.value = result.user.profilePhoto.isNotEmpty
           ? result.user.profilePhoto
-          : result.user.avatar;
+          : (result.user.avatar.contains('pinimg.com') ? '' : result.user.avatar);
 
       if (remoteProfilePhoto.value.isNotEmpty) {
         await SharedPreferencesHelper.saveAvatar(remoteProfilePhoto.value);

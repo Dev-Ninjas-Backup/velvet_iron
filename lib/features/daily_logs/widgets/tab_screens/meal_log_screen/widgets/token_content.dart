@@ -92,45 +92,66 @@ class TokenContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: 98,
-                      child: Text("Carbs", style: getTextStyle(fontSize: 14)),
+                    Expanded(
+                      child: Text("Calories", style: getTextStyle(fontSize: 13, color: Colors.white70)),
                     ),
-                    SizedBox(
-                      width: 98,
-                      child: Text("Protein", style: getTextStyle(fontSize: 14)),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text("Carbs", style: getTextStyle(fontSize: 13, color: Colors.white70)),
                     ),
-                    SizedBox(
-                      width: 98,
-                      child: Text("Fats", style: getTextStyle(fontSize: 14)),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text("Protein", style: getTextStyle(fontSize: 13, color: Colors.white70)),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text("Fats", style: getTextStyle(fontSize: 13, color: Colors.white70)),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Obx(
-                      () => NutritionInputField(
-                        hintText: "carbs",
-                        controller: controller.carbsController,
-                        enabled: !controller.isCarbsFromScan.value,
+                    Expanded(
+                      child: NutritionInputField(
+                        hintText: "cal",
+                        controller: controller.caloriesController,
+                        unit: "kcal",
+                        enabled: true,
                       ),
                     ),
-                    Obx(
-                      () => NutritionInputField(
-                        hintText: "protein",
-                        controller: controller.proteinController,
-                        enabled: !controller.isProteinFromScan.value,
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Obx(
+                        () => NutritionInputField(
+                          hintText: "carbs",
+                          controller: controller.carbsController,
+                          unit: "g",
+                          enabled: !controller.isCarbsFromScan.value,
+                        ),
                       ),
                     ),
-                    Obx(
-                      () => NutritionInputField(
-                        hintText: "fats",
-                        controller: controller.fatController,
-                        enabled: !controller.isFatsFromScan.value,
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Obx(
+                        () => NutritionInputField(
+                          hintText: "protein",
+                          controller: controller.proteinController,
+                          unit: "g",
+                          enabled: !controller.isProteinFromScan.value,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Obx(
+                        () => NutritionInputField(
+                          hintText: "fats",
+                          controller: controller.fatController,
+                          unit: "g",
+                          enabled: !controller.isFatsFromScan.value,
+                        ),
                       ),
                     ),
                   ],

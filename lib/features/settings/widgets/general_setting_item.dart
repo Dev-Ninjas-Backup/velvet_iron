@@ -7,6 +7,7 @@ import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GeneralSettingsWidget extends StatelessWidget {
   const GeneralSettingsWidget({super.key});
@@ -61,6 +62,22 @@ class GeneralSettingsWidget extends StatelessWidget {
               iconPath: ImagePath.diamondAdventurer,
               title: 'My Subscriptions',
               onTap: () => Get.toNamed(AppRoute.mySubscriptionScreen),
+            ),
+            const SizedBox(height: 12),
+
+            // Guild Hall (Discord Community)
+            _SettingsItem(
+              themeController: themeController,
+              iconPath: IconPath.discordwhite,
+              title: 'Guild Hall (Discord Community)',
+              onTap: () async {
+                final url = Uri.parse('https://discord.gg/velvetiron');
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                } else {
+                  await launchUrl(url);
+                }
+              },
             ),
             const SizedBox(height: 12),
 

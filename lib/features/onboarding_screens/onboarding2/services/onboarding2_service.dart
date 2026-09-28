@@ -79,6 +79,11 @@ class Onboarding2Service {
             responseData: decodedData,
           );
         } else {
+          // If failed with photo, retry without photo
+          if (profilePhoto != null) {
+            print('⚠️ S3 Photo upload failed, falling back to username-only update');
+            return await updateProfile(username: username, profilePhoto: null);
+          }
           return ResponseData(
             isSuccess: false,
             statusCode: response.statusCode,
@@ -87,6 +92,11 @@ class Onboarding2Service {
           );
         }
       } else {
+        // Fallback for 500 / AWS Access Key errors when photo was attached
+        if (profilePhoto != null) {
+          print('⚠️ Server error during photo upload (${response.statusCode}), falling back without photo');
+          return await updateProfile(username: username, profilePhoto: null);
+        }
         return ResponseData(
           isSuccess: false,
           statusCode: response.statusCode,

@@ -356,6 +356,12 @@ class HomeController extends GetxController {
     }
 
     for (final quest in quests) {
+      // Avoid duplicate display if this quest matches an already-added schedule item
+      final isAlreadyAdded = items.any((existing) =>
+          existing.id == quest.id ||
+          (quest.originalRefId != null && existing.id == quest.originalRefId));
+      if (isAlreadyAdded) continue;
+
       final titleLower = quest.title.toLowerCase();
       final isWater = quest.id.contains('water') ||
           titleLower.contains('water') ||

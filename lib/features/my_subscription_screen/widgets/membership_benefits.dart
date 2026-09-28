@@ -8,10 +8,10 @@ class MembershipBenefits extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final benefits = [
-      "Full advance health tracking features",
-      "Playful & gamified personalized theme and companions ",
-      "Daily quote and health tips",
-      "Free access in advance discord community for  more advance activity ",
+      "Full health & wellness tracking",
+      "Fantasy themes and selectable companions",
+      "Quests, XP, achievements & 1,000,000-step journey",
+      "Private Discord community with challenges, events, and prizes",
     ];
 
     return Column(

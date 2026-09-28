@@ -89,7 +89,7 @@ class OnboardingHeaderWidget11 extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Text(
-        "Choose package to experience the full potential",
+        "Choose a Plan to Unlock Your Full Potential",
         textAlign: TextAlign.center,
         style: getTextStyle(
           fontSize: 24,

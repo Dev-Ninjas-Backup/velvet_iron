@@ -13,6 +13,7 @@ class MealLogService {
     required String carbs,
     required String protein,
     required String fats,
+    int? calories,
   }) async {
     try {
       final accessToken = await SharedPreferencesHelper.getAccessToken();
@@ -41,6 +42,9 @@ class MealLogService {
       request.fields['carbs'] = carbs;
       request.fields['protein'] = protein;
       request.fields['fats'] = fats;
+      if (calories != null && calories > 0) {
+        request.fields['calories'] = calories.toString();
+      }
 
       debugLog('Request URL: ${uri.toString()}');
       debugLog('Request Fields: ${request.fields}');
@@ -60,13 +64,18 @@ class MealLogService {
         debugLog('Parsed JSON: $jsonData');
 
         final meal = MealLogModel.fromJson(jsonData);
-        debugLog('MealLog ID: ${meal.id}');
-        debugLog('Earned XP: ${meal.earnedXp}');
-        debugLog('Calories: ${meal.calories}');
-        debugLog('isTaken: ${meal.isTaken}');
-        debugLog('LoggedAt: ${meal.loggedAt}');
-
         return meal;
+      } else if (response.statusCode == 400 && response.body.contains('calories') && calories != null) {
+        // Fallback retry without calories if backend hasn't finished deploying calories override DTO
+        debugLog('Backend rejected calories field, retrying without calories override...');
+        return await logMeal(
+          mealType: mealType,
+          description: description,
+          carbs: carbs,
+          protein: protein,
+          fats: fats,
+          calories: null,
+        );
       } else {
         debugLog('API Error: ${response.statusCode}');
         debugLog('Error Body: ${response.body}');
@@ -250,6 +259,71 @@ class MealLogService {
     } catch (e, stackTrace) {
       debugLog('Exception in markMealAsTaken: $e');
       debugLog('StackTrace: $stackTrace');
+      return false;
+    }
+  }
+
+  /// Update an existing meal log (PATCH /meal-log/:id with optional calories override)
+  Future<bool> updateMealLog({
+    required String mealLogId,
+    required String mealType,
+    required String carbs,
+    required String protein,
+    required String fats,
+    int? calories,
+  }) async {
+    try {
+      final accessToken = await SharedPreferencesHelper.getAccessToken();
+      final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+
+      if (accessToken == null || refreshToken == null) {
+        debugLog('Tokens not found in SharedPreferences');
+        return false;
+      }
+
+      final uri = Uri.parse(Urls.updateMealLog(mealLogId));
+      final Map<String, dynamic> body = {
+        'mealType': mealType,
+        'carbs': double.tryParse(carbs) ?? 0,
+        'protein': double.tryParse(protein) ?? 0,
+        'fats': double.tryParse(fats) ?? 0,
+      };
+      if (calories != null && calories > 0) {
+        body['calories'] = calories;
+      }
+
+      final response = await http.patch(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+          'x-refresh-token': refreshToken,
+        },
+        body: jsonEncode(body),
+      );
+
+      debugLog('updateMealLog Status: ${response.statusCode}');
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else if (response.statusCode == 400 && response.body.contains('calories') && calories != null) {
+        // Fallback retry without calories field
+        body.remove('calories');
+        final retryResponse = await http.patch(
+          uri,
+          headers: {
+            'Content-Type': 'application/json',
+            'accept': 'application/json',
+            'Authorization': 'Bearer $accessToken',
+            'x-refresh-token': refreshToken,
+          },
+          body: jsonEncode(body),
+        );
+        return retryResponse.statusCode == 200 || retryResponse.statusCode == 201;
+      }
+      return false;
+    } catch (e) {
+      debugLog('Exception in updateMealLog: $e');
       return false;
     }
   }

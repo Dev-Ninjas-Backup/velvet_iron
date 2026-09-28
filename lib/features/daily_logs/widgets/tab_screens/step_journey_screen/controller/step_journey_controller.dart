@@ -73,11 +73,182 @@ class StepJourneyController extends GetxController {
         activeLore: landmarkStatus.currentMilestone?.lore ?? res.fantasyMap.activeLore,
         companionReaction: res.fantasyMap.companionReaction,
       );
+
+      checkAndCelebrateNewLandmark(null);
     } catch (e) {
       debugPrint('[StepJourneyController] Error fetching steps: $e');
     } finally {
       if (showLoading) isLoading.value = false;
     }
+  }
+
+  /// Automatically celebrate when a new milestone landmark threshold is unlocked
+  Future<void> checkAndCelebrateNewLandmark(BuildContext? context) async {
+    final landmarkStatus = ExpeditionContentService().getLandmarkStatus(lifetimeSteps.value);
+    final current = landmarkStatus.currentMilestone;
+    if (current == null) return;
+
+    final lastCelebrated = await SharedPreferencesHelper.getString('last_celebrated_landmark');
+    if (lastCelebrated != current.name) {
+      await SharedPreferencesHelper.setString('last_celebrated_landmark', current.name);
+      if (context != null && context.mounted) {
+        showLandmarkCelebrationModal(context, current);
+      } else if (Get.context != null && Get.context!.mounted) {
+        showLandmarkCelebrationModal(Get.context!, current);
+      }
+    }
+  }
+
+  /// Show grand modal acknowledging when a landmark is unlocked
+  void showLandmarkCelebrationModal(BuildContext context, MilestoneInfo milestone) {
+    final artwork = ExpeditionContentService().getCampsiteArtworkForSteps(milestone.steps);
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0F1B2B).withValues(alpha: 0.96),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: const Color(0xFFD6B36A), width: 2),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFFE5A93C).withValues(alpha: 0.35),
+                  blurRadius: 24,
+                  spreadRadius: 4,
+                ),
+              ],
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.star, color: Color(0xFFE5A93C), size: 24),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Landmark Reached!',
+                        style: getTextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFFE5A93C),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.star, color: Color(0xFFE5A93C), size: 24),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    milestone.name,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Landmark Artwork
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.asset(
+                      artwork,
+                      width: double.infinity,
+                      height: 160,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE5A93C).withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xFFE5A93C)),
+                    ),
+                    child: Text(
+                      '${milestone.steps.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} Cumulative Steps • Landmark Unlocked',
+                      style: const TextStyle(
+                        color: Color(0xFFE5A93C),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Lore and Clue
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.35),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: const Color(0xFFD6B36A).withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          milestone.lore,
+                          style: getTextStyle(
+                            fontSize: 12,
+                            color: Colors.white,
+                          ),
+                        ),
+                        if (milestone.canonicalClue.isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            'Observation: "${milestone.canonicalClue}"',
+                            style: getTextStyle(
+                              fontSize: 11,
+                              color: const Color(0xFFD6B36A),
+                            ).copyWith(fontStyle: FontStyle.italic),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFD6B36A),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      onPressed: () => Navigator.pop(ctx),
+                      child: const Text(
+                        'Continue Expedition',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   /// Add incremental steps (e.g. +1,000)
@@ -298,6 +469,8 @@ class StepJourneyController extends GetxController {
 
     final restingAsset = ExpeditionContentService().getRestingPoseAsset(companionName);
     final campQuote = ExpeditionContentService().getRandomCampsiteQuote(companionName);
+    final campsiteArtwork = ExpeditionContentService().getCampsiteArtworkForSteps(lifetimeSteps.value);
+    final campLocation = ExpeditionContentService().getCampsiteLocationName(lifetimeSteps.value);
     final locked = stepsLocked ?? steps.value;
     final xp = earnedXp ?? 20;
 
@@ -327,15 +500,50 @@ class StepJourneyController extends GetxController {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Campsite Scene Artwork
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Image.asset(
-                      ImagePath.campsiteScene,
-                      width: double.infinity,
-                      height: 150,
-                      fit: BoxFit.cover,
-                    ),
+                  // Campsite Scene Artwork with Location Badge
+                  Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Image.asset(
+                          campsiteArtwork,
+                          width: double.infinity,
+                          height: 160,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 8,
+                        left: 8,
+                        right: 8,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.65),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: const Color(0xFFD6B36A).withValues(alpha: 0.5)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.location_on, color: Color(0xFFE5A93C), size: 14),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: Text(
+                                  campLocation,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 14),
 
@@ -380,55 +588,100 @@ class StepJourneyController extends GetxController {
                   ),
                   const SizedBox(height: 14),
 
-                  // Resting Companion Avatar & Campsite Quote
+                  // Prominent Resting Companion Portrait & Nightly Dialogue
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.4),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: const Color(0xFFD6B36A).withValues(alpha: 0.3)),
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          const Color(0xFF16253B).withValues(alpha: 0.9),
+                          const Color(0xFF0A121D).withValues(alpha: 0.95),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(
+                        color: const Color(0xFFD6B36A).withValues(alpha: 0.5),
+                        width: 1.5,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.4),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
-                    child: Row(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        // Large Prominent Companion Portrait
                         Container(
-                          width: 68,
-                          height: 68,
+                          height: 140,
+                          width: 140,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: const Color(0xFFD6B36A).withValues(alpha: 0.6)),
-                            color: Colors.black38,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: const Color(0xFFD6B36A),
+                              width: 2.5,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFFE5A93C).withValues(alpha: 0.3),
+                                blurRadius: 14,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                            color: Colors.black45,
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(11),
+                          child: ClipOval(
                             child: Image.asset(
                               restingAsset,
-                              fit: BoxFit.contain,
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                companionName,
-                                style: const TextStyle(
-                                  color: Color(0xFFD6B36A),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '"$campQuote"',
-                                style: getTextStyle(
-                                  fontSize: 11,
-                                  color: Colors.white70,
-                                ).copyWith(fontStyle: FontStyle.italic),
-                              ),
-                            ],
+                        const SizedBox(height: 12),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFD6B36A).withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: const Color(0xFFD6B36A).withValues(alpha: 0.7),
+                            ),
+                          ),
+                          child: Text(
+                            companionName.toUpperCase(),
+                            style: const TextStyle(
+                              color: Color(0xFFD6B36A),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              letterSpacing: 1.2,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        // Dialogue Box
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.35),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: const Color(0xFFD6B36A).withValues(alpha: 0.25),
+                            ),
+                          ),
+                          child: Text(
+                            '"$campQuote"',
+                            textAlign: TextAlign.center,
+                            style: getTextStyle(
+                              fontSize: 13,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                            ).copyWith(fontStyle: FontStyle.italic, height: 1.4),
                           ),
                         ),
                       ],

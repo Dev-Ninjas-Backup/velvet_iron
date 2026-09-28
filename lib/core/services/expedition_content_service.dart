@@ -222,6 +222,41 @@ class ExpeditionContentService {
     } else if (lower.contains('visepheron') || lower.contains('dragon')) {
       return ImagePath.visepheronResting;
     }
-    return ImagePath.campTentFire;
+    return ImagePath.campThumbnail;
+  }
+
+  /// Get dynamic campsite artwork based on cumulative journey steps
+  String getCampsiteArtworkForSteps(int cumulativeSteps) {
+    if (cumulativeSteps >= 1000000) {
+      return ImagePath.landmarkCitadel;
+    } else if (cumulativeSteps >= 875000) {
+      return ImagePath.landmarkObsidianKeep;
+    } else if (cumulativeSteps >= 750000) {
+      return ImagePath.landmarkKingsRoad;
+    } else if (cumulativeSteps >= 625000) {
+      return ImagePath.landmarkAshenPass;
+    } else if (cumulativeSteps >= 500000) {
+      return ImagePath.landmarkWatchtower;
+    } else if (cumulativeSteps >= 375000) {
+      return ImagePath.landmarkMarsh;
+    } else if (cumulativeSteps >= 250000) {
+      return ImagePath.landmarkVael;
+    } else if (cumulativeSteps >= 150000) {
+      return ImagePath.landmarkCrossing;
+    } else if (cumulativeSteps >= 75000) {
+      return ImagePath.landmarkWhisperwood;
+    } else if (cumulativeSteps >= 25000) {
+      return ImagePath.landmarkArch;
+    }
+    return ImagePath.campsiteScene;
+  }
+
+  /// Get campsite location title
+  String getCampsiteLocationName(int cumulativeSteps) {
+    final status = getLandmarkStatus(cumulativeSteps);
+    if (status.currentMilestone != null) {
+      return "Camp at ${status.currentMilestone!.name}";
+    }
+    return "Camp at the Starting Outpost";
   }
 }

@@ -63,13 +63,19 @@ class UserProfile {
   });
 
   String? get effectiveProfileImage {
-    if (profilePhoto != null && profilePhoto!.isNotEmpty) {
+    if (profilePhoto != null &&
+        profilePhoto!.isNotEmpty &&
+        !profilePhoto!.contains('pinimg.com')) {
       return profilePhoto;
     }
-    if (user.profilePhoto != null && user.profilePhoto!.isNotEmpty) {
+    if (user.profilePhoto != null &&
+        user.profilePhoto!.isNotEmpty &&
+        !user.profilePhoto!.contains('pinimg.com')) {
       return user.profilePhoto;
     }
-    if (user.avatar != null && user.avatar!.isNotEmpty) {
+    if (user.avatar != null &&
+        user.avatar!.isNotEmpty &&
+        !user.avatar!.contains('pinimg.com')) {
       return user.avatar;
     }
     return null;

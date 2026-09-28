@@ -33,11 +33,26 @@ class ExerciseService {
       'x-refresh-token': refreshToken,
     });
 
-    request.fields['type'] = type.toUpperCase();
-    request.fields['name'] = name;
-    request.fields['intensity'] = intensity.toUpperCase();
-    request.fields['duration'] = duration.toString();
-    request.fields['note'] = note;
+    String cleanIntensity = intensity.toUpperCase().trim();
+    if (cleanIntensity == 'MODERATE' || cleanIntensity == 'MED' || cleanIntensity.isEmpty) {
+      cleanIntensity = 'MEDIUM';
+    } else if (cleanIntensity != 'LOW' && cleanIntensity != 'HIGH') {
+      cleanIntensity = 'MEDIUM';
+    }
+
+    String cleanType = type.toUpperCase().trim();
+    if (cleanType != 'CARDIO' && cleanType != 'STRENGTH' && cleanType != 'FLEXIBILITY' && cleanType != 'BALANCE') {
+      cleanType = 'CARDIO';
+    }
+
+    final exerciseName = name.trim().isNotEmpty ? name.trim() : (type.isNotEmpty ? type : 'Exercise');
+    final exerciseDuration = duration > 0 ? duration : 30;
+
+    request.fields['type'] = cleanType;
+    request.fields['name'] = exerciseName;
+    request.fields['intensity'] = cleanIntensity;
+    request.fields['duration'] = exerciseDuration.toString();
+    request.fields['note'] = note.trim();
 
     print('📤 Request Fields: ${request.fields}');
 
@@ -122,11 +137,26 @@ class ExerciseService {
       'x-refresh-token': refreshToken,
     });
 
-    request.fields['type'] = type.toUpperCase();
-    request.fields['name'] = name;
-    request.fields['intensity'] = intensity.toUpperCase();
-    request.fields['duration'] = duration.toString();
-    request.fields['note'] = note;
+    String cleanIntensity = intensity.toUpperCase().trim();
+    if (cleanIntensity == 'MODERATE' || cleanIntensity == 'MED' || cleanIntensity.isEmpty) {
+      cleanIntensity = 'MEDIUM';
+    } else if (cleanIntensity != 'LOW' && cleanIntensity != 'HIGH') {
+      cleanIntensity = 'MEDIUM';
+    }
+
+    String cleanType = type.toUpperCase().trim();
+    if (cleanType != 'CARDIO' && cleanType != 'STRENGTH' && cleanType != 'FLEXIBILITY' && cleanType != 'BALANCE') {
+      cleanType = 'CARDIO';
+    }
+
+    final exerciseName = name.trim().isNotEmpty ? name.trim() : (type.isNotEmpty ? type : 'Exercise');
+    final exerciseDuration = duration > 0 ? duration : 30;
+
+    request.fields['type'] = cleanType;
+    request.fields['name'] = exerciseName;
+    request.fields['intensity'] = cleanIntensity;
+    request.fields['duration'] = exerciseDuration.toString();
+    request.fields['note'] = note.trim();
     request.fields['scheduledAt'] = scheduledAt.toUtc().toIso8601String();
 
     print('📤 Schedule Request Fields: ${request.fields}');

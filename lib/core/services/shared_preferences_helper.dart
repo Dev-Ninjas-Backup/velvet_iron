@@ -11,6 +11,24 @@ class SharedPreferencesHelper {
     await prefs.setString(key, value);
   }
 
+  static Future<void> saveString(String key, String value) async {
+    await setString(key, value);
+  }
+
+  static Future<bool?> getBool(String key) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(key);
+  }
+
+  static Future<void> setBool(String key, bool value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(key, value);
+  }
+
+  static Future<void> saveBool(String key, bool value) async {
+    await setBool(key, value);
+  }
+
   static const String _accessTokenKey = 'token';
   static const String _userIdKey = 'userId';
   static const String _emailKey = 'email';
@@ -85,6 +103,25 @@ class SharedPreferencesHelper {
     await prefs.setString(_roleKey, role);
     await prefs.setBool(_isLoginKey, true);
     await prefs.setBool(_rememberMeKey, rememberMe);
+  }
+
+  static Future<void> saveRefreshedTokens({
+    required String accessToken,
+    required String refreshToken,
+    Map<String, dynamic>? user,
+  }) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_accessTokenKey, accessToken);
+    await prefs.setString(_refreshTokenKey, refreshToken);
+    await prefs.setBool(_isLoginKey, true);
+    if (user != null) {
+      if (user['id'] != null) await prefs.setString(_userIdKey, user['id'].toString());
+      if (user['email'] != null) await prefs.setString(_emailKey, user['email'].toString());
+      if (user['name'] != null) await prefs.setString(_nameKey, user['name'].toString());
+      if (user['username'] != null) await prefs.setString(_usernameKey, user['username'].toString());
+      if (user['avatar'] != null) await prefs.setString(_avatarKey, user['avatar'].toString());
+      if (user['role'] != null) await prefs.setString(_roleKey, user['role'].toString());
+    }
   }
 
   static Future<String?> getAccessToken() async {

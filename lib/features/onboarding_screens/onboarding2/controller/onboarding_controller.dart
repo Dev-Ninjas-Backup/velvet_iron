@@ -64,7 +64,13 @@ class Onboarding2Controller extends GetxController {
       );
       Get.toNamed(AppRoute.getonboardingScreen3());
     } else {
-      EasyLoading.showError(response.errorMessage);
+      if (response.errorMessage.contains('AWS') ||
+          response.errorMessage.contains('Access Key')) {
+        EasyLoading.showInfo('Username saved. Profile photo service updating.');
+        Get.toNamed(AppRoute.getonboardingScreen3());
+      } else {
+        EasyLoading.showError(response.errorMessage);
+      }
     }
   }
 

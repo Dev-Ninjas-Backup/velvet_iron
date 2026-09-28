@@ -45,10 +45,23 @@ class ThemesListWidget extends StatelessWidget {
               if (displayTitle.toLowerCase() == 'reader') displayTitle = 'Scribe';
               if (displayTitle.toLowerCase() == 'gamer') displayTitle = 'Realmwalker';
 
+              String subtitle = '';
+              final lower = displayTitle.toLowerCase();
+              if (lower == 'adventurer') {
+                subtitle = 'Forge your strength through an epic fantasy adventure.';
+              } else if (lower == 'scribe') {
+                subtitle = 'Turn your wellness journey into a story worth writing.';
+              } else if (lower == 'mage') {
+                subtitle = 'Harness arcane power as you build stronger habits.';
+              } else if (lower == 'realmwalker') {
+                subtitle = 'Level up your health as you journey between worlds.';
+              }
+
               return Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: Themes(
                   title: displayTitle,
+                  subtitle: subtitle,
                   badgeText: isSelected ? 'Active Now' : '',
                   gradientColors: _getThemeGradient(appTheme.id),
                   icon: isOnboardingSelected

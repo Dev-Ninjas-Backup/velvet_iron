@@ -15,10 +15,87 @@ class ScanBarcodeController extends GetxController {
   final protein = TextEditingController();
   final fats = TextEditingController();
   final calories = TextEditingController();
+  final quantityController = TextEditingController(text: '1');
 
   String productName = '';
   String lastScannedValue = '';
   bool isProcessing = false;
+
+  double? baseCarbs;
+  double? baseProtein;
+  double? baseFats;
+  double? baseCalories;
+  double servingQuantity = 100.0;
+  String servingSizeText = '';
+  String selectedUnit = '100g / 100mL';
+
+  final List<String> availableUnits = [
+    '100g / 100mL',
+    'Serving',
+    'mL',
+    'fl oz',
+    'oz',
+    'g',
+  ];
+
+  void setUnit(String unit) {
+    selectedUnit = unit;
+    applyServingScale();
+  }
+
+  void onQuantityChanged(String value) {
+    applyServingScale();
+  }
+
+  void applyServingScale() {
+    if (baseCarbs == null &&
+        baseProtein == null &&
+        baseFats == null &&
+        baseCalories == null) {
+      return;
+    }
+
+    final qty = double.tryParse(quantityController.text.trim()) ?? 1.0;
+    if (qty <= 0) return;
+
+    double factor = 1.0;
+    switch (selectedUnit) {
+      case '100g / 100mL':
+        factor = qty;
+        break;
+      case 'Serving':
+        factor = (servingQuantity / 100.0) * qty;
+        break;
+      case 'mL':
+      case 'g':
+        factor = qty / 100.0;
+        break;
+      case 'fl oz':
+        factor = (qty * 29.5735) / 100.0;
+        break;
+      case 'oz':
+        factor = (qty * 28.3495) / 100.0;
+        break;
+    }
+
+    if (baseCarbs != null) {
+      final val = baseCarbs! * factor;
+      carbs.text = val < 10 ? val.toStringAsFixed(1) : val.round().toString();
+    }
+    if (baseProtein != null) {
+      final val = baseProtein! * factor;
+      protein.text = val < 10 ? val.toStringAsFixed(1) : val.round().toString();
+    }
+    if (baseFats != null) {
+      final val = baseFats! * factor;
+      fats.text = val < 10 ? val.toStringAsFixed(1) : val.round().toString();
+    }
+    if (baseCalories != null) {
+      calories.text = (baseCalories! * factor).round().toString();
+    }
+
+    update();
+  }
 
   @override
   void onInit() {
@@ -124,7 +201,35 @@ class ScanBarcodeController extends GetxController {
             if (calc > 0) caloriesVal = calc.toString();
           }
 
-          if (carbsVal.isNotEmpty || proteinVal.isNotEmpty || fatsVal.isNotEmpty) {
+          servingSizeText = (product['serving_size'] ??
+                  product['serving_size_imported'] ??
+                  '')
+              .toString();
+          final sq = double.tryParse(
+            product['serving_quantity']?.toString() ?? '',
+          );
+          if (sq != null && sq > 0) {
+            servingQuantity = sq;
+          } else if (servingSizeText.isNotEmpty) {
+            final match = RegExp(r'([0-9.]+)').firstMatch(servingSizeText);
+            if (match != null) {
+              servingQuantity =
+                  double.tryParse(match.group(1) ?? '') ?? 100.0;
+            }
+          } else {
+            servingQuantity = 100.0;
+          }
+
+          baseCarbs = double.tryParse(carbsVal);
+          baseProtein = double.tryParse(proteinVal);
+          baseFats = double.tryParse(fatsVal);
+          baseCalories = double.tryParse(caloriesVal);
+          quantityController.text = '1';
+          selectedUnit = '100g / 100mL';
+
+          if (carbsVal.isNotEmpty ||
+              proteinVal.isNotEmpty ||
+              fatsVal.isNotEmpty) {
             carbs.text = carbsVal;
             protein.text = proteinVal;
             fats.text = fatsVal;
@@ -226,6 +331,14 @@ class ScanBarcodeController extends GetxController {
     protein.clear();
     fats.clear();
     calories.clear();
+    quantityController.text = '1';
+    selectedUnit = '100g / 100mL';
+    baseCarbs = null;
+    baseProtein = null;
+    baseFats = null;
+    baseCalories = null;
+    servingSizeText = '';
+    servingQuantity = 100.0;
     productName = '';
     lastScannedValue = '';
     isProcessing = false;
@@ -392,6 +505,7 @@ class ScanBarcodeController extends GetxController {
     protein.dispose();
     fats.dispose();
     calories.dispose();
+    quantityController.dispose();
     super.onClose();
   }
 }

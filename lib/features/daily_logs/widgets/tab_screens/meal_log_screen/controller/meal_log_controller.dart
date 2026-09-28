@@ -134,12 +134,14 @@ class MealLogController extends GetxController {
 
     isLoading.value = true;
 
+    final cal = int.tryParse(caloriesController.text.trim());
     final result = await MealLogService.logMeal(
       mealType: mealType,
       description: description,
       carbs: carbs,
       protein: protein,
       fats: fats,
+      calories: cal,
     );
 
     isLoading.value = false;
