@@ -53,18 +53,6 @@ class ScanBarcodeFrame extends StatelessWidget {
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Test sample button
-                          IconButton(
-                            icon: const Icon(
-                              Icons.science_outlined,
-                              color: Colors.amberAccent,
-                              size: 22,
-                            ),
-                            tooltip: "Test Sample Barcode (Nutella)",
-                            onPressed: () {
-                              scanController.testSampleBarcode('3017620422003');
-                            },
-                          ),
                           // Gallery picker button
                           IconButton(
                             icon: const Icon(
