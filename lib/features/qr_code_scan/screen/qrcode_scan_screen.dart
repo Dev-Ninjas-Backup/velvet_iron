@@ -4,20 +4,35 @@ import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller
 import 'package:velvet_iron/features/qr_code_scan/controller/scan_barcode_controller.dart';
 import 'package:velvet_iron/features/qr_code_scan/widgets/scan_barcode_frame.dart';
 
-class QrcodeScanScreen extends StatelessWidget {
+class QrcodeScanScreen extends StatefulWidget {
   const QrcodeScanScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // FIX: Use Get.put only if not already registered, preventing duplicate instances
-    if (!Get.isRegistered<ScanBarcodeController>()) {
-      Get.put<ScanBarcodeController>(ScanBarcodeController());
-      debugPrint('[QrcodeScanScreen] ScanBarcodeController registered');
-    } else {
-      debugPrint(
-        '[QrcodeScanScreen] ScanBarcodeController already registered — reusing',
-      );
+  State<QrcodeScanScreen> createState() => _QrcodeScanScreenState();
+}
+
+class _QrcodeScanScreenState extends State<QrcodeScanScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (Get.isRegistered<ScanBarcodeController>()) {
+      Get.delete<ScanBarcodeController>();
     }
+    Get.put<ScanBarcodeController>(ScanBarcodeController());
+    debugPrint('[QrcodeScanScreen] Fresh ScanBarcodeController registered');
+  }
+
+  @override
+  void dispose() {
+    if (Get.isRegistered<ScanBarcodeController>()) {
+      Get.delete<ScanBarcodeController>();
+      debugPrint('[QrcodeScanScreen] ScanBarcodeController disposed');
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     return Scaffold(
       backgroundColor: Colors.transparent,

@@ -128,10 +128,7 @@ class ScanBarcodeController extends GetxController {
     isProcessing = true;
     lastScannedValue = rawValue;
 
-    try {
-      mobileScannerController.stop();
-    } catch (_) {}
-    debugPrint('[onBarcodeDetected] Scanner paused');
+    debugPrint('[onBarcodeDetected] Barcode accepted, processing');
 
     // Check if it's formatted query/colon/json string
     if (_isFormattedString(rawValue)) {
@@ -342,9 +339,6 @@ class ScanBarcodeController extends GetxController {
     productName = '';
     lastScannedValue = '';
     isProcessing = false;
-    try {
-      mobileScannerController.start();
-    } catch (_) {}
     update();
   }
 

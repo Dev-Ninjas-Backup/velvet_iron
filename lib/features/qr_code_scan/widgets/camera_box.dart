@@ -50,13 +50,69 @@ class CameraBox extends StatelessWidget {
           },
           errorBuilder: (context, error, child) {
             debugPrint('[CameraBox] MobileScanner error: $error');
+            final errorMsg = error.toString().toLowerCase();
+            if (errorMsg.contains('already started')) {
+              // Harmless state race — camera is already running
+              return const SizedBox.shrink();
+            }
             return Container(
-              color: Colors.black,
+              color: const Color(0xFF141414),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Center(
-                child: Text(
-                  'Camera Error: ${error.toString()}',
-                  style: const TextStyle(color: Colors.red, fontSize: 12),
-                  textAlign: TextAlign.center,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.camera_alt_outlined,
+                      color: Colors.white54,
+                      size: 36,
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Camera unavailable.\nScan from gallery or enter manually.',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                        height: 1.4,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 12),
+                    InkWell(
+                      onTap: () => scanController.pickImageAndScan(),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white12,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.white24),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.photo_library_outlined,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                            SizedBox(width: 6),
+                            Text(
+                              'Choose from Gallery',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             );
