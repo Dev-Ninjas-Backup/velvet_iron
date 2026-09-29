@@ -7,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/app.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:velvet_iron/core/services/notification_service.dart';
 import 'package:velvet_iron/core/services/revenuecat_service.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/auth/services/onboarding_status_service.dart';
@@ -25,6 +26,9 @@ void main() async {
 
   // Initialize RevenueCat
   await RevenueCatService.init();
+
+  // Initialize Daily Companion Notifications
+  await NotificationService.init();
 
   // Initialize Firebase with duplicate app error handling
   try {

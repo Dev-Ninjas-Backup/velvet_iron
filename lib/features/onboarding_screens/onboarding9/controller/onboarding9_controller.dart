@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding9/model/madication_response_model.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding9/service/onboarding9_service.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
@@ -69,6 +70,8 @@ class OnboardingController9 extends GetxController {
         EasyLoading.showSuccess(
           'Medication logged! +${medication.earnedXp} XP',
         );
+        await SharedPreferencesHelper.setBool('enable_medication_quest', true);
+        await SharedPreferencesHelper.setBool('user_takes_medication', true);
         Get.toNamed(AppRoute.getonboardingScreen11());
       } else {
         EasyLoading.showError(response.errorMessage);
@@ -79,7 +82,9 @@ class OnboardingController9 extends GetxController {
     }
   }
 
-  void onSkipMedication() {
+  Future<void> onSkipMedication() async {
+    await SharedPreferencesHelper.setBool('enable_medication_quest', false);
+    await SharedPreferencesHelper.setBool('user_takes_medication', false);
     Get.toNamed(AppRoute.getonboardingScreen11());
   }
 

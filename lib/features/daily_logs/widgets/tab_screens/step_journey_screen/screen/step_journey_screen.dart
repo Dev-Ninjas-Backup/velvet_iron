@@ -508,7 +508,7 @@ class StepJourneyScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              '${currentLifetime.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} / 1,000,000 steps to The World\'s Edge',
+                              '${currentLifetime.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} / 1,000,000 steps to The Shattered Citadel',
                               style: getTextStyle(fontSize: 10, color: Colors.white54),
                             ),
                           ],

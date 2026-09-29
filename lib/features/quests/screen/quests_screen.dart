@@ -384,6 +384,85 @@ class QuestsScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                            const SizedBox(height: 12),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                color: themeController
+                                    .activeTheme
+                                    .cardBackgroundColor
+                                    .withValues(alpha: 0.5),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: themeController
+                                      .activeTheme
+                                      .borderColor
+                                      .withValues(alpha: 0.4),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: themeController
+                                          .activeTheme
+                                          .accentGoldColor
+                                          .withValues(alpha: 0.15),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Icon(
+                                      Icons.medication_outlined,
+                                      color: themeController
+                                          .activeTheme
+                                          .accentGoldColor,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Track Medication / GLP-1",
+                                          style: getTextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          "Include 'Elixir of the Alchemist' quest",
+                                          style: getTextStyle(
+                                            fontSize: 11,
+                                            color: Colors.white60,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Obx(
+                                    () => Switch(
+                                      value: controller
+                                          .enableMedicationQuest
+                                          .value,
+                                      activeThumbColor: themeController
+                                          .activeTheme
+                                          .accentGoldColor,
+                                      onChanged: (val) =>
+                                          controller.toggleMedicationQuest(val),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             const SizedBox(height: 20),
                             QuestTips(
                               onXpEarned: (message) {

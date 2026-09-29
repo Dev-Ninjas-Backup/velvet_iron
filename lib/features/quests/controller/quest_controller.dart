@@ -16,14 +16,30 @@ class QuestController extends GetxController {
   final RxList<Quest> customQuests = <Quest>[].obs;
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
+  final RxBool enableMedicationQuest = false.obs;
 
   final QuestService _service = QuestService();
 
   int get logTarget {
-    final count = questsData.value?.todayLogCount ?? 0;
-    if (count < 10) return 10;
-    if (count < 20) return 20;
-    return 30;
+    final total = questsData.value?.quests.length ?? 0;
+    return total > 0 ? total : 4;
+  }
+
+  Future<void> loadMedicationPreference() async {
+    final enabled = await SharedPreferencesHelper.getBool('enable_medication_quest');
+    enableMedicationQuest.value = enabled ?? false;
+  }
+
+  Future<void> toggleMedicationQuest(bool value) async {
+    enableMedicationQuest.value = value;
+    await SharedPreferencesHelper.setBool('enable_medication_quest', value);
+    await SharedPreferencesHelper.setBool('user_takes_medication', value);
+    await fetchQuests();
+    if (value) {
+      EasyLoading.showSuccess('Medication quest added to your daily Codex!');
+    } else {
+      EasyLoading.showInfo('Medication quest hidden from daily Codex.');
+    }
   }
 
   @override
@@ -161,13 +177,30 @@ class QuestController extends GetxController {
     EasyLoading.showInfo('Quest removed');
   }
 
+  List<Quest> _filterQuestsIfNeeded(List<Quest> list) {
+    if (enableMedicationQuest.value) return list;
+    return list.where((q) {
+      final lowerTitle = q.title.toLowerCase();
+      final lowerId = q.id.toLowerCase();
+      final isMedQuest = lowerTitle.contains('elixir of the alchemist') ||
+          lowerTitle.contains('track your shot') ||
+          lowerId.contains('track-your-shot') ||
+          lowerId.contains('track_your_shot') ||
+          lowerId.startsWith('med_');
+      return !isMedQuest;
+    }).toList();
+  }
+
   void _mergeCustomQuestsIntoData() {
     final current = questsData.value;
     if (current == null) {
+      final filteredCustom = _filterQuestsIfNeeded(customQuests);
+      final completed = filteredCustom.where((q) => q.isDone).length;
+      final totalXp = filteredCustom.where((q) => q.isDone).fold(0, (sum, q) => sum + q.xp);
       questsData.value = DailyQuestResponse(
-        todayTotalXp: 0,
-        todayLogCount: 0,
-        quests: List.from(customQuests),
+        todayTotalXp: totalXp,
+        todayLogCount: completed,
+        quests: List.from(filteredCustom),
       );
       return;
     }
@@ -187,7 +220,23 @@ class QuestController extends GetxController {
       mergedMap[q.id] = q;
     }
 
-    questsData.value = current.copyWith(quests: mergedMap.values.toList());
+    final filtered = _filterQuestsIfNeeded(mergedMap.values.toList());
+    final completed = filtered.where((q) => q.isDone).length;
+    final totalXp = filtered.where((q) => q.isDone).fold(0, (sum, q) => sum + q.xp);
+
+    questsData.value = current.copyWith(
+      quests: filtered,
+      todayLogCount: completed,
+      todayTotalXp: totalXp > 0 ? totalXp : current.todayTotalXp,
+      meta: current.meta != null
+          ? UnifiedQuestMeta(
+              totalQuests: filtered.length,
+              completedQuests: completed,
+              todayCustomXpEarned: current.meta!.todayCustomXpEarned,
+              dailyCustomXpCap: current.meta!.dailyCustomXpCap,
+            )
+          : null,
+    );
   }
 
   static const List<Quest> defaultDailyQuests = [
@@ -221,6 +270,7 @@ class QuestController extends GetxController {
     try {
       isLoading(true);
       errorMessage('');
+      await loadMedicationPreference();
       await _loadLocalCustomQuests();
 
       try {

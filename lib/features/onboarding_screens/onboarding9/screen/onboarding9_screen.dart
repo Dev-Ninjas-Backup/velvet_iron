@@ -61,17 +61,31 @@ class OnboardingScreen9 extends StatelessWidget {
                                     : controller.onContinue,
                               ),
                             ),
-                            const SizedBox(height: 16),
-                            TextButton(
-                              onPressed: controller.onSkipMedication,
-                              child: Text(
-                                "None / I do not take medication",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white.withValues(alpha: 0.8),
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Colors.white.withValues(alpha: 0.8),
+                            const SizedBox(height: 14),
+                            SizedBox(
+                              width: double.infinity,
+                              child: OutlinedButton(
+                                onPressed: controller.onSkipMedication,
+                                style: OutlinedButton.styleFrom(
+                                  side: const BorderSide(
+                                    color: Colors.white70,
+                                    width: 1.2,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
+                                ),
+                                child: const Text(
+                                  "N/A — I don't take medications",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                    letterSpacing: 0.2,
+                                  ),
                                 ),
                               ),
                             ),

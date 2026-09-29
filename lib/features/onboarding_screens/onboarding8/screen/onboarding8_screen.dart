@@ -71,6 +71,22 @@ class OnboardingScreen8 extends StatelessWidget {
                               ),
                             ),
 
+                            const SizedBox(height: 16),
+                            TextButton(
+                              onPressed: controller.onSkipFood,
+                              child: Text(
+                                "N/A — I haven't eaten yet (Skip)",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white.withValues(alpha: 0.8),
+                                  decoration: TextDecoration.underline,
+                                  decorationColor:
+                                      Colors.white.withValues(alpha: 0.8),
+                                ),
+                              ),
+                            ),
+
                             const SizedBox(height: 40),
                           ],
                         ),

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/controller/meal_log_controller.dart';
 
 class ScanBarcodeController extends GetxController {
   // Single shared MobileScannerController — used directly by CameraBox
@@ -27,7 +28,7 @@ class ScanBarcodeController extends GetxController {
   double? baseCalories;
   double servingQuantity = 100.0;
   String servingSizeText = '';
-  String selectedUnit = '100g / 100mL';
+  String selectedUnit = 'Serving';
 
   final List<String> availableUnits = [
     '100g / 100mL',
@@ -222,16 +223,12 @@ class ScanBarcodeController extends GetxController {
           baseFats = double.tryParse(fatsVal);
           baseCalories = double.tryParse(caloriesVal);
           quantityController.text = '1';
-          selectedUnit = '100g / 100mL';
+          selectedUnit = 'Serving';
+          applyServingScale();
 
-          if (carbsVal.isNotEmpty ||
-              proteinVal.isNotEmpty ||
-              fatsVal.isNotEmpty) {
-            carbs.text = carbsVal;
-            protein.text = proteinVal;
-            fats.text = fatsVal;
-            calories.text = caloriesVal;
-
+          if (carbs.text.isNotEmpty ||
+              protein.text.isNotEmpty ||
+              fats.text.isNotEmpty) {
             update();
             EasyLoading.showSuccess('Found: $productName');
             return;
@@ -306,10 +303,13 @@ class ScanBarcodeController extends GetxController {
               if (calc > 0) caloriesVal = calc.toString();
             }
 
-            carbs.text = carbsVal;
-            protein.text = proteinVal;
-            fats.text = fatsVal;
-            calories.text = caloriesVal;
+            baseCarbs = double.tryParse(carbsVal);
+            baseProtein = double.tryParse(proteinVal);
+            baseFats = double.tryParse(fatsVal);
+            baseCalories = double.tryParse(caloriesVal);
+            quantityController.text = '1';
+            selectedUnit = 'Serving';
+            applyServingScale();
 
             update();
             EasyLoading.showSuccess('Found: $productName');
@@ -329,7 +329,7 @@ class ScanBarcodeController extends GetxController {
     fats.clear();
     calories.clear();
     quantityController.text = '1';
-    selectedUnit = '100g / 100mL';
+    selectedUnit = 'Serving';
     baseCarbs = null;
     baseProtein = null;
     baseFats = null;
@@ -483,12 +483,43 @@ class ScanBarcodeController extends GetxController {
     }
   }
 
-  void save() {
+  Future<void> save() async {
+    final carbsVal = carbs.text.trim();
+    final proteinVal = protein.text.trim();
+    final fatsVal = fats.text.trim();
+    final caloriesVal = calories.text.trim();
+    final name = productName.trim().isNotEmpty ? productName.trim() : 'Scanned Food';
+
     debugPrint(
       '[ScanBarcodeController] save() — '
-      'carbs="${carbs.text}", protein="${protein.text}", fats="${fats.text}"',
+      'name="$name", carbs="$carbsVal", protein="$proteinVal", fats="$fatsVal", calories="$caloriesVal"',
     );
-    Get.back();
+
+    if (carbsVal.isEmpty && proteinVal.isEmpty && fatsVal.isEmpty && caloriesVal.isEmpty) {
+      EasyLoading.showInfo('Please enter or scan nutrition values first.');
+      return;
+    }
+
+    try {
+      final mealLogController = Get.isRegistered<MealLogController>()
+          ? Get.find<MealLogController>()
+          : Get.put(MealLogController());
+
+      mealLogController.descriptionController.text = name;
+      mealLogController.populateNutritionFromScan(
+        carbs: carbsVal.isNotEmpty ? carbsVal : '0',
+        protein: proteinVal.isNotEmpty ? proteinVal : '0',
+        fats: fatsVal.isNotEmpty ? fatsVal : '0',
+        calories: caloriesVal.isNotEmpty ? caloriesVal : null,
+      );
+
+      Get.back();
+
+      await mealLogController.submitMealLog();
+    } catch (e) {
+      debugPrint('[ScanBarcodeController] Error saving meal: $e');
+      Get.back();
+    }
   }
 
   @override

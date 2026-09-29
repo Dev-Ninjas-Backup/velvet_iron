@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/features/qr_code_scan/controller/scan_barcode_controller.dart';
-import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/controller/meal_log_controller.dart';
 
 class ScanActionButtons extends StatelessWidget {
   const ScanActionButtons({super.key});
@@ -38,40 +37,8 @@ class ScanActionButtons extends StatelessWidget {
             Expanded(
               child: GestureDetector(
                 onTap: () {
-                  try {
-                    final scanController = Get.find<ScanBarcodeController>();
-                    final mealLogController = Get.find<MealLogController>();
-
-                    final carbs = scanController.carbs.text.trim();
-                    final protein = scanController.protein.text.trim();
-                    final fats = scanController.fats.text.trim();
-                    final calories = scanController.calories.text.trim();
-
-                    if (carbs.isNotEmpty ||
-                        protein.isNotEmpty ||
-                        fats.isNotEmpty ||
-                        calories.isNotEmpty) {
-                      mealLogController.populateNutritionFromScan(
-                        carbs: carbs.isNotEmpty ? carbs : '0',
-                        protein: protein.isNotEmpty ? protein : '0',
-                        fats: fats.isNotEmpty ? fats : '0',
-                        calories: calories.isNotEmpty ? calories : null,
-                      );
-                      debugPrint(
-                        '[ScanActionButtons] Data transferred to MealLogController with calories: $calories',
-                      );
-                      Get.back();
-                    } else {
-                      debugPrint(
-                        '[ScanActionButtons] ⚠️ Nutrition fields are empty',
-                      );
-                    }
-                  } catch (e) {
-                    debugPrint(
-                      '[ScanActionButtons] ❌ Error transferring data: $e',
-                    );
-                    Get.back();
-                  }
+                  final scanController = Get.find<ScanBarcodeController>();
+                  scanController.save();
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 12),

@@ -93,6 +93,10 @@ class OnboardingController8 extends GetxController {
     }
   }
 
+  void onSkipFood() {
+    Get.toNamed(AppRoute.getonboardingScreen9());
+  }
+
   void onBackPressed() {
     Get.back();
   }
