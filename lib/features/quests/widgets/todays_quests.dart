@@ -113,6 +113,8 @@ class TodaysQuestItem extends StatelessWidget {
                           decoration: isActive ? TextDecoration.lineThrough : null,
                           decorationColor: Colors.white54,
                         ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 4),
                       Text(

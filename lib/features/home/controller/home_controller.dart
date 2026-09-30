@@ -314,7 +314,7 @@ class HomeController extends GetxController {
           id: item.id,
           title: item.title,
           sub: item.description,
-          time: item.scheduledAt,
+          time: _formatScheduleTime(item.scheduledAt),
           iconPath: iconPath,
           xp: item.earnedXp,
           isChecked: item.details.isTaken.obs,
@@ -415,6 +415,26 @@ class HomeController extends GetxController {
         return IconPath.grass;
       case ScheduleType.meal:
         return IconPath.todo;
+    }
+  }
+
+  /// Format scheduled ISO time to concise display
+  String _formatScheduleTime(String raw) {
+    if (raw.isEmpty) return '';
+    try {
+      final dt = DateTime.parse(raw).toLocal();
+      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      final day = days[dt.weekday - 1];
+      final hour = dt.hour % 12 == 0 ? 12 : dt.hour % 12;
+      final minute = dt.minute.toString().padLeft(2, '0');
+      final period = dt.hour >= 12 ? 'PM' : 'AM';
+      final now = DateTime.now();
+      if (dt.year == now.year && dt.month == now.month && dt.day == now.day) {
+        return "Today • $hour:$minute $period";
+      }
+      return "$day • $hour:$minute $period";
+    } catch (_) {
+      return raw;
     }
   }
 }

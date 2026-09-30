@@ -108,7 +108,7 @@ class ScanBarcodeFrame extends StatelessWidget {
                           const SizedBox(width: 6),
                           Flexible(
                             child: Text(
-                              "${scanController.productName} (per 100g)",
+                              scanController.productName,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 13,

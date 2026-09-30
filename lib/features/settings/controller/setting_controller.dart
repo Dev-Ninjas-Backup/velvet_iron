@@ -12,6 +12,8 @@ import 'package:velvet_iron/core/services/revenuecat_service.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
+import 'package:velvet_iron/features/quests/controller/quest_controller.dart';
 import 'package:velvet_iron/features/settings/services/logout_service.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 
@@ -49,9 +51,31 @@ class SettingsController extends GetxController with WidgetsBindingObserver {
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
+    _syncCompanionFromHomeOrCache();
     _loadCachedProfilePhoto();
     fetchUserProfile();
     fetchActiveCompanion();
+  }
+
+  void _syncCompanionFromHomeOrCache() {
+    if (Get.isRegistered<HomeController>()) {
+      final homeController = Get.find<HomeController>();
+      if (homeController.activeCompanionImage.value != null) {
+        activeCompanionImage.value = homeController.activeCompanionImage.value;
+        activeCompanionName.value = homeController.activeCompanionName.value;
+      }
+    }
+    _loadCachedCompanion();
+  }
+
+  Future<void> _loadCachedCompanion() async {
+    final cached = await SharedPreferencesHelper.getActiveCompanion();
+    if (cached != null && cached['imagePath'] != null) {
+      if (activeCompanionImage.value == null) {
+        activeCompanionImage.value = cached['imagePath'];
+        activeCompanionName.value = cached['name'];
+      }
+    }
   }
 
   Future<void> _loadCachedProfilePhoto() async {
@@ -199,29 +223,17 @@ class SettingsController extends GetxController with WidgetsBindingObserver {
 
   static String _formatDateTime(String isoString) {
     try {
-      final dt = DateTime.parse(isoString);
-      const months = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-      ];
+      final dt = DateTime.parse(isoString).toLocal();
       const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-      // Use UTC directly from the API, don't convert to local
       final day = days[dt.weekday - 1];
-      final month = months[dt.month - 1];
       final hour = dt.hour % 12 == 0 ? 12 : dt.hour % 12;
       final minute = dt.minute.toString().padLeft(2, '0');
       final period = dt.hour >= 12 ? 'PM' : 'AM';
-      return "${dt.day} $month, $day - $hour:$minute $period";
+      final now = DateTime.now();
+      if (dt.year == now.year && dt.month == now.month && dt.day == now.day) {
+        return "Today • $hour:$minute $period";
+      }
+      return "$day • $hour:$minute $period";
     } catch (e) {
       return isoString;
     }
@@ -334,15 +346,20 @@ class SettingsController extends GetxController with WidgetsBindingObserver {
                         Get.back();
                         EasyLoading.show(status: 'Leaving the Codex...');
                         final settingsService = SettingsService();
-                        final result = await settingsService.logout();
+                        await settingsService.logout();
                         await RevenueCatService.logOut();
+                        if (Get.isRegistered<QuestController>()) {
+                          Get.delete<QuestController>(force: true);
+                        }
+                        if (Get.isRegistered<HomeController>()) {
+                          Get.delete<HomeController>(force: true);
+                        }
+                        await SharedPreferencesHelper.clearAll();
                         await Future.delayed(
                           const Duration(milliseconds: 1200),
                         );
                         EasyLoading.dismiss();
-                        if (result.isSuccess) {
-                          Get.offAllNamed(AppRoute.getLoginScreen());
-                        }
+                        Get.offAllNamed(AppRoute.getLoginScreen());
                       },
                       child: Container(
                         height: 48,
@@ -457,6 +474,12 @@ class SettingsController extends GetxController with WidgetsBindingObserver {
     } catch (e) {
       print('Error during deletion logout: $e');
     } finally {
+      if (Get.isRegistered<QuestController>()) {
+        Get.delete<QuestController>(force: true);
+      }
+      if (Get.isRegistered<HomeController>()) {
+        Get.delete<HomeController>(force: true);
+      }
       await SharedPreferencesHelper.clearAll();
       EasyLoading.dismiss();
       Get.offAllNamed(AppRoute.getLoginScreen());

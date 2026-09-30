@@ -75,7 +75,10 @@ class QuestService {
     try {
       final customList = await getCustomQuests();
       if (customList.isNotEmpty) {
-        final combined = [...codexResponse.quests, ...customList];
+        final existingIds = codexResponse.quests.map((q) => q.id).toSet();
+        final newCustom =
+            customList.where((q) => !existingIds.contains(q.id)).toList();
+        final combined = [...codexResponse.quests, ...newCustom];
         return codexResponse.copyWith(quests: combined);
       }
     } catch (e) {
@@ -111,12 +114,17 @@ class QuestService {
     required String name,
     required String category,
     String recurrence = 'DAILY',
+    String? description,
+    int? xp,
   }) async {
     final headers = await _getHeaders();
     final body = jsonEncode({
       'name': name,
       'category': category.toUpperCase(),
       'recurrence': recurrence.toUpperCase(),
+      if (description != null && description.isNotEmpty)
+        'description': description,
+      if (xp != null && xp > 0) 'xpReward': xp,
     });
 
     print('🔵 [QuestService] POST ${Urls.customQuests} body=$body');
@@ -131,7 +139,10 @@ class QuestService {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final json = jsonDecode(response.body) as Map<String, dynamic>;
-      return Quest.fromJson(json);
+      final data = json['data'] is Map<String, dynamic>
+          ? json['data'] as Map<String, dynamic>
+          : json;
+      return Quest.fromJson(data);
     }
     return null;
   }
@@ -151,11 +162,41 @@ class QuestService {
     return response.statusCode == 200 || response.statusCode == 204;
   }
 
-  /// 6. Complete Unified Quest: POST /quests/today/complete (Milestone 3)
+  /// 6. Complete Custom Quest: POST /quests/custom/:id/complete
+  Future<Map<String, dynamic>> completeCustomQuest(String id) async {
+    final headers = await _getHeaders();
+    final url = Urls.completeCustomQuest(id);
+    print('🔵 [QuestService] POST $url');
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+    );
+
+    print('🔵 [QuestService] completeCustomQuest statusCode=${response.statusCode}');
+    print('🔵 [QuestService] completeCustomQuest body=${response.body}');
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    } else {
+      throw Exception('Custom quest completion returned ${response.statusCode}');
+    }
+  }
+
+  /// 7. Complete Unified Quest: POST /quests/today/complete (Milestone 3)
   Future<Map<String, dynamic>> completeUnifiedQuest({
     required String questId,
     required String questType,
   }) async {
+    // If it's a custom quest, prefer the dedicated custom quest completion endpoint
+    if (questType == 'CUSTOM') {
+      try {
+        return await completeCustomQuest(questId);
+      } catch (e) {
+        print('🟡 [QuestService] Custom complete failed, falling back to unified: $e');
+      }
+    }
+
     final headers = await _getHeaders();
     final body = jsonEncode({
       'questId': questId,

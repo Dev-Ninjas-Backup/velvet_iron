@@ -186,29 +186,42 @@ class _TodoTile extends StatelessWidget {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     todo.title,
-                    style: getTextStyle(color: Colors.white, fontSize: 12),
-                    // overflow: TextOverflow.ellipsis,
+                    style: getTextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
+                  const SizedBox(height: 2),
                   Text(
                     todo.sub,
-                    style: getTextStyle(color: theme.textColor, fontSize: 11),
-                    // overflow: TextOverflow.ellipsis,
+                    style: getTextStyle(
+                      color: theme.textColor,
+                      fontSize: 11,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
             ),
+            const SizedBox(width: 8),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       "+${todo.xp} XP",
-                      style: getTextStyle(color: Colors.white),
+                      style: getTextStyle(color: Colors.white, fontSize: 12),
                     ),
                     const SizedBox(width: 4),
                     Image.asset(
@@ -226,7 +239,10 @@ class _TodoTile extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(todo.time, style: getTextStyle(color: theme.textColor)),
+                Text(
+                  todo.time,
+                  style: getTextStyle(color: theme.textColor, fontSize: 11),
+                ),
               ],
             ),
           ],
