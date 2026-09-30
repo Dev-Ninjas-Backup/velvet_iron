@@ -149,78 +149,92 @@ class _UpcomingLogContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       child: Obx(
-        () => Row(
-          children: [
-            Center(child: Image.asset(IconPath.todo, height: 25, width: 25)),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    controller.upcomingLog.value,
-                    style: getTextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white,
+        () {
+          final themeId = themeController.activeTheme.id;
+          final starIcon = themeId == 'adventurer'
+              ? IconPath.starAdventure
+              : themeId == 'mage'
+              ? IconPath.starMage
+              : themeId == 'gamer'
+              ? IconPath.starGamer
+              : IconPath.starReader;
+
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(child: Image.asset(IconPath.todo, height: 24, width: 24)),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      controller.upcomingLog.value,
+                      style: getTextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
+                    const SizedBox(height: 2),
+                    Text(
+                      controller.upcomingLogDescription.value.isNotEmpty
+                          ? controller.upcomingLogDescription.value
+                          : '350 kCal',
+                      style: getTextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: themeController.activeTheme.textColor,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '+${controller.upcomingLogXP.value} XP',
+                        style: getTextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Image.asset(
+                        starIcon,
+                        height: 12,
+                        width: 12,
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    controller.upcomingLogDescription.value.isNotEmpty
-                        ? controller.upcomingLogDescription.value
-                        : '350 kCal',
+                    controller.upcomingLogTime.value,
                     style: getTextStyle(
-                      fontSize: 12,
+                      fontSize: 11,
                       fontWeight: FontWeight.w400,
                       color: themeController.activeTheme.textColor,
                     ),
                   ),
                 ],
               ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      '+${controller.upcomingLogXP.value} XP',
-                      style: getTextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    Image.asset(
-                      themeController.activeTheme.id == 'adventurer'
-                          ? IconPath.starAdventure
-                          : themeController.activeTheme.id == 'mage'
-                          ? IconPath.starMage
-                          : themeController.activeTheme.id == 'gamer'
-                          ? IconPath.starGamer
-                          : IconPath.starReader,
-                      height: 12,
-                      width: 12,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  controller.upcomingLogTime.value,
-                  style: getTextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w400,
-                    color: themeController.activeTheme.textColor,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+            ],
+          );
+        },
       ),
     );
   }

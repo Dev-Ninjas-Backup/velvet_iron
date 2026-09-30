@@ -61,28 +61,35 @@ class OnboardingScreen8 extends StatelessWidget {
                             const CalorieInputWidget8(),
                             const SizedBox(height: 32),
 
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 24,
-                              ),
-                              child: CustomButton(
-                                label: 'Continue (+10 XP)',
-                                onPressed: controller.onContinue,
-                              ),
+                            CustomButton(
+                              label: 'Continue (+10 XP)',
+                              onPressed: controller.onContinue,
                             ),
-
-                            const SizedBox(height: 16),
-                            TextButton(
-                              onPressed: controller.onSkipFood,
-                              child: Text(
-                                "N/A — I haven't eaten yet (Skip)",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white.withValues(alpha: 0.8),
-                                  decoration: TextDecoration.underline,
-                                  decorationColor:
-                                      Colors.white.withValues(alpha: 0.8),
+                            const SizedBox(height: 14),
+                            SizedBox(
+                              width: double.infinity,
+                              child: OutlinedButton(
+                                onPressed: controller.onSkipFood,
+                                style: OutlinedButton.styleFrom(
+                                  side: const BorderSide(
+                                    color: Colors.white70,
+                                    width: 1.2,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
+                                ),
+                                child: const Text(
+                                  "N/A — I haven't eaten yet (Skip)",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                    letterSpacing: 0.2,
+                                  ),
                                 ),
                               ),
                             ),

@@ -3,6 +3,7 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/settings/controller/setting_controller.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
 import 'package:get/get.dart';
 
 class UserProfileWidget extends StatelessWidget {
@@ -37,15 +38,28 @@ class UserProfileWidget extends StatelessWidget {
                           color: Color(0xFF2A0F0F),
                         ),
                         child: ClipOval(
-                          child: Obx(
-                            () => Image.asset(
-                              controller.activeCompanionImage.value ??
-                                  IconPath.serkelProfile,
+                          child: Obx(() {
+                            final img = controller.activeCompanionImage.value ??
+                                (Get.isRegistered<HomeController>()
+                                    ? Get.find<HomeController>()
+                                        .activeCompanionImage
+                                        .value
+                                    : null);
+                            if (img != null && img.isNotEmpty) {
+                              return Image.asset(
+                                img,
+                                height: 60,
+                                width: 60,
+                                fit: BoxFit.cover,
+                              );
+                            }
+                            return Container(
                               height: 60,
                               width: 60,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                              color: themeController.activeTheme.textfieldColor
+                                  .withValues(alpha: 0.4),
+                            );
+                          }),
                         ),
                       ),
                     ),
@@ -115,15 +129,28 @@ class UserProfileWidget extends StatelessWidget {
                         color: Color(0xFF2A0F0F),
                       ),
                       child: ClipOval(
-                        child: Obx(
-                          () => Image.asset(
-                            controller.activeCompanionImage.value ??
-                                IconPath.serkelProfile,
+                        child: Obx(() {
+                          final img = controller.activeCompanionImage.value ??
+                              (Get.isRegistered<HomeController>()
+                                  ? Get.find<HomeController>()
+                                      .activeCompanionImage
+                                      .value
+                                  : null);
+                          if (img != null && img.isNotEmpty) {
+                            return Image.asset(
+                              img,
+                              height: 60,
+                              width: 60,
+                              fit: BoxFit.cover,
+                            );
+                          }
+                          return Container(
                             height: 60,
                             width: 60,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                            color: themeController.activeTheme.textfieldColor
+                                .withValues(alpha: 0.4),
+                          );
+                        }),
                       ),
                     ),
                   ),

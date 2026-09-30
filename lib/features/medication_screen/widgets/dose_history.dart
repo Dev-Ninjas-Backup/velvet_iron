@@ -94,27 +94,38 @@ class DoseHistory extends StatelessWidget {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         title,
-                        style: getTextStyle(color: Colors.white),
+                        style: getTextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
+                      const SizedBox(height: 2),
                       Text(
                         sub,
                         style: getTextStyle(
                           color: themeController.activeTheme.textColor,
+                          fontSize: 11,
                         ),
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 ),
-
+                const SizedBox(width: 8),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Image.asset(
                           themeController.activeTheme.id == 'adventurer'
@@ -130,7 +141,7 @@ class DoseHistory extends StatelessWidget {
                         const SizedBox(width: 4),
                         Text(
                           "+10 XP",
-                          style: getTextStyle(color: Colors.white),
+                          style: getTextStyle(color: Colors.white, fontSize: 12),
                         ),
                       ],
                     ),
@@ -139,6 +150,7 @@ class DoseHistory extends StatelessWidget {
                       time,
                       style: getTextStyle(
                         color: themeController.activeTheme.textColor,
+                        fontSize: 11,
                       ),
                     ),
                   ],

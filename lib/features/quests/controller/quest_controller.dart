@@ -1,8 +1,8 @@
 // ignore_for_file: avoid_print
 
-import 'dart:convert';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/quests/model/quest_model.dart';
@@ -10,10 +10,8 @@ import 'package:velvet_iron/features/quests/service/quests_service.dart';
 
 class QuestController extends GetxController {
   static const String _lastArticleXpKey = 'last_article_xp_time';
-  static const String _customQuestsKey = 'user_custom_quests';
 
   final Rx<DailyQuestResponse?> questsData = Rx<DailyQuestResponse?>(null);
-  final RxList<Quest> customQuests = <Quest>[].obs;
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
   final RxBool enableMedicationQuest = false.obs;
@@ -45,7 +43,17 @@ class QuestController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _cleanupLegacyLocalQuests();
     fetchQuests();
+  }
+
+  Future<void> _cleanupLegacyLocalQuests() async {
+    try {
+      // One-time cleanup to ensure old un-scoped custom quests from previous installs are wiped
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('user_custom_quests');
+      await prefs.remove('user_custom_quests_date');
+    } catch (_) {}
   }
 
   Future<bool> canEarnArticleXp() async {
@@ -84,40 +92,7 @@ class QuestController extends GetxController {
     }
   }
 
-  Future<void> _loadLocalCustomQuests() async {
-    try {
-      final jsonStr = await SharedPreferencesHelper.getString(_customQuestsKey);
-      if (jsonStr != null && jsonStr.isNotEmpty) {
-        final List list = jsonDecode(jsonStr);
-        final todayStr = '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}';
-        final savedToday = await SharedPreferencesHelper.getString('${_customQuestsKey}_date');
-
-        customQuests.assignAll(list.map((item) {
-          final q = Quest.fromJson(item as Map<String, dynamic>);
-          // If a new day, reset isDone
-          if (savedToday != todayStr) {
-            return q.copyWith(isDone: false);
-          }
-          return q;
-        }).toList());
-      }
-    } catch (e) {
-      print('Error loading custom quests: $e');
-    }
-  }
-
-  Future<void> _saveLocalCustomQuests() async {
-    try {
-      final jsonStr = jsonEncode(customQuests.map((q) => q.toJson()).toList());
-      await SharedPreferencesHelper.setString(_customQuestsKey, jsonStr);
-      final todayStr = '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}';
-      await SharedPreferencesHelper.setString('${_customQuestsKey}_date', todayStr);
-    } catch (e) {
-      print('Error saving custom quests: $e');
-    }
-  }
-
-  /// Create a new custom quest (Syncs to Cloud + local fallback)
+  /// Create a new custom quest (Cloud via POST /quests/custom)
   Future<void> addCustomQuest({
     required String title,
     required String description,
@@ -127,54 +102,40 @@ class QuestController extends GetxController {
   }) async {
     try {
       EasyLoading.show(status: 'Forging quest...');
-      Quest? serverQuest;
-      try {
-        serverQuest = await _service.createCustomQuest(
-          name: title,
-          category: category,
-          recurrence: recurrence,
-        );
-      } catch (e) {
-        print('Cloud custom quest creation failed, falling back to local: $e');
+      final serverQuest = await _service.createCustomQuest(
+        name: title,
+        category: category,
+        recurrence: recurrence,
+      );
+
+      if (serverQuest != null) {
+        EasyLoading.showSuccess('Quest Forged!');
+        CompanionDialogueEngine.showDialogueSnackbar(trigger: 'Quest Accepted');
+        await fetchQuests();
+      } else {
+        EasyLoading.showError('Could not forge quest on server.');
       }
-
-      final quest = serverQuest ??
-          Quest(
-            id: 'custom_${DateTime.now().millisecondsSinceEpoch}',
-            title: title,
-            xp: xp,
-            description: description,
-            isDone: false,
-            questType: 'CUSTOM',
-            category: category,
-          );
-
-      customQuests.add(quest);
-      await _saveLocalCustomQuests();
-      _mergeCustomQuestsIntoData();
-
-      EasyLoading.showSuccess('Quest Forged!');
-      CompanionDialogueEngine.showDialogueSnackbar(trigger: 'Quest Accepted');
     } catch (e) {
+      print('Cloud custom quest creation failed: $e');
       EasyLoading.showError('Could not forge quest');
     }
   }
 
-  /// Delete a custom quest (Cloud + local)
+  /// Delete a custom quest (Cloud via DELETE /quests/custom/:id)
   Future<void> deleteCustomQuest(String id) async {
     try {
-      // If it has a UUID ID from server, delete from cloud
-      if (!id.startsWith('custom_')) {
-        await _service.deleteCustomQuest(id);
+      EasyLoading.show(status: 'Removing quest...');
+      final success = await _service.deleteCustomQuest(id);
+      if (success) {
+        EasyLoading.showInfo('Quest removed');
+        await fetchQuests();
+      } else {
+        EasyLoading.showError('Could not remove quest from server.');
       }
     } catch (e) {
       print('Failed to delete cloud custom quest: $e');
+      EasyLoading.showError('Could not remove quest');
     }
-
-    customQuests.removeWhere((q) => q.id == id);
-    await _saveLocalCustomQuests();
-    _mergeCustomQuestsIntoData();
-    EasyLoading.showInfo('Quest removed');
   }
 
   List<Quest> _filterQuestsIfNeeded(List<Quest> list) {
@@ -189,54 +150,6 @@ class QuestController extends GetxController {
           lowerId.startsWith('med_');
       return !isMedQuest;
     }).toList();
-  }
-
-  void _mergeCustomQuestsIntoData() {
-    final current = questsData.value;
-    if (current == null) {
-      final filteredCustom = _filterQuestsIfNeeded(customQuests);
-      final completed = filteredCustom.where((q) => q.isDone).length;
-      final totalXp = filteredCustom.where((q) => q.isDone).fold(0, (sum, q) => sum + q.xp);
-      questsData.value = DailyQuestResponse(
-        todayTotalXp: totalXp,
-        todayLogCount: completed,
-        quests: List.from(filteredCustom),
-      );
-      return;
-    }
-
-    // Keep server non-custom quests and append custom quests uniquely
-    final nonCustomQuests = current.quests.where((q) => q.questType != 'CUSTOM' && !q.id.startsWith('custom_')).toList();
-    final Map<String, Quest> mergedMap = {};
-
-    for (final q in nonCustomQuests) {
-      mergedMap[q.id] = q;
-    }
-    // Add cloud and local custom quests
-    for (final q in current.quests.where((q) => q.questType == 'CUSTOM')) {
-      mergedMap[q.id] = q;
-    }
-    for (final q in customQuests) {
-      mergedMap[q.id] = q;
-    }
-
-    final filtered = _filterQuestsIfNeeded(mergedMap.values.toList());
-    final completed = filtered.where((q) => q.isDone).length;
-    final totalXp = filtered.where((q) => q.isDone).fold(0, (sum, q) => sum + q.xp);
-
-    questsData.value = current.copyWith(
-      quests: filtered,
-      todayLogCount: completed,
-      todayTotalXp: totalXp > 0 ? totalXp : current.todayTotalXp,
-      meta: current.meta != null
-          ? UnifiedQuestMeta(
-              totalQuests: filtered.length,
-              completedQuests: completed,
-              todayCustomXpEarned: current.meta!.todayCustomXpEarned,
-              dailyCustomXpCap: current.meta!.dailyCustomXpCap,
-            )
-          : null,
-    );
   }
 
   static const List<Quest> defaultDailyQuests = [
@@ -271,32 +184,46 @@ class QuestController extends GetxController {
       isLoading(true);
       errorMessage('');
       await loadMedicationPreference();
-      await _loadLocalCustomQuests();
 
+      DailyQuestResponse rawData;
       try {
         final data = await _service.getQuests();
         if (data.quests.isEmpty) {
-          questsData(
-            DailyQuestResponse(
-              todayTotalXp: data.todayTotalXp,
-              todayLogCount: data.todayLogCount,
-              quests: List.from(defaultDailyQuests),
-            ),
+          rawData = DailyQuestResponse(
+            todayTotalXp: data.todayTotalXp,
+            todayLogCount: data.todayLogCount,
+            quests: List.from(defaultDailyQuests),
           );
         } else {
-          questsData(data);
+          rawData = data;
         }
       } catch (e) {
-        print('Using local custom quests fallback: $e');
-        questsData(
-          DailyQuestResponse(
-            todayTotalXp: 0,
-            todayLogCount: 0,
-            quests: List.from(defaultDailyQuests),
-          ),
+        print('Using default daily quests fallback: $e');
+        rawData = DailyQuestResponse(
+          todayTotalXp: 0,
+          todayLogCount: 0,
+          quests: List.from(defaultDailyQuests),
         );
       }
-      _mergeCustomQuestsIntoData();
+
+      final filtered = _filterQuestsIfNeeded(rawData.quests);
+      final completed = filtered.where((q) => q.isDone).length;
+      final totalXp =
+          filtered.where((q) => q.isDone).fold(0, (sum, q) => sum + q.xp);
+
+      questsData.value = rawData.copyWith(
+        quests: filtered,
+        todayLogCount: completed,
+        todayTotalXp: totalXp > 0 ? totalXp : rawData.todayTotalXp,
+        meta: rawData.meta != null
+            ? UnifiedQuestMeta(
+                totalQuests: filtered.length,
+                completedQuests: completed,
+                todayCustomXpEarned: rawData.meta!.todayCustomXpEarned,
+                dailyCustomXpCap: rawData.meta!.dailyCustomXpCap,
+              )
+            : null,
+      );
     } catch (e) {
       errorMessage('Failed to fetch quests');
     } finally {
@@ -328,13 +255,11 @@ class QuestController extends GetxController {
           .map((q) => q.id == questId ? q.copyWith(isDone: true) : q)
           .toList();
 
-      if (quest.questType == 'CUSTOM') {
-        final cIndex = customQuests.indexWhere((q) => q.id == questId);
-        if (cIndex != -1) {
-          customQuests[cIndex] = customQuests[cIndex].copyWith(isDone: true);
-          await _saveLocalCustomQuests();
-        }
-      }
+      questsData.value = data.copyWith(
+        quests: updatedQuests,
+        todayTotalXp: data.todayTotalXp + quest.xp,
+        todayLogCount: data.todayLogCount + 1,
+      );
 
       // Route through Milestone 3 unified completion endpoint or fallback
       try {
@@ -349,14 +274,6 @@ class QuestController extends GetxController {
           await _service.addXp(xp: quest.xp, reason: 'Quest: ${quest.title}');
         } catch (_) {}
       }
-
-      questsData(
-        data.copyWith(
-          quests: updatedQuests,
-          todayTotalXp: data.todayTotalXp + quest.xp,
-          todayLogCount: data.todayLogCount + 1,
-        ),
-      );
 
       EasyLoading.showSuccess('+${quest.xp} XP Earned!');
 
@@ -375,5 +292,11 @@ class QuestController extends GetxController {
     } catch (e) {
       errorMessage('Failed to complete quest');
     }
+  }
+
+  @override
+  void onClose() {
+    questsData.value = null;
+    super.onClose();
   }
 }

@@ -55,6 +55,8 @@ class Urls {
   static const String completeQuestToday = '$baseUrl/quests/today/complete';
   static const String customQuests = '$baseUrl/quests/custom';
   static String deleteCustomQuest(String id) => '$baseUrl/quests/custom/$id';
+  static String completeCustomQuest(String id) =>
+      '$baseUrl/quests/custom/$id/complete';
   static const String addXP = '$baseUrl/profile/add-xp/log';
   static const String homeScreen = '$baseUrl/profile';
   static const String onboardingStatus = '$baseUrl/onboarding';

@@ -1,0 +1,17 @@
+Hi Salauddin and team! 
+I finished a full test of the new build, including a brand-new account and the entire onboarding process. 
+First, you all did an AMAZING job with this build. ❤️ I tested onboarding, exercises/scheduling, medications, step journey, characters/dialogue, water, weight, moods, quests, Guild Hall subscription gate, reminders, barcode scanning/food logging, and the other main functions. Everything worked beautifully overall, and onboarding was flawless from beginning to end! 
+I only found 4 remaining items: 
+
+1. Custom quest crossing accounts — important: “Evening Mobility,” which I created on my previous test account, appeared in Today’s Quests on my brand-new account. Custom quests should only belong to the account that created them. Please check that custom quests are tied to the authenticated user ID, and ideally confirm other user-created data is properly separated between accounts as well. 
+
+2. Dynamic card text formatting: User-created/scheduled items are sometimes compressed into a tiny text area and wrap vertically. I reproduced this with an injection and Aerial Silks. On Settings > Upcoming Log, “Tirzepatide” also wraps as “Tirzepat / ide.” Please allow these fields enough horizontal space to wrap normally. 
+
+3. Barcode scanner: The scanner is working correctly now! 🎉 It defaults to 1 Serving, scales the portion, saves, and updates Daily Log/totals properly. The only issue is the product header still says “(per 100g).” Please remove that since values are now based on the selected serving/portion. 
+
+4. Companion artwork flicker: When Settings first opens, the companion portrait briefly shows the old artwork, then switches to the correct artwork about a second later. Please prevent the old asset from flashing before the current one loads. Other than these items, everything I tested worked! I’m genuinely so impressed with this build. Please pass my thanks to everyone who worked on it. I know I’ve sent a LOT of detailed feedback throughout development 😂 and I really appreciate how much work your team has put into bringing everything together. The app looks beautiful, feels cohesive, and I’m incredibly excited that we’re this close to submission. ❤️ Thank you all so much!
+
+
+
+
+One very small UI item I just noticed after sending my feedback: on onboarding Step 10, the medication N/A option has the outlined oval/button around it, but on Step 9 the food “N/A — I haven't eaten yet (Skip)” option does not. Both options work correctly — could the food N/A option please use the same outlined button style as the medication N/A option for consistency? Thank you!

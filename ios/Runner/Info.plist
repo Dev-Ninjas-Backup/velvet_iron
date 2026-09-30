@@ -83,6 +83,10 @@
 	<string>Velvet &amp; Iron needs access to your photo library to select profile and progress photos.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Velvet &amp; Iron needs microphone access for video recording features.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 </dict>
