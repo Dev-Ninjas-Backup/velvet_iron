@@ -28,6 +28,12 @@ class Urls {
   static const String medicationSchedule = '$baseUrl/medication-schedule';
   static String updateMedicationHHistory(String id) =>
       '$baseUrl/medication-schedule/$id/taken?isTaken=true';
+  static String deleteMedicationSchedule(String id) =>
+      '$baseUrl/medication-schedule/$id';
+  static String updateMedicationSchedule(String id) =>
+      '$baseUrl/medication-schedule/$id';
+  static String deleteMedication(String id) => '$baseUrl/medication/$id';
+  static String updateMedication(String id) => '$baseUrl/medication/$id';
   static const String moodLog = '$baseUrl/mood-log';
   static String getMoodLogHistory(int limit, int offset) =>
       '$baseUrl/mood-log/history?limit=$limit&offset=$offset';
@@ -49,6 +55,16 @@ class Urls {
   static const String exerciseLogSchedule = '$baseUrl/exercise-log/schedule';
   static String updateExerciseHHistory(String id) =>
       '$baseUrl/exercise-log/$id/taken?isTaken=true';
+  static String deleteExerciseSchedule(String id) =>
+      '$baseUrl/exercise-log/schedule/$id';
+  static String updateExerciseSchedule(String id) =>
+      '$baseUrl/exercise-log/schedule/$id';
+  static String deleteExerciseScheduled(String id) =>
+      '$baseUrl/exercise-log/scheduled/$id';
+  static String updateExerciseScheduled(String id) =>
+      '$baseUrl/exercise-log/scheduled/$id';
+  static String deleteExerciseLog(String id) => '$baseUrl/exercise-log/$id';
+  static String updateExerciseLog(String id) => '$baseUrl/exercise-log/$id';
   static const String firebaseLogin = '$baseUrl/auth/firebase-login';
   static const String quests = '$baseUrl/xp-stats/quests';
   static const String questsToday = '$baseUrl/quests/today';
@@ -90,4 +106,10 @@ class Urls {
   static const String companionDialogue =
       '$baseUrl/companions/current/dialogue';
   static const String refreshToken = '$baseUrl/auth/refresh-token';
+
+  // Legal & Compliance (Apple Guideline 3.1.2)
+  static const String appleEulaUrl =
+      'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
+  static const String privacyPolicyUrl =
+      'https://sites.google.com/view/velvet-iron-privacy-policy/home';
 }

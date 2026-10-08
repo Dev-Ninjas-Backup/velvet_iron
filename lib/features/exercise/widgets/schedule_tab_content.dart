@@ -45,7 +45,52 @@ class ScheduleTabContent extends StatelessWidget {
               onTimeChanged: (time) => controller.setSelectedTime(time),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 12),
+          Text(
+            "Recurrence:",
+            style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+          ),
+          const SizedBox(height: 8),
+          Obx(
+            () => Row(
+              children: ['DAILY', 'WEEKLY', 'SPECIFIC DAYS'].map((rec) {
+                final isSel = controller.selectedRecurrence.value == rec;
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: () => controller.selectedRecurrence.value = rec,
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 6),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: isSel
+                            ? themeController.activeTheme.accentGoldColor
+                                .withValues(alpha: 0.3)
+                            : Colors.black26,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: isSel
+                              ? themeController.activeTheme.accentGoldColor
+                              : Colors.white24,
+                        ),
+                      ),
+                      child: Text(
+                        rec,
+                        style: TextStyle(
+                          color: isSel
+                              ? themeController.activeTheme.accentGoldColor
+                              : Colors.white70,
+                          fontSize: 11,
+                          fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 18),
           Text("Notes (optional)", style: getTextStyle()),
           const SizedBox(height: 10),
           SizedBox(

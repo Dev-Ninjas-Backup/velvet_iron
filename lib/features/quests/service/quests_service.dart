@@ -148,18 +148,37 @@ class QuestService {
   }
 
   /// 5. Delete Cloud Custom Quest: DELETE /quests/custom/:id
-  Future<bool> deleteCustomQuest(String id) async {
+  Future<bool> deleteCustomQuest(String id, {String? fallbackId}) async {
     final headers = await _getHeaders();
-    final url = Urls.deleteCustomQuest(id);
+    final candidates = <String>[];
+    if (id.isNotEmpty) candidates.add(id);
+    if (id.startsWith('custom_')) {
+      candidates.add(id.replaceFirst('custom_', ''));
+    }
+    if (fallbackId != null && fallbackId.isNotEmpty && !candidates.contains(fallbackId)) {
+      candidates.add(fallbackId);
+      if (fallbackId.startsWith('custom_')) {
+        candidates.add(fallbackId.replaceFirst('custom_', ''));
+      }
+    }
 
-    print('🔵 [QuestService] DELETE $url');
-    final response = await http.delete(
-      Uri.parse(url),
-      headers: headers,
-    );
-
-    print('🔵 [QuestService] deleteCustomQuest statusCode=${response.statusCode}');
-    return response.statusCode == 200 || response.statusCode == 204;
+    for (final targetId in candidates) {
+      final url = Urls.deleteCustomQuest(targetId);
+      print('🔵 [QuestService] DELETE $url');
+      try {
+        final response = await http.delete(
+          Uri.parse(url),
+          headers: headers,
+        );
+        print('🔵 [QuestService] deleteCustomQuest ($targetId) statusCode=${response.statusCode}');
+        if (response.statusCode == 200 || response.statusCode == 204) {
+          return true;
+        }
+      } catch (e) {
+        print('🔴 [QuestService] Error deleting quest $targetId: $e');
+      }
+    }
+    return false;
   }
 
   /// 6. Complete Custom Quest: POST /quests/custom/:id/complete

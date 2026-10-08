@@ -94,11 +94,17 @@ class MealLog extends StatelessWidget {
                           Obx(() {
                             final h = mealLogController.history.value;
                             final consumedCarb = h?.consumedCarb ?? 0;
-                            final targetCarb = h?.macroNeed.carb ?? 0;
+                            final targetCarb = mealLogController.targetCarbs.value > 0
+                                ? mealLogController.targetCarbs.value.toDouble()
+                                : (h?.macroNeed.carb ?? 0);
                             final consumedProtein = h?.consumedProtein ?? 0;
-                            final targetProtein = h?.macroNeed.protein ?? 0;
+                            final targetProtein = mealLogController.targetProtein.value > 0
+                                ? mealLogController.targetProtein.value.toDouble()
+                                : (h?.macroNeed.protein ?? 0);
                             final consumedFat = h?.consumedFat ?? 0;
-                            final targetFat = h?.macroNeed.fat ?? 0;
+                            final targetFat = mealLogController.targetFats.value > 0
+                                ? mealLogController.targetFats.value.toDouble()
+                                : (h?.macroNeed.fat ?? 0);
 
                             return SingleChildScrollView(
                               scrollDirection: Axis.horizontal,

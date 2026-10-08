@@ -5,6 +5,7 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 import '../controller/my_subscription_controller.dart';
+import 'package:velvet_iron/core/common/widgets/subscription_legal_disclaimer.dart';
 import '../widgets/membership_benefits.dart';
 import '../widgets/subscription_card.dart';
 
@@ -69,6 +70,8 @@ class MySubscriptionScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
+                            const SizedBox(height: 24),
+                            const SubscriptionLegalDisclaimer(),
                           ],
                         ),
                       ),

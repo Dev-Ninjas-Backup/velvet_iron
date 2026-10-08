@@ -1,0 +1,249 @@
+Hi! I found an important issue in the current build that needs to be addressed as soon as
+possible. Meal logging is currently not working at all. I first scanned a protein shake with
+the barcode scanner. The scanner worked correctly and populated the name, calories
+and macros, but tapping Log Meal returned "Failed to log meal. Please try again." I then
+tested manually entering a meal without using the barcode scanner and received the
+same failure, so this does not appear to be specific to barcode scanning. It appears that
+the actual meal-saving/logging function is failing. Since meal tracking is a core feature,
+can you please investigate this urgently? I have screenshots of the error if needed.
+
+
+
+Custom Quest deletion bug: User-created quests can be created successfully, but
+attempting to delete one returns "Could not remove quest from server." After
+closing/reopening the app, the quest is still present, confirming the server-side deletion
+did not occur.
+
+attachment1: /Users/saharaislam/Desktop/tahmid/velvet_iron/velvet_iron-attachments (1)/Screenshot_20260930_080821.jpg
+attachment2: /Users/saharaislam/Desktop/tahmid/velvet_iron/velvet_iron-attachments (1)/Screenshot_20260930_092304.jpg
+
+
+
+
+
+Push notifications: The app shows that I should receive
+a notification at 8:00 PM, but I did not receive one
+tonight. Notifications are enabled on my device, so can
+you please verify that the scheduled push notifications
+are actually being triggered and delivered?
+
+
+
+
+
+
+
+
+
+
+Hi team, I finished another round of testing and have a few additional items that need to be addressed: 
+1. Macro targets are not saving/updating. When I change my calorie/macro targets in Settings, the new values are not saving and updating correctly in the app. 
+2. There is currently no level-up moment. When a user levels up, nothing happens visually and there is no acknowledgment from their companion. Leveling up should feel rewarding. There should be a clear congratulations/level-up moment, ideally with the user's active companion congratulating them. 
+3. Medication schedules need edit and delete options. After scheduling a medication, I cannot find a way to edit the medication/schedule or delete it. 
+4. Exercise schedules need edit and delete options. The same issue exists with scheduled workouts/exercises. Users need to be able to edit or delete something after it has been scheduled. 
+5. Medication and exercise scheduling need recurrence options. Custom quests already have recurrence controls, and I would like medication and exercise scheduling to work similarly. Users should be able to select daily, weekly, specific days, etc. when scheduling these items. 
+6. Scheduled items need notification reminders. If a user schedules a medication, workout, or other scheduled activity, the app should send a phone notification reminding them when it is coming up. ALSO, I still need an update on the three bugs I have repeatedly asked about: - Meal logging not working correctly - Custom quests not deleting correctly - Scheduled push notifications not firing I have been asking for an update and clarity on these three issues for several days now, and I still have not received a clear status update on them. Please do not overlook these items in responding to the new feedback above. At this point, I need a specific update on each of the three existing bugs: what has been identified, whether work has been completed or is currently in progress, and when I can expect a build containing the fixes. Please also confirm that you have received and logged each of the new items above. Thank you.
+7. Codex quests are not automatically completing from logged activities. I logged my mood and energy for today, but “Attunement of Spirit — Log your mood and energy levels” remains incomplete and Today's Progress remains 1/6. Codex quests are supposed to automatically track logged activities, so logging the corresponding activity needs to immediately complete the associated quest and award the XP. Please verify this functionality across all Codex quests, not just mood logging, to make sure meals, steps, water, workouts, mood/energy, etc. are all correctly connected to their respective quests.
+8. XP, exercise totals, and progress data are inconsistent across screens and are not updating correctly. I logged two exercises: running for 60 minutes and Aerial Silks for 50 minutes. Exercise History correctly shows both activities and +10 XP for each. The Exercise screen also correctly shows: - Exercises Logged: 2 - Total Rewards: 20 XP However, that SAME screen shows: - Time Trained: 0 min - Rewards: 0+ XP This means the individual exercise records are being stored, but the aggregate statistics are not updating correctly. XP is also lagging and displaying inconsistently across different areas of the app. After earning XP, some screens reflect it while others do not immediately update. The Weekly Activity XP bar graph is also not displaying the XP I earned today, even though other parts of the app recognize that XP was awarded. When an activity is logged, all related data should update immediately and consistently across the app: - Exercise count - Time trained - XP earned - Total XP - Weekly Activity graph - Level progress - Codex quest completion - Any resulting level-up event Please investigate whether there is a broader synchronization/state-management issue causing these systems not to update together. Because several of the issues I am finding involve core features and connections between features, I also need the team to perform a complete end-to-end regression test of the app before sending me the next build. Please do not rely on me to individually identify every broken workflow. Please test each Codex quest against its corresponding logged activity, XP awarding and level progression, Weekly Activity data, exercise statistics, meal logging, scheduled notifications, medication scheduling, exercise scheduling, custom quest creation/deletion, and settings persistence before providing the next APK. I need to know that the major user flows have been tested together and are functioning correctly before I begin another full round of testing.
+
+One clarification/additional issue:
+
+Attunement of Spirit did NOT automatically complete when I logged my mood. I manually tapped the quest completion button on the Home screen afterward, which is why Home now shows it as completed.
+
+However, that revealed another synchronization issue.
+
+After I manually completed Attunement of Spirit on the Home screen, Home shows TWO completed quests: Attunement of Spirit and Explore New Realms.
+
+When I immediately open the dedicated Quest screen, it still shows Today's Progress as 1/6, Total XP as 15 XP, and Attunement of Spirit as incomplete.
+
+So there are two separate problems here:
+
+1. Logging my mood did not automatically trigger completion of the corresponding Codex quest as it should.
+
+2. Manually completing that quest on the Home screen did not update the Quest screen, quest progress, or XP there.
+
+The same account is therefore showing different quest completion states depending on which screen I am viewing. This further supports the synchronization/state-management issue I described above.
+
+
+
+
+
+
+
+
+
+
+
+Hi team,
+
+I am consolidating everything into one message because there are now multiple issues across the app, and I need to make sure nothing is being missed.
+
+I also need to be very clear that I am still waiting for an update on the THREE existing bugs I have repeatedly asked about:
+
+- Meal logging not working correctly
+- Custom quests not deleting correctly
+- Scheduled push notifications not firing
+
+I have been asking for an update and clarity on these issues for several days. I need a specific status update on each one: what has been identified, whether the fix is completed or currently in progress, and when I can expect a build containing the fix.
+
+During additional testing tonight, I found the following:
+
+1. MACRO TARGETS ARE NOT SAVING/UPDATING
+
+When I change my calorie/macro targets in Settings, the new values are not saving and updating correctly in the app.
+
+2. THERE IS NO LEVEL-UP MOMENT
+
+When a user levels up, nothing happens visually and there is no acknowledgment from their companion.
+
+Leveling up is a major part of the gamification system and should feel rewarding. There should be a clear level-up/congratulations moment, ideally including a message from the user's active companion.
+
+3. MEDICATION SCHEDULES NEED EDIT AND DELETE OPTIONS
+
+After scheduling a medication, there is no clear way to go back and edit the medication/schedule or delete it.
+
+Users need to be able to manage something after they schedule it.
+
+4. EXERCISE SCHEDULES NEED EDIT AND DELETE OPTIONS
+
+The same issue exists with scheduled workouts/exercises.
+
+Once an exercise has been scheduled, users need the ability to edit or delete it.
+
+5. MEDICATION AND EXERCISE SCHEDULING NEED RECURRENCE OPTIONS
+
+Custom quests already have recurrence controls.
+
+Medication and exercise scheduling should work similarly, allowing users to choose options such as daily, weekly, specific days, etc.
+
+6. SCHEDULED ITEMS NEED ACTUAL PHONE NOTIFICATION REMINDERS
+
+When a user schedules a medication, workout, or other scheduled activity, the app should send a phone notification reminding them when the scheduled activity is coming up.
+
+This is especially important because scheduled push notifications are already one of the three existing bugs I am still waiting for an update on.
+
+7. CODEX QUESTS ARE NOT AUTOMATICALLY COMPLETING FROM LOGGED ACTIVITIES
+
+I logged my mood and energy today.
+
+The Codex quest "Attunement of Spirit - Log your mood and energy levels" did NOT automatically complete after I logged the activity.
+
+The app specifically tells users that Codex quests are automatically tracked when they log their activities. Logging the corresponding activity should therefore automatically complete the associated quest and award its XP.
+
+Please test ALL Codex quest triggers, not only mood/energy.
+
+Meals, steps, water, workouts, mood/energy, and every other automatically tracked Codex quest need to be tested individually to verify that completing the corresponding activity actually triggers the quest.
+
+IMPORTANT CLARIFICATION:
+
+After the mood quest failed to automatically complete, I manually pressed the completion button for Attunement of Spirit on the Home screen.
+
+Home then showed TWO completed quests:
+- Attunement of Spirit
+- Explore New Realms
+
+However, when I immediately opened the dedicated Quest screen, it still showed:
+- Today's Progress: 1/6
+- Total XP: 15 XP
+- Attunement of Spirit as incomplete
+
+So there are TWO separate problems here:
+
+A. Logging my mood did not automatically trigger the corresponding Codex quest.
+
+B. Manually completing that quest on Home did not synchronize the completion state with the dedicated Quest screen.
+
+The same account is therefore displaying different quest states depending on which screen I am viewing.
+
+8. XP, EXERCISE TOTALS, WEEKLY ACTIVITY, AND PROGRESS DATA ARE INCONSISTENT ACROSS SCREENS
+
+I logged two exercises:
+
+- Running: 60 minutes
+- Aerial Silks: 50 minutes
+
+Exercise History correctly shows both activities and +10 XP for each.
+
+The Exercise screen also correctly shows:
+- Exercises Logged: 2
+- Total Rewards: 20 XP
+However, the SAME screen shows:
+- Time Trained: 0 min
+- Rewards: 0+ XP
+
+I have logged 110 total minutes of exercise, yet Time Trained remains at zero.
+
+XP is also lagging and displaying inconsistently throughout the app. Some screens recognize XP while others do not update at the same time.
+
+The Weekly Activity bar graph is also not displaying the XP I earned today, despite XP being awarded elsewhere in the app.
+
+When an activity is successfully logged, ALL related information should update immediately and consistently:
+
+- Exercise count
+- Time trained
+- XP earned
+- Total XP
+- Weekly Activity graph
+- Level progress
+- Codex quest completion
+- Today's quest progress
+- Any resulting level-up event
+
+At this point, this appears to be a broader synchronization/state-management problem rather than isolated display bugs.
+
+Different parts of the app are recognizing the same activity differently.
+
+For example:
+
+Exercise History recognizes my two workouts and 20 XP, but Time Trained says 0 minutes.
+
+Home recognizes a manually completed quest, while the Quest screen says that same quest is incomplete.
+
+XP can be recognized in one location but not reflected in the Weekly Activity graph or other areas.
+
+This is creating contradictory information throughout the app.
+
+FULL REGRESSION TESTING
+
+Because several of these problems involve CORE FEATURES and the connections between those features, I need the team to perform a complete end-to-end regression test before sending me the next APK.
+
+Please do not rely on me to individually discover every broken workflow.
+
+I am happy to perform acceptance testing and provide feedback, but the build needs to undergo internal functional testing before being sent to me.
+
+Please specifically test complete user journeys, including:
+
+Log activity -> corresponding Codex quest completes -> XP is awarded -> XP totals update -> Weekly Activity updates -> level progress updates -> level-up event triggers when appropriate.
+
+Please also test:
+
+- Every Codex quest trigger
+- Meal logging
+- Macro/settings persistence
+- Exercise logging and statistics
+- Medication scheduling
+- Exercise scheduling
+- Recurrence controls
+- Editing scheduled items
+- Deleting scheduled items
+- Custom quest creation and deletion
+- Push notifications
+- XP calculations
+- XP synchronization across screens
+- Weekly Activity data
+- Level progression
+- Companion/level-up responses
+
+I need to know that the major user flows have been tested together and are functioning correctly before I begin another full round of testing.
+
+Please confirm that you have received and logged ALL of the issues in this message.
+
+I also need a direct status update TODAY on the three outstanding bugs I have already been waiting on:
+
+1. Meal logging
+2. Custom quest deletion
+3. Push notifications
+
+Please address each of those three individually rather than providing a general statement that the team is working on them.
+
+Thank you.

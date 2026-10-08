@@ -217,4 +217,86 @@ class ExerciseService {
       return null;
     }
   }
+
+  /// Delete an exercise schedule (DELETE /exercise-log/schedule/:id or /exercise-log/scheduled/:id)
+  Future<bool> deleteExerciseSchedule({
+    required String exerciseId,
+    required String accessToken,
+    required String refreshToken,
+  }) async {
+    final urlsToTry = [
+      Urls.deleteExerciseSchedule(exerciseId),
+      Urls.deleteExerciseScheduled(exerciseId),
+      Urls.deleteExerciseLog(exerciseId),
+    ];
+
+    for (final url in urlsToTry) {
+      print('[ExerciseService] DELETE $url');
+      try {
+        final response = await http.delete(
+          Uri.parse(url),
+          headers: {
+            'accept': 'application/json',
+            'Authorization': 'Bearer $accessToken',
+            'x-refresh-token': refreshToken,
+          },
+        );
+        print('[ExerciseService] DELETE status: ${response.statusCode}');
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+          return true;
+        }
+      } catch (e) {
+        print('[ExerciseService] Error deleting exercise: $e');
+      }
+    }
+    return false;
+  }
+
+  /// Update an exercise schedule (PATCH /exercise-log/schedule/:id)
+  Future<Map<String, dynamic>?> updateExerciseSchedule({
+    required String exerciseId,
+    required String type,
+    required String name,
+    required String intensity,
+    required int duration,
+    required String note,
+    required DateTime scheduledAt,
+    required String accessToken,
+    required String refreshToken,
+  }) async {
+    final urlsToTry = [
+      Urls.updateExerciseSchedule(exerciseId),
+      Urls.updateExerciseScheduled(exerciseId),
+    ];
+
+    for (final url in urlsToTry) {
+      print('[ExerciseService] PATCH $url');
+      try {
+        final request = http.MultipartRequest('PATCH', Uri.parse(url));
+        request.headers.addAll({
+          'accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+          'x-refresh-token': refreshToken,
+        });
+
+        request.fields['type'] = type.toUpperCase().trim();
+        request.fields['name'] = name.trim();
+        request.fields['intensity'] = intensity.toUpperCase().trim();
+        request.fields['duration'] = duration.toString();
+        request.fields['note'] = note.trim();
+        request.fields['scheduledAt'] = scheduledAt.toUtc().toIso8601String();
+
+        final response = await request.send();
+        final body = await response.stream.bytesToString();
+        print('[ExerciseService] PATCH status: ${response.statusCode}');
+
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+          return jsonDecode(body) as Map<String, dynamic>;
+        }
+      } catch (e) {
+        print('[ExerciseService] Error updating exercise schedule: $e');
+      }
+    }
+    return null;
+  }
 }

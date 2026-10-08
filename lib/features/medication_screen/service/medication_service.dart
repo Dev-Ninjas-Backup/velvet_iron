@@ -213,6 +213,81 @@ class MedicationService {
       throw MedicationException('Unexpected error: $e');
     }
   }
+
+  /// Delete a medication schedule (DELETE /medication-schedule/:id with fallback to DELETE /medication/:id)
+  Future<bool> deleteMedicationSchedule({
+    required String id,
+    required String accessToken,
+    required String refreshToken,
+  }) async {
+    final urlsToTry = [
+      Urls.deleteMedicationSchedule(id),
+      Urls.deleteMedication(id),
+    ];
+
+    for (final url in urlsToTry) {
+      debugPrint('[MedicationService] DELETE $url');
+      try {
+        final response = await http.delete(
+          Uri.parse(url),
+          headers: {
+            'accept': 'application/json',
+            'Authorization': 'Bearer $accessToken',
+            'x-refresh-token': refreshToken,
+          },
+        );
+        debugPrint('[MedicationService] DELETE status: ${response.statusCode}');
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+          return true;
+        }
+      } catch (e) {
+        debugPrint('[MedicationService] Error deleting medication: $e');
+      }
+    }
+    return false;
+  }
+
+  /// Update a medication schedule (PATCH /medication-schedule/:id)
+  Future<Medication?> updateMedicationSchedule({
+    required String id,
+    String? name,
+    String? type,
+    int? doseMg,
+    DateTime? scheduleTime,
+    required String accessToken,
+    required String refreshToken,
+  }) async {
+    final uri = Uri.parse(Urls.updateMedicationSchedule(id));
+    debugPrint('[MedicationService] Update PATCH: $uri');
+
+    try {
+      final request = http.MultipartRequest('PATCH', uri);
+      request.headers.addAll({
+        'accept': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+        'x-refresh-token': refreshToken,
+      });
+
+      if (name != null && name.isNotEmpty) request.fields['name'] = name;
+      if (type != null && type.isNotEmpty) request.fields['type'] = type.toUpperCase();
+      if (doseMg != null && doseMg > 0) request.fields['doseMg'] = doseMg.toString();
+      if (scheduleTime != null) {
+        request.fields['scheduleTime'] = scheduleTime.toUtc().toIso8601String();
+      }
+
+      final response = await request.send();
+      final responseBody = await response.stream.bytesToString();
+      debugPrint('[MedicationService] Update status: ${response.statusCode}');
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final jsonData = jsonDecode(responseBody) as Map<String, dynamic>;
+        return Medication.fromJson(jsonData);
+      }
+    } catch (e) {
+      debugPrint('[MedicationService] Error updating medication: $e');
+    }
+    return null;
+  }
 }
 
 // History response model

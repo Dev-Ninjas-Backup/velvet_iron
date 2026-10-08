@@ -8,6 +8,8 @@ import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/core/services/notification_service.dart';
 import 'package:velvet_iron/core/services/revenuecat_service.dart';
+import 'package:velvet_iron/core/services/end_points.dart';
+import 'package:velvet_iron/core/common/widgets/subscription_legal_disclaimer.dart';
 import 'package:velvet_iron/routes/app_routes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -114,6 +116,24 @@ class GeneralSettingsWidget extends StatelessWidget {
               title: 'About Training Codex',
               onTap: () => Get.toNamed(AppRoute.getaboutTrainingScreen()),
             ),
+            const SizedBox(height: 12),
+
+            // Terms of Use (EULA)
+            _SettingsItem(
+              themeController: themeController,
+              iconData: Icons.gavel_outlined,
+              title: 'Terms of Use (EULA)',
+              onTap: () => SubscriptionLegalDisclaimer.launchUrlSafe(Urls.appleEulaUrl),
+            ),
+            const SizedBox(height: 12),
+
+            // Privacy Policy
+            _SettingsItem(
+              themeController: themeController,
+              iconData: Icons.privacy_tip_outlined,
+              title: 'Privacy Policy',
+              onTap: () => SubscriptionLegalDisclaimer.launchUrlSafe(Urls.privacyPolicyUrl),
+            ),
           ],
         );
       },
@@ -123,13 +143,15 @@ class GeneralSettingsWidget extends StatelessWidget {
 
 class _SettingsItem extends StatelessWidget {
   final AppThemeController themeController;
-  final String iconPath;
+  final String? iconPath;
+  final IconData? iconData;
   final String title;
   final VoidCallback onTap;
 
   const _SettingsItem({
     required this.themeController,
-    required this.iconPath,
+    this.iconPath,
+    this.iconData,
     required this.title,
     required this.onTap,
   });
@@ -159,11 +181,13 @@ class _SettingsItem extends StatelessWidget {
                       .activeTheme
                       .progressBarGradient
                       .createShader(bounds),
-                  child: Image.asset(
-                    iconPath,
-                    color: Colors.white,
-                    fit: BoxFit.contain,
-                  ),
+                  child: iconData != null
+                      ? Icon(iconData, color: Colors.white, size: 24)
+                      : Image.asset(
+                          iconPath ?? IconPath.todo,
+                          color: Colors.white,
+                          fit: BoxFit.contain,
+                        ),
                 ),
               ),
             ),

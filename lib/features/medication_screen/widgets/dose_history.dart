@@ -10,6 +10,8 @@ class DoseHistory extends StatelessWidget {
   final RxBool isSelected;
   final bool isTaken;
   final VoidCallback? onStatusIconTap;
+  final VoidCallback? onEditTap;
+  final VoidCallback? onDeleteTap;
 
   const DoseHistory({
     super.key,
@@ -20,6 +22,8 @@ class DoseHistory extends StatelessWidget {
     required this.isSelected,
     required this.isTaken,
     this.onStatusIconTap,
+    this.onEditTap,
+    this.onDeleteTap,
   });
 
   @override
@@ -155,6 +159,35 @@ class DoseHistory extends StatelessWidget {
                     ),
                   ],
                 ),
+                if (onEditTap != null || onDeleteTap != null) ...[
+                  const SizedBox(width: 8),
+                  if (onEditTap != null)
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: onEditTap,
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Icon(
+                          Icons.edit_outlined,
+                          size: 18,
+                          color: themeController.activeTheme.textColor,
+                        ),
+                      ),
+                    ),
+                  if (onDeleteTap != null)
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: onDeleteTap,
+                      child: const Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Icon(
+                          Icons.delete_outline,
+                          size: 18,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    ),
+                ],
               ],
             ),
           ),

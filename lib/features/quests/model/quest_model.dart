@@ -201,7 +201,10 @@ class Quest {
       description: description,
       isDone: isDone,
       questType: qType,
-      originalRefId: json['originalRefId']?.toString() ?? id,
+      originalRefId: json['originalRefId']?.toString() ??
+          json['customQuestId']?.toString() ??
+          json['questId']?.toString() ??
+          (id.startsWith('custom_') ? id.substring(7) : id),
       category: json['category']?.toString(),
     );
   }

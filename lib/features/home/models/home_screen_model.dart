@@ -440,7 +440,7 @@ class XPPeriod {
             ?.map((e) => XPDayData.fromJson(e as Map<String, dynamic>))
             .toList() ??
         [],
-    totalXp: (json['totalXp'] ?? 0) as int,
+    totalXp: (json['totalXp'] ?? json['totalXP'] ?? 0) as int,
   );
 
   Map<String, dynamic> toJson() => {
@@ -470,7 +470,7 @@ class XPDayData {
     day: (json['day'] ?? '') as String,
     dateLabel: (json['dateLabel'] ?? '') as String,
     isoDate: (json['isoDate'] ?? '') as String,
-    xp: (json['xp'] ?? 0) as int,
+    xp: (json['xp'] ?? json['XP'] ?? 0) as int,
     logsCount: (json['logsCount'] ?? 0) as int,
   );
 

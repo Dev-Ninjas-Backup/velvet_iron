@@ -4,14 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
+import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/model/meal_log_model.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/model/meal_log_schidule_model.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/service/meal_log_service.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/model/meal_log_history_model.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
+import 'package:velvet_iron/features/quests/controller/quest_controller.dart';
 
 class MealLogController extends GetxController {
   final selectedMealTab = 0.obs;
   final selectedMealType = 0.obs;
+
+  // Reactive user macro targets
+  final targetCarbs = 0.obs;
+  final targetProtein = 0.obs;
+  final targetFats = 0.obs;
+  final targetCalories = 0.obs;
 
   final caloriesController = TextEditingController();
   final proteinController = TextEditingController();
@@ -83,11 +92,30 @@ class MealLogController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    loadTargetMacros();
     fetchHistory();
+  }
+
+  Future<void> loadTargetMacros() async {
+    final c = await SharedPreferencesHelper.getString('macro_carbs');
+    final p = await SharedPreferencesHelper.getString('macro_protein');
+    final f = await SharedPreferencesHelper.getString('macro_fats');
+    final isManual = await SharedPreferencesHelper.getBool('macro_is_manual_calories');
+    final manualCal = await SharedPreferencesHelper.getString('macro_manual_calories');
+
+    if (c != null && c.isNotEmpty) targetCarbs.value = int.tryParse(c) ?? 0;
+    if (p != null && p.isNotEmpty) targetProtein.value = int.tryParse(p) ?? 0;
+    if (f != null && f.isNotEmpty) targetFats.value = int.tryParse(f) ?? 0;
+    if (isManual == true && manualCal != null && manualCal.isNotEmpty) {
+      targetCalories.value = int.tryParse(manualCal) ?? 0;
+    } else {
+      targetCalories.value = (targetCarbs.value * 4) + (targetProtein.value * 4) + (targetFats.value * 9);
+    }
   }
 
   //  history fetch method
   Future<void> fetchHistory() async {
+    await loadTargetMacros();
     isHistoryLoading.value = true;
     final result = await MealLogService.getMealLogHistory();
     isHistoryLoading.value = false;
@@ -153,6 +181,15 @@ class MealLogController extends GetxController {
       );
       _clearFields();
       fetchHistory();
+
+      // Auto-complete corresponding Codex quest and sync
+      if (Get.isRegistered<QuestController>()) {
+        Get.find<QuestController>().onActivityLogged('meal');
+      }
+      if (Get.isRegistered<HomeController>()) {
+        Get.find<HomeController>().fetchData();
+      }
+
       final proteinAmount = double.tryParse(protein) ?? 0;
       final trigger = proteinAmount >= 25 ? 'Protein Goal' : 'Nutrition / Meal Logged';
       CompanionDialogueEngine.showDialogueSnackbar(trigger: trigger);

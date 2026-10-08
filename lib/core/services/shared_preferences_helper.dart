@@ -29,6 +29,16 @@ class SharedPreferencesHelper {
     await setBool(key, value);
   }
 
+  static Future<int?> getInt(String key) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(key);
+  }
+
+  static Future<void> setInt(String key, int value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(key, value);
+  }
+
   static const String _accessTokenKey = 'token';
   static const String _userIdKey = 'userId';
   static const String _emailKey = 'email';

@@ -9,6 +9,7 @@ import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
 import 'package:velvet_iron/features/bottom_nav/controller/bottom_nav_controller.dart';
 import 'package:velvet_iron/features/exercise/controller/exercise_controller.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/date_and_time_picker.dart';
 import 'package:velvet_iron/features/exercise/widgets/completed_tab_content.dart';
 import 'package:velvet_iron/features/exercise/widgets/excercise_switcher.dart';
 import 'package:velvet_iron/features/exercise/widgets/excersise_history.dart';
@@ -106,17 +107,22 @@ class ExerciseScreen extends StatelessWidget {
                               Expanded(
                                 child: GetBuilder<AppThemeController>(
                                   builder: (themeController) {
-                                    final scheduled =
-                                        controller.scheduledExercises;
-                                    final totalDuration = scheduled.fold<int>(
-                                      0,
-                                      (sum, item) => sum + (item.duration),
-                                    );
-                                    final totalScheduledXp = scheduled
-                                        .fold<int>(
-                                          0,
-                                          (sum, item) => sum + (item.earnedXp),
-                                        );
+                                    final completed = controller.completedExercises;
+                                    final totalDuration = completed.isNotEmpty
+                                        ? completed.fold<int>(
+                                            0,
+                                            (sum, item) => sum + item.duration,
+                                          )
+                                        : controller.exercises.fold<int>(
+                                            0,
+                                            (sum, item) => sum + item.duration,
+                                          );
+                                    final totalCompletedXp = controller.totalEarnedXp.value > 0
+                                        ? controller.totalEarnedXp.value
+                                        : completed.fold<int>(
+                                            0,
+                                            (sum, item) => sum + item.earnedXp,
+                                          );
                                     String nextScheduleStr =
                                         "$totalDuration min";
                                     return CustomLogContainerExercise(
@@ -133,7 +139,7 @@ class ExerciseScreen extends StatelessWidget {
                                           : 'assets/icons/time_reader.png',
                                       title: "Time Trained",
                                       value: nextScheduleStr,
-                                      rewardAmount: "$totalScheduledXp+",
+                                      rewardAmount: "$totalCompletedXp+",
                                     );
                                   },
                                 ),
@@ -317,6 +323,18 @@ class ExerciseScreen extends StatelessWidget {
                                             );
                                           }
                                         : null,
+                                    onEditTap: () => _showEditExerciseDialog(
+                                      context,
+                                      themeController,
+                                      next,
+                                      controller,
+                                    ),
+                                    onDeleteTap: () => _confirmDeleteExercise(
+                                      context,
+                                      themeController,
+                                      next,
+                                      controller,
+                                    ),
                                   );
                                 }),
                               ],
@@ -331,6 +349,159 @@ class ExerciseScreen extends StatelessWidget {
             ],
           );
         },
+      ),
+    );
+  }
+
+  void _confirmDeleteExercise(
+    BuildContext context,
+    AppThemeController themeController,
+    dynamic exercise,
+    ExerciseController controller,
+  ) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: themeController.activeTheme.dropdownBackgroundColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: themeController.activeTheme.borderColor.withValues(alpha: 0.4),
+          ),
+        ),
+        title: Text(
+          'Delete Exercise Schedule',
+          style: getTextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        content: Text(
+          'Are you sure you want to remove "${exercise.name}" from your scheduled workouts?',
+          style: getTextStyle(fontSize: 13, color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text('Cancel', style: getTextStyle(color: Colors.white60)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+            onPressed: () {
+              Navigator.pop(ctx);
+              controller.deleteExerciseSchedule(exercise.id);
+            },
+            child: Text('Delete', style: getTextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showEditExerciseDialog(
+    BuildContext context,
+    AppThemeController themeController,
+    dynamic exercise,
+    ExerciseController controller,
+  ) {
+    final nameCtrl = TextEditingController(text: exercise.name);
+    final durationCtrl = TextEditingController(text: exercise.duration.toString());
+    final noteCtrl = TextEditingController(text: exercise.note);
+    var selectedType = exercise.type.toString();
+    var selectedIntensity = exercise.intensity.toString();
+    var editDate = exercise.scheduledAt ?? DateTime.now();
+    var editTime = TimeOfDay.fromDateTime(editDate);
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: themeController.activeTheme.dropdownBackgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(
+              color: themeController.activeTheme.borderColor.withValues(alpha: 0.4),
+            ),
+          ),
+          title: Text(
+            'Edit Scheduled Workout',
+            style: getTextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Workout Name', style: getTextStyle(fontSize: 12, color: Colors.white70)),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: nameCtrl,
+                  style: getTextStyle(fontSize: 13, color: Colors.white),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.black26,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text('Duration (min)', style: getTextStyle(fontSize: 12, color: Colors.white70)),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: durationCtrl,
+                  keyboardType: TextInputType.number,
+                  style: getTextStyle(fontSize: 13, color: Colors.white),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.black26,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text('Scheduled Time', style: getTextStyle(fontSize: 12, color: Colors.white70)),
+                const SizedBox(height: 6),
+                DateAndTimePicker(
+                  selectedDate: editDate,
+                  selectedTime: editTime,
+                  onDateChanged: (d) => setDialogState(() => editDate = d),
+                  onTimeChanged: (t) => setDialogState(() => editTime = t),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text('Cancel', style: getTextStyle(color: Colors.white60)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: themeController.activeTheme.accentGoldColor,
+              ),
+              onPressed: () {
+                final newName = nameCtrl.text.trim();
+                final newDuration = int.tryParse(durationCtrl.text.trim()) ?? exercise.duration;
+                if (newName.isEmpty) return;
+
+                final scheduledDt = DateTime(
+                  editDate.year,
+                  editDate.month,
+                  editDate.day,
+                  editTime.hour,
+                  editTime.minute,
+                );
+
+                Navigator.pop(ctx);
+                controller.editExerciseSchedule(
+                  exerciseId: exercise.id,
+                  type: selectedType,
+                  name: newName,
+                  intensity: selectedIntensity,
+                  duration: newDuration,
+                  note: noteCtrl.text.trim(),
+                  scheduledAt: scheduledDt,
+                );
+              },
+              child: Text('Save', style: getTextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        ),
       ),
     );
   }

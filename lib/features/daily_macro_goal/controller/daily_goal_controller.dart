@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/controller/meal_log_controller.dart';
 import 'package:velvet_iron/features/daily_macro_goal/service/daily_macro_goal_service.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
 
 class DailyGoalController extends GetxController {
   var carbs = 0.obs;
@@ -187,6 +189,16 @@ class DailyGoalController extends GetxController {
       await SharedPreferencesHelper.setString('macro_fats', fats.value.toString());
       await SharedPreferencesHelper.saveBool('macro_is_manual_calories', isManualCalories.value);
       await SharedPreferencesHelper.saveString('macro_manual_calories', manualCaloriesController.text);
+
+      // Immediately propagate updated macro targets to MealLogController and HomeController
+      if (Get.isRegistered<MealLogController>()) {
+        final mlc = Get.find<MealLogController>();
+        mlc.loadTargetMacros();
+        mlc.fetchHistory();
+      }
+      if (Get.isRegistered<HomeController>()) {
+        Get.find<HomeController>().fetchData();
+      }
 
       EasyLoading.showSuccess(
         result.message.isNotEmpty ? result.message : 'Daily goals updated!',

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
 import 'package:velvet_iron/features/quests/model/quest_model.dart';
 import 'package:velvet_iron/features/quests/service/quests_service.dart';
 
@@ -125,10 +126,21 @@ class QuestController extends GetxController {
   Future<void> deleteCustomQuest(String id) async {
     try {
       EasyLoading.show(status: 'Removing quest...');
-      final success = await _service.deleteCustomQuest(id);
+      final currentQuests = questsData.value?.quests ?? [];
+      final quest = currentQuests.firstWhereOrNull((q) => q.id == id || q.originalRefId == id);
+      final fallbackId = quest?.originalRefId;
+
+      final success = await _service.deleteCustomQuest(id, fallbackId: fallbackId);
       if (success) {
+        if (questsData.value != null) {
+          final updated = questsData.value!.quests.where((q) => q.id != id && q.originalRefId != id).toList();
+          questsData.value = questsData.value!.copyWith(quests: updated);
+        }
         EasyLoading.showInfo('Quest removed');
         await fetchQuests();
+        if (Get.isRegistered<HomeController>()) {
+          Get.find<HomeController>().fetchData();
+        }
       } else {
         EasyLoading.showError('Could not remove quest from server.');
       }
@@ -231,28 +243,20 @@ class QuestController extends GetxController {
     }
   }
 
-  /// Complete a quest (Unified completion routing with CODEX auto-complete guidance)
+  /// Complete a quest (Unified completion routing, works for all types including CODEX)
   Future<void> completeQuest(String questId) async {
     try {
       final data = questsData.value;
       if (data == null) return;
 
-      final questIndex = data.quests.indexWhere((q) => q.id == questId);
+      final questIndex = data.quests.indexWhere((q) => q.id == questId || q.originalRefId == questId);
       if (questIndex == -1) return;
       final quest = data.quests[questIndex];
       if (quest.isDone) return;
 
-      // 1. CODEX quests cannot be completed manually (completed by user activities)
-      if (quest.questType == 'CODEX') {
-        EasyLoading.showInfo(
-          'Codex quests are automatically tracked when you log your activities (meals, steps, water, workouts)!',
-        );
-        return;
-      }
-
-      // 2. Complete non-CODEX quests (CUSTOM, MEDICATION_SCHEDULE, WORKOUT_SCHEDULE)
+      // Update local state immediately
       final updatedQuests = data.quests
-          .map((q) => q.id == questId ? q.copyWith(isDone: true) : q)
+          .map((q) => (q.id == quest.id || q.originalRefId == quest.id) ? q.copyWith(isDone: true) : q)
           .toList();
 
       questsData.value = data.copyWith(
@@ -264,10 +268,10 @@ class QuestController extends GetxController {
       // Route through Milestone 3 unified completion endpoint or fallback
       try {
         await _service.completeUnifiedQuest(
-          questId: quest.originalRefId ?? questId,
+          questId: quest.originalRefId ?? quest.id,
           questType: quest.questType,
         );
-        print('🔵 [QuestController] Unified quest completed on server: $questId');
+        print('🔵 [QuestController] Quest completed on server: ${quest.id} (${quest.questType})');
       } catch (e) {
         print('🟡 [QuestController] Falling back to addXp for completion: $e');
         try {
@@ -276,6 +280,11 @@ class QuestController extends GetxController {
       }
 
       EasyLoading.showSuccess('+${quest.xp} XP Earned!');
+
+      // Sync HomeController so Home screen immediately reflects completion
+      if (Get.isRegistered<HomeController>()) {
+        Get.find<HomeController>().fetchData();
+      }
 
       // Display companion celebratory dialogue
       try {
@@ -291,6 +300,63 @@ class QuestController extends GetxController {
       }
     } catch (e) {
       errorMessage('Failed to complete quest');
+    }
+  }
+
+  /// Automatically trigger completion of corresponding Codex quest when an activity is logged
+  Future<void> onActivityLogged(String activityType) async {
+    final data = questsData.value;
+    if (data == null || data.quests.isEmpty) {
+      await fetchQuests();
+    }
+    final currentData = questsData.value;
+    if (currentData == null) return;
+
+    Quest? targetQuest;
+    final lower = activityType.toLowerCase();
+
+    for (final q in currentData.quests) {
+      if (q.isDone) continue;
+      final t = q.title.toLowerCase();
+      final id = q.id.toLowerCase();
+      final ref = (q.originalRefId ?? '').toLowerCase();
+
+      if (lower.contains('mood') || lower.contains('spirit')) {
+        if (t.contains('attunement') || t.contains('spirit') || t.contains('mood') || id.contains('mood') || ref.contains('mood')) {
+          targetQuest = q;
+          break;
+        }
+      } else if (lower.contains('meal') || lower.contains('food') || lower.contains('nutrition')) {
+        if (t.contains('feast') || t.contains('hearth') || t.contains('nourishment') || t.contains('protein') || t.contains('meal') || id.contains('meal') || ref.contains('meal')) {
+          targetQuest = q;
+          break;
+        }
+      } else if (lower.contains('water') || lower.contains('hydration')) {
+        if (t.contains('hydration') || t.contains('ancients') || t.contains('water') || id.contains('water') || ref.contains('water')) {
+          targetQuest = q;
+          break;
+        }
+      } else if (lower.contains('exercise') || lower.contains('workout') || lower.contains('training') || lower.contains('run')) {
+        if (t.contains('training') || t.contains('workout') || t.contains('exercise') || t.contains('iron') || id.contains('workout') || id.contains('exercise')) {
+          targetQuest = q;
+          break;
+        }
+      } else if (lower.contains('step') || lower.contains('walk')) {
+        if (t.contains('stride') || t.contains('realmwalker') || t.contains('step') || id.contains('step') || ref.contains('step')) {
+          targetQuest = q;
+          break;
+        }
+      } else if (lower.contains('med') || lower.contains('dose') || lower.contains('alchemy')) {
+        if (t.contains('elixir') || t.contains('medication') || t.contains('alchemy') || t.contains('dose') || id.contains('medication') || ref.contains('medication')) {
+          targetQuest = q;
+          break;
+        }
+      }
+    }
+
+    if (targetQuest != null) {
+      print('🔵 [QuestController] Auto-completing tracked quest: ${targetQuest.title}');
+      await completeQuest(targetQuest.id);
     }
   }
 

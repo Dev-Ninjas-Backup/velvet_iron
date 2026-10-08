@@ -6,6 +6,7 @@ import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller
 import 'package:velvet_iron/features/onboarding_screens/onboarding11/controller/onboarding11_controller.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding11/widgets/onboarding11_widgets.dart';
 import 'package:velvet_iron/features/onboarding_screens/onboarding11/widgets/package_selection.dart';
+import 'package:velvet_iron/core/common/widgets/subscription_legal_disclaimer.dart';
 import 'package:velvet_iron/features/onboarding_screens/subscription_completion_popup.dart';
 
 class OnboardingScreen11 extends StatelessWidget {
@@ -97,6 +98,8 @@ class OnboardingScreen11 extends StatelessWidget {
                             ),
                           ),
                         ),
+                        const SizedBox(height: 16),
+                        const SubscriptionLegalDisclaimer(),
                         SizedBox(height: screenHeight * 0.04),
                       ],
                     ),

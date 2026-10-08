@@ -27,7 +27,12 @@ class MealLogService {
         return null;
       }
 
-      //  Build multipart request
+      // Parse macros as integers as required by backend schema
+      final cInt = (double.tryParse(carbs) ?? 0).round();
+      final pInt = (double.tryParse(protein) ?? 0).round();
+      final fInt = (double.tryParse(fats) ?? 0).round();
+
+      // 1. Build multipart request (matching Swagger schema: mealType, description, carbs, protein, fats)
       final uri = Uri.parse(Urls.mealLog);
       final request = http.MultipartRequest('POST', uri);
 
@@ -37,50 +42,88 @@ class MealLogService {
         'x-refresh-token': refreshToken,
       });
 
-      request.fields['mealType'] = mealType;
+      request.fields['mealType'] = mealType.toUpperCase();
       request.fields['description'] = description;
-      request.fields['carbs'] = carbs;
-      request.fields['protein'] = protein;
-      request.fields['fats'] = fats;
+      request.fields['carbs'] = cInt.toString();
+      request.fields['protein'] = pInt.toString();
+      request.fields['fats'] = fInt.toString();
+      // Only include calories if non-null and backend allows; otherwise let backend auto-calculate
       if (calories != null && calories > 0) {
         request.fields['calories'] = calories.toString();
       }
 
       debugLog('Request URL: ${uri.toString()}');
       debugLog('Request Fields: ${request.fields}');
-      debugLog('Request Headers: ${request.headers}');
 
-      //  Send request
+      // Send multipart request
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 
       debugLog('Status Code: ${response.statusCode}');
       debugLog('Response Body: ${response.body}');
 
-      //  Parse response
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> jsonData = jsonDecode(response.body);
-        debugLog('Meal Logged Successfully!');
-        debugLog('Parsed JSON: $jsonData');
-
-        final meal = MealLogModel.fromJson(jsonData);
-        return meal;
-      } else if (response.statusCode == 400 && response.body.contains('calories') && calories != null) {
-        // Fallback retry without calories if backend hasn't finished deploying calories override DTO
-        debugLog('Backend rejected calories field, retrying without calories override...');
-        return await logMeal(
-          mealType: mealType,
-          description: description,
-          carbs: carbs,
-          protein: protein,
-          fats: fats,
-          calories: null,
-        );
-      } else {
-        debugLog('API Error: ${response.statusCode}');
-        debugLog('Error Body: ${response.body}');
-        return null;
+        debugLog('Meal Logged Successfully via Multipart!');
+        return MealLogModel.fromJson(jsonData);
       }
+
+      // If rejected because of calories or format, retry multipart strictly without calories
+      if (calories != null && calories > 0) {
+        debugLog('Retrying multipart without calories field...');
+        final retryReq = http.MultipartRequest('POST', uri);
+        retryReq.headers.addAll({
+          'accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+          'x-refresh-token': refreshToken,
+        });
+        retryReq.fields['mealType'] = mealType.toUpperCase();
+        retryReq.fields['description'] = description;
+        retryReq.fields['carbs'] = cInt.toString();
+        retryReq.fields['protein'] = pInt.toString();
+        retryReq.fields['fats'] = fInt.toString();
+
+        final retryStream = await retryReq.send();
+        final retryRes = await http.Response.fromStream(retryStream);
+        if (retryRes.statusCode == 200 || retryRes.statusCode == 201) {
+          final Map<String, dynamic> jsonData = jsonDecode(retryRes.body);
+          debugLog('Meal Logged Successfully without calories!');
+          return MealLogModel.fromJson(jsonData);
+        }
+      }
+
+      // 2. Fallback: try application/json POST
+      debugLog('Attempting fallback application/json POST...');
+      final jsonPayload = {
+        'mealType': mealType.toUpperCase(),
+        'description': description,
+        'carbs': cInt,
+        'protein': pInt,
+        'fats': fInt,
+      };
+
+      final jsonResponse = await http.post(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+          'x-refresh-token': refreshToken,
+        },
+        body: jsonEncode(jsonPayload),
+      );
+
+      debugLog('JSON fallback Status Code: ${jsonResponse.statusCode}');
+      debugLog('JSON fallback Response Body: ${jsonResponse.body}');
+
+      if (jsonResponse.statusCode == 200 || jsonResponse.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(jsonResponse.body);
+        debugLog('Meal Logged Successfully via JSON fallback!');
+        return MealLogModel.fromJson(jsonData);
+      }
+
+      debugLog('All meal log attempts failed: ${response.statusCode} / ${jsonResponse.statusCode}');
+      return null;
     } catch (e, stackTrace) {
       debugLog('Exception in logMeal: $e');
       debugLog('StackTrace: $stackTrace');

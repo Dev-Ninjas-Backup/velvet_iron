@@ -1,6 +1,7 @@
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
@@ -25,16 +26,38 @@ class NotificationService {
 
     try {
       tz.initializeTimeZones();
+      try {
+        final timeZoneInfo = await FlutterTimezone.getLocalTimezone();
+        final timeZoneName = timeZoneInfo.identifier;
+        tz.setLocalLocation(tz.getLocation(timeZoneName));
+        debugPrint(
+          '[NotificationService] Local timezone set to: $timeZoneName',
+        );
+      } catch (tzErr) {
+        debugPrint(
+          '[NotificationService] FlutterTimezone error: $tzErr, matching offset...',
+        );
+        final offset = DateTime.now().timeZoneOffset;
+        for (final loc in tz.timeZoneDatabase.locations.values) {
+          if (loc.currentTimeZone.offset == offset.inMilliseconds) {
+            tz.setLocalLocation(loc);
+            debugPrint(
+              '[NotificationService] Local timezone matched: ${loc.name}',
+            );
+            break;
+          }
+        }
+      }
 
       const AndroidInitializationSettings androidSettings =
           AndroidInitializationSettings('@mipmap/launcher_icon');
 
       const DarwinInitializationSettings iosSettings =
           DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
-      );
+            requestAlertPermission: true,
+            requestBadgePermission: true,
+            requestSoundPermission: true,
+          );
 
       const InitializationSettings initSettings = InitializationSettings(
         android: androidSettings,
@@ -44,7 +67,9 @@ class NotificationService {
       await _notificationsPlugin.initialize(
         initSettings,
         onDidReceiveNotificationResponse: (NotificationResponse details) {
-          debugPrint('[NotificationService] Notification tapped: ${details.payload}');
+          debugPrint(
+            '[NotificationService] Notification tapped: ${details.payload}',
+          );
         },
       );
 
@@ -60,7 +85,8 @@ class NotificationService {
 
         final androidPlugin = _notificationsPlugin
             .resolvePlatformSpecificImplementation<
-                AndroidFlutterLocalNotificationsPlugin>();
+              AndroidFlutterLocalNotificationsPlugin
+            >();
 
         await androidPlugin?.createNotificationChannel(androidChannel);
         await androidPlugin?.requestNotificationsPermission();
@@ -70,7 +96,8 @@ class NotificationService {
       if (!kIsWeb && Platform.isIOS) {
         final iosPlugin = _notificationsPlugin
             .resolvePlatformSpecificImplementation<
-                IOSFlutterLocalNotificationsPlugin>();
+              IOSFlutterLocalNotificationsPlugin
+            >();
 
         await iosPlugin?.requestPermissions(
           alert: true,
@@ -108,10 +135,10 @@ class NotificationService {
     }
   }
 
-  /// Schedule daily notification at the specified local time (defaults to 8:00 PM)
+  /// Schedule daily notification at the specified local time (set to 08:00 PM)
   static Future<void> scheduleDailyCompanionReminder({
     int hour = 20,
-    int minute = 0,
+    int minute = 00,
   }) async {
     try {
       if (!_isInitialized) await init();
@@ -153,10 +180,11 @@ class NotificationService {
         "Your companion is waiting for you. Return to the Codex to continue today's journey.",
         scheduledDate,
         details,
-        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time, // repeats daily at the same time
+        matchDateTimeComponents:
+            DateTimeComponents.time, // repeats daily at the same time
       );
 
       debugPrint(
@@ -202,14 +230,75 @@ class NotificationService {
         ),
       );
 
-      await _notificationsPlugin.show(
-        999,
-        title,
-        body,
-        details,
-      );
+      await _notificationsPlugin.show(999, title, body, details);
     } catch (e) {
       debugPrint('[NotificationService] Error showing test notification: $e');
+    }
+  }
+
+  /// Schedule a notification reminder for a scheduled workout or medication
+  static Future<void> scheduleItemReminder({
+    required int id,
+    required String title,
+    required String body,
+    required DateTime scheduledAt,
+  }) async {
+    try {
+      if (!_isInitialized) await init();
+
+      final now = tz.TZDateTime.now(tz.local);
+      final tzScheduled = tz.TZDateTime.from(scheduledAt, tz.local);
+
+      if (tzScheduled.isBefore(now)) {
+        debugPrint(
+          '[NotificationService] Scheduled time has already passed: $scheduledAt',
+        );
+        return;
+      }
+
+      const NotificationDetails details = NotificationDetails(
+        android: AndroidNotificationDetails(
+          'scheduled_activities',
+          'Scheduled Activities',
+          channelDescription:
+              'Reminders for your scheduled workouts and medications.',
+          importance: Importance.high,
+          priority: Priority.high,
+          icon: '@mipmap/launcher_icon',
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      );
+
+      await _notificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        tzScheduled,
+        details,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+      );
+
+      debugPrint(
+        '[NotificationService] Scheduled reminder ID $id for ${tzScheduled.toIso8601String()}',
+      );
+    } catch (e) {
+      debugPrint('[NotificationService] Error scheduling item reminder: $e');
+    }
+  }
+
+  /// Cancel a scheduled item reminder by notification ID
+  static Future<void> cancelItemReminder(int id) async {
+    try {
+      await _notificationsPlugin.cancel(id);
+      debugPrint('[NotificationService] Cancelled item reminder ID: $id');
+    } catch (e) {
+      debugPrint('[NotificationService] Error cancelling item reminder: $e');
     }
   }
 }

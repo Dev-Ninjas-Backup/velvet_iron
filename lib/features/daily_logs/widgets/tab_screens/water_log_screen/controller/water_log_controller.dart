@@ -3,6 +3,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/water_log_screen/models/water_log_model.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/water_log_screen/service/water_log_service.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
 import 'package:velvet_iron/features/quests/controller/quest_controller.dart';
 
 class WaterLogController extends GetxController {
@@ -78,9 +79,12 @@ class WaterLogController extends GetxController {
       // Sync fresh data
       await fetchTodayWater(showLoading: false);
 
-      // Refresh quests
+      // Auto-complete tracked quest and sync
       if (Get.isRegistered<QuestController>()) {
-        Get.find<QuestController>().fetchQuests();
+        Get.find<QuestController>().onActivityLogged('water');
+      }
+      if (Get.isRegistered<HomeController>()) {
+        Get.find<HomeController>().fetchData();
       }
     } catch (e) {
       // Rollback
@@ -103,7 +107,10 @@ class WaterLogController extends GetxController {
       await fetchTodayWater(showLoading: false);
 
       if (Get.isRegistered<QuestController>()) {
-        Get.find<QuestController>().fetchQuests();
+        Get.find<QuestController>().onActivityLogged('water');
+      }
+      if (Get.isRegistered<HomeController>()) {
+        Get.find<HomeController>().fetchData();
       }
     } catch (e) {
       EasyLoading.showError('Failed to log water: ${e.toString()}');

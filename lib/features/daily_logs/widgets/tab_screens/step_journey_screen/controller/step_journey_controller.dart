@@ -286,7 +286,10 @@ class StepJourneyController extends GetxController {
       await fetchTodaySteps(showLoading: false);
 
       if (Get.isRegistered<QuestController>()) {
-        Get.find<QuestController>().fetchQuests();
+        Get.find<QuestController>().onActivityLogged('steps');
+      }
+      if (Get.isRegistered<HomeController>()) {
+        Get.find<HomeController>().fetchData();
       }
     } catch (e) {
       steps.value = prevSteps;
@@ -312,7 +315,10 @@ class StepJourneyController extends GetxController {
       await fetchTodaySteps(showLoading: false);
 
       if (Get.isRegistered<QuestController>()) {
-        Get.find<QuestController>().fetchQuests();
+        Get.find<QuestController>().onActivityLogged('steps');
+      }
+      if (Get.isRegistered<HomeController>()) {
+        Get.find<HomeController>().fetchData();
       }
     } catch (e) {
       EasyLoading.showError('Failed to update steps: ${e.toString()}');
@@ -448,6 +454,13 @@ class StepJourneyController extends GetxController {
       totalCampsites.value = res.totalCampsites;
 
       await fetchTodaySteps(showLoading: false);
+
+      if (Get.isRegistered<QuestController>()) {
+        Get.find<QuestController>().onActivityLogged('steps');
+      }
+      if (Get.isRegistered<HomeController>()) {
+        Get.find<HomeController>().fetchData();
+      }
 
       if (context.mounted) {
         showCampDetails(context, stepsLocked: res.stepsLocked, earnedXp: res.earnedXp);

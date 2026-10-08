@@ -8,6 +8,8 @@ import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_screen/model/mood_log_model.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_screen/service/mood_log_service.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
+import 'package:velvet_iron/features/quests/controller/quest_controller.dart';
 
 class MoodLogController extends GetxController {
   final selectedMood = 0.obs;
@@ -271,6 +273,14 @@ class MoodLogController extends GetxController {
       await Future.delayed(const Duration(milliseconds: 100));
       Get.back();
       EasyLoading.showSuccess('Mood logged Successfully');
+
+      // Auto-complete corresponding Codex quest (Attunement of Spirit) and sync
+      if (Get.isRegistered<QuestController>()) {
+        Get.find<QuestController>().onActivityLogged('mood');
+      }
+      if (Get.isRegistered<HomeController>()) {
+        Get.find<HomeController>().fetchData();
+      }
 
       final isRough = (mood == MoodType.tired ||
           mood == MoodType.pissed ||

@@ -16,7 +16,6 @@ import 'package:velvet_iron/features/quests/model/quest_model.dart';
 class HomeController extends GetxController {
   final selectedMood = 1.obs;
   final isLoading = true.obs;
-  int? _previousLevel;
 
   final Rx<UserProfile?> userProfile = Rx<UserProfile?>(null);
   final profilePhotoUrl = Rx<String?>(null);
@@ -187,20 +186,23 @@ class HomeController extends GetxController {
         print('[HomeController] API Response received and parsed successfully');
 
         final newLevel = userProfile.value?.level;
-        if (_previousLevel != null &&
-            newLevel != null &&
-            newLevel > _previousLevel!) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (Get.context != null) {
-              CompanionDialogueEngine.showFullBodySpecialMoment(
-                context: Get.context!,
-                contextMoment: 'level_up',
-                trigger: 'Level Up',
-              );
-            }
-          });
+        final savedLevel = await SharedPreferencesHelper.getInt('last_seen_level');
+        if (newLevel != null) {
+          if (savedLevel == null) {
+            await SharedPreferencesHelper.setInt('last_seen_level', newLevel);
+          } else if (newLevel > savedLevel) {
+            await SharedPreferencesHelper.setInt('last_seen_level', newLevel);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (Get.context != null) {
+                CompanionDialogueEngine.showFullBodySpecialMoment(
+                  context: Get.context!,
+                  contextMoment: 'level_up',
+                  trigger: 'Level Up',
+                );
+              }
+            });
+          }
         }
-        _previousLevel = newLevel;
 
         final effectiveImage = userProfile.value?.effectiveProfileImage;
         if (effectiveImage != null && effectiveImage.isNotEmpty) {
@@ -222,6 +224,16 @@ class HomeController extends GetxController {
         print('[HomeController] API Error: $e');
         print('[HomeController] Falling back to mock data...');
         EasyLoading.showError('Failed to load data.');
+      }
+
+      // Ensure QuestController fetches authoritative unified quests from backend
+      try {
+        final questController = Get.isRegistered<QuestController>()
+            ? Get.find<QuestController>()
+            : Get.put(QuestController(), permanent: true);
+        await questController.fetchQuests();
+      } catch (qErr) {
+        print('[HomeController] Error fetching quests: $qErr');
       }
 
       _buildTodos();

@@ -168,6 +168,51 @@ class ScheduleContentMedication extends StatelessWidget {
                 onTimeChanged: (time) => controller.updateTime(time),
               ),
             ),
+            const SizedBox(height: 12),
+            Text(
+              "Recurrence:",
+              style: getTextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+            ),
+            const SizedBox(height: 8),
+            Obx(
+              () => Row(
+                children: ['DAILY', 'WEEKLY', 'SPECIFIC DAYS'].map((rec) {
+                  final isSel = controller.selectedRecurrence.value == rec;
+                  return Expanded(
+                    child: GestureDetector(
+                      onTap: () => controller.selectedRecurrence.value = rec,
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 6),
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: isSel
+                              ? themeController.activeTheme.accentGoldColor
+                                  .withValues(alpha: 0.3)
+                              : Colors.black26,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: isSel
+                                ? themeController.activeTheme.accentGoldColor
+                                : Colors.white24,
+                          ),
+                        ),
+                        child: Text(
+                          rec,
+                          style: TextStyle(
+                            color: isSel
+                                ? themeController.activeTheme.accentGoldColor
+                                : Colors.white70,
+                            fontSize: 11,
+                            fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
             const SizedBox(height: 20),
             CustomButton(
               label: "Schedule Medication (+10 XP)",
@@ -264,6 +309,16 @@ class ScheduleContentMedication extends StatelessWidget {
                               controller.markMedicationAsTaken(next.id);
                             }
                           : null,
+                      onEditTap: () => _showEditMedicationDialog(
+                        context,
+                        themeController,
+                        next,
+                      ),
+                      onDeleteTap: () => _confirmDeleteMedication(
+                        context,
+                        themeController,
+                        next,
+                      ),
                     );
                   }),
                 ],
@@ -272,6 +327,153 @@ class ScheduleContentMedication extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+
+  void _confirmDeleteMedication(
+    BuildContext context,
+    AppThemeController themeController,
+    dynamic med,
+  ) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: themeController.activeTheme.dropdownBackgroundColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: themeController.activeTheme.borderColor.withValues(alpha: 0.4),
+          ),
+        ),
+        title: Text(
+          'Delete Medication Schedule',
+          style: getTextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        content: Text(
+          'Are you sure you want to remove "${med.name}" from your scheduled medications?',
+          style: getTextStyle(fontSize: 13, color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text('Cancel', style: getTextStyle(color: Colors.white60)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+            onPressed: () {
+              Navigator.pop(ctx);
+              controller.deleteMedicationSchedule(med.id);
+            },
+            child: Text('Delete', style: getTextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showEditMedicationDialog(
+    BuildContext context,
+    AppThemeController themeController,
+    dynamic med,
+  ) {
+    final nameCtrl = TextEditingController(text: med.name);
+    final doseCtrl = TextEditingController(text: med.doseMg.toInt().toString());
+    var selectedType = med.type.toString().toUpperCase();
+    var editDate = med.scheduledAt ?? DateTime.now();
+    var editTime = TimeOfDay.fromDateTime(editDate);
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: themeController.activeTheme.dropdownBackgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(
+              color: themeController.activeTheme.borderColor.withValues(alpha: 0.4),
+            ),
+          ),
+          title: Text(
+            'Edit Medication Schedule',
+            style: getTextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Medication Name', style: getTextStyle(fontSize: 12, color: Colors.white70)),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: nameCtrl,
+                  style: getTextStyle(fontSize: 13, color: Colors.white),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.black26,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text('Dose (mg)', style: getTextStyle(fontSize: 12, color: Colors.white70)),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: doseCtrl,
+                  keyboardType: TextInputType.number,
+                  style: getTextStyle(fontSize: 13, color: Colors.white),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.black26,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text('Scheduled Time', style: getTextStyle(fontSize: 12, color: Colors.white70)),
+                const SizedBox(height: 6),
+                DateAndTimePicker(
+                  selectedDate: editDate,
+                  selectedTime: editTime,
+                  onDateChanged: (d) => setDialogState(() => editDate = d),
+                  onTimeChanged: (t) => setDialogState(() => editTime = t),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text('Cancel', style: getTextStyle(color: Colors.white60)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: themeController.activeTheme.accentGoldColor,
+              ),
+              onPressed: () {
+                final newName = nameCtrl.text.trim();
+                final newDose = int.tryParse(doseCtrl.text.trim()) ?? med.doseMg.toInt();
+                if (newName.isEmpty) return;
+
+                final scheduledDt = DateTime(
+                  editDate.year,
+                  editDate.month,
+                  editDate.day,
+                  editTime.hour,
+                  editTime.minute,
+                );
+
+                Navigator.pop(ctx);
+                controller.updateMedicationSchedule(
+                  medicationId: med.id,
+                  name: newName,
+                  type: selectedType,
+                  doseMg: newDose,
+                  scheduleTime: scheduledDt,
+                );
+              },
+              child: Text('Save', style: getTextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
