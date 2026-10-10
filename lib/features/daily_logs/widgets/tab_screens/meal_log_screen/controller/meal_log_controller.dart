@@ -182,15 +182,32 @@ class MealLogController extends GetxController {
       _clearFields();
       fetchHistory();
 
+      final proteinAmount = double.tryParse(protein) ?? 0.0;
+      final carbsAmount = double.tryParse(carbs) ?? 0.0;
+      final fatsAmount = double.tryParse(fats) ?? 0.0;
+
       // Auto-complete corresponding Codex quest and sync
       if (Get.isRegistered<QuestController>()) {
-        Get.find<QuestController>().onActivityLogged('meal');
+        final now = DateTime.now();
+        final prevTodayCount = history.value?.logs.where((l) {
+          final dt = l.loggedAt.toLocal();
+          return dt.year == now.year && dt.month == now.month && dt.day == now.day;
+        }).length ?? 0;
+
+        Get.find<QuestController>().onActivityLogged(
+          'meal',
+          meta: {
+            'protein': proteinAmount,
+            'carbs': carbsAmount,
+            'fats': fatsAmount,
+            'mealCount': prevTodayCount + 1,
+          },
+        );
       }
       if (Get.isRegistered<HomeController>()) {
         Get.find<HomeController>().fetchData();
       }
 
-      final proteinAmount = double.tryParse(protein) ?? 0;
       final trigger = proteinAmount >= 25 ? 'Protein Goal' : 'Nutrition / Meal Logged';
       CompanionDialogueEngine.showDialogueSnackbar(trigger: trigger);
     } else {

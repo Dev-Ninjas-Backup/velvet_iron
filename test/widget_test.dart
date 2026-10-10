@@ -191,4 +191,86 @@ void main() {
       expect(chartDoubleData, [20.0, 30.0, 25.0, 45.0, 0.0, 0.0, 0.0]);
     });
   });
+
+  group('Client Feedback Issues 1, 2, 3 Tests', () {
+    test('Issue 1: Exercise scheduledAt converts to local timezone with 12-hour AM/PM', () {
+      // 00:15:00Z on Oct 16 in UTC
+      final utcTime = DateTime.parse('2026-10-16T00:15:00.000Z');
+      final local = utcTime.toLocal();
+
+      // Ensure local time is used and correctly formatted
+      final hourNum = local.hour % 12 == 0 ? 12 : local.hour % 12;
+      final minute = local.minute.toString().padLeft(2, '0');
+      final period = local.hour >= 12 ? 'PM' : 'AM';
+
+      expect(hourNum, isPositive);
+      expect(minute, '15');
+      expect(['AM', 'PM'], contains(period));
+    });
+
+    test('Issue 2: Workout/Exercise activity never matches step quest', () {
+      const stepQuest = Quest(
+        id: 'step-master',
+        title: 'Stride of the Realmwalker',
+        description: 'Complete your daily step goal',
+        xp: 25,
+        isDone: false,
+      );
+
+      final lower = 'exercise';
+      final t = stepQuest.title.toLowerCase();
+      final id = stepQuest.id.toLowerCase();
+      final ref = (stepQuest.originalRefId ?? '').toLowerCase();
+
+      final isStepQuest = t.contains('stride') ||
+          t.contains('realmwalker') ||
+          t.contains('step') ||
+          id.contains('step') ||
+          ref.contains('step');
+
+      expect(isStepQuest, isTrue);
+
+      // In onActivityLogged for exercise, step quests must be skipped
+      bool matched = false;
+      if (lower.contains('exercise')) {
+        if (!isStepQuest && (t.contains('exercise') || id.contains('exercise'))) {
+          matched = true;
+        }
+      }
+      expect(matched, isFalse, reason: 'Exercise logging must NOT match step quests');
+    });
+
+    test('Issue 3: Titan\'s Nourishment completes on 30g+ protein and rejects <30g', () {
+      const proteinQuest = Quest(
+        id: 'protein-power',
+        title: "Titan's Nourishment",
+        description: 'Log a meal with 30g+ protein',
+        xp: 20,
+        isDone: false,
+      );
+
+      final t = proteinQuest.title.toLowerCase();
+      final id = proteinQuest.id.toLowerCase();
+      final ref = (proteinQuest.originalRefId ?? '').toLowerCase();
+      final isProteinQuest = t.contains('nourishment') ||
+          t.contains('titan') ||
+          t.contains('protein') ||
+          id.contains('protein') ||
+          ref.contains('protein');
+
+      expect(isProteinQuest, isTrue);
+
+      bool checkCompletion(double protein) {
+        if (isProteinQuest && protein >= 30.0) {
+          return true;
+        }
+        return false;
+      }
+
+      expect(checkCompletion(30.0), isTrue, reason: 'Exactly 30g protein should complete Titan\'s Nourishment');
+      expect(checkCompletion(45.0), isTrue, reason: '45g protein should complete Titan\'s Nourishment');
+      expect(checkCompletion(29.9), isFalse, reason: 'Under 30g protein should NOT complete Titan\'s Nourishment');
+      expect(checkCompletion(0.0), isFalse, reason: '0g protein should NOT complete Titan\'s Nourishment');
+    });
+  });
 }

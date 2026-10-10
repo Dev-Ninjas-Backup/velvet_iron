@@ -1,0 +1,26 @@
+Hi team! During today's testing, I found a few additional issues that need to be addressed:
+
+1. Exercise Scheduling: I scheduled Aerial Silks for October 15 at 7:15 PM for 50 minutes.
+After saving, it displayed the wrong date, 12:15 AM, and 30 minutes. The edit screen also
+showed incorrect information. Medication scheduling works correctly, so this appears
+specific to exercise scheduling.
+
+2. Step Quest Triggering Incorrectly: Logging Aerial Silks as a completed workout
+automatically completed "Stride of the Realmwalker." This quest should only trigger when
+the required steps are recorded in the step tracker, not when an unrelated workout is
+logged.
+
+3. Titan's Nourishment Quest: I logged a protein shake containing exactly 30g of protein,
+but the quest requiring 30g+ protein did not complete. It should trigger automatically
+when a qualifying food entry is logged.
+
+4. Exercise History: When logging a completed workout, there is no option to select the
+date or time it actually occurred. Users should be able to log previous workouts
+accurately rather than having everything recorded on the current date.
+
+5. Daily Quest Reset - HIGH PRIORITY: It appears the app may be using a different
+timezone for daily resets. Daily quests should reset at midnight in the user's local
+timezone. Please also verify that streaks, steps, water, nutrition, and medication tracking
+use the correct local date.
+
+Thank you!

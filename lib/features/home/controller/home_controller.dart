@@ -353,7 +353,7 @@ class HomeController extends GetxController {
         Quest(
           id: 'daily_steps',
           title: 'Stride of the Ranger',
-          description: 'Walk 5,000 steps or complete active movement',
+          description: 'Walk 5,000 steps in the step tracker',
           xp: 25,
           isDone: false,
         ),

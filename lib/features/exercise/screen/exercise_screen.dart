@@ -270,7 +270,8 @@ class ExerciseScreen extends StatelessWidget {
                                   )
                                 else
                                   ...scheduled.map((next) {
-                                  final dayName = next.scheduledAt != null
+                                  final local = next.scheduledAt?.toLocal();
+                                  final dayName = local != null
                                       ? const [
                                           'Mon',
                                           'Tue',
@@ -279,19 +280,31 @@ class ExerciseScreen extends StatelessWidget {
                                           'Fri',
                                           'Sat',
                                           'Sun',
-                                        ][next.scheduledAt!.weekday - 1]
+                                        ][local.weekday - 1]
                                       : '-';
-                                  final hour = next.scheduledAt != null
-                                      ? next.scheduledAt!.hour
+                                  final hourNum = local != null
+                                      ? (local.hour % 12 == 0 ? 12 : local.hour % 12)
+                                      : null;
+                                  final hour = hourNum != null
+                                      ? hourNum.toString().padLeft(2, '0')
+                                      : '--';
+                                  final minute = local != null
+                                      ? local.minute
                                             .toString()
                                             .padLeft(2, '0')
                                       : '--';
-                                  final minute = next.scheduledAt != null
-                                      ? next.scheduledAt!.minute
-                                            .toString()
-                                            .padLeft(2, '0')
-                                      : '--';
-                                  final timeStr = "$dayName - $hour:$minute";
+                                  final period = local != null
+                                      ? (local.hour >= 12 ? 'PM' : 'AM')
+                                      : '';
+                                  final now = DateTime.now();
+                                  final isToday = local != null &&
+                                      local.year == now.year &&
+                                      local.month == now.month &&
+                                      local.day == now.day;
+                                  final prefix = isToday ? 'Today' : dayName;
+                                  final timeStr = local != null
+                                      ? "$prefix - $hour:$minute $period"
+                                      : '-';
                                   String iconPath;
                                   switch (next.name) {
                                     case 'Yoga Meditation':
@@ -406,8 +419,9 @@ class ExerciseScreen extends StatelessWidget {
     final noteCtrl = TextEditingController(text: exercise.note);
     var selectedType = exercise.type.toString();
     var selectedIntensity = exercise.intensity.toString();
-    var editDate = exercise.scheduledAt ?? DateTime.now();
-    var editTime = TimeOfDay.fromDateTime(editDate);
+    final localDt = exercise.scheduledAt?.toLocal() ?? DateTime.now();
+    var editDate = localDt;
+    var editTime = TimeOfDay.fromDateTime(localDt);
 
     showDialog(
       context: context,

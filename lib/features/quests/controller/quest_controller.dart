@@ -176,7 +176,7 @@ class QuestController extends GetxController {
     Quest(
       id: 'daily_steps',
       title: 'Stride of the Ranger',
-      description: 'Walk 5,000 steps or complete active movement',
+      description: 'Walk 5,000 steps in the step tracker',
       xp: 25,
       isDone: false,
       questType: 'CODEX',
@@ -304,7 +304,7 @@ class QuestController extends GetxController {
   }
 
   /// Automatically trigger completion of corresponding Codex quest when an activity is logged
-  Future<void> onActivityLogged(String activityType) async {
+  Future<void> onActivityLogged(String activityType, {Map<String, dynamic>? meta}) async {
     final data = questsData.value;
     if (data == null || data.quests.isEmpty) {
       await fetchQuests();
@@ -312,7 +312,7 @@ class QuestController extends GetxController {
     final currentData = questsData.value;
     if (currentData == null) return;
 
-    Quest? targetQuest;
+    final targetQuests = <Quest>[];
     final lower = activityType.toLowerCase();
 
     for (final q in currentData.quests) {
@@ -323,38 +323,60 @@ class QuestController extends GetxController {
 
       if (lower.contains('mood') || lower.contains('spirit')) {
         if (t.contains('attunement') || t.contains('spirit') || t.contains('mood') || id.contains('mood') || ref.contains('mood')) {
-          targetQuest = q;
-          break;
+          targetQuests.add(q);
         }
       } else if (lower.contains('meal') || lower.contains('food') || lower.contains('nutrition')) {
-        if (t.contains('feast') || t.contains('hearth') || t.contains('nourishment') || t.contains('protein') || t.contains('meal') || id.contains('meal') || ref.contains('meal')) {
-          targetQuest = q;
-          break;
+        final proteinAmount = (meta?['protein'] as num?)?.toDouble() ?? 0.0;
+        final mealCount = (meta?['mealCount'] as num?)?.toInt() ?? 1;
+
+        // 1. Protein-specific quest: "Titan's Nourishment" / "protein-power" (requires 30g+ protein)
+        final isProteinQuest = t.contains('nourishment') || t.contains('titan') || t.contains('protein') || id.contains('protein') || ref.contains('protein');
+        if (isProteinQuest) {
+          if (proteinAmount >= 30.0) {
+            targetQuests.add(q);
+          }
+          continue;
+        }
+
+        // 2. Three meals a day quest: "Feast of the Hearth" / "three-meals" (requires 3 meals logged)
+        final isThreeMealsQuest = t.contains('feast') || t.contains('hearth') || t.contains('three-meal') || id.contains('three-meal') || ref.contains('three-meal');
+        if (isThreeMealsQuest) {
+          if (mealCount >= 3) {
+            targetQuests.add(q);
+          }
+          continue;
+        }
+
+        // 3. Generic custom meal quest
+        if (t.contains('meal') || id.contains('meal') || ref.contains('meal') || t.contains('nutrition')) {
+          targetQuests.add(q);
         }
       } else if (lower.contains('water') || lower.contains('hydration')) {
         if (t.contains('hydration') || t.contains('ancients') || t.contains('water') || id.contains('water') || ref.contains('water')) {
-          targetQuest = q;
-          break;
+          targetQuests.add(q);
         }
       } else if (lower.contains('exercise') || lower.contains('workout') || lower.contains('training') || lower.contains('run')) {
+        // IMPORTANT (Issue 2): Never complete step quests when an exercise/workout is logged!
+        final isStepQuest = t.contains('stride') || t.contains('realmwalker') || t.contains('step') || id.contains('step') || ref.contains('step');
+        if (isStepQuest) {
+          continue;
+        }
+
         if (t.contains('training') || t.contains('workout') || t.contains('exercise') || t.contains('iron') || id.contains('workout') || id.contains('exercise')) {
-          targetQuest = q;
-          break;
+          targetQuests.add(q);
         }
       } else if (lower.contains('step') || lower.contains('walk')) {
         if (t.contains('stride') || t.contains('realmwalker') || t.contains('step') || id.contains('step') || ref.contains('step')) {
-          targetQuest = q;
-          break;
+          targetQuests.add(q);
         }
       } else if (lower.contains('med') || lower.contains('dose') || lower.contains('alchemy')) {
         if (t.contains('elixir') || t.contains('medication') || t.contains('alchemy') || t.contains('dose') || id.contains('medication') || ref.contains('medication')) {
-          targetQuest = q;
-          break;
+          targetQuests.add(q);
         }
       }
     }
 
-    if (targetQuest != null) {
+    for (final targetQuest in targetQuests) {
       print('🔵 [QuestController] Auto-completing tracked quest: ${targetQuest.title}');
       await completeQuest(targetQuest.id);
     }

@@ -113,6 +113,7 @@ class IntensityAndDuration extends StatelessWidget {
                               Expanded(
                                 child: TextField(
                                   controller: controller.durationController,
+                                  keyboardType: TextInputType.number,
                                   onChanged: (value) {
                                     controller.duration.value =
                                         int.tryParse(value) ?? 30;

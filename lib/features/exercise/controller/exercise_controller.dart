@@ -122,9 +122,10 @@ class ExerciseController extends GetxController {
   void _clearFields() {
     exerciseNameController.clear();
     notesController.clear();
+    durationController.clear();
     exerciseType.value = 'Cardio'; // Reset dropdown
     intensity.value = 'Medium'; // Reset dropdown
-    duration.value = 0;
+    duration.value = 30;
     exerciseName.value = '';
     notes.value = '';
     // Always reset scheduling state to avoid pollution between tabs
@@ -137,11 +138,15 @@ class ExerciseController extends GetxController {
   Future<void> logExercise() async {
     try {
       EasyLoading.show(status: 'Logging exercise...');
+      final parsedDuration =
+          int.tryParse(durationController.text.trim()) ?? duration.value;
+      final effectiveDuration = parsedDuration > 0 ? parsedDuration : 30;
+
       final response = await _exerciseService.logExercise(
         type: exerciseType.value,
         name: exerciseNameController.text,
         intensity: intensity.value,
-        duration: duration.value,
+        duration: effectiveDuration,
         note: notesController.text,
       );
       if (response == null) {
@@ -185,11 +190,15 @@ class ExerciseController extends GetxController {
         scheduleTime.value.minute,
       );
 
+      final parsedDuration =
+          int.tryParse(durationController.text.trim()) ?? duration.value;
+      final effectiveDuration = parsedDuration > 0 ? parsedDuration : 30;
+
       final response = await _exerciseService.scheduleExercise(
         type: exerciseType.value,
         name: exerciseNameController.text,
         intensity: intensity.value,
-        duration: duration.value,
+        duration: effectiveDuration,
         note: notesController.text,
         scheduledAt: scheduledDateTime,
       );
