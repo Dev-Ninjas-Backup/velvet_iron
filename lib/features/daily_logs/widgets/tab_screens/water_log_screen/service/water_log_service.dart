@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:velvet_iron/core/services/app_timezone_helper.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/water_log_screen/models/water_log_model.dart';
@@ -9,17 +10,20 @@ class WaterLogService {
   Future<Map<String, String>> _getHeaders() async {
     final accessToken = await SharedPreferencesHelper.getAccessToken() ?? '';
     final refreshToken = await SharedPreferencesHelper.getRefreshToken() ?? '';
+    final timezone = await AppTimezoneHelper.getTimezoneName();
     return {
       'accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $accessToken',
+      'x-timezone': timezone,
       if (refreshToken.isNotEmpty) 'x-refresh-token': refreshToken,
     };
   }
 
   /// GET /water-log/today
   Future<WaterTodayResponse> getTodayWater() async {
-    final url = Uri.parse(Urls.waterLogToday);
+    final date = AppTimezoneHelper.getTodayDateString();
+    final url = Uri.parse('${Urls.waterLogToday}?date=$date');
     final headers = await _getHeaders();
 
     debugPrint('[WaterLogService] GET $url');

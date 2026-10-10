@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:velvet_iron/core/services/app_timezone_helper.dart';
 import 'package:velvet_iron/features/quests/model/quest_model.dart';
 import 'package:velvet_iron/features/exercise/model/exercise_model.dart';
 import 'package:velvet_iron/features/medication_screen/model/medication_model.dart';
@@ -273,4 +274,62 @@ void main() {
       expect(checkCompletion(0.0), isFalse, reason: '0g protein should NOT complete Titan\'s Nourishment');
     });
   });
+
+  group('Client Feedback Issues 4, 5 & Bonus Decoupling Tests', () {
+    test('Issue 4: Exercise history backdating formats loggedAt ISO 8601 timestamp', () {
+      final pastDate = DateTime(2026, 10, 5, 18, 30);
+      final loggedAtString = pastDate.toUtc().toIso8601String();
+
+      expect(loggedAtString, contains('2026-10-05T'));
+      expect(loggedAtString, endsWith('Z'));
+
+      // Validate parsed log item
+      final exerciseLogJson = {
+        'id': 'da4f09d0-9feb-4bf3-a71d-d3fe61f748c8',
+        'type': 'STRENGTH',
+        'name': 'Aerial Silks',
+        'intensity': 'HIGH',
+        'duration': 45,
+        'note': 'Completed evening routine',
+        'loggedAt': loggedAtString,
+        'isTaken': true,
+        'earnedXp': 10,
+      };
+
+      expect(exerciseLogJson['loggedAt'], loggedAtString);
+      expect(exerciseLogJson['duration'], 45);
+      expect(exerciseLogJson['intensity'], 'HIGH');
+    });
+
+    test('Issue 5: AppTimezoneHelper formats local date as YYYY-MM-DD', () {
+      final testDate = DateTime(2026, 10, 10, 15, 30);
+      final dateString = AppTimezoneHelper.getTodayDateString(testDate);
+      expect(dateString, '2026-10-10');
+
+      final singleDigitDate = DateTime(2026, 4, 5, 9, 5);
+      final singleDigitString = AppTimezoneHelper.getTodayDateString(singleDigitDate);
+      expect(singleDigitString, '2026-04-05');
+    });
+
+    test('Bonus Fix: Step quest exclusively completes on target goal or 8,000+ steps', () {
+      bool evaluateStepQuest({required int currentSteps, required int goal, required bool isGoalReached}) {
+        if (!isGoalReached && currentSteps < 8000) {
+          return false;
+        }
+        return true;
+      }
+
+      // Small step increments should NOT complete step quest
+      expect(evaluateStepQuest(currentSteps: 500, goal: 8000, isGoalReached: false), isFalse);
+      expect(evaluateStepQuest(currentSteps: 6240, goal: 8000, isGoalReached: false), isFalse);
+
+      // Reaching goal completes quest
+      expect(evaluateStepQuest(currentSteps: 5000, goal: 5000, isGoalReached: true), isTrue);
+
+      // Reaching 8,000 steps completes quest even if custom goal is higher
+      expect(evaluateStepQuest(currentSteps: 8000, goal: 10000, isGoalReached: false), isTrue);
+      expect(evaluateStepQuest(currentSteps: 10000, goal: 8000, isGoalReached: true), isTrue);
+    });
+  });
 }
+

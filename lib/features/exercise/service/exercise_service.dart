@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:velvet_iron/core/services/app_timezone_helper.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
 
@@ -15,6 +16,7 @@ class ExerciseService {
     required String intensity,
     required int duration,
     required String note,
+    DateTime? loggedAt,
   }) async {
     final accessToken = await SharedPreferencesHelper.getAccessToken();
     final refreshToken = await SharedPreferencesHelper.getRefreshToken();
@@ -24,6 +26,7 @@ class ExerciseService {
       return null;
     }
 
+    final timezone = await AppTimezoneHelper.getTimezoneName();
     final uri = Uri.parse(Urls.exerciseLog);
     var request = http.MultipartRequest('POST', uri);
 
@@ -31,6 +34,7 @@ class ExerciseService {
       'accept': 'application/json',
       'Authorization': 'Bearer $accessToken',
       'x-refresh-token': refreshToken,
+      'x-timezone': timezone,
     });
 
     String cleanIntensity = intensity.toUpperCase().trim();
@@ -53,6 +57,8 @@ class ExerciseService {
     request.fields['intensity'] = cleanIntensity;
     request.fields['duration'] = exerciseDuration.toString();
     request.fields['note'] = note.trim();
+    final logTime = loggedAt ?? DateTime.now();
+    request.fields['loggedAt'] = logTime.toUtc().toIso8601String();
 
     print('📤 Request Fields: ${request.fields}');
 
@@ -83,7 +89,8 @@ class ExerciseService {
       return null;
     }
 
-    print('📤 Fetching Exercise History...');
+    final timezone = await AppTimezoneHelper.getTimezoneName();
+    print('📤 Fetching Exercise History (tz: $timezone)...');
 
     final getConnect = GetConnect();
     final response = await getConnect.get(
@@ -92,6 +99,7 @@ class ExerciseService {
         'accept': 'application/json',
         'Authorization': 'Bearer $accessToken',
         'x-refresh-token': refreshToken,
+        'x-timezone': timezone,
       },
     );
 
@@ -128,6 +136,7 @@ class ExerciseService {
       return null;
     }
 
+    final timezone = await AppTimezoneHelper.getTimezoneName();
     final uri = Uri.parse(Urls.exerciseLogSchedule);
     var request = http.MultipartRequest('POST', uri);
 
@@ -135,6 +144,7 @@ class ExerciseService {
       'accept': 'application/json',
       'Authorization': 'Bearer $accessToken',
       'x-refresh-token': refreshToken,
+      'x-timezone': timezone,
     });
 
     String cleanIntensity = intensity.toUpperCase().trim();
@@ -187,33 +197,35 @@ class ExerciseService {
     print('[ExerciseService] Mark taken PATCH: $uri');
 
     try {
+      final timezone = await AppTimezoneHelper.getTimezoneName();
       final response = await http.patch(
         uri,
         headers: {
           'accept': 'application/json',
           'Authorization': 'Bearer $accessToken',
           'x-refresh-token': refreshToken,
+          'x-timezone': timezone,
         },
       );
 
       print(
-        '[ExerciseService] Mark taken Response status: \\${response.statusCode}',
+        '[ExerciseService] Mark taken Response status: ${response.statusCode}',
       );
-      print('[ExerciseService] Mark taken Response body: \\${response.body}');
+      print('[ExerciseService] Mark taken Response body: ${response.body}');
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
-        print('[ExerciseService] Marked as taken! id=\\$exerciseId');
+        print('[ExerciseService] Marked as taken! id=$exerciseId');
         return jsonData;
       } else {
         final errorData = jsonDecode(response.body) as Map<String, dynamic>;
         print(
-          '[ExerciseService] ❌ Mark taken error: \\${errorData['message'] ?? response.body}',
+          '[ExerciseService] ❌ Mark taken error: ${errorData['message'] ?? response.body}',
         );
         return null;
       }
     } catch (e) {
-      print('[ExerciseService] ❌ Mark taken Exception: \\${e.toString()}');
+      print('[ExerciseService] ❌ Mark taken Exception: ${e.toString()}');
       return null;
     }
   }
@@ -230,6 +242,7 @@ class ExerciseService {
       Urls.deleteExerciseLog(exerciseId),
     ];
 
+    final timezone = await AppTimezoneHelper.getTimezoneName();
     for (final url in urlsToTry) {
       print('[ExerciseService] DELETE $url');
       try {
@@ -239,6 +252,7 @@ class ExerciseService {
             'accept': 'application/json',
             'Authorization': 'Bearer $accessToken',
             'x-refresh-token': refreshToken,
+            'x-timezone': timezone,
           },
         );
         print('[ExerciseService] DELETE status: ${response.statusCode}');
@@ -269,6 +283,7 @@ class ExerciseService {
       Urls.updateExerciseScheduled(exerciseId),
     ];
 
+    final timezone = await AppTimezoneHelper.getTimezoneName();
     for (final url in urlsToTry) {
       print('[ExerciseService] PATCH $url');
       try {
@@ -277,6 +292,7 @@ class ExerciseService {
           'accept': 'application/json',
           'Authorization': 'Bearer $accessToken',
           'x-refresh-token': refreshToken,
+          'x-timezone': timezone,
         });
 
         request.fields['type'] = type.toUpperCase().trim();

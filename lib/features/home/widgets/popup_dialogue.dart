@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
+import 'package:velvet_iron/core/services/app_timezone_helper.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
@@ -22,6 +23,7 @@ class _XpService {
   }) async {
     const String dailyLoginXP = Urls.dailyLogsXP;
     try {
+      final timezone = await AppTimezoneHelper.getTimezoneName();
       final response = await http.post(
         Uri.parse(dailyLoginXP),
         headers: {
@@ -29,6 +31,7 @@ class _XpService {
           'Authorization': 'Bearer $accessToken',
           'x-refresh-token': refreshToken,
           'Content-Type': 'application/json',
+          'x-timezone': timezone,
         },
         body: jsonEncode({'xp': dailyLoginXpAmount}),
       );

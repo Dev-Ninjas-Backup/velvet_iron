@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:velvet_iron/core/services/app_timezone_helper.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/model/meal_log_history_model.dart';
@@ -27,6 +28,8 @@ class MealLogService {
         return null;
       }
 
+      final timezone = await AppTimezoneHelper.getTimezoneName();
+
       // Parse macros as integers as required by backend schema
       final cInt = (double.tryParse(carbs) ?? 0).round();
       final pInt = (double.tryParse(protein) ?? 0).round();
@@ -40,6 +43,7 @@ class MealLogService {
         'accept': 'application/json',
         'Authorization': 'Bearer $accessToken',
         'x-refresh-token': refreshToken,
+        'x-timezone': timezone,
       });
 
       request.fields['mealType'] = mealType.toUpperCase();
@@ -155,6 +159,7 @@ class MealLogService {
         return null;
       }
 
+      final timezone = await AppTimezoneHelper.getTimezoneName();
       final uri = Uri.parse(Urls.mealSchedule);
       final request = http.MultipartRequest('POST', uri);
 
@@ -162,6 +167,7 @@ class MealLogService {
         'accept': 'application/json',
         'Authorization': 'Bearer $accessToken',
         'x-refresh-token': refreshToken,
+        'x-timezone': timezone,
       });
 
       request.fields['mealType'] = mealType;
@@ -223,6 +229,7 @@ class MealLogService {
         return null;
       }
 
+      final timezone = await AppTimezoneHelper.getTimezoneName();
       final uri = Uri.parse(Urls.mealLogHistory(limit, offset));
 
       final response = await http.get(
@@ -231,6 +238,7 @@ class MealLogService {
           'accept': 'application/json',
           'Authorization': 'Bearer $accessToken',
           'x-refresh-token': refreshToken,
+          'x-timezone': timezone,
         },
       );
 

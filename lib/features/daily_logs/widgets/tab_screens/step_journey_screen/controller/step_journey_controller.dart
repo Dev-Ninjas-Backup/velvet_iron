@@ -286,7 +286,15 @@ class StepJourneyController extends GetxController {
       await fetchTodaySteps(showLoading: false);
 
       if (Get.isRegistered<QuestController>()) {
-        Get.find<QuestController>().onActivityLogged('steps');
+        final reached = isGoalReached.value || (goal.value > 0 && steps.value >= goal.value) || steps.value >= 8000;
+        Get.find<QuestController>().onActivityLogged(
+          'steps',
+          meta: {
+            'steps': steps.value,
+            'goal': goal.value,
+            'isGoalReached': reached,
+          },
+        );
       }
       if (Get.isRegistered<HomeController>()) {
         Get.find<HomeController>().fetchData();
@@ -315,7 +323,15 @@ class StepJourneyController extends GetxController {
       await fetchTodaySteps(showLoading: false);
 
       if (Get.isRegistered<QuestController>()) {
-        Get.find<QuestController>().onActivityLogged('steps');
+        final reached = isGoalReached.value || (goal.value > 0 && steps.value >= goal.value) || steps.value >= 8000;
+        Get.find<QuestController>().onActivityLogged(
+          'steps',
+          meta: {
+            'steps': steps.value,
+            'goal': goal.value,
+            'isGoalReached': reached,
+          },
+        );
       }
       if (Get.isRegistered<HomeController>()) {
         Get.find<HomeController>().fetchData();
@@ -456,7 +472,15 @@ class StepJourneyController extends GetxController {
       await fetchTodaySteps(showLoading: false);
 
       if (Get.isRegistered<QuestController>()) {
-        Get.find<QuestController>().onActivityLogged('steps');
+        final reached = isGoalReached.value || (goal.value > 0 && steps.value >= goal.value) || steps.value >= 8000;
+        Get.find<QuestController>().onActivityLogged(
+          'steps',
+          meta: {
+            'steps': steps.value,
+            'goal': goal.value,
+            'isGoalReached': reached,
+          },
+        );
       }
       if (Get.isRegistered<HomeController>()) {
         Get.find<HomeController>().fetchData();

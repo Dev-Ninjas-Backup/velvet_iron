@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
+import 'package:velvet_iron/core/services/app_timezone_helper.dart';
 import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
@@ -138,6 +139,7 @@ class _CompanionFullBodyDialogueState extends State<CompanionFullBodyDialogue>
         widget.refreshToken != null) {
       _isLoading.value = true;
       try {
+        final timezone = await AppTimezoneHelper.getTimezoneName();
         final response = await http.post(
           Uri.parse(Urls.dailyLogsXP),
           headers: {
@@ -145,6 +147,7 @@ class _CompanionFullBodyDialogueState extends State<CompanionFullBodyDialogue>
             'Authorization': 'Bearer ${widget.accessToken}',
             'x-refresh-token': widget.refreshToken!,
             'Content-Type': 'application/json',
+            'x-timezone': timezone,
           },
           body: jsonEncode({'xp': widget.xpReward}),
         );

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:velvet_iron/core/services/app_timezone_helper.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/mood_log_screen/model/mood_log_model.dart';
 
@@ -12,16 +13,19 @@ class MoodLogService {
     required String accessToken,
     required String refreshToken,
   }) async {
-    final uri = Uri.parse(Urls.getTodayMoodLog);
+    final date = AppTimezoneHelper.getTodayDateString();
+    final uri = Uri.parse('${Urls.getTodayMoodLog}?date=$date');
     debugPrint('MoodLog GET today: $uri');
 
     try {
+      final timezone = await AppTimezoneHelper.getTimezoneName();
       final response = await http.get(
         uri,
         headers: {
           'accept': '*/*',
           'Authorization': 'Bearer $accessToken',
           'x-refresh-token': refreshToken,
+          'x-timezone': timezone,
         },
       );
 
@@ -60,12 +64,14 @@ class MoodLogService {
     debugPrint('MoodLog GET history: $uri');
 
     try {
+      final timezone = await AppTimezoneHelper.getTimezoneName();
       final response = await http.get(
         uri,
         headers: {
           'accept': 'application/json',
           'Authorization': 'Bearer $accessToken',
           'x-refresh-token': refreshToken,
+          'x-timezone': timezone,
         },
       );
 
@@ -107,11 +113,13 @@ class MoodLogService {
     final uri = Uri.parse(Urls.moodLog);
     debugPrint('MoodLog POST $uri');
 
+    final timezone = await AppTimezoneHelper.getTimezoneName();
     final request = http.MultipartRequest('POST', uri)
       ..headers.addAll({
         'accept': 'application/json',
         'Authorization': 'Bearer $accessToken',
         'x-refresh-token': refreshToken,
+        'x-timezone': timezone,
       })
       ..fields['mood'] = mood.value
       ..fields['energyLevel'] = energyLevel.value

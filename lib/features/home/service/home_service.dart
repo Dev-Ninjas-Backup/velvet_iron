@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:velvet_iron/core/services/app_timezone_helper.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
@@ -11,6 +12,7 @@ class HomeService {
   Future<UserProfile> getProfile() async {
     final token = await SharedPreferencesHelper.getAccessToken() ?? '';
     final refreshToken = await SharedPreferencesHelper.getRefreshToken() ?? '';
+    final timezone = await AppTimezoneHelper.getTimezoneName();
 
     final response = await http.get(
       Uri.parse(Urls.homeScreen),
@@ -18,6 +20,7 @@ class HomeService {
         'accept': '*/*',
         'Authorization': 'Bearer $token',
         'x-refresh-token': refreshToken,
+        'x-timezone': timezone,
       },
     );
 

@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:velvet_iron/core/services/app_timezone_helper.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/quests/model/quest_model.dart';
@@ -9,10 +10,12 @@ class QuestService {
   Future<Map<String, String>> _getHeaders() async {
     final token = await SharedPreferencesHelper.getAccessToken();
     final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+    final timezone = await AppTimezoneHelper.getTimezoneName();
     return {
       'accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
+      'x-timezone': timezone,
       if (refreshToken != null && refreshToken.isNotEmpty)
         'x-refresh-token': refreshToken,
     };
@@ -21,10 +24,12 @@ class QuestService {
   /// 1. Unified Quests Feed: GET /quests/today (Milestone 3)
   Future<DailyQuestResponse> getUnifiedQuestsToday() async {
     final headers = await _getHeaders();
-    print('🔵 [QuestService] GET ${Urls.questsToday}');
+    final date = AppTimezoneHelper.getTodayDateString();
+    final url = '${Urls.questsToday}?date=$date';
+    print('🔵 [QuestService] GET $url');
 
     final response = await http.get(
-      Uri.parse(Urls.questsToday),
+      Uri.parse(url),
       headers: headers,
     );
 
@@ -52,10 +57,12 @@ class QuestService {
 
     // Fallback: Legacy Codex Quests from /xp-stats/quests
     final headers = await _getHeaders();
-    print('🔵 [QuestService] Fallback GET ${Urls.quests}');
+    final date = AppTimezoneHelper.getTodayDateString();
+    final url = '${Urls.quests}?date=$date';
+    print('🔵 [QuestService] Fallback GET $url');
 
     final response = await http.get(
-      Uri.parse(Urls.quests),
+      Uri.parse(url),
       headers: headers,
     );
 

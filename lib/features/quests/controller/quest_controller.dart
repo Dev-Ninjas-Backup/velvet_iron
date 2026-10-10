@@ -366,6 +366,12 @@ class QuestController extends GetxController {
           targetQuests.add(q);
         }
       } else if (lower.contains('step') || lower.contains('walk')) {
+        final currentSteps = (meta?['steps'] as num?)?.toInt();
+        final isGoalReached = meta?['isGoalReached'] as bool?;
+        // Bonus Fix: Step quests complete exclusively when step targets are achieved (target goal or 8,000+ steps)
+        if (isGoalReached != null && !isGoalReached && (currentSteps == null || currentSteps < 8000)) {
+          continue;
+        }
         if (t.contains('stride') || t.contains('realmwalker') || t.contains('step') || id.contains('step') || ref.contains('step')) {
           targetQuests.add(q);
         }

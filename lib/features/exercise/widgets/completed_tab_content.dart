@@ -4,6 +4,7 @@ import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/icon_path.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/widgets/date_and_time_picker.dart';
 import 'package:velvet_iron/features/exercise/controller/exercise_controller.dart';
 import 'package:velvet_iron/features/exercise/widgets/excercise_dropdown.dart';
 import 'package:velvet_iron/features/exercise/widgets/intensity_and_duration.dart';
@@ -35,6 +36,15 @@ class CompletedTabContent extends StatelessWidget {
           ExerciseNameTextField(controller: controller),
           SizedBox(height: 16),
           IntensityAndDuration(controller: controller),
+          SizedBox(height: 14),
+          Obx(
+            () => DateAndTimePicker(
+              selectedDate: controller.completedDate.value,
+              selectedTime: controller.completedTime.value,
+              onDateChanged: (date) => controller.setCompletedDate(date),
+              onTimeChanged: (time) => controller.setCompletedTime(time),
+            ),
+          ),
           SizedBox(height: 14),
           Text(
             "Notes (optional):",

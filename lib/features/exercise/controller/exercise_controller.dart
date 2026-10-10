@@ -104,6 +104,8 @@ class ExerciseController extends GetxController {
   final notes = ''.obs;
   final scheduleDate = DateTime.now().obs;
   final scheduleTime = TimeOfDay.now().obs;
+  final completedDate = DateTime.now().obs;
+  final completedTime = TimeOfDay.now().obs;
 
   void setSelectedDate(DateTime date) {
     scheduleDate.value = date;
@@ -111,6 +113,14 @@ class ExerciseController extends GetxController {
 
   void setSelectedTime(TimeOfDay time) {
     scheduleTime.value = time;
+  }
+
+  void setCompletedDate(DateTime date) {
+    completedDate.value = date;
+  }
+
+  void setCompletedTime(TimeOfDay time) {
+    completedTime.value = time;
   }
 
   final selectedExerciseTab = 0.obs;
@@ -128,13 +138,15 @@ class ExerciseController extends GetxController {
     duration.value = 30;
     exerciseName.value = '';
     notes.value = '';
-    // Always reset scheduling state to avoid pollution between tabs
+    // Always reset scheduling and completed state to avoid pollution between tabs
     scheduleDate.value = DateTime.now();
     scheduleTime.value = TimeOfDay.now();
+    completedDate.value = DateTime.now();
+    completedTime.value = TimeOfDay.now();
   }
 
   /// Log a completed exercise (Completed tab)
-  /// Only sends fields required for completion, never scheduling fields
+  /// Sends fields required for completion including backdated loggedAt timestamp
   Future<void> logExercise() async {
     try {
       EasyLoading.show(status: 'Logging exercise...');
@@ -142,12 +154,21 @@ class ExerciseController extends GetxController {
           int.tryParse(durationController.text.trim()) ?? duration.value;
       final effectiveDuration = parsedDuration > 0 ? parsedDuration : 30;
 
+      final completedDateTime = DateTime(
+        completedDate.value.year,
+        completedDate.value.month,
+        completedDate.value.day,
+        completedTime.value.hour,
+        completedTime.value.minute,
+      );
+
       final response = await _exerciseService.logExercise(
         type: exerciseType.value,
         name: exerciseNameController.text,
         intensity: intensity.value,
         duration: effectiveDuration,
         note: notesController.text,
+        loggedAt: completedDateTime,
       );
       if (response == null) {
         EasyLoading.showError('Failed to log exercise. Please try again.');

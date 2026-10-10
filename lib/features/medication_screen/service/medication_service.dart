@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:velvet_iron/core/services/app_timezone_helper.dart';
 import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/features/medication_screen/model/medication_model.dart';
 
@@ -17,12 +18,14 @@ class MedicationService {
     debugPrint('Medication POST: $uri');
 
     try {
+      final timezone = await AppTimezoneHelper.getTimezoneName();
       var request = http.MultipartRequest('POST', uri);
 
       request.headers.addAll({
         'accept': 'application/json',
         'Authorization': 'Bearer $accessToken',
         'x-refresh-token': refreshToken,
+        'x-timezone': timezone,
       });
 
       request.fields['name'] = name;
@@ -70,12 +73,14 @@ class MedicationService {
     debugPrint('[MedicationService] Schedule POST: $uri');
 
     try {
+      final timezone = await AppTimezoneHelper.getTimezoneName();
       var request = http.MultipartRequest('POST', uri);
 
       request.headers.addAll({
         'accept': 'application/json',
         'Authorization': 'Bearer $accessToken',
         'x-refresh-token': refreshToken,
+        'x-timezone': timezone,
       });
 
       request.fields['name'] = name;
@@ -126,12 +131,14 @@ class MedicationService {
     debugPrint('[MedicationService] Mark taken PATCH: $uri');
 
     try {
+      final timezone = await AppTimezoneHelper.getTimezoneName();
       final response = await http.patch(
         uri,
         headers: {
           'accept': 'application/json',
           'Authorization': 'Bearer $accessToken',
           'x-refresh-token': refreshToken,
+          'x-timezone': timezone,
         },
       );
 
@@ -173,12 +180,14 @@ class MedicationService {
     debugPrint('[MedicationService] History GET: $uri');
 
     try {
+      final timezone = await AppTimezoneHelper.getTimezoneName();
       final response = await http.get(
         uri,
         headers: {
           'accept': 'application/json',
           'Authorization': 'Bearer $accessToken',
           'x-refresh-token': refreshToken,
+          'x-timezone': timezone,
         },
       );
 
@@ -225,6 +234,7 @@ class MedicationService {
       Urls.deleteMedication(id),
     ];
 
+    final timezone = await AppTimezoneHelper.getTimezoneName();
     for (final url in urlsToTry) {
       debugPrint('[MedicationService] DELETE $url');
       try {
@@ -234,6 +244,7 @@ class MedicationService {
             'accept': 'application/json',
             'Authorization': 'Bearer $accessToken',
             'x-refresh-token': refreshToken,
+            'x-timezone': timezone,
           },
         );
         debugPrint('[MedicationService] DELETE status: ${response.statusCode}');
@@ -261,11 +272,13 @@ class MedicationService {
     debugPrint('[MedicationService] Update PATCH: $uri');
 
     try {
+      final timezone = await AppTimezoneHelper.getTimezoneName();
       final request = http.MultipartRequest('PATCH', uri);
       request.headers.addAll({
         'accept': 'application/json',
         'Authorization': 'Bearer $accessToken',
         'x-refresh-token': refreshToken,
+        'x-timezone': timezone,
       });
 
       if (name != null && name.isNotEmpty) request.fields['name'] = name;
