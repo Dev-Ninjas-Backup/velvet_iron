@@ -194,7 +194,7 @@ class MealLogController extends GetxController {
           return dt.year == now.year && dt.month == now.month && dt.day == now.day;
         }).length ?? 0;
 
-        Get.find<QuestController>().onActivityLogged(
+        await Get.find<QuestController>().onActivityLogged(
           'meal',
           meta: {
             'protein': proteinAmount,

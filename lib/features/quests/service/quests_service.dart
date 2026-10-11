@@ -47,10 +47,8 @@ class QuestService {
     // Attempt the new Milestone 3 unified feed first
     try {
       final unified = await getUnifiedQuestsToday();
-      if (unified.quests.isNotEmpty) {
-        print('🔵 [QuestService] Unified feed loaded successfully (${unified.quests.length} quests)');
-        return unified;
-      }
+      print('🔵 [QuestService] Unified feed loaded successfully (${unified.quests.length} quests)');
+      return unified;
     } catch (e) {
       print('🟡 [QuestService] Unified feed not yet available on server, using fallback: $e');
     }

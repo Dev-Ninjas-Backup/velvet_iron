@@ -11,7 +11,6 @@ import 'package:velvet_iron/features/daily_logs/controller/daily_log_controller.
 import 'package:velvet_iron/features/home/models/home_screen_model.dart';
 import 'package:velvet_iron/features/home/service/home_service.dart';
 import 'package:velvet_iron/features/quests/controller/quest_controller.dart';
-import 'package:velvet_iron/features/quests/model/quest_model.dart';
 
 class HomeController extends GetxController {
   final selectedMood = 1.obs;
@@ -339,33 +338,7 @@ class HomeController extends GetxController {
         ? Get.find<QuestController>()
         : Get.put(QuestController(), permanent: true);
 
-    var quests = questController.questsData.value?.quests;
-    if (quests == null || quests.isEmpty) {
-      // Heroic daily quests fallback so Today's Quests is always populated
-      quests = const [
-        Quest(
-          id: 'daily_water',
-          title: 'Hydration of the Ancients',
-          description: 'Drink 8 glasses of water throughout the day',
-          xp: 15,
-          isDone: false,
-        ),
-        Quest(
-          id: 'daily_steps',
-          title: 'Stride of the Ranger',
-          description: 'Walk 5,000 steps in the step tracker',
-          xp: 25,
-          isDone: false,
-        ),
-        Quest(
-          id: 'daily_mindful',
-          title: 'Codex Reflection',
-          description: 'Log your daily mood & check in with your companion',
-          xp: 10,
-          isDone: false,
-        ),
-      ];
-    }
+    final quests = questController.questsData.value?.quests ?? [];
 
     for (final quest in quests) {
       // Avoid duplicate display if this quest matches an already-added schedule item

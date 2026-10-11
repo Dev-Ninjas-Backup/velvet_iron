@@ -140,14 +140,6 @@ class Quest {
     String title = json['title'] as String? ?? json['name'] as String? ?? '';
     String description = json['description'] as String? ?? '';
 
-    // Sanitize unrealistic 120g single meal protein preset
-    if (title.contains('120g') || title.contains('120 g')) {
-      title = title.replaceAll(RegExp(r'120\s*g\+?\s*protein', caseSensitive: false), '30g+ protein');
-    }
-    if (description.contains('120g') || description.contains('120 g')) {
-      description = description.replaceAll(RegExp(r'120\s*g\+?\s*protein', caseSensitive: false), '30g+ protein');
-    }
-
     final lowerTitle = title.trim().toLowerCase();
     final idString = (json['id']?.toString() ?? '').toLowerCase();
     final refId = (json['originalRefId']?.toString() ?? '').toLowerCase();
@@ -161,9 +153,7 @@ class Quest {
       if (description.isEmpty) description = "Log breakfast, lunch, and dinner";
     } else if (lowerTitle == 'protein power' || idString.contains('protein-power') || refId.contains('protein-power')) {
       title = "Titan's Nourishment";
-      if (description.isEmpty || description.contains('120g')) {
-        description = "Log a meal with 30g+ protein";
-      }
+      if (description.isEmpty) description = "Log a meal with 120g+ protein";
     } else if (lowerTitle == 'track your shot' || idString.contains('track-your-shot') || refId.contains('track-your-shot')) {
       title = "Elixir of the Alchemist";
     } else if (lowerTitle == 'mood check' || idString.contains('mood-check') || refId.contains('mood-check')) {

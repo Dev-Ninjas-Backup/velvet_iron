@@ -50,10 +50,12 @@ class QuestController extends GetxController {
 
   Future<void> _cleanupLegacyLocalQuests() async {
     try {
-      // One-time cleanup to ensure old un-scoped custom quests from previous installs are wiped
+      // One-time cleanup to ensure old un-scoped custom quests & local completion overrides are wiped
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove('user_custom_quests');
       await prefs.remove('user_custom_quests_date');
+      await prefs.remove('locally_completed_quests_date');
+      await prefs.remove('locally_completed_quest_ids');
     } catch (_) {}
   }
 
@@ -164,60 +166,13 @@ class QuestController extends GetxController {
     }).toList();
   }
 
-  static const List<Quest> defaultDailyQuests = [
-    Quest(
-      id: 'daily_water',
-      title: 'Hydration of the Ancients',
-      description: 'Drink 8 glasses of water throughout the day',
-      xp: 15,
-      isDone: false,
-      questType: 'CODEX',
-    ),
-    Quest(
-      id: 'daily_steps',
-      title: 'Stride of the Ranger',
-      description: 'Walk 5,000 steps in the step tracker',
-      xp: 25,
-      isDone: false,
-      questType: 'CODEX',
-    ),
-    Quest(
-      id: 'daily_mindful',
-      title: 'Codex Reflection',
-      description: 'Log your daily mood & check in with your companion',
-      xp: 10,
-      isDone: false,
-      questType: 'CODEX',
-    ),
-  ];
-
   Future<void> fetchQuests() async {
     try {
       isLoading(true);
       errorMessage('');
       await loadMedicationPreference();
 
-      DailyQuestResponse rawData;
-      try {
-        final data = await _service.getQuests();
-        if (data.quests.isEmpty) {
-          rawData = DailyQuestResponse(
-            todayTotalXp: data.todayTotalXp,
-            todayLogCount: data.todayLogCount,
-            quests: List.from(defaultDailyQuests),
-          );
-        } else {
-          rawData = data;
-        }
-      } catch (e) {
-        print('Using default daily quests fallback: $e');
-        rawData = DailyQuestResponse(
-          todayTotalXp: 0,
-          todayLogCount: 0,
-          quests: List.from(defaultDailyQuests),
-        );
-      }
-
+      final rawData = await _service.getQuests();
       final filtered = _filterQuestsIfNeeded(rawData.quests);
       final completed = filtered.where((q) => q.isDone).length;
       final totalXp =
@@ -237,13 +192,14 @@ class QuestController extends GetxController {
             : null,
       );
     } catch (e) {
+      print('🔴 [QuestController] Error fetching quests: $e');
       errorMessage('Failed to fetch quests');
     } finally {
       isLoading(false);
     }
   }
 
-  /// Complete a quest (Unified completion routing, works for all types including CODEX)
+  /// Complete a quest (Custom quests complete via server API; Codex quests are activity-driven)
   Future<void> completeQuest(String questId) async {
     try {
       final data = questsData.value;
@@ -254,137 +210,49 @@ class QuestController extends GetxController {
       final quest = data.quests[questIndex];
       if (quest.isDone) return;
 
-      // Update local state immediately
-      final updatedQuests = data.quests
-          .map((q) => (q.id == quest.id || q.originalRefId == quest.id) ? q.copyWith(isDone: true) : q)
-          .toList();
+      if (quest.questType == 'CODEX') {
+        EasyLoading.showInfo('Complete this Codex quest by logging your daily activity in Daily Logs!');
+        return;
+      }
 
-      questsData.value = data.copyWith(
-        quests: updatedQuests,
-        todayTotalXp: data.todayTotalXp + quest.xp,
-        todayLogCount: data.todayLogCount + 1,
-      );
-
-      // Route through Milestone 3 unified completion endpoint or fallback
+      EasyLoading.show(status: 'Completing quest...');
       try {
         await _service.completeUnifiedQuest(
           questId: quest.originalRefId ?? quest.id,
           questType: quest.questType,
         );
-        print('🔵 [QuestController] Quest completed on server: ${quest.id} (${quest.questType})');
-      } catch (e) {
-        print('🟡 [QuestController] Falling back to addXp for completion: $e');
+        print('🔵 [QuestController] Custom quest completed on server: ${quest.id}');
+        EasyLoading.showSuccess('+${quest.xp} XP Earned!');
+
         try {
-          await _service.addXp(xp: quest.xp, reason: 'Quest: ${quest.title}');
+          final cached = await SharedPreferencesHelper.getActiveCompanion();
+          final companionName = cached?['name'] ?? 'Thyra';
+          CompanionDialogueEngine.showDialogueSnackbar(
+            trigger: 'Quest Completed',
+            companionName: companionName,
+            duration: const Duration(seconds: 4),
+          );
         } catch (_) {}
-      }
 
-      EasyLoading.showSuccess('+${quest.xp} XP Earned!');
+        await fetchQuests();
 
-      // Sync HomeController so Home screen immediately reflects completion
-      if (Get.isRegistered<HomeController>()) {
-        Get.find<HomeController>().fetchData();
-      }
-
-      // Display companion celebratory dialogue
-      try {
-        final cached = await SharedPreferencesHelper.getActiveCompanion();
-        final companionName = cached?['name'] ?? 'Thyra';
-        CompanionDialogueEngine.showDialogueSnackbar(
-          trigger: 'Quest Completed',
-          companionName: companionName,
-          duration: const Duration(seconds: 4),
-        );
+        if (Get.isRegistered<HomeController>()) {
+          Get.find<HomeController>().fetchData();
+        }
       } catch (e) {
-        print('Could not display companion quest dialogue: $e');
+        print('🔴 [QuestController] Error completing quest on server: $e');
+        EasyLoading.showError('Could not complete quest on server.');
       }
     } catch (e) {
       errorMessage('Failed to complete quest');
     }
   }
 
-  /// Automatically trigger completion of corresponding Codex quest when an activity is logged
+  /// Automatically refresh daily quests from the backend when an activity is logged
   Future<void> onActivityLogged(String activityType, {Map<String, dynamic>? meta}) async {
-    final data = questsData.value;
-    if (data == null || data.quests.isEmpty) {
-      await fetchQuests();
-    }
-    final currentData = questsData.value;
-    if (currentData == null) return;
-
-    final targetQuests = <Quest>[];
-    final lower = activityType.toLowerCase();
-
-    for (final q in currentData.quests) {
-      if (q.isDone) continue;
-      final t = q.title.toLowerCase();
-      final id = q.id.toLowerCase();
-      final ref = (q.originalRefId ?? '').toLowerCase();
-
-      if (lower.contains('mood') || lower.contains('spirit')) {
-        if (t.contains('attunement') || t.contains('spirit') || t.contains('mood') || id.contains('mood') || ref.contains('mood')) {
-          targetQuests.add(q);
-        }
-      } else if (lower.contains('meal') || lower.contains('food') || lower.contains('nutrition')) {
-        final proteinAmount = (meta?['protein'] as num?)?.toDouble() ?? 0.0;
-        final mealCount = (meta?['mealCount'] as num?)?.toInt() ?? 1;
-
-        // 1. Protein-specific quest: "Titan's Nourishment" / "protein-power" (requires 30g+ protein)
-        final isProteinQuest = t.contains('nourishment') || t.contains('titan') || t.contains('protein') || id.contains('protein') || ref.contains('protein');
-        if (isProteinQuest) {
-          if (proteinAmount >= 30.0) {
-            targetQuests.add(q);
-          }
-          continue;
-        }
-
-        // 2. Three meals a day quest: "Feast of the Hearth" / "three-meals" (requires 3 meals logged)
-        final isThreeMealsQuest = t.contains('feast') || t.contains('hearth') || t.contains('three-meal') || id.contains('three-meal') || ref.contains('three-meal');
-        if (isThreeMealsQuest) {
-          if (mealCount >= 3) {
-            targetQuests.add(q);
-          }
-          continue;
-        }
-
-        // 3. Generic custom meal quest
-        if (t.contains('meal') || id.contains('meal') || ref.contains('meal') || t.contains('nutrition')) {
-          targetQuests.add(q);
-        }
-      } else if (lower.contains('water') || lower.contains('hydration')) {
-        if (t.contains('hydration') || t.contains('ancients') || t.contains('water') || id.contains('water') || ref.contains('water')) {
-          targetQuests.add(q);
-        }
-      } else if (lower.contains('exercise') || lower.contains('workout') || lower.contains('training') || lower.contains('run')) {
-        // IMPORTANT (Issue 2): Never complete step quests when an exercise/workout is logged!
-        final isStepQuest = t.contains('stride') || t.contains('realmwalker') || t.contains('step') || id.contains('step') || ref.contains('step');
-        if (isStepQuest) {
-          continue;
-        }
-
-        if (t.contains('training') || t.contains('workout') || t.contains('exercise') || t.contains('iron') || id.contains('workout') || id.contains('exercise')) {
-          targetQuests.add(q);
-        }
-      } else if (lower.contains('step') || lower.contains('walk')) {
-        final currentSteps = (meta?['steps'] as num?)?.toInt();
-        final isGoalReached = meta?['isGoalReached'] as bool?;
-        // Bonus Fix: Step quests complete exclusively when step targets are achieved (target goal or 8,000+ steps)
-        if (isGoalReached != null && !isGoalReached && (currentSteps == null || currentSteps < 8000)) {
-          continue;
-        }
-        if (t.contains('stride') || t.contains('realmwalker') || t.contains('step') || id.contains('step') || ref.contains('step')) {
-          targetQuests.add(q);
-        }
-      } else if (lower.contains('med') || lower.contains('dose') || lower.contains('alchemy')) {
-        if (t.contains('elixir') || t.contains('medication') || t.contains('alchemy') || t.contains('dose') || id.contains('medication') || ref.contains('medication')) {
-          targetQuests.add(q);
-        }
-      }
-    }
-
-    for (final targetQuest in targetQuests) {
-      print('🔵 [QuestController] Auto-completing tracked quest: ${targetQuest.title}');
-      await completeQuest(targetQuest.id);
+    await fetchQuests();
+    if (Get.isRegistered<HomeController>()) {
+      Get.find<HomeController>().fetchData();
     }
   }
 

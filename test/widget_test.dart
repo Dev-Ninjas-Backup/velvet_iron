@@ -35,6 +35,21 @@ void main() {
       expect(candidates, contains('12345'));
     });
 
+    test('Quest model preserves 120g protein description as supplied by backend', () {
+      final json = {
+        'id': 'codex_protein-power',
+        'title': 'Protein Power',
+        'description': 'Log a meal with 120g+ protein',
+        'xpReward': 25,
+        'isCompleted': false,
+        'questType': 'CODEX',
+        'originalRefId': 'protein-power',
+      };
+      final quest = Quest.fromJson(json);
+      expect(quest.description, 'Log a meal with 120g+ protein');
+      expect(quest.title, "Titan's Nourishment");
+    });
+
     test('DailyQuestResponse correctly aggregates completed quests and XP', () {
       const q1 = Quest(id: 'q1', title: 'Hydration', description: 'Drink water', xp: 15, isDone: true);
       const q2 = Quest(id: 'q2', title: 'Running', description: 'Run', xp: 25, isDone: false);
