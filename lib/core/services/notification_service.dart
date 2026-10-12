@@ -14,9 +14,21 @@ class NotificationService {
   static const String _channelName = 'Companion Reminders';
   static const String _channelDescription =
       'Daily reminders to check in with your companion and log your journey.';
-  static const int _dailyReminderNotificationId = 1001;
+
+  /// Base ID for daily companion reminders (IDs 1001 - 1007 for each weekday)
+  static const int _baseReminderNotificationId = 1000;
+  static const int _legacyReminderNotificationId = 1001;
 
   static const String reminderEnabledKey = 'companion_reminder_enabled';
+
+  /// Curated fantasy-themed companion reminder messages rotating throughout the week
+  static const List<String> reminderMessages = [
+    "The campfire is burning, traveler. Come reflect on today's journey.",
+    "Another day draws to a close. Your companion awaits you at camp.",
+    "The stars are rising over the realm. Have you recorded today's victories?",
+    "Your journey continues tomorrow, but tonight, the campfire awaits.",
+    "Even the greatest warriors must rest. Return to camp and reflect on your progress.",
+  ];
 
   static bool _isInitialized = false;
 
@@ -73,9 +85,9 @@ class NotificationService {
         },
       );
 
-      // Create Android Notification Channel
+      // Create Android Notification Channel and request runtime permissions
       if (!kIsWeb && Platform.isAndroid) {
-        final androidChannel = AndroidNotificationChannel(
+        const androidChannel = AndroidNotificationChannel(
           _channelId,
           _channelName,
           description: _channelDescription,
@@ -90,6 +102,13 @@ class NotificationService {
 
         await androidPlugin?.createNotificationChannel(androidChannel);
         await androidPlugin?.requestNotificationsPermission();
+        try {
+          await androidPlugin?.requestExactAlarmsPermission();
+        } catch (e) {
+          debugPrint(
+            '[NotificationService] requestExactAlarmsPermission error: $e',
+          );
+        }
       }
 
       // Request iOS Notification Permissions
@@ -119,6 +138,69 @@ class NotificationService {
     }
   }
 
+  /// Determines safe AndroidScheduleMode based on device permissions
+  static Future<AndroidScheduleMode> _resolveAndroidScheduleMode() async {
+    if (kIsWeb || !Platform.isAndroid) {
+      return AndroidScheduleMode.exactAllowWhileIdle;
+    }
+    try {
+      final androidPlugin = _notificationsPlugin
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
+      final canExact = await androidPlugin?.canScheduleExactNotifications();
+      if (canExact == true) {
+        return AndroidScheduleMode.exactAllowWhileIdle;
+      }
+    } catch (e) {
+      debugPrint(
+        '[NotificationService] Error checking exact alarm capability: $e',
+      );
+    }
+    return AndroidScheduleMode.inexactAllowWhileIdle;
+  }
+
+  /// Safely schedule zoned notification with graceful fallback to inexact alarms
+  static Future<void> _safeZonedSchedule({
+    required int id,
+    required String title,
+    required String body,
+    required tz.TZDateTime scheduledDate,
+    required NotificationDetails details,
+    DateTimeComponents? matchDateTimeComponents,
+  }) async {
+    final scheduleMode = await _resolveAndroidScheduleMode();
+    try {
+      await _notificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        scheduledDate,
+        details,
+        androidScheduleMode: scheduleMode,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: matchDateTimeComponents,
+      );
+    } catch (scheduleErr) {
+      debugPrint(
+        '[NotificationService] zonedSchedule error with $scheduleMode: $scheduleErr. Retrying with inexact...',
+      );
+      // Fallback to inexactAllowWhileIdle if exact failed due to SecurityException
+      await _notificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        scheduledDate,
+        details,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: matchDateTimeComponents,
+      );
+    }
+  }
+
   /// Check if companion reminder is enabled
   static Future<bool> isReminderEnabled() async {
     final enabled = await SharedPreferencesHelper.getBool(reminderEnabledKey);
@@ -135,7 +217,8 @@ class NotificationService {
     }
   }
 
-  /// Schedule daily notification at the specified local time (set to 08:00 PM)
+  /// Schedule daily notification at the specified local time (default: 8:00 PM / 20:00)
+  /// Automatically rotates across fantasy-themed companion reminder messages each day of the week.
   static Future<void> scheduleDailyCompanionReminder({
     int hour = 20,
     int minute = 00,
@@ -143,8 +226,11 @@ class NotificationService {
     try {
       if (!_isInitialized) await init();
 
+      // First cancel existing daily reminder IDs to avoid duplicate alerts
+      await cancelDailyReminder();
+
       final now = tz.TZDateTime.now(tz.local);
-      var scheduledDate = tz.TZDateTime(
+      tz.TZDateTime firstScheduled = tz.TZDateTime(
         tz.local,
         now.year,
         now.month,
@@ -153,9 +239,9 @@ class NotificationService {
         minute,
       );
 
-      // If scheduled time has already passed today, schedule for tomorrow
-      if (scheduledDate.isBefore(now)) {
-        scheduledDate = scheduledDate.add(const Duration(days: 1));
+      // If scheduled time has already passed today, start from tomorrow
+      if (firstScheduled.isBefore(now)) {
+        firstScheduled = firstScheduled.add(const Duration(days: 1));
       }
 
       const NotificationDetails details = NotificationDetails(
@@ -171,35 +257,46 @@ class NotificationService {
           presentAlert: true,
           presentBadge: true,
           presentSound: true,
+          presentBanner: true,
+          presentList: true,
         ),
       );
 
-      await _notificationsPlugin.zonedSchedule(
-        _dailyReminderNotificationId,
-        'Your Companion Awaits',
-        "Your companion is waiting for you. Return to the Codex to continue today's journey.",
-        scheduledDate,
-        details,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents:
-            DateTimeComponents.time, // repeats daily at the same time
-      );
+      // Schedule 7 recurring weekly reminders (one for each weekday)
+      // to ensure a continuous rotating sequence of fantasy messages.
+      for (int i = 0; i < 7; i++) {
+        final targetDate = firstScheduled.add(Duration(days: i));
+        final notifId = _baseReminderNotificationId + targetDate.weekday;
+        final message =
+            reminderMessages[(targetDate.weekday - 1) %
+                reminderMessages.length];
 
-      debugPrint(
-        '[NotificationService] Scheduled daily reminder for ${scheduledDate.toIso8601String()}',
-      );
+        await _safeZonedSchedule(
+          id: notifId,
+          title: 'Your Companion Awaits',
+          body: message,
+          scheduledDate: targetDate,
+          details: details,
+          matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+        );
+
+        debugPrint(
+          '[NotificationService] Scheduled reminder for weekday ${targetDate.weekday} at ${targetDate.toIso8601String()}: "$message"',
+        );
+      }
     } catch (e) {
       debugPrint('[NotificationService] Error scheduling daily reminder: $e');
     }
   }
 
-  /// Cancel the scheduled daily reminder
+  /// Cancel all scheduled daily companion reminders
   static Future<void> cancelDailyReminder() async {
     try {
-      await _notificationsPlugin.cancel(_dailyReminderNotificationId);
-      debugPrint('[NotificationService] Cancelled daily reminder');
+      for (int i = 1; i <= 7; i++) {
+        await _notificationsPlugin.cancel(_baseReminderNotificationId + i);
+      }
+      await _notificationsPlugin.cancel(_legacyReminderNotificationId);
+      debugPrint('[NotificationService] Cancelled daily companion reminders');
     } catch (e) {
       debugPrint('[NotificationService] Error cancelling reminder: $e');
     }
@@ -208,11 +305,12 @@ class NotificationService {
   /// Show an instant test notification
   static Future<void> showTestNotification({
     String title = 'Your Companion Awaits',
-    String body =
-        "Your companion is waiting for you. Return to the Codex to continue today's journey.",
+    String? body,
   }) async {
     try {
       if (!_isInitialized) await init();
+
+      final msg = body ?? reminderMessages[0];
 
       const NotificationDetails details = NotificationDetails(
         android: AndroidNotificationDetails(
@@ -227,12 +325,66 @@ class NotificationService {
           presentAlert: true,
           presentBadge: true,
           presentSound: true,
+          presentBanner: true,
+          presentList: true,
         ),
       );
 
-      await _notificationsPlugin.show(999, title, body, details);
+      await _notificationsPlugin.show(999, title, msg, details);
+      debugPrint(
+        '[NotificationService] Showed instant test notification: $msg',
+      );
     } catch (e) {
       debugPrint('[NotificationService] Error showing test notification: $e');
+    }
+  }
+
+  /// Schedule a quick test notification in N seconds (useful for verifying background delivery)
+  static Future<void> scheduleTestReminder({
+    int secondsFromNow = 5,
+    String title = 'Your Companion Awaits',
+    String? body,
+  }) async {
+    try {
+      if (!_isInitialized) await init();
+
+      final now = tz.TZDateTime.now(tz.local);
+      final scheduledDate = now.add(Duration(seconds: secondsFromNow));
+      final msg = body ?? reminderMessages[0];
+
+      const NotificationDetails details = NotificationDetails(
+        android: AndroidNotificationDetails(
+          _channelId,
+          _channelName,
+          channelDescription: _channelDescription,
+          importance: Importance.high,
+          priority: Priority.high,
+          icon: '@mipmap/launcher_icon',
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+          presentBanner: true,
+          presentList: true,
+        ),
+      );
+
+      await _safeZonedSchedule(
+        id: 998,
+        title: title,
+        body: msg,
+        scheduledDate: scheduledDate,
+        details: details,
+      );
+
+      debugPrint(
+        '[NotificationService] Scheduled test notification for ${scheduledDate.toIso8601String()} ($secondsFromNow s from now)',
+      );
+    } catch (e) {
+      debugPrint(
+        '[NotificationService] Error scheduling test notification: $e',
+      );
     }
   }
 
@@ -270,18 +422,17 @@ class NotificationService {
           presentAlert: true,
           presentBadge: true,
           presentSound: true,
+          presentBanner: true,
+          presentList: true,
         ),
       );
 
-      await _notificationsPlugin.zonedSchedule(
-        id,
-        title,
-        body,
-        tzScheduled,
-        details,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
+      await _safeZonedSchedule(
+        id: id,
+        title: title,
+        body: body,
+        scheduledDate: tzScheduled,
+        details: details,
       );
 
       debugPrint(
