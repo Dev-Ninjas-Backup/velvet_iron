@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -10,18 +11,18 @@ class NotificationService {
   static final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  static const String _channelId = 'companion_reminders';
+  static const String _channelId = 'companion_reminders_v2';
   static const String _channelName = 'Companion Reminders';
   static const String _channelDescription =
       'Daily reminders to check in with your companion and log your journey.';
 
-  /// Base ID for daily companion reminders (IDs 1001 - 1007 for each weekday)
+  /// Primary ID for daily companion reminder
+  static const int _dailyReminderNotificationId = 1001;
   static const int _baseReminderNotificationId = 1000;
-  static const int _legacyReminderNotificationId = 1001;
 
   static const String reminderEnabledKey = 'companion_reminder_enabled';
 
-  /// Curated fantasy-themed companion reminder messages rotating throughout the week
+  /// Curated fantasy-themed companion reminder messages
   static const List<String> reminderMessages = [
     "The campfire is burning, traveler. Come reflect on today's journey.",
     "Another day draws to a close. Your companion awaits you at camp.",
@@ -69,6 +70,11 @@ class NotificationService {
             requestAlertPermission: true,
             requestBadgePermission: true,
             requestSoundPermission: true,
+            defaultPresentAlert: true,
+            defaultPresentBadge: true,
+            defaultPresentSound: true,
+            defaultPresentBanner: true,
+            defaultPresentList: true,
           );
 
       const InitializationSettings initSettings = InitializationSettings(
@@ -91,8 +97,9 @@ class NotificationService {
           _channelId,
           _channelName,
           description: _channelDescription,
-          importance: Importance.high,
+          importance: Importance.max,
           playSound: true,
+          enableVibration: true,
         );
 
         final androidPlugin = _notificationsPlugin
@@ -109,6 +116,11 @@ class NotificationService {
             '[NotificationService] requestExactAlarmsPermission error: $e',
           );
         }
+
+        final enabled = await androidPlugin?.areNotificationsEnabled();
+        debugPrint(
+          '[NotificationService] Android notifications enabled status: $enabled',
+        );
       }
 
       // Request iOS Notification Permissions
@@ -118,10 +130,13 @@ class NotificationService {
               IOSFlutterLocalNotificationsPlugin
             >();
 
-        await iosPlugin?.requestPermissions(
+        final granted = await iosPlugin?.requestPermissions(
           alert: true,
           badge: true,
           sound: true,
+        );
+        debugPrint(
+          '[NotificationService] iOS notification permissions granted: $granted',
         );
       }
 
@@ -151,13 +166,15 @@ class NotificationService {
       final canExact = await androidPlugin?.canScheduleExactNotifications();
       if (canExact == true) {
         return AndroidScheduleMode.exactAllowWhileIdle;
+      } else {
+        return AndroidScheduleMode.inexactAllowWhileIdle;
       }
     } catch (e) {
       debugPrint(
         '[NotificationService] Error checking exact alarm capability: $e',
       );
     }
-    return AndroidScheduleMode.inexactAllowWhileIdle;
+    return AndroidScheduleMode.exactAllowWhileIdle;
   }
 
   /// Safely schedule zoned notification with graceful fallback to inexact alarms
@@ -186,7 +203,6 @@ class NotificationService {
       debugPrint(
         '[NotificationService] zonedSchedule error with $scheduleMode: $scheduleErr. Retrying with inexact...',
       );
-      // Fallback to inexactAllowWhileIdle if exact failed due to SecurityException
       await _notificationsPlugin.zonedSchedule(
         id,
         title,
@@ -217,16 +233,16 @@ class NotificationService {
     }
   }
 
-  /// Schedule daily notification at the specified local time (default: 8:00 PM / 20:00)
-  /// Automatically rotates across fantasy-themed companion reminder messages each day of the week.
+  /// Schedule daily notification at 8:00 PM
+  /// Uses DateTimeComponents.time for rock-solid recurring delivery across all devices.
   static Future<void> scheduleDailyCompanionReminder({
     int hour = 20,
-    int minute = 00,
+    int minute = 0,
   }) async {
     try {
       if (!_isInitialized) await init();
 
-      // First cancel existing daily reminder IDs to avoid duplicate alerts
+      // Cancel existing reminder IDs to avoid duplicate alerts
       await cancelDailyReminder();
 
       final now = tz.TZDateTime.now(tz.local);
@@ -249,8 +265,10 @@ class NotificationService {
           _channelId,
           _channelName,
           channelDescription: _channelDescription,
-          importance: Importance.high,
-          priority: Priority.high,
+          importance: Importance.max,
+          priority: Priority.max,
+          playSound: true,
+          enableVibration: true,
           icon: '@mipmap/launcher_icon',
         ),
         iOS: DarwinNotificationDetails(
@@ -262,28 +280,23 @@ class NotificationService {
         ),
       );
 
-      // Schedule 7 recurring weekly reminders (one for each weekday)
-      // to ensure a continuous rotating sequence of fantasy messages.
-      for (int i = 0; i < 7; i++) {
-        final targetDate = firstScheduled.add(Duration(days: i));
-        final notifId = _baseReminderNotificationId + targetDate.weekday;
-        final message =
-            reminderMessages[(targetDate.weekday - 1) %
-                reminderMessages.length];
+      // Schedule daily recurring reminder (at 8:00 PM)
+      final messageIndex =
+          (firstScheduled.weekday - 1) % reminderMessages.length;
+      final message = reminderMessages[messageIndex];
 
-        await _safeZonedSchedule(
-          id: notifId,
-          title: 'Your Companion Awaits',
-          body: message,
-          scheduledDate: targetDate,
-          details: details,
-          matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
-        );
+      await _safeZonedSchedule(
+        id: _dailyReminderNotificationId,
+        title: 'Your Companion Awaits',
+        body: message,
+        scheduledDate: firstScheduled,
+        details: details,
+        matchDateTimeComponents: DateTimeComponents.time,
+      );
 
-        debugPrint(
-          '[NotificationService] Scheduled reminder for weekday ${targetDate.weekday} at ${targetDate.toIso8601String()}: "$message"',
-        );
-      }
+      debugPrint(
+        '[NotificationService] Scheduled daily reminder (ID $_dailyReminderNotificationId) for ${firstScheduled.toIso8601String()}: "$message"',
+      );
     } catch (e) {
       debugPrint('[NotificationService] Error scheduling daily reminder: $e');
     }
@@ -292,10 +305,16 @@ class NotificationService {
   /// Cancel all scheduled daily companion reminders
   static Future<void> cancelDailyReminder() async {
     try {
+      await _notificationsPlugin.cancel(_dailyReminderNotificationId);
       for (int i = 1; i <= 7; i++) {
         await _notificationsPlugin.cancel(_baseReminderNotificationId + i);
       }
-      await _notificationsPlugin.cancel(_legacyReminderNotificationId);
+      for (int i = 1; i <= 20; i++) {
+        await _notificationsPlugin.cancel(2000 + i);
+      }
+      await _notificationsPlugin.cancel(997);
+      await _notificationsPlugin.cancel(998);
+      await _notificationsPlugin.cancel(999);
       debugPrint('[NotificationService] Cancelled daily companion reminders');
     } catch (e) {
       debugPrint('[NotificationService] Error cancelling reminder: $e');
@@ -317,8 +336,10 @@ class NotificationService {
           _channelId,
           _channelName,
           channelDescription: _channelDescription,
-          importance: Importance.high,
-          priority: Priority.high,
+          importance: Importance.max,
+          priority: Priority.max,
+          playSound: true,
+          enableVibration: true,
           icon: '@mipmap/launcher_icon',
         ),
         iOS: DarwinNotificationDetails(
@@ -339,10 +360,10 @@ class NotificationService {
     }
   }
 
-  /// Schedule a quick test notification in N seconds (useful for verifying background delivery)
+  /// Schedule a quick test notification in N seconds (useful for verifying real-device background wake up)
   static Future<void> scheduleTestReminder({
-    int secondsFromNow = 5,
-    String title = 'Your Companion Awaits',
+    int secondsFromNow = 10,
+    String title = 'Companion Test Reminder',
     String? body,
   }) async {
     try {
@@ -357,8 +378,10 @@ class NotificationService {
           _channelId,
           _channelName,
           channelDescription: _channelDescription,
-          importance: Importance.high,
-          priority: Priority.high,
+          importance: Importance.max,
+          priority: Priority.max,
+          playSound: true,
+          enableVibration: true,
           icon: '@mipmap/launcher_icon',
         ),
         iOS: DarwinNotificationDetails(
@@ -379,7 +402,7 @@ class NotificationService {
       );
 
       debugPrint(
-        '[NotificationService] Scheduled test notification for ${scheduledDate.toIso8601String()} ($secondsFromNow s from now)',
+        '[NotificationService] Scheduled test notification (ID 998) for ${scheduledDate.toIso8601String()} ($secondsFromNow s from now)',
       );
     } catch (e) {
       debugPrint(
