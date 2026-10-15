@@ -123,6 +123,7 @@ class Quest {
   final String questType; // 'CODEX' | 'CUSTOM' | 'MEDICATION_SCHEDULE' | 'WORKOUT_SCHEDULE'
   final String? originalRefId;
   final String? category;
+  final DateTime? scheduledAt;
 
   const Quest({
     required this.id,
@@ -133,7 +134,34 @@ class Quest {
     this.questType = 'CODEX',
     this.originalRefId,
     this.category,
+    this.scheduledAt,
   });
+
+  /// Formats scheduled workout subtitle in user's device local timezone
+  static String formatWorkoutScheduleDescription({
+    required String type,
+    int? duration,
+    required DateTime scheduledAt,
+  }) {
+    final local = scheduledAt.toLocal();
+    final now = DateTime.now();
+    final isToday = local.year == now.year &&
+        local.month == now.month &&
+        local.day == now.day;
+    final hourNum = local.hour % 12 == 0 ? 12 : local.hour % 12;
+    final hour = hourNum.toString().padLeft(2, '0');
+    final minute = local.minute.toString().padLeft(2, '0');
+    final period = local.hour >= 12 ? 'PM' : 'AM';
+    final timeStr = "$hour:$minute $period";
+
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    final dayName = days[local.weekday - 1];
+    final datePrefix = isToday ? 'Today' : dayName;
+
+    final durationStr = (duration != null && duration > 0) ? '$duration min • ' : '';
+    final typeUpper = type.toUpperCase();
+    return "$typeUpper • $durationStr$datePrefix at $timeStr";
+  }
 
   factory Quest.fromJson(Map<String, dynamic> json) {
     // Title may be 'title' or 'name' (from custom quests endpoint)
@@ -178,6 +206,27 @@ class Quest {
       }
     }
 
+    DateTime? scheduledAt;
+    if (json['scheduledAt'] != null) {
+      if (json['scheduledAt'] is DateTime) {
+        scheduledAt = json['scheduledAt'] as DateTime;
+      } else {
+        scheduledAt = DateTime.tryParse(json['scheduledAt'].toString());
+      }
+    }
+
+    // Format workout schedule description using device local timezone if scheduledAt is present
+    if (qType == 'WORKOUT_SCHEDULE' && scheduledAt != null) {
+      final categoryType = json['category']?.toString() ??
+          (description.contains('•') ? description.split('•').first.trim() : 'CARDIO');
+      final duration = (json['duration'] as num?)?.toInt();
+      description = formatWorkoutScheduleDescription(
+        type: categoryType,
+        duration: duration,
+        scheduledAt: scheduledAt,
+      );
+    }
+
     // Default description for custom quests if empty
     if (description.isEmpty && json['category'] != null) {
       final rec = json['recurrence']?.toString() ?? 'DAILY';
@@ -196,6 +245,7 @@ class Quest {
           json['questId']?.toString() ??
           (id.startsWith('custom_') ? id.substring(7) : id),
       category: json['category']?.toString(),
+      scheduledAt: scheduledAt,
     );
   }
 
@@ -209,6 +259,7 @@ class Quest {
       'questType': questType,
       if (originalRefId != null) 'originalRefId': originalRefId,
       if (category != null) 'category': category,
+      if (scheduledAt != null) 'scheduledAt': scheduledAt!.toIso8601String(),
     };
   }
 
@@ -221,6 +272,7 @@ class Quest {
     String? questType,
     String? originalRefId,
     String? category,
+    DateTime? scheduledAt,
   }) {
     return Quest(
       id: id ?? this.id,
@@ -231,6 +283,7 @@ class Quest {
       questType: questType ?? this.questType,
       originalRefId: originalRefId ?? this.originalRefId,
       category: category ?? this.category,
+      scheduledAt: scheduledAt ?? this.scheduledAt,
     );
   }
 }

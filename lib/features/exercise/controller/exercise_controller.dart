@@ -240,6 +240,9 @@ class ExerciseController extends GetxController {
       );
 
       await fetchExerciseHistory();
+      if (Get.isRegistered<QuestController>()) {
+        await Get.find<QuestController>().fetchQuests();
+      }
       if (Get.isRegistered<HomeController>()) {
         Get.find<HomeController>().fetchData();
       }
@@ -279,6 +282,9 @@ class ExerciseController extends GetxController {
         exercises.removeWhere((e) => e.id == exerciseId);
         EasyLoading.showSuccess('Exercise removed');
         await fetchExerciseHistory();
+        if (Get.isRegistered<QuestController>()) {
+          await Get.find<QuestController>().fetchQuests();
+        }
         if (Get.isRegistered<HomeController>()) {
           Get.find<HomeController>().fetchData();
         }
@@ -332,6 +338,9 @@ class ExerciseController extends GetxController {
         );
         EasyLoading.showSuccess('Exercise updated');
         await fetchExerciseHistory();
+        if (Get.isRegistered<QuestController>()) {
+          await Get.find<QuestController>().fetchQuests();
+        }
         if (Get.isRegistered<HomeController>()) {
           Get.find<HomeController>().fetchData();
         }

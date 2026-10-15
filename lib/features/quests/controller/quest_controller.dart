@@ -5,6 +5,9 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
+import 'package:velvet_iron/features/exercise/controller/exercise_controller.dart';
+import 'package:velvet_iron/features/exercise/model/exercise_model.dart';
+import 'package:velvet_iron/features/exercise/service/exercise_service.dart';
 import 'package:velvet_iron/features/home/controller/home_controller.dart';
 import 'package:velvet_iron/features/quests/model/quest_model.dart';
 import 'package:velvet_iron/features/quests/service/quests_service.dart';
@@ -166,6 +169,103 @@ class QuestController extends GetxController {
     }).toList();
   }
 
+  /// Synchronize workouts scheduled for user's local today into Today's Quests
+  Future<List<Quest>> _syncScheduledExercisesWithQuests(List<Quest> backendQuests) async {
+    List<Exercise> allExercises = [];
+    if (Get.isRegistered<ExerciseController>()) {
+      final exCtrl = Get.find<ExerciseController>();
+      if (exCtrl.exercises.isEmpty) {
+        await exCtrl.fetchExerciseHistory();
+      }
+      allExercises = exCtrl.exercises;
+    } else {
+      try {
+        final res = await ExerciseService().fetchExerciseHistory();
+        if (res != null && res['logs'] is List) {
+          allExercises = (res['logs'] as List)
+              .map((e) => Exercise.fromJson(e))
+              .toList();
+        }
+      } catch (e) {
+        print('🟡 [QuestController] Could not fetch exercise history: $e');
+      }
+    }
+
+    final now = DateTime.now();
+    // Strictly filter exercises scheduled for TODAY in user's device local timezone
+    final todayExercises = allExercises.where((ex) {
+      if (ex.scheduledAt == null) return false;
+      final local = ex.scheduledAt!.toLocal();
+      return local.year == now.year &&
+          local.month == now.month &&
+          local.day == now.day;
+    }).toList();
+
+    final result = <Quest>[];
+
+    // Filter out any WORKOUT_SCHEDULE quest from backend that doesn't match local today
+    for (final q in backendQuests) {
+      if (q.questType == 'WORKOUT_SCHEDULE') {
+        if (q.scheduledAt != null) {
+          final local = q.scheduledAt!.toLocal();
+          if (local.year != now.year || local.month != now.month || local.day != now.day) {
+            continue; // Exclude workout that isn't on local calendar day
+          }
+        }
+      }
+      result.add(q);
+    }
+
+    // Merge each today's scheduled exercise into quests
+    for (final ex in todayExercises) {
+      final matchIndex = result.indexWhere((q) =>
+          q.id == 'workout_${ex.id}' ||
+          q.id == ex.id ||
+          q.originalRefId == ex.id ||
+          (q.questType == 'WORKOUT_SCHEDULE' &&
+              q.title.toLowerCase().trim() == ex.name.toLowerCase().trim()));
+
+      final formattedDesc = Quest.formatWorkoutScheduleDescription(
+        type: ex.type,
+        duration: ex.duration,
+        scheduledAt: ex.scheduledAt!,
+      );
+
+      if (matchIndex != -1) {
+        // Update existing quest with local timezone formatted description & status
+        final existing = result[matchIndex];
+        result[matchIndex] = existing.copyWith(
+          id: 'workout_${ex.id}',
+          title: ex.name.isNotEmpty ? ex.name : ex.type,
+          description: formattedDesc,
+          isDone: ex.isTaken,
+          questType: 'WORKOUT_SCHEDULE',
+          originalRefId: ex.id,
+          category: ex.type,
+          scheduledAt: ex.scheduledAt,
+        );
+      } else {
+        // Backend didn't include it (or filtered by server date) - insert at top
+        result.insert(
+          0,
+          Quest(
+            id: 'workout_${ex.id}',
+            title: ex.name.isNotEmpty ? ex.name : ex.type,
+            xp: ex.earnedXp > 0 ? ex.earnedXp : 10,
+            description: formattedDesc,
+            isDone: ex.isTaken,
+            questType: 'WORKOUT_SCHEDULE',
+            originalRefId: ex.id,
+            category: ex.type,
+            scheduledAt: ex.scheduledAt,
+          ),
+        );
+      }
+    }
+
+    return result;
+  }
+
   Future<void> fetchQuests() async {
     try {
       isLoading(true);
@@ -174,17 +274,18 @@ class QuestController extends GetxController {
 
       final rawData = await _service.getQuests();
       final filtered = _filterQuestsIfNeeded(rawData.quests);
-      final completed = filtered.where((q) => q.isDone).length;
+      final syncedQuests = await _syncScheduledExercisesWithQuests(filtered);
+      final completed = syncedQuests.where((q) => q.isDone).length;
       final totalXp =
-          filtered.where((q) => q.isDone).fold(0, (sum, q) => sum + q.xp);
+          syncedQuests.where((q) => q.isDone).fold(0, (sum, q) => sum + q.xp);
 
       questsData.value = rawData.copyWith(
-        quests: filtered,
+        quests: syncedQuests,
         todayLogCount: completed,
         todayTotalXp: totalXp > 0 ? totalXp : rawData.todayTotalXp,
         meta: rawData.meta != null
             ? UnifiedQuestMeta(
-                totalQuests: filtered.length,
+                totalQuests: syncedQuests.length,
                 completedQuests: completed,
                 todayCustomXpEarned: rawData.meta!.todayCustomXpEarned,
                 dailyCustomXpCap: rawData.meta!.dailyCustomXpCap,
@@ -199,7 +300,7 @@ class QuestController extends GetxController {
     }
   }
 
-  /// Complete a quest (Custom quests complete via server API; Codex quests are activity-driven)
+  /// Complete a quest (Custom & Workout quests complete via server API; Codex quests are activity-driven)
   Future<void> completeQuest(String questId) async {
     try {
       final data = questsData.value;
@@ -212,6 +313,51 @@ class QuestController extends GetxController {
 
       if (quest.questType == 'CODEX') {
         EasyLoading.showInfo('Complete this Codex quest by logging your daily activity in Daily Logs!');
+        return;
+      }
+
+      if (quest.questType == 'WORKOUT_SCHEDULE') {
+        EasyLoading.show(status: 'Completing workout...');
+        final exerciseId = quest.originalRefId ??
+            (quest.id.startsWith('workout_') ? quest.id.substring(8) : quest.id);
+
+        bool marked = false;
+        if (Get.isRegistered<ExerciseController>()) {
+          try {
+            await Get.find<ExerciseController>().markExerciseAsTaken(exerciseId);
+            marked = true;
+          } catch (e) {
+            print('🟡 [QuestController] ExerciseController mark as taken failed: $e');
+          }
+        }
+        if (!marked) {
+          try {
+            final accessToken = await SharedPreferencesHelper.getAccessToken();
+            final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+            if (accessToken != null && refreshToken != null) {
+              await ExerciseService().markExerciseAsTaken(
+                exerciseId: exerciseId,
+                accessToken: accessToken,
+                refreshToken: refreshToken,
+              );
+            }
+          } catch (e) {
+            print('🟡 [QuestController] ExerciseService mark as taken failed: $e');
+          }
+        }
+
+        try {
+          await _service.completeUnifiedQuest(
+            questId: exerciseId,
+            questType: 'WORKOUT_SCHEDULE',
+          );
+        } catch (_) {}
+
+        EasyLoading.showSuccess('+${quest.xp} XP Earned!');
+        await fetchQuests();
+        if (Get.isRegistered<HomeController>()) {
+          Get.find<HomeController>().fetchData();
+        }
         return;
       }
 

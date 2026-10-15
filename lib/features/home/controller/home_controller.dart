@@ -316,15 +316,33 @@ class HomeController extends GetxController {
     }
 
     final items = <HomeScreenModel>[];
+    final isTodayFilter = selectedTodoFilter.value != 'Weekly' && selectedTodoFilter.value != 'Monthly';
+    final now = DateTime.now();
 
     // 1. Scheduled activities (medication, exercise, meals)
     for (final item in scheduleItems) {
+      if (isTodayFilter && item.scheduledAt.isNotEmpty) {
+        final dt = DateTime.tryParse(item.scheduledAt)?.toLocal();
+        if (dt != null && (dt.year != now.year || dt.month != now.month || dt.day != now.day)) {
+          continue; // Discard items that are not today in local timezone
+        }
+      }
+
       final iconPath = _getIconPathForScheduleType(item.type);
+      String subText = item.description;
+      if (item.type == ScheduleType.exercise) {
+        final typeStr = item.details.type.isNotEmpty ? item.details.type.toUpperCase() : 'EXERCISE';
+        final durStr = (item.details.duration != null && item.details.duration! > 0)
+            ? '${item.details.duration} min • '
+            : '';
+        subText = "$typeStr • $durStr${_formatScheduleTime(item.scheduledAt)}";
+      }
+
       items.add(
         HomeScreenModel(
           id: item.id,
           title: item.title,
-          sub: item.description,
+          sub: subText,
           time: _formatScheduleTime(item.scheduledAt),
           iconPath: iconPath,
           xp: item.earnedXp,
@@ -344,8 +362,30 @@ class HomeController extends GetxController {
       // Avoid duplicate display if this quest matches an already-added schedule item
       final isAlreadyAdded = items.any((existing) =>
           existing.id == quest.id ||
-          (quest.originalRefId != null && existing.id == quest.originalRefId));
+          (quest.originalRefId != null && existing.id == quest.originalRefId) ||
+          (existing.id != null && (quest.id == 'workout_${existing.id}' || quest.id.endsWith(existing.id!))));
       if (isAlreadyAdded) continue;
+
+      if (quest.questType == 'WORKOUT_SCHEDULE') {
+        final timeStr = quest.scheduledAt != null
+            ? _formatScheduleTime(quest.scheduledAt!.toIso8601String())
+            : 'Today';
+        items.add(
+          HomeScreenModel(
+            id: quest.id,
+            title: quest.title,
+            sub: quest.description,
+            time: timeStr,
+            iconPath: IconPath.grass,
+            xp: quest.xp,
+            isChecked: quest.isDone.obs,
+            onToggle: () {
+              questController.completeQuest(quest.id);
+            },
+          ),
+        );
+        continue;
+      }
 
       final titleLower = quest.title.toLowerCase();
       final isWater = quest.id.contains('water') ||

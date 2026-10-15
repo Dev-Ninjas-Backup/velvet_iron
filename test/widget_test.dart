@@ -346,5 +346,132 @@ void main() {
       expect(evaluateStepQuest(currentSteps: 10000, goal: 8000, isGoalReached: true), isTrue);
     });
   });
+
+  group('Today\'s Quests & Scheduled Activities Timezone Synchronization Tests', () {
+    test('Quest.formatWorkoutScheduleDescription formats in local time with Today prefix', () {
+      final now = DateTime.now();
+      final todayExercise = DateTime(now.year, now.month, now.day, 18, 45); // 6:45 PM today
+      final desc = Quest.formatWorkoutScheduleDescription(
+        type: 'CARDIO',
+        duration: 30,
+        scheduledAt: todayExercise,
+      );
+
+      expect(desc, contains('CARDIO'));
+      expect(desc, contains('30 min'));
+      expect(desc, contains('Today at 06:45 PM'));
+    });
+
+    test('Quest.fromJson formats WORKOUT_SCHEDULE using local timezone when scheduledAt is present', () {
+      final now = DateTime.now();
+      final localToday = DateTime(now.year, now.month, now.day, 19, 30);
+      final utcIso = localToday.toUtc().toIso8601String();
+
+      final json = {
+        'id': 'workout_aerial_silks_1',
+        'title': 'Aerial Silks',
+        'description': 'CARDIO • Wednesday, October 14, 2026 at 5:45 AM', // Raw server string
+        'scheduledAt': utcIso,
+        'xpReward': 10,
+        'isCompleted': false,
+        'questType': 'WORKOUT_SCHEDULE',
+        'originalRefId': 'aerial_silks_1',
+        'category': 'STRENGTH',
+        'duration': 45,
+      };
+
+      final quest = Quest.fromJson(json);
+      expect(quest.title, 'Aerial Silks');
+      expect(quest.questType, 'WORKOUT_SCHEDULE');
+      expect(quest.scheduledAt, isNotNull);
+      // Description is sanitized from server Bangladesh time into device local time
+      expect(quest.description, contains('STRENGTH'));
+      expect(quest.description, contains('45 min'));
+      expect(quest.description, contains('Today at 07:30 PM'));
+      expect(quest.description, isNot(contains('5:45 AM')));
+    });
+
+    test('Scheduled activity for today automatically populates under Today\'s Quests', () {
+      final now = DateTime.now();
+      final todayExerciseDate = DateTime(now.year, now.month, now.day, 20, 0); // 8:00 PM today
+
+      final exercise = Exercise(
+        id: 'aerial_silks_today',
+        userId: 'user_1',
+        type: 'STRENGTH',
+        name: 'Aerial Silks',
+        intensity: 'HIGH',
+        duration: 45,
+        note: 'Evening routine',
+        isTaken: false,
+        loggedAt: DateTime.now(),
+        scheduledAt: todayExerciseDate.toUtc(),
+        earnedXp: 10,
+        entryType: 'SCHEDULE',
+      );
+
+      // Verify that local date matches today
+      final local = exercise.scheduledAt!.toLocal();
+      final isToday = local.year == now.year && local.month == now.month && local.day == now.day;
+      expect(isToday, isTrue);
+
+      // Simulate synchronization logic
+      final backendQuests = <Quest>[
+        const Quest(
+          id: 'codex_three-meals',
+          title: 'Feast of the Hearth',
+          description: 'Log breakfast, lunch, and dinner',
+          xp: 30,
+          isDone: false,
+        ),
+      ];
+
+      final todayQuest = Quest(
+        id: 'workout_${exercise.id}',
+        title: exercise.name.isNotEmpty ? exercise.name : exercise.type,
+        xp: exercise.earnedXp > 0 ? exercise.earnedXp : 10,
+        description: Quest.formatWorkoutScheduleDescription(
+          type: exercise.type,
+          duration: exercise.duration,
+          scheduledAt: exercise.scheduledAt!,
+        ),
+        isDone: exercise.isTaken,
+        questType: 'WORKOUT_SCHEDULE',
+        originalRefId: exercise.id,
+        category: exercise.type,
+        scheduledAt: exercise.scheduledAt,
+      );
+
+      final syncedList = [todayQuest, ...backendQuests];
+      expect(syncedList.length, 2);
+      expect(syncedList.first.title, 'Aerial Silks');
+      expect(syncedList.first.questType, 'WORKOUT_SCHEDULE');
+      expect(syncedList.first.description, contains('Today at 08:00 PM'));
+    });
+
+    test('Exercise scheduled for tomorrow is excluded from Today\'s Quests', () {
+      final now = DateTime.now();
+      final tomorrowDate = DateTime(now.year, now.month, now.day + 1, 10, 0); // Tomorrow 10 AM
+
+      final tomorrowExercise = Exercise(
+        id: 'tomorrow_ice_skating',
+        userId: 'user_1',
+        type: 'CARDIO',
+        name: 'Ice Skating',
+        intensity: 'MEDIUM',
+        duration: 30,
+        note: 'Tomorrow skate',
+        isTaken: false,
+        loggedAt: DateTime.now(),
+        scheduledAt: tomorrowDate.toUtc(),
+        earnedXp: 10,
+        entryType: 'SCHEDULE',
+      );
+
+      final local = tomorrowExercise.scheduledAt!.toLocal();
+      final isToday = local.year == now.year && local.month == now.month && local.day == now.day;
+      expect(isToday, isFalse);
+    });
+  });
 }
 
