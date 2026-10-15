@@ -472,6 +472,26 @@ void main() {
       final isToday = local.year == now.year && local.month == now.month && local.day == now.day;
       expect(isToday, isFalse);
     });
+
+    test('Backend deployed payload parses Titan\'s Nourishment 30g and scheduled workout UTC ISO', () {
+      final deployedBackendQuestJson = {
+        'id': 'codex_protein-power',
+        'title': "Titan's Nourishment",
+        'description': 'Log a meal with 30g+ protein',
+        'xpReward': 30,
+        'isCompleted': false,
+        'questType': 'CODEX',
+        'originalRefId': 'protein-power',
+        'scheduledAt': null,
+        'timeOfDay': null,
+      };
+
+      final quest = Quest.fromJson(deployedBackendQuestJson);
+      expect(quest.title, "Titan's Nourishment");
+      expect(quest.description, 'Log a meal with 30g+ protein');
+      expect(quest.xp, 30);
+      expect(quest.isDone, isFalse);
+    });
   });
 }
 

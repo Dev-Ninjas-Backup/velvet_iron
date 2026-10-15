@@ -181,7 +181,7 @@ class Quest {
       if (description.isEmpty) description = "Log breakfast, lunch, and dinner";
     } else if (lowerTitle == 'protein power' || idString.contains('protein-power') || refId.contains('protein-power')) {
       title = "Titan's Nourishment";
-      if (description.isEmpty) description = "Log a meal with 120g+ protein";
+      if (description.isEmpty) description = "Log a meal with 30g+ protein";
     } else if (lowerTitle == 'track your shot' || idString.contains('track-your-shot') || refId.contains('track-your-shot')) {
       title = "Elixir of the Alchemist";
     } else if (lowerTitle == 'mood check' || idString.contains('mood-check') || refId.contains('mood-check')) {

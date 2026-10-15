@@ -459,6 +459,10 @@ class HomeController extends GetxController {
       }
       return "$day • $hour:$minute $period";
     } catch (_) {
+      if (raw.contains(' at ')) {
+        final timePart = raw.split(' at ').last.trim();
+        return "Today • $timePart";
+      }
       return raw;
     }
   }
