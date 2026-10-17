@@ -51,10 +51,12 @@ class StepJourneyService {
   }) async {
     final url = Uri.parse(Urls.stepLog);
     final headers = await _getHeaders();
-    final payload = <String, dynamic>{};
+    final effectiveDate = date ?? AppTimezoneHelper.getTodayDateString();
+    final payload = <String, dynamic>{
+      'date': effectiveDate,
+    };
     if (steps != null) payload['steps'] = steps;
     if (addSteps != null) payload['addSteps'] = addSteps;
-    if (date != null) payload['date'] = date;
     final body = jsonEncode(payload);
 
     debugPrint('[StepJourneyService] POST $url body: $body');
@@ -72,14 +74,21 @@ class StepJourneyService {
     }
   }
 
-  /// POST /step-log/set-up-camp
+  /// POST /step-log/set-up-camp (Alias: /step-log/camp)
   Future<SetUpCampResponse> setUpCamp() async {
-    final url = Uri.parse(Urls.stepLogSetUpCamp);
     final headers = await _getHeaders();
+    final url = Uri.parse(Urls.stepLogSetUpCamp);
 
     debugPrint('[StepJourneyService] POST $url');
-    final response = await http.post(url, headers: headers);
+    var response = await http.post(url, headers: headers);
     debugPrint('[StepJourneyService] Status: ${response.statusCode}');
+
+    if (response.statusCode == 404) {
+      final altUrl = Uri.parse(Urls.stepLogCamp);
+      debugPrint('[StepJourneyService] 404 on set-up-camp, falling back to POST $altUrl');
+      response = await http.post(altUrl, headers: headers);
+      debugPrint('[StepJourneyService] Alt Status: ${response.statusCode}');
+    }
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final decoded = jsonDecode(response.body) as Map<String, dynamic>;

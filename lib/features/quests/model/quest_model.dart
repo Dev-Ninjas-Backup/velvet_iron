@@ -193,7 +193,7 @@ class Quest {
     final isDone = json['isCompleted'] == true || json['isDone'] == true;
 
     // Determine quest type
-    String qType = json['questType']?.toString() ?? '';
+    String qType = json['questType']?.toString().toUpperCase().trim() ?? '';
     if (qType.isEmpty) {
       if (json['isCustom'] == true || id.startsWith('custom_') || json['category'] != null) {
         qType = 'CUSTOM';

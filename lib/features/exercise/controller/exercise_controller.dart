@@ -14,6 +14,7 @@ import 'package:velvet_iron/features/quests/controller/quest_controller.dart';
 class ExerciseController extends GetxController {
   final _exerciseService = ExerciseService();
   final selectedRecurrence = 'DAILY'.obs;
+  final selectedDaysOfWeek = <int>{DateTime.now().weekday}.obs;
 
   final isLoading = true.obs;
 
@@ -143,6 +144,7 @@ class ExerciseController extends GetxController {
     scheduleTime.value = TimeOfDay.now();
     completedDate.value = DateTime.now();
     completedTime.value = TimeOfDay.now();
+    selectedDaysOfWeek.assignAll([DateTime.now().weekday]);
   }
 
   /// Log a completed exercise (Completed tab)
@@ -215,6 +217,10 @@ class ExerciseController extends GetxController {
           int.tryParse(durationController.text.trim()) ?? duration.value;
       final effectiveDuration = parsedDuration > 0 ? parsedDuration : 30;
 
+      final isSpecific = selectedRecurrence.value == 'SPECIFIC DAYS' || selectedRecurrence.value == 'WEEKLY';
+      final cleanRecurrence = selectedRecurrence.value == 'SPECIFIC DAYS' ? 'SPECIFIC_DAYS' : selectedRecurrence.value;
+      final daysList = isSpecific ? (selectedDaysOfWeek.toList()..sort()) : <int>[];
+
       final response = await _exerciseService.scheduleExercise(
         type: exerciseType.value,
         name: exerciseNameController.text,
@@ -222,6 +228,8 @@ class ExerciseController extends GetxController {
         duration: effectiveDuration,
         note: notesController.text,
         scheduledAt: scheduledDateTime,
+        recurrence: cleanRecurrence,
+        daysOfWeek: daysList,
       );
       if (response == null) {
         EasyLoading.showError('Failed to schedule exercise. Please try again.');

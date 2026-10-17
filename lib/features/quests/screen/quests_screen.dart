@@ -24,6 +24,7 @@ class QuestsScreen extends StatelessWidget {
     int selectedXp = 10;
     String selectedCategory = 'FITNESS';
     String selectedRecurrence = 'DAILY';
+    final Set<int> selectedDays = {DateTime.now().weekday}; // ISO 1=Mon..7=Sun
 
     Get.dialog(
       StatefulBuilder(
@@ -138,7 +139,7 @@ class QuestsScreen extends StatelessWidget {
                     Text('Recurrence', style: getTextStyle(color: Colors.white70, fontSize: 12)),
                     const SizedBox(height: 6),
                     Row(
-                      children: ['DAILY', 'WEEKLY'].map((rec) {
+                      children: ['DAILY', 'WEEKLY', 'SPECIFIC DAYS'].map((rec) {
                         final isSel = selectedRecurrence == rec;
                         return Expanded(
                           child: GestureDetector(
@@ -162,7 +163,7 @@ class QuestsScreen extends StatelessWidget {
                                 rec,
                                 style: TextStyle(
                                   color: isSel ? themeController.activeTheme.accentGoldColor : Colors.white70,
-                                  fontSize: 12,
+                                  fontSize: 10.5,
                                   fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
                                 ),
                               ),
@@ -171,6 +172,66 @@ class QuestsScreen extends StatelessWidget {
                         );
                       }).toList(),
                     ),
+                    if (selectedRecurrence == 'SPECIFIC DAYS' || selectedRecurrence == 'WEEKLY') ...[
+                      const SizedBox(height: 12),
+                      Text('Repeat On', style: getTextStyle(color: Colors.white70, fontSize: 12)),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          {'day': 'Mon', 'val': 1},
+                          {'day': 'Tue', 'val': 2},
+                          {'day': 'Wed', 'val': 3},
+                          {'day': 'Thu', 'val': 4},
+                          {'day': 'Fri', 'val': 5},
+                          {'day': 'Sat', 'val': 6},
+                          {'day': 'Sun', 'val': 7},
+                        ].map((d) {
+                          final dayVal = d['val'] as int;
+                          final isDaySel = selectedDays.contains(dayVal);
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (isDaySel) {
+                                  if (selectedDays.length > 1) {
+                                    selectedDays.remove(dayVal);
+                                  } else {
+                                    EasyLoading.showInfo('Select at least one day');
+                                  }
+                                } else {
+                                  selectedDays.add(dayVal);
+                                }
+                              });
+                            },
+                            child: Container(
+                              width: 34,
+                              height: 34,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: isDaySel
+                                    ? themeController.activeTheme.accentGoldColor.withValues(alpha: 0.35)
+                                    : Colors.black26,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: isDaySel
+                                      ? themeController.activeTheme.accentGoldColor
+                                      : Colors.white24,
+                                  width: isDaySel ? 1.5 : 1,
+                                ),
+                              ),
+                              child: Text(
+                                d['day'] as String,
+                                style: TextStyle(
+                                  color: isDaySel ? themeController.activeTheme.accentGoldColor : Colors.white70,
+                                  fontSize: 10,
+                                  fontWeight: isDaySel ? FontWeight.bold : FontWeight.normal,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
                     const SizedBox(height: 14),
                     Text('XP Reward (Max 15 XP)', style: getTextStyle(color: Colors.white70, fontSize: 12)),
                     const SizedBox(height: 8),
@@ -215,12 +276,17 @@ class QuestsScreen extends StatelessWidget {
                             EasyLoading.showInfo('Please enter a quest objective');
                             return;
                           }
+                          final isSpecific = selectedRecurrence == 'SPECIFIC DAYS' || selectedRecurrence == 'WEEKLY';
+                          final recurrenceApi = selectedRecurrence == 'SPECIFIC DAYS'
+                              ? 'SPECIFIC_DAYS'
+                              : selectedRecurrence;
                           controller.addCustomQuest(
                             title: title,
                             description: descController.text.trim().isEmpty ? '$selectedCategory • $selectedRecurrence' : descController.text.trim(),
                             xp: selectedXp,
                             category: selectedCategory,
-                            recurrence: selectedRecurrence,
+                            recurrence: recurrenceApi,
+                            daysOfWeek: isSpecific ? (selectedDays.toList()..sort()) : null,
                           );
                           Get.back();
                         },

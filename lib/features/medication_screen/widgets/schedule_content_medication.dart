@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
@@ -213,6 +214,81 @@ class ScheduleContentMedication extends StatelessWidget {
                 }).toList(),
               ),
             ),
+            Obx(() {
+              final isSpecific = controller.selectedRecurrence.value == 'SPECIFIC DAYS' ||
+                  controller.selectedRecurrence.value == 'WEEKLY';
+              if (!isSpecific) return const SizedBox.shrink();
+
+              return Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Repeat On:",
+                      style: getTextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        {'day': 'Mon', 'val': 1},
+                        {'day': 'Tue', 'val': 2},
+                        {'day': 'Wed', 'val': 3},
+                        {'day': 'Thu', 'val': 4},
+                        {'day': 'Fri', 'val': 5},
+                        {'day': 'Sat', 'val': 6},
+                        {'day': 'Sun', 'val': 7},
+                      ].map((d) {
+                        final dayVal = d['val'] as int;
+                        final isDaySel = controller.selectedDaysOfWeek.contains(dayVal);
+                        return GestureDetector(
+                          onTap: () {
+                            if (isDaySel) {
+                              if (controller.selectedDaysOfWeek.length > 1) {
+                                controller.selectedDaysOfWeek.remove(dayVal);
+                              } else {
+                                EasyLoading.showInfo('Select at least one day');
+                              }
+                            } else {
+                              controller.selectedDaysOfWeek.add(dayVal);
+                            }
+                          },
+                          child: Container(
+                            width: 36,
+                            height: 36,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: isDaySel
+                                  ? themeController.activeTheme.accentGoldColor
+                                      .withValues(alpha: 0.35)
+                                  : Colors.black26,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: isDaySel
+                                    ? themeController.activeTheme.accentGoldColor
+                                    : Colors.white24,
+                                width: isDaySel ? 1.5 : 1,
+                              ),
+                            ),
+                            child: Text(
+                              d['day'] as String,
+                              style: TextStyle(
+                                color: isDaySel
+                                    ? themeController.activeTheme.accentGoldColor
+                                    : Colors.white70,
+                                fontSize: 10,
+                                fontWeight: isDaySel ? FontWeight.bold : FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              );
+            }),
             const SizedBox(height: 20),
             CustomButton(
               label: "Schedule Medication (+10 XP)",

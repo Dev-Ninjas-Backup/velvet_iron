@@ -26,6 +26,7 @@ class Urls {
   static const String medication = '$baseUrl/medication';
   static const String medicationHistory = '$baseUrl/medication/history';
   static const String medicationSchedule = '$baseUrl/medication-schedule';
+  static const String medicationSchedules = '$baseUrl/medication-schedules';
   static String updateMedicationHHistory(String id) =>
       '$baseUrl/medication-schedule/$id/taken?isTaken=true';
   static String deleteMedicationSchedule(String id) =>
@@ -53,6 +54,7 @@ class Urls {
   static const String exerciseLog = '$baseUrl/exercise-log';
   static const String exerciseHistory = '$baseUrl/exercise-log/history';
   static const String exerciseLogSchedule = '$baseUrl/exercise-log/schedule';
+  static const String exerciseLogSchedules = '$baseUrl/exercise-logs/schedules';
   static String updateExerciseHHistory(String id) =>
       '$baseUrl/exercise-log/$id/taken?isTaken=true';
   static String deleteExerciseSchedule(String id) =>
@@ -69,7 +71,9 @@ class Urls {
   static const String quests = '$baseUrl/xp-stats/quests';
   static const String questsToday = '$baseUrl/quests/today';
   static const String completeQuestToday = '$baseUrl/quests/today/complete';
+  static const String completeQuest = '$baseUrl/quests/complete';
   static const String customQuests = '$baseUrl/quests/custom';
+  static const String customQuestsAlt = '$baseUrl/custom-quests';
   static String deleteCustomQuest(String id) => '$baseUrl/quests/custom/$id';
   static String completeCustomQuest(String id) =>
       '$baseUrl/quests/custom/$id/complete';
@@ -98,6 +102,7 @@ class Urls {
   static const String stepLogToday = '$baseUrl/step-log/today';
   static const String stepLog = '$baseUrl/step-log';
   static const String stepLogSetUpCamp = '$baseUrl/step-log/set-up-camp';
+  static const String stepLogCamp = '$baseUrl/step-log/camp';
   static const String stepLogGoal = '$baseUrl/step-log/goal';
   static String stepLogHistory([int limit = 30]) =>
       '$baseUrl/step-log/history?limit=$limit';

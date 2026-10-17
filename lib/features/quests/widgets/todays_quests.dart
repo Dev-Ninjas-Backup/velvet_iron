@@ -77,7 +77,7 @@ class TodaysQuestItem extends StatelessWidget {
           behavior: HitTestBehavior.opaque,
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
               color: themeController.activeTheme.textfieldColor.withValues(
                 alpha: 0.6,
@@ -94,10 +94,10 @@ class TodaysQuestItem extends StatelessWidget {
               children: [
                 Image.asset(
                   isActive ? dotIcon : IconPath.whitecircle,
-                  width: 24,
-                  height: 24,
+                  width: 22,
+                  height: 22,
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,16 +107,18 @@ class TodaysQuestItem extends StatelessWidget {
                         header,
                         style: getTextStyle(
                           color: Colors.white,
-                          fontSize: 14,
+                          fontSize: 13,
                           fontWeight: FontWeight.w600,
                         ).copyWith(
                           decoration: isActive ? TextDecoration.lineThrough : null,
                           decorationColor: Colors.white54,
+                          letterSpacing: -0.1,
                         ),
                         maxLines: 2,
+                        softWrap: true,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 3),
                       Text(
                         title,
                         style: getTextStyle(
@@ -124,12 +126,13 @@ class TodaysQuestItem extends StatelessWidget {
                           fontSize: 11,
                         ),
                         maxLines: 2,
+                        softWrap: true,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 6),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisSize: MainAxisSize.min,
@@ -139,30 +142,30 @@ class TodaysQuestItem extends StatelessWidget {
                       children: [
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 9,
-                            vertical: 3,
+                            horizontal: 7,
+                            vertical: 2,
                           ),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(colors: tag.gradient),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             tag.label,
                             style: getTextStyle(
                               color: Colors.white,
-                              fontSize: 11,
+                              fontSize: 10,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                         if (questType == 'CUSTOM' && onDelete != null) ...[
-                          const SizedBox(width: 4),
+                          const SizedBox(width: 2),
                           GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: onDelete,
                             child: const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                              child: Icon(Icons.delete_outline, size: 20, color: Colors.white70),
+                              padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                              child: Icon(Icons.delete_outline, size: 18, color: Colors.white70),
                             ),
                           ),
                         ],

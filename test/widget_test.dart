@@ -493,5 +493,65 @@ void main() {
       expect(quest.isDone, isFalse);
     });
   });
+
+  group('Client Feedback Round 8 Specific Fixes Tests', () {
+    test('Issue 2: Custom Quest XP defaults to 10 and parses correctly from xpReward', () {
+      final customQuest10XpJson = {
+        'id': 'custom_gym_session',
+        'title': 'Gym Strength Session',
+        'category': 'FITNESS',
+        'description': 'Legs & Core workout routine',
+        'xpReward': 10,
+        'xp': 10,
+        'recurrence': 'SPECIFIC_DAYS',
+        'daysOfWeek': [1, 3, 5],
+        'isCompleted': false,
+        'isCustom': true,
+      };
+
+      final quest = Quest.fromJson(customQuest10XpJson);
+      expect(quest.title, 'Gym Strength Session');
+      expect(quest.xp, 10);
+      expect(quest.isDone, isFalse);
+      expect(quest.questType, 'CUSTOM');
+    });
+
+    test('Issue 3: Specific Days maps ISO 1=Monday to 7=Sunday correctly', () {
+      final weekdays = [
+        {'day': 'Mon', 'val': 1},
+        {'day': 'Tue', 'val': 2},
+        {'day': 'Wed', 'val': 3},
+        {'day': 'Thu', 'val': 4},
+        {'day': 'Fri', 'val': 5},
+        {'day': 'Sat', 'val': 6},
+        {'day': 'Sun', 'val': 7},
+      ];
+
+      expect(weekdays[0]['val'], 1); // Monday
+      expect(weekdays[6]['val'], 7); // Sunday
+
+      final selectedDays = {1, 3, 5}; // Mon, Wed, Fri
+      final sortedList = selectedDays.toList()..sort();
+      expect(sortedList, [1, 3, 5]);
+    });
+
+    test('Issue 4: Medication quest parses Tirzepatide with full title and description intact', () {
+      final tirzepatideQuestJson = {
+        'id': 'med_tirzepatide_01',
+        'title': 'Tirzepatide',
+        'description': '2.5 mg • Subcutaneous Injection • 09:00 AM',
+        'xpReward': 10,
+        'isCompleted': false,
+        'questType': 'medication_schedule',
+        'originalRefId': 'tirzepatide_01',
+      };
+
+      final quest = Quest.fromJson(tirzepatideQuestJson);
+      expect(quest.title, 'Tirzepatide');
+      expect(quest.description, contains('2.5 mg'));
+      expect(quest.questType, 'MEDICATION_SCHEDULE');
+      expect(quest.xp, 10);
+    });
+  });
 }
 

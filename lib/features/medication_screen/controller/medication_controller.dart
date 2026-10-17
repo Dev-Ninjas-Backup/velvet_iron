@@ -10,6 +10,7 @@ import 'package:velvet_iron/features/quests/controller/quest_controller.dart';
 
 class MedicationController extends GetxController {
   final selectedRecurrence = 'DAILY'.obs;
+  final selectedDaysOfWeek = <int>{DateTime.now().weekday}.obs;
   @override
   void onClose() {
     selectedMedication.value = '';
@@ -204,11 +205,17 @@ class MedicationController extends GetxController {
       );
       debugPrint('[MedicationController] scheduleTime: $scheduleTime');
 
+      final isSpecific = selectedRecurrence.value == 'SPECIFIC DAYS' || selectedRecurrence.value == 'WEEKLY';
+      final cleanRecurrence = selectedRecurrence.value == 'SPECIFIC DAYS' ? 'SPECIFIC_DAYS' : selectedRecurrence.value;
+      final daysList = isSpecific ? (selectedDaysOfWeek.toList()..sort()) : <int>[];
+
       final medication = await _medicationService.scheduleMedication(
         name: selectedMedication.value,
         type: selectedType.value,
         doseMg: selectedDoseMg.value,
         scheduleTime: scheduleTime,
+        recurrence: cleanRecurrence,
+        daysOfWeek: daysList,
         accessToken: accessToken,
         refreshToken: refreshToken,
       );
@@ -256,6 +263,7 @@ class MedicationController extends GetxController {
     selectedDate.value = DateTime.now();
     selectedTime.value = TimeOfDay.now();
     selectedRecurrence.value = 'DAILY';
+    selectedDaysOfWeek.assignAll([DateTime.now().weekday]);
   }
 
   void updateDoseMg(double newDose) {

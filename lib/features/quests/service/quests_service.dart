@@ -114,30 +114,58 @@ class QuestService {
     return [];
   }
 
-  /// 4. Create Cloud Custom Quest: POST /quests/custom
+  /// 4. Create Cloud Custom Quest: POST /quests/custom or POST /custom-quests
   Future<Quest?> createCustomQuest({
     required String name,
     required String category,
     String recurrence = 'DAILY',
     String? description,
-    int? xp,
+    int xp = 10,
+    List<int>? daysOfWeek,
   }) async {
     final headers = await _getHeaders();
-    final body = jsonEncode({
+    final cleanRecurrence = recurrence.toUpperCase().replaceAll(' ', '_');
+    final payload = {
+      'title': name,
       'name': name,
       'category': category.toUpperCase(),
-      'recurrence': recurrence.toUpperCase(),
+      'recurrence': cleanRecurrence,
+      'xpReward': xp,
+      'xp': xp,
       if (description != null && description.isNotEmpty)
         'description': description,
-      if (xp != null && xp > 0) 'xpReward': xp,
-    });
+      if (daysOfWeek != null && daysOfWeek.isNotEmpty) ...{
+        'daysOfWeek': daysOfWeek,
+        'repeatDays': daysOfWeek,
+      },
+    };
+    final body = jsonEncode(payload);
 
     print('🔵 [QuestService] POST ${Urls.customQuests} body=$body');
-    final response = await http.post(
-      Uri.parse(Urls.customQuests),
-      headers: headers,
-      body: body,
-    );
+    http.Response response;
+    try {
+      response = await http.post(
+        Uri.parse(Urls.customQuests),
+        headers: headers,
+        body: body,
+      );
+    } catch (e) {
+      print('🟡 [QuestService] Primary custom-quest endpoint failed ($e), trying alternate: ${Urls.customQuestsAlt}');
+      response = await http.post(
+        Uri.parse(Urls.customQuestsAlt),
+        headers: headers,
+        body: body,
+      );
+    }
+
+    if (response.statusCode == 404) {
+      print('🟡 [QuestService] ${Urls.customQuests} returned 404, falling back to ${Urls.customQuestsAlt}');
+      response = await http.post(
+        Uri.parse(Urls.customQuestsAlt),
+        headers: headers,
+        body: body,
+      );
+    }
 
     print('🔵 [QuestService] createCustomQuest statusCode=${response.statusCode}');
     print('🔵 [QuestService] createCustomQuest body=${response.body}');
@@ -207,13 +235,13 @@ class QuestService {
     }
   }
 
-  /// 7. Complete Unified Quest: POST /quests/today/complete (Milestone 3)
+  /// 7. Complete Unified Quest: POST /quests/complete or POST /quests/today/complete (Milestone 3)
   Future<Map<String, dynamic>> completeUnifiedQuest({
     required String questId,
     required String questType,
   }) async {
     // If it's a custom quest, prefer the dedicated custom quest completion endpoint
-    if (questType == 'CUSTOM') {
+    if (questType.toUpperCase() == 'CUSTOM') {
       try {
         return await completeCustomQuest(questId);
       } catch (e) {
@@ -222,17 +250,36 @@ class QuestService {
     }
 
     final headers = await _getHeaders();
+    final cleanType = questType.toLowerCase().replaceAll('-', '_');
     final body = jsonEncode({
       'questId': questId,
-      'questType': questType,
+      'questType': cleanType,
     });
 
     print('🔵 [QuestService] POST ${Urls.completeQuestToday} body=$body');
-    final response = await http.post(
-      Uri.parse(Urls.completeQuestToday),
-      headers: headers,
-      body: body,
-    );
+    http.Response response;
+    try {
+      response = await http.post(
+        Uri.parse(Urls.completeQuestToday),
+        headers: headers,
+        body: body,
+      );
+    } catch (_) {
+      response = await http.post(
+        Uri.parse(Urls.completeQuest),
+        headers: headers,
+        body: body,
+      );
+    }
+
+    if (response.statusCode == 404) {
+      print('🟡 [QuestService] ${Urls.completeQuestToday} 404, falling back to ${Urls.completeQuest}');
+      response = await http.post(
+        Uri.parse(Urls.completeQuest),
+        headers: headers,
+        body: body,
+      );
+    }
 
     print('🔵 [QuestService] completeUnifiedQuest statusCode=${response.statusCode}');
     print('🔵 [QuestService] completeUnifiedQuest body=${response.body}');

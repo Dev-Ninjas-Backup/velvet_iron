@@ -98,13 +98,14 @@ class QuestController extends GetxController {
     }
   }
 
-  /// Create a new custom quest (Cloud via POST /quests/custom)
+  /// Create a new custom quest (Cloud via POST /quests/custom or /custom-quests)
   Future<void> addCustomQuest({
     required String title,
     required String description,
     required int xp,
     String category = 'FITNESS',
     String recurrence = 'DAILY',
+    List<int>? daysOfWeek,
   }) async {
     try {
       EasyLoading.show(status: 'Forging quest...');
@@ -112,12 +113,18 @@ class QuestController extends GetxController {
         name: title,
         category: category,
         recurrence: recurrence,
+        description: description,
+        xp: xp,
+        daysOfWeek: daysOfWeek,
       );
 
       if (serverQuest != null) {
-        EasyLoading.showSuccess('Quest Forged!');
+        EasyLoading.showSuccess('Quest Forged! (+${serverQuest.xp} XP)');
         CompanionDialogueEngine.showDialogueSnackbar(trigger: 'Quest Accepted');
         await fetchQuests();
+        if (Get.isRegistered<HomeController>()) {
+          Get.find<HomeController>().fetchData();
+        }
       } else {
         EasyLoading.showError('Could not forge quest on server.');
       }

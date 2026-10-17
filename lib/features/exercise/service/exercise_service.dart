@@ -127,6 +127,8 @@ class ExerciseService {
     required int duration,
     required String note,
     required DateTime scheduledAt,
+    String recurrence = 'DAILY',
+    List<int>? daysOfWeek,
   }) async {
     final accessToken = await SharedPreferencesHelper.getAccessToken();
     final refreshToken = await SharedPreferencesHelper.getRefreshToken();
@@ -161,6 +163,7 @@ class ExerciseService {
 
     final exerciseName = name.trim().isNotEmpty ? name.trim() : (type.isNotEmpty ? type : 'Exercise');
     final exerciseDuration = duration > 0 ? duration : 30;
+    final cleanRecurrence = recurrence.toUpperCase().replaceAll(' ', '_');
 
     request.fields['type'] = cleanType;
     request.fields['name'] = exerciseName;
@@ -168,6 +171,10 @@ class ExerciseService {
     request.fields['duration'] = exerciseDuration.toString();
     request.fields['note'] = note.trim();
     request.fields['scheduledAt'] = scheduledAt.toUtc().toIso8601String();
+    request.fields['recurrence'] = cleanRecurrence;
+    if (daysOfWeek != null && daysOfWeek.isNotEmpty) {
+      request.fields['daysOfWeek'] = jsonEncode(daysOfWeek);
+    }
 
     print('📤 Schedule Request Fields: ${request.fields}');
 
@@ -181,10 +188,55 @@ class ExerciseService {
       final Map<String, dynamic> jsonData = jsonDecode(responseBody);
       print('✅ Schedule Exercise Response: $jsonData');
       return jsonData;
-    } else {
-      print('❌ Schedule Exercise Error: $responseBody');
-      return null;
     }
+
+    // Fallback: try JSON request to /exercise-logs/schedules or /exercise-log/schedule
+    try {
+      print('🟡 Multipart schedule returned ${response.statusCode}, falling back to JSON...');
+      final jsonPayload = {
+        'name': exerciseName,
+        'type': cleanType,
+        'intensity': cleanIntensity,
+        'duration': exerciseDuration,
+        'note': note.trim(),
+        'scheduledAt': scheduledAt.toUtc().toIso8601String(),
+        'recurrence': cleanRecurrence,
+        if (daysOfWeek != null && daysOfWeek.isNotEmpty) 'daysOfWeek': daysOfWeek,
+      };
+
+      final jsonHeaders = {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+        'x-refresh-token': refreshToken,
+        'x-timezone': timezone,
+      };
+
+      var jsonRes = await http.post(
+        Uri.parse(Urls.exerciseLogSchedules),
+        headers: jsonHeaders,
+        body: jsonEncode(jsonPayload),
+      );
+
+      if (jsonRes.statusCode == 404) {
+        jsonRes = await http.post(
+          Uri.parse(Urls.exerciseLogSchedule),
+          headers: jsonHeaders,
+          body: jsonEncode(jsonPayload),
+        );
+      }
+
+      print('📡 JSON Schedule Status Code: ${jsonRes.statusCode}');
+      if (jsonRes.statusCode == 200 || jsonRes.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(jsonRes.body);
+        return jsonData;
+      }
+    } catch (fallbackErr) {
+      print('🔴 Fallback JSON schedule error: $fallbackErr');
+    }
+
+    print('❌ Schedule Exercise Error: $responseBody');
+    return null;
   }
 
   /// Mark a scheduled exercise as taken (PATCH /exercise-log/{id}/taken?isTaken=true)

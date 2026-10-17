@@ -68,6 +68,8 @@ class MedicationService {
     required String scheduleTime,
     required String accessToken,
     required String refreshToken,
+    String recurrence = 'DAILY',
+    List<int>? daysOfWeek,
   }) async {
     final uri = Uri.parse(Urls.medicationSchedule);
     debugPrint('[MedicationService] Schedule POST: $uri');
@@ -83,13 +85,19 @@ class MedicationService {
         'x-timezone': timezone,
       });
 
+      final cleanRecurrence = recurrence.toUpperCase().replaceAll(' ', '_');
+
       request.fields['name'] = name;
       request.fields['type'] = type;
       request.fields['doseMg'] = doseMg.toString();
       request.fields['scheduleTime'] = scheduleTime;
+      request.fields['recurrence'] = cleanRecurrence;
+      if (daysOfWeek != null && daysOfWeek.isNotEmpty) {
+        request.fields['daysOfWeek'] = jsonEncode(daysOfWeek);
+      }
 
       debugPrint(
-        '[MedicationService] Schedule Fields: name=$name, type=$type, doseMg=$doseMg, scheduleTime=$scheduleTime',
+        '[MedicationService] Schedule Fields: name=$name, type=$type, doseMg=$doseMg, scheduleTime=$scheduleTime, recurrence=$cleanRecurrence, daysOfWeek=$daysOfWeek',
       );
 
       final response = await request.send();
@@ -104,13 +112,52 @@ class MedicationService {
         final jsonData = jsonDecode(responseBody) as Map<String, dynamic>;
         debugPrint('[MedicationService] Scheduled! id=${jsonData['id']}');
         return Medication.fromJson(jsonData);
-      } else {
-        final errorData = jsonDecode(responseBody) as Map<String, dynamic>;
-        throw MedicationException(
-          errorData['message'] ??
-              'Failed to schedule medication (${response.statusCode})',
-        );
       }
+
+      // Fallback: try JSON request as documented in COMPLETE_API_CHANGES_AND_INTEGRATION_GUIDE.md section 3.5
+      try {
+        debugPrint('[MedicationService] Multipart returned ${response.statusCode}, trying JSON...');
+        final jsonPayload = {
+          'name': name,
+          'type': type,
+          'doseMg': doseMg,
+          'scheduleTime': scheduleTime,
+          'recurrence': cleanRecurrence,
+          if (daysOfWeek != null && daysOfWeek.isNotEmpty) 'daysOfWeek': daysOfWeek,
+          'reminderEnabled': true,
+        };
+        final jsonHeaders = {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+          'x-refresh-token': refreshToken,
+          'x-timezone': timezone,
+        };
+        var jsonRes = await http.post(
+          Uri.parse(Urls.medicationSchedules),
+          headers: jsonHeaders,
+          body: jsonEncode(jsonPayload),
+        );
+        if (jsonRes.statusCode == 404) {
+          jsonRes = await http.post(
+            Uri.parse(Urls.medicationSchedule),
+            headers: jsonHeaders,
+            body: jsonEncode(jsonPayload),
+          );
+        }
+        if (jsonRes.statusCode >= 200 && jsonRes.statusCode < 300) {
+          final jsonData = jsonDecode(jsonRes.body) as Map<String, dynamic>;
+          return Medication.fromJson(jsonData);
+        }
+      } catch (jsonErr) {
+        debugPrint('[MedicationService] JSON fallback error: $jsonErr');
+      }
+
+      final errorData = jsonDecode(responseBody) as Map<String, dynamic>;
+      throw MedicationException(
+        errorData['message'] ??
+            'Failed to schedule medication (${response.statusCode})',
+      );
     } on SocketException {
       throw MedicationException('No internet connection.');
     } on HttpException catch (e) {

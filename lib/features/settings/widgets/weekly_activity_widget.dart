@@ -1,9 +1,9 @@
-import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
+import 'package:velvet_iron/features/home/controller/home_controller.dart';
 
 class WeeklyActivityProgress extends StatelessWidget {
   final String title;
@@ -21,11 +21,10 @@ class WeeklyActivityProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Random random = Random();
-    final List<double> weeklyData = List.generate(
-      7,
-      (index) => 20 + random.nextDouble() * 80,
-    );
+    final homeController = Get.isRegistered<HomeController>()
+        ? Get.find<HomeController>()
+        : null;
+    final List<double> weeklyData = homeController?.chartData ?? List.filled(7, 0.0);
 
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
