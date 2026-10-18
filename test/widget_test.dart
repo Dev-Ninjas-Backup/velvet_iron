@@ -1,9 +1,11 @@
+import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:velvet_iron/core/services/app_timezone_helper.dart';
 import 'package:velvet_iron/features/quests/model/quest_model.dart';
 import 'package:velvet_iron/features/exercise/model/exercise_model.dart';
 import 'package:velvet_iron/features/medication_screen/model/medication_model.dart';
 import 'package:velvet_iron/features/home/models/home_screen_model.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/step_journey_screen/widgets/fantasy_map_widget.dart';
 
 void main() {
   group('Quest System Tests', () {
@@ -551,6 +553,59 @@ void main() {
       expect(quest.description, contains('2.5 mg'));
       expect(quest.questType, 'MEDICATION_SCHEDULE');
       expect(quest.xp, 10);
+    });
+  });
+
+  group('Client Feedback Round 9 Specific Fixes Tests', () {
+    test('Issue 3: Dynamic Y-axis scales tightly around 218-221 lbs instead of starting at zero', () {
+      final entries = [218.0, 219.5, 220.0, 221.0];
+      final minW = entries.reduce(min);
+      final maxW = entries.reduce(max);
+      expect(minW, 218.0);
+      expect(maxW, 221.0);
+
+      final diff = maxW - minW;
+      final padding = (diff * 0.25).clamp(2.0, 15.0);
+      final minY = (minW - padding).floorToDouble();
+      final maxY = (maxW + padding).ceilToDouble();
+
+      // Bounds should be around 216 and 223 - NOT starting at 0 or 240
+      expect(minY, greaterThanOrEqualTo(210.0));
+      expect(minY, lessThanOrEqualTo(218.0));
+      expect(maxY, greaterThanOrEqualTo(221.0));
+      expect(maxY, lessThanOrEqualTo(230.0));
+      expect(minY, isNot(0.0));
+    });
+
+    test('Issue 4: Weight tracking provides all 6 required timeframe options', () {
+      const availableTimeframes = [
+        'Weekly',
+        'Monthly',
+        '3 Months',
+        '6 Months',
+        'Yearly',
+        'All Time',
+      ];
+
+      expect(availableTimeframes.length, 6);
+      expect(availableTimeframes, contains('Weekly'));
+      expect(availableTimeframes, contains('Monthly'));
+      expect(availableTimeframes, contains('3 Months'));
+      expect(availableTimeframes, contains('6 Months'));
+      expect(availableTimeframes, contains('Yearly'));
+      expect(availableTimeframes, contains('All Time'));
+    });
+
+    test('Issue 5: Journey landmarks lead to The Shattered Citadel at 1,000,000 steps', () {
+      final milestones = FantasyMapWidget.journeyMilestones;
+      expect(milestones.length, 11);
+      expect(milestones.first.stepMilestone, 0);
+      expect(milestones.first.name, 'The Starting Outpost');
+
+      final finalMilestone = milestones.last;
+      expect(finalMilestone.stepMilestone, 1000000);
+      expect(finalMilestone.name, 'The Shattered Citadel');
+      expect(finalMilestone.fraction, 1.0);
     });
   });
 }

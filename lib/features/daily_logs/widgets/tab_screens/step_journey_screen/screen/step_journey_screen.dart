@@ -329,6 +329,7 @@ class StepJourneyScreen extends StatelessWidget {
                     isCampSet: controller.isCampSet.value,
                     currentSteps: controller.steps.value,
                     goal: controller.goal.value,
+                    lifetimeSteps: controller.lifetimeSteps.value,
                   ),
                 ),
                 const SizedBox(height: 14),
