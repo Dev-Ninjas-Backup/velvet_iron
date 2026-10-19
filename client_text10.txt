@@ -1,0 +1,24 @@
+Hi! I've now tested Version 21. Initially, the updates weren't appearing, but after uninstalling and
+reinstalling the app 3 times, the changes loaded correctly.
+I'm happy to report that several of the fixes are now working!
+- The weight graph scaling is corrected, and the additional timeframe filters are available.
+- Custom quests are awarding the correct XP amounts.
+- XP from completed quests is being awarded and displayed correctly, including on the activity
+graph.
+- Specific-day exercise scheduling appears to be working.
+- The step map now has interactive landmark cards with the location names, descriptions, and
+milestones.
+There are two remaining issues I've noticed:
+1. Daily Login XP: I'm not receiving the daily login XP when opening the app. Quest XP is functioning
+correctly, so this appears to be specific to the daily login reward. Please investigate and ensure it
+awards XP once per day based on the user's local timezone.
+2. Step Map Appearance: While the landmark cards are working, the route itself looks strange. The
+zigzagging path between locations appears unnatural and visually messy. I'd like the route to look
+more like a cohesive fantasy journey, with smoother, more intentional progression between
+landmarks. Please also ensure the location labels are clearly readable.
+
+Overall, this is a significant improvement over the previous builds, and I'm pleased to see these
+updates functioning correctly.
+I understand the backend fixes for meal history and mood logging are planned for Monday, and I'll
+test those once they're available.
+Thank you for the progress! Please let me know when the remaining issues are addressed

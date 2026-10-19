@@ -9,6 +9,9 @@ import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/step_journey_screen/models/step_journey_model.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/step_journey_screen/service/step_journey_service.dart';
 import 'package:velvet_iron/features/home/controller/home_controller.dart';
+import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
+import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/step_journey_screen/widgets/royal_summons_dialog.dart';
+import 'package:velvet_iron/features/home/widgets/companion_full_body_dialogue.dart';
 import 'package:velvet_iron/features/quests/controller/quest_controller.dart';
 
 class StepJourneyController extends GetxController {
@@ -80,6 +83,105 @@ class StepJourneyController extends GetxController {
     } finally {
       if (showLoading) isLoading.value = false;
     }
+  }
+
+  bool _isShowingSummons = false;
+
+  /// Automatically check if this account has accepted the Royal Summons on first visit
+  Future<void> checkAndShowRoyalSummons(BuildContext context) async {
+    final hasAccepted = await SharedPreferencesHelper.hasAcceptedRoyalSummons();
+    if (hasAccepted) return;
+    if (_isShowingSummons) return;
+    _isShowingSummons = true;
+
+    if (!context.mounted) {
+      _isShowingSummons = false;
+      return;
+    }
+
+    RoyalSummonsDialog.show(
+      context,
+      isReread: false,
+      onAccept: () async {
+        await SharedPreferencesHelper.markRoyalSummonsAccepted();
+        _isShowingSummons = false;
+        if (context.mounted) {
+          _showCompanionSummonsDialogue(context);
+        }
+      },
+    );
+  }
+
+  /// Manually reopen Royal Summons decree for rereading
+  void openRoyalSummons(BuildContext context) {
+    RoyalSummonsDialog.show(
+      context,
+      isReread: true,
+    );
+  }
+
+  /// Present companion's specific voice reaction after accepting the summons
+  Future<void> _showCompanionSummonsDialogue(BuildContext context) async {
+    final companionName = await getActiveCompanionName();
+    final key = CompanionDialogueEngine.normalizeCompanionKey(companionName);
+    final displayName = CompanionDialogueEngine.getDisplayName(companionName);
+
+    String quote;
+    switch (key) {
+      case 'riven':
+        quote =
+            "So. The Crown has finally decided to ask for help. How reassuring. Come along, darling. If we're to save a kingdom, I'd rather not keep destiny waiting.";
+        break;
+      case 'thyra':
+        quote =
+            "The road ahead will test us both. There will be danger, and there may be sacrifices. But you have my shield and my oath. Whatever waits beyond that Arch, we face it together.";
+        break;
+      case 'general_leon':
+        quote =
+            "Unknown territory. Unstable portals. Missing scouts. Fantastic. I've seen operations start with better intelligence. Stay sharp, watch your surroundings, and keep moving. We'll figure this out as we go.";
+        break;
+      case 'visepheron':
+        quote =
+            "Ahh... the Crown calls, and the little ones begin to stir. How curious that the fate of kingdoms should rest upon footsteps. Come, wanderer. Let us see what secrets this broken world has yet to surrender.";
+        break;
+      default:
+        quote =
+            "So. The Crown has finally decided to ask for help. How reassuring. Come along, darling. If we're to save a kingdom, I'd rather not keep destiny waiting.";
+        break;
+    }
+
+    if (!context.mounted) return;
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (ctx) => CompanionFullBodyDialogue(
+        companionName: displayName,
+        quote: quote,
+        contextMoment: 'expedition_summons',
+        customMomentHeadline: 'ROYAL EXPEDITION',
+        customButtonLabel: 'Enter the Realm',
+        xpReward: 0,
+        onCustomAction: () {
+          // Player enters the realm and begins navigation at The Outpost
+        },
+      ),
+    );
+  }
+
+  /// Retrieve the active chosen companion name
+  Future<String> getActiveCompanionName() async {
+    final savedCompanion = await SharedPreferencesHelper.getActiveCompanion();
+    if (savedCompanion != null &&
+        savedCompanion['name'] != null &&
+        savedCompanion['name']!.isNotEmpty) {
+      return savedCompanion['name']!;
+    }
+    if (Get.isRegistered<HomeController>()) {
+      final homeComp = Get.find<HomeController>().companionName;
+      if (homeComp.isNotEmpty) return homeComp;
+    }
+    return 'Thyra';
   }
 
   /// Automatically celebrate when a new milestone landmark threshold is unlocked

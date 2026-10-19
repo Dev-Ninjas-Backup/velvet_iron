@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velvet_iron/core/services/app_timezone_helper.dart';
 
 class SharedPreferencesHelper {
   static Future<String?> getString(String key) async {
@@ -185,22 +186,28 @@ class SharedPreferencesHelper {
     return prefs.getBool(_rememberMeKey) ?? false;
   }
 
+  static const String _lastDailyLoginDateKey = 'lastDailyLoginDate';
+
   static Future<void> clearAll() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    // Save the daily login timestamp before clearing
+    // Save daily login tracking before clearing
     final lastDailyLoginTimestamp = prefs.getString(
       _lastDailyLoginTimestampKey,
     );
+    final lastDailyLoginDate = prefs.getString(_lastDailyLoginDateKey);
 
     // Clear all data
     await prefs.clear();
 
-    // Restore the daily login timestamp (24-hour cooldown persists across logout/login)
+    // Restore daily login persistence across logout/login
     if (lastDailyLoginTimestamp != null) {
       await prefs.setString(
         _lastDailyLoginTimestampKey,
         lastDailyLoginTimestamp,
       );
+    }
+    if (lastDailyLoginDate != null) {
+      await prefs.setString(_lastDailyLoginDateKey, lastDailyLoginDate);
     }
   }
 
@@ -225,7 +232,24 @@ class SharedPreferencesHelper {
     return prefs.getString('${_activeThemeIdKey}_name');
   }
 
-  // Daily login timestamp methods
+  // Daily login persistence methods
+  static Future<void> saveLastDailyLoginDate(String dateStr) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_lastDailyLoginDateKey, dateStr);
+  }
+
+  static Future<String?> getLastDailyLoginDate() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_lastDailyLoginDateKey);
+  }
+
+  static Future<bool> hasClaimedDailyLoginToday() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final lastDate = prefs.getString(_lastDailyLoginDateKey);
+    final today = AppTimezoneHelper.getTodayDateString();
+    return lastDate == today;
+  }
+
   static Future<void> saveLastDailyLoginTimestamp(DateTime timestamp) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(
@@ -268,13 +292,13 @@ class SharedPreferencesHelper {
   static Future<bool> isFullBodyGreetingShownToday() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final lastDate = prefs.getString(_lastFullBodyGreetingDateKey);
-    final today = DateTime.now().toIso8601String().substring(0, 10);
+    final today = AppTimezoneHelper.getTodayDateString();
     return lastDate == today;
   }
 
   static Future<void> markFullBodyGreetingShownToday() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final today = DateTime.now().toIso8601String().substring(0, 10);
+    final today = AppTimezoneHelper.getTodayDateString();
     await prefs.setString(_lastFullBodyGreetingDateKey, today);
   }
 
@@ -290,4 +314,18 @@ class SharedPreferencesHelper {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getInt(_dailyStepGoalKey);
   }
+
+  // Royal Summons narrative onboarding tracking (scoped to userId)
+  static Future<bool> hasAcceptedRoyalSummons() async {
+    final userId = await getUserId() ?? 'default';
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('has_accepted_royal_summons_$userId') ?? false;
+  }
+
+  static Future<void> markRoyalSummonsAccepted() async {
+    final userId = await getUserId() ?? 'default';
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('has_accepted_royal_summons_$userId', true);
+  }
 }
+

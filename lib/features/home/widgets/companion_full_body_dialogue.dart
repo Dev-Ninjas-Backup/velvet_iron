@@ -1,17 +1,14 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
-import 'package:velvet_iron/core/services/app_timezone_helper.dart';
 import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
-import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
 import 'package:velvet_iron/features/home/controller/home_controller.dart';
+import 'package:velvet_iron/features/home/service/home_service.dart';
 
 class CompanionFullBodyDialogue extends StatefulWidget {
   final String companionName;
@@ -22,6 +19,10 @@ class CompanionFullBodyDialogue extends StatefulWidget {
   final VoidCallback? onClaim;
   final String? accessToken;
   final String? refreshToken;
+  final bool alreadyClaimedToday;
+  final String? customMomentHeadline;
+  final String? customButtonLabel;
+  final VoidCallback? onCustomAction;
 
   const CompanionFullBodyDialogue({
     super.key,
@@ -30,9 +31,13 @@ class CompanionFullBodyDialogue extends StatefulWidget {
     this.quote,
     this.contextMoment = 'daily_greeting',
     this.xpReward = 25,
+    this.alreadyClaimedToday = false,
     this.onClaim,
     this.accessToken,
     this.refreshToken,
+    this.customMomentHeadline,
+    this.customButtonLabel,
+    this.onCustomAction,
   });
 
   /// Resolve appropriate high-res character pose based on the companion and the interaction moment
@@ -133,47 +138,52 @@ class _CompanionFullBodyDialogueState extends State<CompanionFullBodyDialogue>
   Future<void> _handleClaim(BuildContext context) async {
     if (_isLoading.value) return;
 
-    // If there is an XP reward and credentials, call the backend daily log XP endpoint
-    if (widget.xpReward > 0 &&
-        widget.accessToken != null &&
-        widget.refreshToken != null) {
-      _isLoading.value = true;
-      try {
-        final timezone = await AppTimezoneHelper.getTimezoneName();
-        final response = await http.post(
-          Uri.parse(Urls.dailyLogsXP),
-          headers: {
-            'accept': '*/*',
-            'Authorization': 'Bearer ${widget.accessToken}',
-            'x-refresh-token': widget.refreshToken!,
-            'Content-Type': 'application/json',
-            'x-timezone': timezone,
-          },
-          body: jsonEncode({'xp': widget.xpReward}),
-        );
-
-        debugPrint('FullBody XP Claim Response: ${response.statusCode}');
-
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          await SharedPreferencesHelper.saveLastDailyLoginTimestamp(
-            DateTime.now(),
-          );
-          await SharedPreferencesHelper.markFullBodyGreetingShownToday();
-
-          // Refresh home profile XP
-          if (Get.isRegistered<HomeController>()) {
-            Get.find<HomeController>().fetchData();
-          }
-
-          EasyLoading.showSuccess('+${widget.xpReward} XP Collected!');
-        }
-      } catch (e) {
-        debugPrint('Error claiming daily XP in FullBody dialog: $e');
-      } finally {
-        _isLoading.value = false;
+    if (widget.onCustomAction != null) {
+      widget.onCustomAction!();
+      if (context.mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
       }
-    } else {
+      return;
+    }
+
+    if (widget.alreadyClaimedToday) {
       await SharedPreferencesHelper.markFullBodyGreetingShownToday();
+      widget.onClaim?.call();
+      if (context.mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+      return;
+    }
+
+    _isLoading.value = true;
+    try {
+      final res = await HomeService().claimDailyLoginReward();
+      await SharedPreferencesHelper.markFullBodyGreetingShownToday();
+
+      if (res['success'] == true) {
+        final xpAwarded = (res['xpAwarded'] as int?) ?? 25;
+        if (xpAwarded > 0) {
+          EasyLoading.showSuccess('+$xpAwarded XP Daily Login Reward Collected!');
+        } else {
+          EasyLoading.showSuccess('Welcome back! Daily login reward active.');
+        }
+
+        // Refresh home profile XP
+        if (Get.isRegistered<HomeController>()) {
+          Get.find<HomeController>().fetchData();
+        }
+      } else {
+        final msg = res['message'] as String? ?? '';
+        if (msg.toLowerCase().contains('already')) {
+          EasyLoading.showInfo('Daily reward already claimed for today');
+        } else {
+          EasyLoading.showError(msg.isNotEmpty ? msg : 'Could not claim daily reward');
+        }
+      }
+    } catch (e) {
+      debugPrint('Error claiming daily XP in FullBody dialog: $e');
+    } finally {
+      _isLoading.value = false;
     }
 
     widget.onClaim?.call();
@@ -198,13 +208,15 @@ class _CompanionFullBodyDialogueState extends State<CompanionFullBodyDialogue>
     final displayTitle =
         CompanionDialogueEngine.getDisplayTitle(widget.companionName);
 
-    String momentHeadline = 'DAILY GREETING';
-    if (widget.contextMoment == 'quest_complete') {
-      momentHeadline = 'QUESTS COMPLETED!';
-    } else if (widget.contextMoment == 'level_up') {
-      momentHeadline = 'LEVEL UP!';
-    } else if (widget.contextMoment == 'streak') {
-      momentHeadline = 'STREAK MILESTONE!';
+    String momentHeadline = widget.customMomentHeadline ?? 'DAILY GREETING';
+    if (widget.customMomentHeadline == null) {
+      if (widget.contextMoment == 'quest_complete') {
+        momentHeadline = 'QUESTS COMPLETED!';
+      } else if (widget.contextMoment == 'level_up') {
+        momentHeadline = 'LEVEL UP!';
+      } else if (widget.contextMoment == 'streak') {
+        momentHeadline = 'STREAK MILESTONE!';
+      }
     }
 
     final double cardOverlap = widget.xpReward > 0 ? 250.0 : 200.0;
@@ -367,7 +379,50 @@ class _CompanionFullBodyDialogueState extends State<CompanionFullBodyDialogue>
                       const SizedBox(height: 16),
 
                       // Daily Reward XP Badge (if applicable)
-                      if (widget.xpReward > 0) ...[
+                      if (widget.alreadyClaimedToday) ...[
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                themeController.activeTheme.accentGoldColor
+                                    .withValues(alpha: 0.2),
+                                themeController.activeTheme.borderColor
+                                    .withValues(alpha: 0.2),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: themeController.activeTheme.accentGoldColor
+                                  .withValues(alpha: 0.5),
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.check_circle_rounded,
+                                color: Color(0xFFFFD700),
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Daily Login Reward: +25 XP Active',
+                                style: getTextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                      ] else if (widget.xpReward > 0) ...[
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -421,9 +476,12 @@ class _CompanionFullBodyDialogueState extends State<CompanionFullBodyDialogue>
                                 ),
                               )
                             : CustomButton(
-                                label: widget.xpReward > 0
-                                    ? 'Claim & Begin Today\'s Quests'
-                                    : 'Continue Journey',
+                                label: widget.customButtonLabel ??
+                                    (widget.alreadyClaimedToday
+                                        ? 'Begin Today\'s Quests'
+                                        : (widget.xpReward > 0
+                                            ? 'Claim & Begin Today\'s Quests'
+                                            : 'Continue Journey')),
                                 onPressed: () => _handleClaim(context),
                               ),
                       ),
@@ -438,7 +496,11 @@ class _CompanionFullBodyDialogueState extends State<CompanionFullBodyDialogue>
                 right: 8,
                 child: GestureDetector(
                   onTap: () {
-                    SharedPreferencesHelper.markFullBodyGreetingShownToday();
+                    if (widget.onCustomAction != null) {
+                      widget.onCustomAction!();
+                    } else {
+                      SharedPreferencesHelper.markFullBodyGreetingShownToday();
+                    }
                     Navigator.of(context, rootNavigator: true).pop();
                   },
                   child: Container(

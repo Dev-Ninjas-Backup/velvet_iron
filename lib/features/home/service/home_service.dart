@@ -135,4 +135,71 @@ class HomeService {
       return null;
     }
   }
+
+  /// Claim the daily login reward (POST /profile/daily-login)
+  /// Evaluated using user local timezone boundaries to award XP once per local day
+  Future<Map<String, dynamic>> claimDailyLoginReward() async {
+    try {
+      final token = await SharedPreferencesHelper.getAccessToken() ?? '';
+      final refreshToken =
+          await SharedPreferencesHelper.getRefreshToken() ?? '';
+      if (token.isEmpty) {
+        return {'success': false, 'message': 'No access token available'};
+      }
+
+      final timezone = await AppTimezoneHelper.getTimezoneName();
+      final todayDate = AppTimezoneHelper.getTodayDateString();
+
+      final response = await http.post(
+        Uri.parse(Urls.dailyLogsXP),
+        headers: {
+          'accept': '*/*',
+          'Authorization': 'Bearer $token',
+          'x-refresh-token': refreshToken,
+          'Content-Type': 'application/json',
+          'x-timezone': timezone,
+        },
+        body: jsonEncode({'xp': 25}),
+      );
+
+      print(
+        '🔵 [HomeService] Daily Login Status: ${response.statusCode}, Body: ${response.body}',
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        final isSuccess = data['success'] == true;
+        final xpAwarded =
+            (data['xpAwarded'] as num?)?.toInt() ?? (isSuccess ? 25 : 0);
+        final message =
+            data['message'] as String? ?? 'Daily login reward processed';
+
+        // Save last daily login date to mark as claimed today in user's local timezone
+        await SharedPreferencesHelper.saveLastDailyLoginDate(todayDate);
+        await SharedPreferencesHelper.saveLastDailyLoginTimestamp(
+          DateTime.now(),
+        );
+
+        return {
+          'success': true,
+          'xpAwarded': xpAwarded,
+          'message': message,
+          'data': data,
+        };
+      }
+
+      return {
+        'success': false,
+        'statusCode': response.statusCode,
+        'message':
+            'Failed to claim daily login reward (${response.statusCode})',
+      };
+    } catch (e) {
+      print('🔴 [HomeService] Daily Login Exception: $e');
+      return {
+        'success': false,
+        'message': 'Error claiming daily login: $e',
+      };
+    }
+  }
 }

@@ -112,28 +112,11 @@ class _HomeScreenContentState extends State<HomeScreenContent>
     }
   }
 
-  /// Check if 24 hours have passed since last daily login XP collection
-  Future<bool> _can24HoursPassed() async {
-    final lastLoginTimestamp =
-        await SharedPreferencesHelper.getLastDailyLoginTimestamp();
-
-    if (lastLoginTimestamp == null) {
-      // First time collecting daily XP
-      return true;
-    }
-
-    try {
-      final lastLoginTime = DateTime.parse(lastLoginTimestamp);
-      final now = DateTime.now();
-      final difference = now.difference(lastLoginTime);
-
-      // Check if 24 hours (86400 seconds) have passed
-      return difference.inHours >= 24;
-    } catch (e) {
-      debugPrint('Error parsing last login timestamp: $e');
-      // If there's an error, allow showing popup
-      return true;
-    }
+  /// Check if daily login XP can be collected for user's local today
+  Future<bool> _canCollectDailyXpToday() async {
+    final hasClaimedToday =
+        await SharedPreferencesHelper.hasClaimedDailyLoginToday();
+    return !hasClaimedToday;
   }
 
   Future<void> _showDailyRewardsPopup() async {
@@ -147,7 +130,7 @@ class _HomeScreenContentState extends State<HomeScreenContent>
 
     final isShownToday =
         await SharedPreferencesHelper.isFullBodyGreetingShownToday();
-    final canCollectXp = await _can24HoursPassed();
+    final canCollectXp = await _canCollectDailyXpToday();
     final homeController =
         Get.isRegistered<HomeController>() ? Get.find<HomeController>() : null;
     final compNameVal = homeController?.activeCompanionName.value;
@@ -178,6 +161,7 @@ class _HomeScreenContentState extends State<HomeScreenContent>
           contextMoment: 'daily_greeting',
           quote: quote,
           xpReward: canCollectXp ? 25 : 0,
+          alreadyClaimedToday: !canCollectXp,
           accessToken: accessToken.isNotEmpty ? accessToken : null,
           refreshToken: refreshToken.isNotEmpty ? refreshToken : null,
           onClaim: () {
@@ -187,7 +171,7 @@ class _HomeScreenContentState extends State<HomeScreenContent>
       );
     } else if (canCollectXp && accessToken.isNotEmpty && refreshToken.isNotEmpty) {
       if (!mounted) return;
-      // If already greeted with full body today, but 24h XP cooldown reset, show standard collect dialog
+      // If already greeted with full body today, but XP not yet claimed today, show collect dialog
       _popupShown = true;
       _lastGreetingTime = DateTime.now();
       showDialog(
@@ -200,7 +184,9 @@ class _HomeScreenContentState extends State<HomeScreenContent>
             selectedCompanionImage: homeController?.activeCompanionImage.value,
             quote: homeController?.dailyRewardQuote.value,
             onCollectRewards: () {
-              debugPrint('Daily rewards collected successfully');
+              if (homeController != null) {
+                homeController.fetchData();
+              }
             },
           ),
         ),

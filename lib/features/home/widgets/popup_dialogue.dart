@@ -1,81 +1,14 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:velvet_iron/core/common/styles/global_text_style.dart';
 import 'package:velvet_iron/core/common/widgets/custom_button.dart';
-import 'package:velvet_iron/core/services/app_timezone_helper.dart';
-import 'package:velvet_iron/core/services/end_points.dart';
-import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/core/utils/app_theme/controller/app_theme_controller.dart';
 import 'package:velvet_iron/core/utils/constants/image_path.dart';
+import 'package:velvet_iron/features/home/service/home_service.dart';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 const int dailyLoginXpAmount = 25;
-
-// ─── XP Service (inline) ────────────────────────────────────────────────────
-
-class _XpService {
-  static Future<Map<String, dynamic>> addDailyRewardXP({
-    required String accessToken,
-    required String refreshToken,
-  }) async {
-    const String dailyLoginXP = Urls.dailyLogsXP;
-    try {
-      final timezone = await AppTimezoneHelper.getTimezoneName();
-      final response = await http.post(
-        Uri.parse(dailyLoginXP),
-        headers: {
-          'accept': '*/*',
-          'Authorization': 'Bearer $accessToken',
-          'x-refresh-token': refreshToken,
-          'Content-Type': 'application/json',
-          'x-timezone': timezone,
-        },
-        body: jsonEncode({'xp': dailyLoginXpAmount}),
-      );
-
-      debugPrint('Daily Login XP Response Status: ${response.statusCode}');
-      debugPrint('Daily Login XP Response Body: ${response.body}');
-
-      Map<String, dynamic> decoded = {};
-      String backendMessage = '';
-      Map<String, dynamic>? profileData;
-
-      try {
-        decoded = jsonDecode(response.body) as Map<String, dynamic>;
-        backendMessage = decoded['message'] as String? ?? '';
-
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          profileData =
-              decoded['logEntry']?['profile'] as Map<String, dynamic>?;
-        }
-      } catch (e) {
-        debugPrint('Failed to parse response: $e');
-      }
-
-      final isSuccess =
-          response.statusCode == 200 || response.statusCode == 201;
-
-      return {
-        'success': isSuccess,
-        'statusCode': response.statusCode,
-        'body': response.body,
-        'profile': profileData,
-        'message': backendMessage,
-      };
-    } catch (e) {
-      debugPrint('XP Service Error: $e');
-      return {
-        'success': false,
-        'statusCode': -1,
-        'body': 'Error: $e',
-        'message': 'Network error occurred',
-      };
-    }
-  }
-}
 
 // ─── PopUpDialogue ───────────────────────────────────────────────────────────
 
@@ -102,57 +35,39 @@ class PopUpDialogue extends StatelessWidget {
   Future<void> _handleCollectRewards(BuildContext context) async {
     if (_isLoading.value) return;
 
-    if (accessToken.isEmpty || refreshToken.isEmpty) {
-      await SharedPreferencesHelper.saveLastDailyLoginTimestamp(DateTime.now());
-      onCollectRewards?.call();
-      EasyLoading.showSuccess('✓ You earned $dailyLoginXpAmount XP!');
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.of(context, rootNavigator: true).pop();
-      });
-      return;
-    }
-
     _isLoading.value = true;
+    try {
+      final response = await HomeService().claimDailyLoginReward();
+      _isLoading.value = false;
 
-    final response = await _XpService.addDailyRewardXP(
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-    );
+      final isSuccess = response['success'] as bool? ?? false;
+      final xpAwarded = response['xpAwarded'] as int? ?? 0;
+      final backendMessage = response['message'] as String? ?? '';
 
-    _isLoading.value = false;
+      if (isSuccess) {
+        debugPrint('✓ XP successfully processed!');
+        onCollectRewards?.call();
 
-    final isSuccess = response['success'] as bool;
-    final backendMessage = response['message'] as String? ?? '';
+        final message = xpAwarded > 0
+            ? '✓ You earned +$xpAwarded XP!'
+            : (backendMessage.isNotEmpty
+                ? backendMessage
+                : '✓ Daily reward already claimed for today!');
 
-    if (isSuccess) {
-      debugPrint('✓ XP successfully collected!');
+        EasyLoading.showSuccess(message, duration: const Duration(seconds: 3));
 
-      // Save the current timestamp for 24-hour cooldown
-      await SharedPreferencesHelper.saveLastDailyLoginTimestamp(DateTime.now());
-
-      onCollectRewards?.call();
-
-      // Show success toast with backend message or default message
-      final message = backendMessage.isNotEmpty
-          ? backendMessage
-          : '✓ You earned $dailyLoginXpAmount XP!';
-
-      EasyLoading.showSuccess(message, duration: const Duration(seconds: 3));
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.of(context, rootNavigator: true).pop();
-      });
-    } else {
-      debugPrint(
-        '✗ Failed to collect XP. Status: ${response['statusCode']}, Body: ${response['body']}',
-      );
-
-      // Show backend error message or generic error
-      final errorMessage = backendMessage.isNotEmpty
-          ? backendMessage
-          : 'Failed to collect rewards. Status: ${response['statusCode']}';
-
-      EasyLoading.showError(errorMessage);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.of(context, rootNavigator: true).pop();
+        });
+      } else {
+        final errorMessage = backendMessage.isNotEmpty
+            ? backendMessage
+            : 'Failed to collect rewards.';
+        EasyLoading.showError(errorMessage);
+      }
+    } catch (e) {
+      _isLoading.value = false;
+      EasyLoading.showError('Error: $e');
     }
   }
 

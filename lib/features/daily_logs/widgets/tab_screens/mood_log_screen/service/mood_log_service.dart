@@ -32,12 +32,27 @@ class MoodLogService {
       debugPrint('MoodLog today status: ${response.statusCode}');
       debugPrint('MoodLog today body  : ${response.body}');
 
-      if (response.statusCode == 404) return null;
+      if (response.statusCode == 404 || response.statusCode == 204) return null;
+
+      final rawBody = response.body.trim();
+      if (rawBody.isEmpty || rawBody == 'null' || rawBody == '{}') return null;
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        return MoodLogResponse.fromJson(
-          jsonDecode(response.body) as Map<String, dynamic>,
-        );
+        final dynamic decoded = jsonDecode(rawBody);
+        if (decoded == null) return null;
+        if (decoded is Map<String, dynamic>) {
+          if (decoded.isEmpty) return null;
+          final target = (decoded['data'] is Map<String, dynamic>)
+              ? decoded['data'] as Map<String, dynamic>
+              : (decoded['log'] is Map<String, dynamic>)
+                  ? decoded['log'] as Map<String, dynamic>
+                  : decoded;
+          if (target.isEmpty || (target['id'] == null && target['mood'] == null)) {
+            return null;
+          }
+          return MoodLogResponse.fromJson(target);
+        }
+        return null;
       }
 
       throw MoodLogException(

@@ -261,6 +261,10 @@ class StepJourneyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(StepJourneyController());
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.checkAndShowRoyalSummons(context);
+    });
+
     return GetBuilder<AppThemeController>(
       builder: (themeController) {
         final theme = themeController.activeTheme;
@@ -308,6 +312,41 @@ class StepJourneyScreen extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () => controller.openRoyalSummons(context),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF261938).withValues(alpha: 0.8),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: const Color(0xFFFFD700),
+                            width: 1.0,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.history_edu_rounded,
+                              size: 15,
+                              color: Color(0xFFFFD700),
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              'Royal Decree',
+                              style: getTextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFFFFD700),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
                   ],
                 ),
               ),
@@ -330,6 +369,65 @@ class StepJourneyScreen extends StatelessWidget {
                     currentSteps: controller.steps.value,
                     goal: controller.goal.value,
                     lifetimeSteps: controller.lifetimeSteps.value,
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Realm Expedition Narrative Banner
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF161024).withValues(alpha: 0.92),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: const Color(0xFFD6B36A).withValues(alpha: 0.6),
+                      width: 1.0,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(7),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: const Color(0xFFFFD700).withValues(alpha: 0.15),
+                        ),
+                        child: const Icon(
+                          Icons.explore_rounded,
+                          size: 18,
+                          color: Color(0xFFFFD700),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          "\"Every step you take in your world carries you farther through ours. Walk, explore, and uncover the secrets awaiting you along the road to the Shattered Citadel.\"",
+                          style: getTextStyle(
+                            fontSize: 11.5,
+                            color: Colors.white.withValues(alpha: 0.92),
+                          ).copyWith(fontStyle: FontStyle.italic, height: 1.35),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      GestureDetector(
+                        onTap: () => controller.openRoyalSummons(context),
+                        child: Container(
+                          padding: const EdgeInsets.all(7),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color(0xFF261938),
+                            border: Border.all(
+                              color: const Color(0xFFFFD700).withValues(alpha: 0.8),
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.history_edu_rounded,
+                            size: 16,
+                            color: Color(0xFFFFD700),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 14),
