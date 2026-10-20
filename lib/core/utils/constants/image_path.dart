@@ -65,13 +65,17 @@ class ImagePath {
   static const String welcomeBackReader = 'assets/images/welcomebackreader.png';
 
   // New Master Path Artworks
-  static const String pathAdventurer = 'assets/images/paths/path_adventurer.png';
+  static const String pathAdventurer =
+      'assets/images/paths/path_adventurer.png';
   static const String pathMage = 'assets/images/paths/path_mage.png';
-  static const String pathRealmwalker = 'assets/images/paths/path_realmwalker.png';
+  static const String pathRealmwalker =
+      'assets/images/paths/path_realmwalker.png';
   static const String pathScribe = 'assets/images/paths/path_scribe.png';
-  static const String emblemAdventurer = 'assets/images/paths/emblem_adventurer.png';
+  static const String emblemAdventurer =
+      'assets/images/paths/emblem_adventurer.png';
   static const String emblemMage = 'assets/images/paths/emblem_mage.png';
-  static const String emblemRealmwalker = 'assets/images/paths/emblem_realmwalker.png';
+  static const String emblemRealmwalker =
+      'assets/images/paths/emblem_realmwalker.png';
   static const String emblemScribe = 'assets/images/paths/emblem_scribe.png';
 
   // Master Companion Artworks & Full Poses
@@ -83,20 +87,28 @@ class ImagePath {
   static const String thyraPose4 = 'assets/images/companions/thyra_pose_4.png';
   static const String thyraPose5 = 'assets/images/companions/thyra_pose_5.png';
 
-  static const String generalLeon = 'assets/images/companions/general_leon_portrait.png';
-  static const String generalLeonFull = 'assets/images/companions/general_leon_full.png';
+  static const String generalLeon =
+      'assets/images/companions/general_leon_portrait.png';
+  static const String generalLeonFull =
+      'assets/images/companions/general_leon_full.png';
   static const String leonPose1 = 'assets/images/companions/leon_pose_1.png';
   static const String leonPose2 = 'assets/images/companions/leon_pose_2.png';
   static const String leonPose3 = 'assets/images/companions/leon_pose_3.png';
   static const String leonPose4 = 'assets/images/companions/leon_pose_4.png';
   static const String leonPose5 = 'assets/images/companions/leon_pose_5.png';
 
-  static const String visepheron = 'assets/images/companions/visepheron_portrait.png';
-  static const String visepheronFull = 'assets/images/companions/visepheron_full.png';
-  static const String visepheronPose1 = 'assets/images/companions/visepheron_pose_1.png';
-  static const String visepheronPose2 = 'assets/images/companions/visepheron_pose_2.png';
-  static const String visepheronPose3 = 'assets/images/companions/visepheron_pose_3.png';
-  static const String visepheronPose4 = 'assets/images/companions/visepheron_pose_4.png';
+  static const String visepheron =
+      'assets/images/companions/visepheron_portrait.png';
+  static const String visepheronFull =
+      'assets/images/companions/visepheron_full.png';
+  static const String visepheronPose1 =
+      'assets/images/companions/visepheron_pose_1.png';
+  static const String visepheronPose2 =
+      'assets/images/companions/visepheron_pose_2.png';
+  static const String visepheronPose3 =
+      'assets/images/companions/visepheron_pose_3.png';
+  static const String visepheronPose4 =
+      'assets/images/companions/visepheron_pose_4.png';
 
   static const String riven = 'assets/images/companions/riven_portrait.png';
   static const String rivenFull = 'assets/images/companions/riven_full.png';
@@ -108,31 +120,49 @@ class ImagePath {
   // Backward compatibility alias / mappings
   static const String serKael = 'assets/images/companions/thyra_portrait.png';
   static const String rvenAshcroft = 'assets/images/riven.png';
-  static const String pyraxis = 'assets/images/companions/visepheron_portrait.png';
-  static const String bramIronledger = 'assets/images/companions/general_leon_portrait.png';
+  static const String pyraxis =
+      'assets/images/companions/visepheron_portrait.png';
+  static const String bramIronledger =
+      'assets/images/companions/general_leon_portrait.png';
 
   static const String congratulations = 'assets/images/congratulations.png';
   static const String potionFlaskBlue = 'assets/images/potion_flask_blue.png';
-  static const String fantasyAdventureMap = 'assets/images/fantasy_adventure_map.png';
-  static const String campTentFire = 'assets/images/campsite/camp_thumbnail.png';
-  static const String campThumbnail = 'assets/images/campsite/camp_thumbnail.png';
+  static const String fantasyAdventureMap =
+      'assets/images/aevaryn_map_1536x1024.jpg';
+  static const String aevarynMap = 'assets/images/aevaryn_map_1536x1024.jpg';
+  static const String campTentFire =
+      'assets/images/campsite/camp_thumbnail.png';
+  static const String campThumbnail =
+      'assets/images/campsite/camp_thumbnail.png';
 
   // Campsite Art & Resting Companions
-  static const String campsiteScene = 'assets/images/campsite/campsite_scene.png';
+  static const String campsiteScene =
+      'assets/images/campsite/campsite_scene.png';
   static const String rivenResting = 'assets/images/campsite/riven_resting.png';
   static const String thyraResting = 'assets/images/campsite/thyra_resting.png';
   static const String leonResting = 'assets/images/campsite/leon_resting.png';
-  static const String visepheronResting = 'assets/images/campsite/visepheron_resting.png';
+  static const String visepheronResting =
+      'assets/images/campsite/visepheron_resting.png';
 
   // Dynamic Landmark Campsite Artwork
-  static const String landmarkArch = 'assets/images/campsite/landmark_1_arch.png';
-  static const String landmarkWhisperwood = 'assets/images/campsite/landmark_2_whisperwood.png';
-  static const String landmarkCrossing = 'assets/images/campsite/landmark_3_crossing.png';
-  static const String landmarkVael = 'assets/images/campsite/landmark_4_vael.png';
-  static const String landmarkMarsh = 'assets/images/campsite/landmark_5_marsh.png';
-  static const String landmarkWatchtower = 'assets/images/campsite/landmark_6_watchtower.png';
-  static const String landmarkAshenPass = 'assets/images/campsite/landmark_7_ashen_pass.png';
-  static const String landmarkKingsRoad = 'assets/images/campsite/landmark_8_kings_road.png';
-  static const String landmarkObsidianKeep = 'assets/images/campsite/landmark_9_obsidian_keep.png';
-  static const String landmarkCitadel = 'assets/images/campsite/landmark_10_citadel.png';
+  static const String landmarkArch =
+      'assets/images/campsite/landmark_1_arch.png';
+  static const String landmarkWhisperwood =
+      'assets/images/campsite/landmark_2_whisperwood.png';
+  static const String landmarkCrossing =
+      'assets/images/campsite/landmark_3_crossing.png';
+  static const String landmarkVael =
+      'assets/images/campsite/landmark_4_vael.png';
+  static const String landmarkMarsh =
+      'assets/images/campsite/landmark_5_marsh.png';
+  static const String landmarkWatchtower =
+      'assets/images/campsite/landmark_6_watchtower.png';
+  static const String landmarkAshenPass =
+      'assets/images/campsite/landmark_7_ashen_pass.png';
+  static const String landmarkKingsRoad =
+      'assets/images/campsite/landmark_8_kings_road.png';
+  static const String landmarkObsidianKeep =
+      'assets/images/campsite/landmark_9_obsidian_keep.png';
+  static const String landmarkCitadel =
+      'assets/images/campsite/landmark_10_citadel.png';
 }

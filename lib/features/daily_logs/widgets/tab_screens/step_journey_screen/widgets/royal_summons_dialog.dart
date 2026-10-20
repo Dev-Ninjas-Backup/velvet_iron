@@ -30,7 +30,7 @@ class RoyalSummonsDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final maxHeight = size.height * 0.82;
+    final maxHeight = size.height * 0.84;
 
     return PopScope(
       canPop: isReread,
@@ -44,20 +44,21 @@ class RoyalSummonsDialog extends StatelessWidget {
           ),
           child: Container(
             decoration: BoxDecoration(
-              color: const Color(0xFF140F22),
+              // Weathered antique parchment outer frame
+              color: const Color(0xFFF3E4BE),
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                color: const Color(0xFFFFD700),
-                width: 2.0,
+                color: const Color(0xFF8B6425),
+                width: 2.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFFFD700).withValues(alpha: 0.18),
-                  blurRadius: 30,
+                  color: const Color(0xFF8B6425).withValues(alpha: 0.35),
+                  blurRadius: 28,
                   spreadRadius: 2,
                 ),
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.85),
+                  color: Colors.black.withValues(alpha: 0.75),
                   blurRadius: 24,
                   offset: const Offset(0, 10),
                 ),
@@ -67,51 +68,98 @@ class RoyalSummonsDialog extends StatelessWidget {
               borderRadius: BorderRadius.circular(22),
               child: Stack(
                 children: [
-                  // Inner subtle vignette/parchment background
+                  // 1. Authentic Aged Weathered Parchment Background
+                  Positioned.fill(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        gradient: RadialGradient(
+                          center: Alignment(0.0, -0.1),
+                          radius: 1.15,
+                          colors: [
+                            Color(0xFFFCF5E0), // Warm ivory parchment center
+                            Color(0xFFF4E5BD), // Classic aged vellum
+                            Color(0xFFE4CCA0), // Weathered shading
+                            Color(0xFFD4B77C), // Burnt vintage edge
+                          ],
+                          stops: [0.0, 0.45, 0.80, 1.0],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // 2. Subtle parchment fiber / texture overlay
                   Positioned.fill(
                     child: Container(
                       decoration: BoxDecoration(
-                        gradient: RadialGradient(
-                          center: Alignment.center,
-                          radius: 1.2,
+                        border: Border.all(
+                          color: const Color(0xFFC4A25C).withValues(alpha: 0.45),
+                          width: 1.0,
+                        ),
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
                           colors: [
-                            const Color(0xFF261938).withValues(alpha: 0.7),
-                            const Color(0xFF100B1B),
+                            const Color(0xFF7A4E1D).withValues(alpha: 0.08),
+                            Colors.transparent,
+                            const Color(0xFF5E3911).withValues(alpha: 0.12),
                           ],
                         ),
                       ),
                     ),
                   ),
 
-                  // Main Content
+                  // 3. Inner Decorative Imperial Border
+                  Positioned.fill(
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          border: Border.all(
+                            color: const Color(0xFFB88C38).withValues(alpha: 0.55),
+                            width: 1.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // 4. Main Scroll Content
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Header Banner
+                      // Header Parchment Ribbon
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 14),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF0F0B18).withValues(alpha: 0.9),
+                          color: const Color(0xFFE8D4A2).withValues(alpha: 0.95),
                           border: const Border(
                             bottom: BorderSide(
-                              color: Color(0xFFD6B36A),
-                              width: 1.2,
+                              color: Color(0xFFB38628),
+                              width: 1.4,
                             ),
                           ),
                         ),
                         child: Column(
                           children: [
-                            // Crown Icon with ambient glow
+                            // Royal Crown Crest Seal
                             Container(
-                              padding: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(9),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: const Color(0xFFFFD700).withValues(alpha: 0.15),
+                                color: const Color(0xFF851A1A),
                                 border: Border.all(
-                                  color: const Color(0xFFFFD700),
-                                  width: 1.5,
+                                  color: const Color(0xFFE5B947),
+                                  width: 2.0,
                                 ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.3),
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
                               ),
                               child: const Icon(
                                 Icons.castle_rounded,
@@ -125,9 +173,9 @@ class RoyalSummonsDialog extends StatelessWidget {
                               'BY DECREE OF THE HIGH KING AND QUEEN',
                               textAlign: TextAlign.center,
                               style: getTextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w800,
-                                color: const Color(0xFFFFD700),
+                                fontSize: 14.5,
+                                fontWeight: FontWeight.w900,
+                                color: const Color(0xFF381206),
                               ).copyWith(letterSpacing: 1.1),
                             ),
                             const SizedBox(height: 4),
@@ -137,8 +185,8 @@ class RoyalSummonsDialog extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: getTextStyle(
                                 fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: const Color(0xFFD6B36A),
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF6B391A),
                               ).copyWith(fontStyle: FontStyle.italic),
                             ),
                           ],
@@ -154,7 +202,7 @@ class RoyalSummonsDialog extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Dramatic Opening
+                                // Dramatic Opening Banner
                                 Container(
                                   width: double.infinity,
                                   padding: const EdgeInsets.symmetric(
@@ -162,12 +210,19 @@ class RoyalSummonsDialog extends StatelessWidget {
                                     vertical: 10,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF2B141E).withValues(alpha: 0.6),
+                                    color: const Color(0xFFFDE8E8),
                                     borderRadius: BorderRadius.circular(10),
                                     border: Border.all(
-                                      color: const Color(0xFFE57373).withValues(alpha: 0.4),
-                                      width: 1,
+                                      color: const Color(0xFFA83232),
+                                      width: 1.2,
                                     ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color(0xFFA83232).withValues(alpha: 0.15),
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 1),
+                                      ),
+                                    ],
                                   ),
                                   child: Text(
                                     'The Shattered Citadel has fallen.',
@@ -175,7 +230,7 @@ class RoyalSummonsDialog extends StatelessWidget {
                                     style: getTextStyle(
                                       fontSize: 14.5,
                                       fontWeight: FontWeight.w800,
-                                      color: const Color(0xFFFF8A80),
+                                      color: const Color(0xFF781616),
                                     ).copyWith(letterSpacing: 0.6),
                                   ),
                                 ),
@@ -198,9 +253,9 @@ class RoyalSummonsDialog extends StatelessWidget {
                                   child: Text(
                                     'And yet, hope remains.',
                                     style: getTextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      color: const Color(0xFFFFD700),
+                                      fontSize: 14.5,
+                                      fontWeight: FontWeight.w800,
+                                      color: const Color(0xFF7E4E03),
                                     ).copyWith(fontStyle: FontStyle.italic),
                                   ),
                                 ),
@@ -229,30 +284,38 @@ class RoyalSummonsDialog extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 16),
 
+                                // Royal Callout Cartouche
                                 Container(
                                   width: double.infinity,
                                   padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFFFD700).withValues(alpha: 0.08),
+                                    color: const Color(0xFFF4E2B4),
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
-                                      color: const Color(0xFFFFD700).withValues(alpha: 0.35),
-                                      width: 1,
+                                      color: const Color(0xFFB8860B),
+                                      width: 1.4,
                                     ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color(0xFFB8860B).withValues(alpha: 0.15),
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 1),
+                                      ),
+                                    ],
                                   ),
                                   child: Text(
                                     'Answer the summons. Begin your journey. The realm awaits.',
                                     textAlign: TextAlign.center,
                                     style: getTextStyle(
                                       fontSize: 13.5,
-                                      fontWeight: FontWeight.w700,
-                                      color: const Color(0xFFFFE082),
+                                      fontWeight: FontWeight.w800,
+                                      color: const Color(0xFF381C03),
                                     ),
                                   ),
                                 ),
                                 const SizedBox(height: 18),
 
-                                // Royal Sign-off & Seal
+                                // Royal Sign-off & Wax Seal
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -263,37 +326,37 @@ class RoyalSummonsDialog extends StatelessWidget {
                                         Text(
                                           'By Order of Their Royal Majesties,',
                                           style: getTextStyle(
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white70,
+                                            fontSize: 11.5,
+                                            fontWeight: FontWeight.w600,
+                                            color: const Color(0xFF5E391A),
                                           ).copyWith(fontStyle: FontStyle.italic),
                                         ),
                                         const SizedBox(height: 2),
                                         Text(
                                           'The High King and Queen',
                                           style: getTextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.bold,
-                                            color: const Color(0xFFFFD700),
+                                            fontSize: 13.5,
+                                            fontWeight: FontWeight.w900,
+                                            color: const Color(0xFF381206),
                                           ),
                                         ),
                                       ],
                                     ),
                                     const SizedBox(width: 12),
                                     Container(
-                                      width: 36,
-                                      height: 36,
+                                      width: 38,
+                                      height: 38,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: const Color(0xFF7A1C1C),
+                                        color: const Color(0xFF8B1818),
                                         border: Border.all(
-                                          color: const Color(0xFFFFD700),
-                                          width: 1.5,
+                                          color: const Color(0xFFD4AF37),
+                                          width: 1.8,
                                         ),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Colors.black.withValues(alpha: 0.5),
-                                            blurRadius: 4,
+                                            color: Colors.black.withValues(alpha: 0.4),
+                                            blurRadius: 5,
                                             offset: const Offset(0, 2),
                                           ),
                                         ],
@@ -301,7 +364,7 @@ class RoyalSummonsDialog extends StatelessWidget {
                                       child: const Icon(
                                         Icons.shield_rounded,
                                         color: Color(0xFFFFD700),
-                                        size: 18,
+                                        size: 19,
                                       ),
                                     ),
                                   ],
@@ -312,16 +375,16 @@ class RoyalSummonsDialog extends StatelessWidget {
                         ),
                       ),
 
-                      // Action Button
+                      // Action Button Footer
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.fromLTRB(20, 12, 20, 18),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF0F0B18).withValues(alpha: 0.95),
-                          border: const Border(
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFE6D09A),
+                          border: Border(
                             top: BorderSide(
-                              color: Color(0xFFD6B36A),
-                              width: 1.0,
+                              color: Color(0xFFB8860B),
+                              width: 1.2,
                             ),
                           ),
                         ),
@@ -348,16 +411,16 @@ class RoyalSummonsDialog extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.6),
+                            color: const Color(0xFF4A2E14),
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: const Color(0xFFD6B36A),
-                              width: 1,
+                              color: const Color(0xFFB8860B),
+                              width: 1.2,
                             ),
                           ),
                           child: const Icon(
                             Icons.close,
-                            color: Colors.white70,
+                            color: Color(0xFFFFE082),
                             size: 16,
                           ),
                         ),
@@ -376,9 +439,9 @@ class RoyalSummonsDialog extends StatelessWidget {
     return Text(
       text,
       style: getTextStyle(
-        fontSize: 12.5,
-        color: Colors.white.withValues(alpha: 0.92),
-      ).copyWith(height: 1.45),
+        fontSize: 12.8,
+        color: const Color(0xFF221408),
+      ).copyWith(height: 1.48, letterSpacing: 0.15),
     );
   }
 }
