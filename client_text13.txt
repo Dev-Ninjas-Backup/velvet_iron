@@ -1,0 +1,35 @@
+I've found two additional issues while testing the latest build. I've attached screenshots for reference.
+
+3. Weekly XP Graph – Incorrect Data
+
+I've earned over 100 XP, but the Weekly Activity graph isn't displaying my XP correctly.
+
+The graph shows only a few bars, and the values don't appear to reflect the XP I've actually earned.
+
+Please verify the following:
+
+- All earned XP is recorded under the correct day according to the user's LOCAL timezone, not the server/developer timezone.
+- The graph accurately totals XP from all completed quests and eligible activities.
+- The graph updates immediately after XP is awarded.
+- The weekly totals match the user's actual earned XP history.
+- All seven days display correctly, including days with zero XP.
+
+I also noticed that the graph has a bar for Tuesday even though it's currently Monday evening here in Wisconsin. Please check whether this is another timezone issue.
+
+4. Custom Quest – Unable to Complete
+
+I created a custom quest called "Study Italian" for 30 minutes, worth 5 XP.
+
+It appears correctly under Today's Quests, but I cannot mark it as completed.
+
+Please ensure:
+
+- Custom quests can be completed directly from Today's Quests.
+- Completing the quest awards the exact XP amount configured by the user.
+- The quest immediately updates to completed status.
+- The awarded XP is reflected in the user's XP total and Weekly Activity graph.
+- Both one-time and recurring custom quests function correctly.
+
+Please test these issues thoroughly before sending the next build. These are core tracking features, and it's important that they work consistently without breaking other existing functionality.
+
+Thank you!

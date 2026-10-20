@@ -48,63 +48,63 @@ class FantasyMapWidget extends StatefulWidget {
       name: "Wayfarer's Arch",
       shortName: "Wayfarer's Arch",
       lore: "An old stone arch straddles the road, its weathered runes faintly lit despite the absence of any spellcaster.",
-      fraction: 0.09,
+      fraction: 0.076,
     ),
     JourneyMilestone(
       stepMilestone: 75000,
       name: "Whisperwood",
       shortName: "Whisperwood",
       lore: "The forest grows unnaturally quiet as the road disappears beneath silver roots. Living things sense the disturbance.",
-      fraction: 0.19,
+      fraction: 0.168,
     ),
     JourneyMilestone(
       stepMilestone: 150000,
       name: "Blackwater Crossing",
       shortName: "Blackwater",
       lore: "A broad river crossing carrying turbulent violet currents, showing evidence that something crossed into Aevaryn.",
-      fraction: 0.29,
+      fraction: 0.289,
     ),
     JourneyMilestone(
       stepMilestone: 250000,
       name: "The Ruins of Vael",
       shortName: "Ruins of Vael",
       lore: "Ancient stone colonnades stand half-swallowed by earth and ivy, proving this phenomenon has occurred before.",
-      fraction: 0.40,
+      fraction: 0.350,
     ),
     JourneyMilestone(
       stepMilestone: 375000,
       name: "The Witchlight Marsh",
       shortName: "Witchlight Marsh",
       lore: "Mist clings to dark waters where pale lights drift between twisted weeping willows as foreign energies bleed together.",
-      fraction: 0.52,
+      fraction: 0.491,
     ),
     JourneyMilestone(
       stepMilestone: 500000,
       name: "The Hollow Watchtower",
       shortName: "Watchtower",
       lore: "A massive imperial spire towers above the bluffs, vacant for centuries. The halfway mark to the Citadel.",
-      fraction: 0.64,
+      fraction: 0.626,
     ),
     JourneyMilestone(
       stepMilestone: 625000,
       name: "The Ashen Pass",
       shortName: "Ashen Pass",
       lore: "Jagged grey cliffs rise steep and unforgiving, dusted with volcanic grey sediment as disturbances accelerate.",
-      fraction: 0.74,
+      fraction: 0.701,
     ),
     JourneyMilestone(
       stepMilestone: 750000,
       name: "The Fallen King's Road",
       shortName: "King's Road",
       lore: "Paved with massive basalt blocks, this historic highway once carried royal legions toward the primal gateway.",
-      fraction: 0.83,
+      fraction: 0.798,
     ),
     JourneyMilestone(
       stepMilestone: 875000,
       name: "The Obsidian Keep",
       shortName: "Obsidian Keep",
       lore: "Dark glass-like stone reflects lightning from distant unnatural storms near the borders of the portal crater.",
-      fraction: 0.91,
+      fraction: 0.905,
     ),
     JourneyMilestone(
       stepMilestone: 1000000,
@@ -143,8 +143,8 @@ class _FantasyMapWidgetState extends State<FantasyMapWidget> {
       }
     }
 
-    // If tapped within 36px of any landmark marker
-    if (closestIndex != null && minDistance < 36.0) {
+    // If tapped within 42px of any landmark marker
+    if (closestIndex != null && minDistance < 42.0) {
       final milestone = FantasyMapWidget.journeyMilestones[closestIndex];
       _showMilestoneBottomSheet(context, milestone);
     }
@@ -538,8 +538,12 @@ class _FantasyMapWidgetState extends State<FantasyMapWidget> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        const double canvasHeight = 220;
-        final mapSize = Size(constraints.maxWidth, canvasHeight);
+        final double canvasWidth = constraints.maxWidth;
+        // The Aevaryn continent map artwork has aspect ratio 1536 x 1024 = 1.5 (3:2)
+        // By sizing height = width / 1.5, the container matches the exact dimensions of the image
+        // and displays in full without cropping any part of the map.
+        final double canvasHeight = canvasWidth / 1.5;
+        final mapSize = Size(canvasWidth, canvasHeight);
 
         return Container(
           decoration: BoxDecoration(
@@ -715,18 +719,19 @@ class _FantasyMapWidgetState extends State<FantasyMapWidget> {
 
                 // Interactive Map Canvas Area
                 SizedBox(
+                  width: canvasWidth,
                   height: canvasHeight,
                   child: Stack(
                     children: [
-                      // 1. Aged Fantasy Map Parchment Background
+                      // 1. Aevaryn Continent Map Background (1536 x 1024, exact aspect ratio)
                       Positioned.fill(
                         child: Image.asset(
-                          ImagePath.fantasyAdventureMap,
-                          fit: BoxFit.cover,
+                          ImagePath.aevarynMap,
+                          fit: BoxFit.fill,
                         ),
                       ),
 
-                      // 2. Dark Vignette Gradient
+                      // 2. Subtle Vignette Gradient
                       Positioned.fill(
                         child: Container(
                           decoration: BoxDecoration(
@@ -734,8 +739,8 @@ class _FantasyMapWidgetState extends State<FantasyMapWidget> {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
-                                Colors.black.withValues(alpha: 0.15),
-                                Colors.black.withValues(alpha: 0.45),
+                                Colors.black.withValues(alpha: 0.05),
+                                Colors.black.withValues(alpha: 0.20),
                               ],
                             ),
                           ),
@@ -939,25 +944,49 @@ class _WindingTrailPainter extends CustomPainter {
     final w = size.width;
     final h = size.height;
 
-    // Define cohesive fantasy expedition waypoints across the realm:
-    // Gently ascending, organic progression from South-West (Outpost) to North-East (The Shattered Citadel)
-    final p0 = Offset(w * 0.09, h * 0.78); // 0: The Starting Outpost
-    final p1 = Offset(w * 0.17, h * 0.68); // 1: The Wayfarer's Arch (25k)
-    final p2 = Offset(w * 0.27, h * 0.58); // 2: Whisperwood (75k)
-    final p3 = Offset(w * 0.37, h * 0.65); // 3: Blackwater Crossing (150k)
-    final p4 = Offset(w * 0.47, h * 0.53); // 4: The Ruins of Vael (250k)
-    final p5 = Offset(w * 0.57, h * 0.64); // 5: The Witchlight Marsh (375k)
-    final p6 = Offset(w * 0.67, h * 0.47); // 6: The Hollow Watchtower (500k)
-    final p7 = Offset(w * 0.75, h * 0.56); // 7: The Ashen Pass (625k)
-    final p8 = Offset(w * 0.82, h * 0.45); // 8: The Fallen King's Road (750k)
-    final p9 = Offset(w * 0.88, h * 0.53); // 9: The Obsidian Keep (875k)
-    final p10 = Offset(w * 0.90, h * 0.30); // 10: The Shattered Citadel (1M)
+    // The 11 milestone landmarks on the Aevaryn continent map (1536 x 1024)
+    final p0 = Offset(w * (127 / 1536), h * (810 / 1024)); // 0: The Outpost (0 steps)
+    final p1 = Offset(w * (215 / 1536), h * (610 / 1024)); // 1: Wayfarer's Arch (25k)
+    final p2 = Offset(w * (385 / 1536), h * (420 / 1024)); // 2: Whisperwood (75k)
+    final p3 = Offset(w * (670 / 1536), h * (615 / 1024)); // 3: Blackwater Crossing (150k)
+    final p4 = Offset(w * (750 / 1536), h * (765 / 1024)); // 4: The Ruins of Vael (250k)
+    final p5 = Offset(w * (1130 / 1536), h * (725 / 1024)); // 5: The Witchlight Marsh (375k)
+    final p6 = Offset(w * (915 / 1536), h * (425 / 1024)); // 6: The Hollow Watchtower (500k)
+    final p7 = Offset(w * (860 / 1536), h * (220 / 1024)); // 7: The Ashen Pass (625k)
+    final p8 = Offset(w * (1130 / 1536), h * (275 / 1024)); // 8: The Fallen King's Road (750k)
+    final p9 = Offset(w * (1400 / 1536), h * (420 / 1024)); // 9: The Obsidian Keep (875k)
+    final p10 = Offset(w * (1415 / 1536), h * (155 / 1024)); // 10: The Shattered Citadel (1M)
 
     final milestoneAnchors = [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10];
     onPositionsCalculated?.call(milestoneAnchors);
 
-    // Build silky-smooth continuous cubic spline passing through all 11 landmarks
-    final path = _buildSmoothCurvedPath(milestoneAnchors);
+    // Natural geographic route waypoints following rivers, temple ruins, marshland, mountains, and roads:
+    final naturalPathWaypoints = [
+      p0, // 0: The Outpost
+      Offset(w * (168 / 1536), h * (715 / 1024)), // Coastal road between Outpost and Arch
+      p1, // 1: Wayfarer's Arch
+      Offset(w * (265 / 1536), h * (515 / 1024)), // Entering Whisperwood tree line
+      p2, // 2: Whisperwood
+      Offset(w * (515 / 1536), h * (495 / 1024)), // Descending valley toward river
+      p3, // 3: Blackwater Crossing (rapids)
+      Offset(w * (715 / 1536), h * (690 / 1024)), // Southern riverbank
+      p4, // 4: The Ruins of Vael (temple peninsula)
+      Offset(w * (920 / 1536), h * (805 / 1024)), // Southern coast trail toward marsh
+      p5, // 5: The Witchlight Marsh
+      Offset(w * (1070 / 1536), h * (570 / 1024)), // Winding northwest past marsh
+      p6, // 6: The Hollow Watchtower
+      Offset(w * (880 / 1536), h * (310 / 1024)), // Mountain pass gorge ascending north
+      p7, // 7: The Ashen Pass
+      Offset(w * (980 / 1536), h * (240 / 1024)), // Ridge path descending to highway
+      p8, // 8: The Fallen King's Road (raised bridge highway)
+      Offset(w * (1270 / 1536), h * (345 / 1024)), // Basalt highway heading toward Keep
+      p9, // 9: The Obsidian Keep
+      Offset(w * (1425 / 1536), h * (290 / 1024)), // Cliff switchback path
+      p10, // 10: The Shattered Citadel
+    ];
+
+    // Build silky-smooth continuous cubic spline passing through all landmarks along natural terrain
+    final path = _buildSmoothCurvedPath(naturalPathWaypoints);
 
     final pathMetrics = path.computeMetrics().toList();
     if (pathMetrics.isEmpty) return;
@@ -1034,7 +1063,7 @@ class _WindingTrailPainter extends CustomPainter {
       }
     }
 
-    // 4. Draw Milestone Pins & Readability Labels
+    // 4. Draw Milestone Pins & Interactive Destination Guidance
     final milestones = FantasyMapWidget.journeyMilestones;
 
     for (int i = 0; i < milestones.length; i++) {
@@ -1047,7 +1076,7 @@ class _WindingTrailPainter extends CustomPainter {
       if (isCitadel) {
         // Draw Grand Shattered Citadel Landmark
         final citadelHalo = Paint()
-          ..color = const Color(0xFFFFD700).withValues(alpha: 0.45)
+          ..color = const Color(0xFFFFD700).withValues(alpha: 0.50)
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
         canvas.drawCircle(pos, 15, citadelHalo);
 
@@ -1064,10 +1093,10 @@ class _WindingTrailPainter extends CustomPainter {
 
         canvas.drawCircle(pos, 4.0, Paint()..color = const Color(0xFFFFD700));
 
-        // Citadel Label safely positioned above/left to never collide with top buttons or other labels
+        // Citadel Label safely positioned above to highlight summit
         _drawPillLabel(
           canvas: canvas,
-          center: Offset(pos.dx - 14, pos.dy - 16),
+          center: Offset(pos.dx, pos.dy - 16),
           text: 'Citadel (1M)',
           isCitadel: true,
         );
@@ -1086,22 +1115,15 @@ class _WindingTrailPainter extends CustomPainter {
             ..strokeWidth = 1.5,
         );
         canvas.drawCircle(pos, 2.5, Paint()..color = Colors.white);
-
-        _drawPillLabel(
-          canvas: canvas,
-          center: Offset(pos.dx + 22, pos.dy + 14),
-          text: 'Outpost (0)',
-          isCitadel: false,
-        );
       } else {
         // Intermediate Journey Milestones
         if (isReached || isTarget) {
           final haloPaint = Paint()
             ..color = isTarget
-                ? const Color(0xFFFF9100).withValues(alpha: 0.45)
-                : const Color(0xFFFFD700).withValues(alpha: 0.30)
+                ? const Color(0xFFFF9100).withValues(alpha: 0.55)
+                : const Color(0xFFFFD700).withValues(alpha: 0.35)
             ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-          canvas.drawCircle(pos, 8.0, haloPaint);
+          canvas.drawCircle(pos, isTarget ? 10.0 : 8.0, haloPaint);
         }
 
         final pinPaint = Paint()
@@ -1109,54 +1131,31 @@ class _WindingTrailPainter extends CustomPainter {
               ? const Color(0xFFE5A93C)
               : (isTarget ? const Color(0xFFFF9100) : const Color(0xFF2B2035))
           ..style = PaintingStyle.fill;
-        canvas.drawCircle(pos, isTarget ? 6.0 : 5.0, pinPaint);
+        canvas.drawCircle(pos, isTarget ? 6.5 : 5.0, pinPaint);
 
         canvas.drawCircle(
           pos,
-          isTarget ? 6.0 : 5.0,
+          isTarget ? 6.5 : 5.0,
           Paint()
             ..color = isReached
                 ? Colors.white
                 : (isTarget ? const Color(0xFFFFD700) : const Color(0xFF8C7355))
             ..style = PaintingStyle.stroke
-            ..strokeWidth = isTarget ? 1.8 : 1.2,
+            ..strokeWidth = isTarget ? 2.0 : 1.2,
         );
 
         if (isReached) {
           canvas.drawCircle(pos, 2.0, Paint()..color = const Color(0xFFFFD700));
         }
 
-        // Determine if this milestone should display a readable pill label:
-        // Key regional milestones:
-        // Whisperwood (i=2), Ruins of Vael (i=4), Hollow Watchtower (i=6)
-        // OR the user's active upcoming target milestone (isTarget)
-        final bool showLabel = (i == 2 || i == 4 || i == 6 || isTarget);
-
-        if (showLabel) {
-          // For i=1 (Wayfarer's Arch), place ABOVE so it never collides with Outpost below it
-          final bool placeAbove = (i == 1 || i % 2 == 0);
-          final labelCenter = Offset(
-            pos.dx,
-            placeAbove ? pos.dy - 16 : pos.dy + 16,
-          );
-
-          String labelText;
-          if (i == 2) {
-            labelText = 'Whisperwood';
-          } else if (i == 4) {
-            labelText = 'Ruins of Vael';
-          } else if (i == 6) {
-            labelText = 'Watchtower';
-          } else {
-            labelText = m.shortName;
-          }
-
+        // Display an illuminated callout pill for the active upcoming target landmark
+        if (isTarget) {
           _drawPillLabel(
             canvas: canvas,
-            center: labelCenter,
-            text: labelText,
+            center: Offset(pos.dx, pos.dy - 16),
+            text: 'Next: ${m.shortName}',
             isCitadel: false,
-            isCurrentTarget: isTarget,
+            isCurrentTarget: true,
           );
         }
       }
