@@ -65,26 +65,26 @@ class HomeController extends GetxController {
 
   // ── Chart data based on selected filter ─────────────────────
 
-  List<double> get chartData {
+  List<XPDayData> get currentChartDays {
     final profile = userProfile.value;
-    if (profile == null) return List.filled(7, 0.0);
-
+    if (profile == null) return [];
     if (selectedChartFilter.value == 'lastWeek') {
-      return profile.xpCharts.lastWeek.data
-          .map((d) => d.xp.toDouble())
-          .toList();
+      return profile.xpCharts.lastWeek.data;
     }
+    return profile.xpCharts.currentWeek.data;
+  }
 
-    // default: currentWeek
-    return profile.xpCharts.currentWeek.data
-        .map((d) => d.xp.toDouble())
-        .toList();
+  List<double> get chartData {
+    final days = currentChartDays;
+    if (days.isEmpty) return List.filled(7, 0.0);
+    return days.map((d) => d.xp.toDouble()).toList();
   }
 
   void selectChartFilter(String filter) {
     selectedChartFilter.value = filter;
     print('[HomeController] Chart filter changed → $filter');
     print('[HomeController] Chart data → $chartData');
+    update();
   }
 
   /// Navigate to any Daily Logs tab

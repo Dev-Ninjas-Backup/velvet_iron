@@ -69,7 +69,7 @@ class CalorieConsumptionCard extends StatelessWidget {
                     const Spacer(),
                     Container(
                       height: 22,
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: themeController.activeTheme.todoSubtitleColor
                             .withValues(alpha: 0.3),
@@ -77,6 +77,14 @@ class CalorieConsumptionCard extends StatelessWidget {
                         border: Border.all(
                           color: themeController.activeTheme.borderColor,
                           width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        mealController.selectedDateString.value,
+                        style: getTextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -88,6 +96,9 @@ class CalorieConsumptionCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: List.generate(_weekDayLabels.length, (index) {
                     final bool isActive = weekly[_weekDayKeys[index]] ?? false;
+                    final bool isSelected =
+                        mealController.selectedWeekdayIndex.value == index;
+
                     String dotIcon = isActive
                         ? (themeController.activeTheme.id == 'adventurer'
                               ? 'assets/icons/doticon_adventure.png'
@@ -98,46 +109,64 @@ class CalorieConsumptionCard extends StatelessWidget {
                               : 'assets/icons/doticon_reader.png')
                         : IconPath.whitecircle;
 
-                    return Container(
-                      width: 43,
-                      height: 60,
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      decoration: BoxDecoration(
-                        color: themeController.activeTheme.todoSubtitleColor
-                            .withValues(alpha: 0.4),
-                        borderRadius: BorderRadius.circular(50),
-                        border: isActive
-                            ? Border.all(
-                                color:
-                                    themeController.activeTheme.dateNameborder,
-                                width: 1,
-                              )
-                            : null,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Container(
-                                width: 24,
-                                height: 24,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
+                    return GestureDetector(
+                      onTap: () => mealController.selectWeekday(index),
+                      child: Container(
+                        width: 43,
+                        height: 60,
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? themeController.activeTheme.todoSubtitleColor
+                                  .withValues(alpha: 0.7)
+                              : themeController.activeTheme.todoSubtitleColor
+                                  .withValues(alpha: 0.4),
+                          borderRadius: BorderRadius.circular(50),
+                          border: isSelected
+                              ? Border.all(
+                                  color: themeController
+                                      .activeTheme
+                                      .dateNameborder,
+                                  width: 2,
+                                )
+                              : (isActive
+                                  ? Border.all(
+                                      color: themeController
+                                          .activeTheme
+                                          .dateNameborder
+                                          .withValues(alpha: 0.5),
+                                      width: 1,
+                                    )
+                                  : null),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Container(
+                                  width: 24,
+                                  height: 24,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                 ),
-                              ),
-                              Image.asset(dotIcon, width: 18, height: 18),
-                            ],
-                          ),
-                          Text(
-                            _weekDayLabels[index],
-                            style: getTextStyle(
-                              fontSize: 10,
-                              color: Colors.white,
+                                Image.asset(dotIcon, width: 18, height: 18),
+                              ],
                             ),
-                          ),
-                        ],
+                            Text(
+                              _weekDayLabels[index],
+                              style: getTextStyle(
+                                fontSize: 10,
+                                fontWeight: isSelected
+                                    ? FontWeight.w700
+                                    : FontWeight.w400,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   }),

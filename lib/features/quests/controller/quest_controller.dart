@@ -370,12 +370,22 @@ class QuestController extends GetxController {
 
       EasyLoading.show(status: 'Completing quest...');
       try {
-        await _service.completeUnifiedQuest(
-          questId: quest.originalRefId ?? quest.id,
-          questType: quest.questType,
-        );
-        print('🔵 [QuestController] Custom quest completed on server: ${quest.id}');
-        EasyLoading.showSuccess('+${quest.xp} XP Earned!');
+        if (quest.questType == 'CUSTOM' ||
+            quest.id.startsWith('custom_') ||
+            (quest.originalRefId != null && quest.originalRefId!.startsWith('custom_'))) {
+          final targetId = quest.originalRefId ?? quest.id;
+          final res = await _service.completeCustomQuest(targetId);
+          print('🔵 [QuestController] Custom quest completed on server: ${quest.id} -> $res');
+          final earnedXp = res['earnedXp'] ?? res['data']?['xpAwarded'] ?? quest.xp;
+          EasyLoading.showSuccess('+$earnedXp XP Earned!');
+        } else {
+          await _service.completeUnifiedQuest(
+            questId: quest.originalRefId ?? quest.id,
+            questType: quest.questType,
+          );
+          print('🔵 [QuestController] Quest completed on server: ${quest.id}');
+          EasyLoading.showSuccess('+${quest.xp} XP Earned!');
+        }
 
         try {
           final cached = await SharedPreferencesHelper.getActiveCompanion();

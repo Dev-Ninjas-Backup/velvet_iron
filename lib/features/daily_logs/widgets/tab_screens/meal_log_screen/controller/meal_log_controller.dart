@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:velvet_iron/core/services/app_timezone_helper.dart';
 import 'package:velvet_iron/core/services/companion_dialogue_engine.dart';
 import 'package:velvet_iron/core/services/shared_preferences_helper.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/meal_log_screen/model/meal_log_model.dart';
@@ -89,9 +90,14 @@ class MealLogController extends GetxController {
     print('[MealLogController]   calories=${caloriesController.text}');
   }
 
+  final selectedWeekdayIndex = (DateTime.now().weekday % 7).obs;
+  final selectedDateString = AppTimezoneHelper.getTodayDateString().obs;
+
   @override
   void onInit() {
     super.onInit();
+    selectedWeekdayIndex.value = DateTime.now().weekday % 7;
+    selectedDateString.value = AppTimezoneHelper.getTodayDateString();
     loadTargetMacros();
     fetchHistory();
   }
@@ -113,25 +119,45 @@ class MealLogController extends GetxController {
     }
   }
 
+  /// Switch the displayed day of the week (0=Sunday ... 6=Saturday)
+  void selectWeekday(int index) {
+    if (index < 0 || index > 6) return;
+    selectedWeekdayIndex.value = index;
+    final now = DateTime.now();
+    // Sunday is index 0
+    final startOfWeek = now.subtract(Duration(days: now.weekday % 7));
+    final targetDate = startOfWeek.add(Duration(days: index));
+    final dateStr = AppTimezoneHelper.getTodayDateString(targetDate);
+    print('[MealLogController] selectWeekday $index -> dateStr=$dateStr');
+    fetchHistory(date: dateStr);
+  }
+
   //  history fetch method
-  Future<void> fetchHistory() async {
+  Future<void> fetchHistory({String? date}) async {
     await loadTargetMacros();
+    final queryDate = date ?? (selectedDateString.value.isNotEmpty
+        ? selectedDateString.value
+        : AppTimezoneHelper.getTodayDateString());
+    selectedDateString.value = queryDate;
+
     isHistoryLoading.value = true;
-    final result = await MealLogService.getMealLogHistory();
+    final result = await MealLogService.getMealLogHistory(
+      date: queryDate,
+      filterLogsByDate: true,
+    );
     isHistoryLoading.value = false;
 
     if (result != null) {
       history.value = result;
       print(
-        '[MealLogController] History loaded. totalCount=${result.totalCount}',
+        '[MealLogController] History loaded for date=$queryDate. totalCount=${result.totalCount}',
       );
       print('[MealLogController] weeklyPresent=${result.weeklyPresent}');
       print('[MealLogController] consumedCalories=${result.consumedCalories}');
       print('[MealLogController] dailyCalories=${result.dailyCalories}');
-      EasyLoading.showSuccess('History loaded successfully!');
     } else {
-      EasyLoading.showError('Failed to load history. Please try again.');
-      print('[MealLogController] History fetch failed.');
+      EasyLoading.showError('Failed to load history for $queryDate.');
+      print('[MealLogController] History fetch failed for $queryDate.');
     }
   }
 

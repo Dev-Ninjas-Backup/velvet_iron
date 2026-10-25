@@ -36,16 +36,29 @@ class Urls {
   static String deleteMedication(String id) => '$baseUrl/medication/$id';
   static String updateMedication(String id) => '$baseUrl/medication/$id';
   static const String moodLog = '$baseUrl/mood-log';
-  static String getMoodLogHistory(int limit, int offset) =>
-      '$baseUrl/mood-log/history?limit=$limit&offset=$offset';
+  static String getMoodLogHistory(int limit, int offset, {String? date}) {
+    String url = '$baseUrl/mood-log/history?limit=$limit&offset=$offset';
+    if (date != null && date.isNotEmpty) {
+      url += '&date=$date';
+    }
+    return url;
+  }
   static const String macroGoal = '$baseUrl/macro-goal';
   static const String getTodayMoodLog = '$baseUrl/mood-log/today';
   static const String mealLog = '$baseUrl/meal-log';
   static const String mealSchedule = '$baseUrl/meal-schedule';
   static String markMealAsTaken(String id) =>
       '$baseUrl/meal-schedule/$id/taken?isTaken=true';
-  static String mealLogHistory(int limit, int offset) =>
-      '$baseUrl/meal-log/history?limit=$limit&offset=$offset';
+  static String mealLogHistory(int limit, int offset, {String? date, bool? filterLogsByDate}) {
+    String url = '$baseUrl/meal-log/history?limit=$limit&offset=$offset';
+    if (date != null && date.isNotEmpty) {
+      url += '&date=$date';
+    }
+    if (filterLogsByDate != null) {
+      url += '&filterLogsByDate=$filterLogsByDate';
+    }
+    return url;
+  }
   static String updateMealLog(String id) => '$baseUrl/meal-log/$id';
   // static const String mealLog = '$baseUrl/meal-log';
   static const String discordSignIn = '$baseUrl/auth/discord-auth-url';
@@ -55,6 +68,10 @@ class Urls {
   static const String exerciseHistory = '$baseUrl/exercise-log/history';
   static const String exerciseLogSchedule = '$baseUrl/exercise-log/schedule';
   static const String exerciseLogSchedules = '$baseUrl/exercise-logs/schedules';
+  static const String exerciseSchedulesToday =
+      '$baseUrl/exercise-log/schedules/today';
+  static String takeExerciseSchedule(String id) =>
+      '$baseUrl/exercise-log/schedule/$id/take';
   static String updateExerciseHHistory(String id) =>
       '$baseUrl/exercise-log/$id/taken?isTaken=true';
   static String deleteExerciseSchedule(String id) =>
@@ -72,11 +89,15 @@ class Urls {
   static const String questsToday = '$baseUrl/quests/today';
   static const String completeQuestToday = '$baseUrl/quests/today/complete';
   static const String completeQuest = '$baseUrl/quests/complete';
+  static const String customQuest = '$baseUrl/custom-quest';
   static const String customQuests = '$baseUrl/quests/custom';
   static const String customQuestsAlt = '$baseUrl/custom-quests';
   static String deleteCustomQuest(String id) => '$baseUrl/quests/custom/$id';
+  static String deleteCustomQuestV2(String id) => '$baseUrl/custom-quest/$id';
   static String completeCustomQuest(String id) =>
       '$baseUrl/quests/custom/$id/complete';
+  static String completeCustomQuestV2(String id) =>
+      '$baseUrl/custom-quest/$id/complete';
   static const String addXP = '$baseUrl/profile/add-xp/log';
   static const String homeScreen = '$baseUrl/profile';
   static const String onboardingStatus = '$baseUrl/onboarding';

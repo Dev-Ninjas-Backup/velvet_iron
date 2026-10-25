@@ -93,15 +93,24 @@ class QuestService {
     return codexResponse;
   }
 
-  /// 3. Fetch Cloud Custom Quests: GET /quests/custom
-  Future<List<Quest>> getCustomQuests() async {
+  /// 3. Fetch Cloud Custom Quests: GET /custom-quest or GET /quests/custom
+  Future<List<Quest>> getCustomQuests({String? date}) async {
     final headers = await _getHeaders();
-    print('🔵 [QuestService] GET ${Urls.customQuests}');
+    final targetDate = date ?? AppTimezoneHelper.getTodayDateString();
+    final timezone = await AppTimezoneHelper.getTimezoneName();
+    final primaryUrl = '${Urls.customQuest}?date=$targetDate&timezone=$timezone';
+    print('🔵 [QuestService] GET $primaryUrl');
 
-    final response = await http.get(
-      Uri.parse(Urls.customQuests),
-      headers: headers,
-    );
+    http.Response response;
+    try {
+      response = await http.get(Uri.parse(primaryUrl), headers: headers);
+    } catch (_) {
+      response = await http.get(Uri.parse(Urls.customQuests), headers: headers);
+    }
+
+    if (response.statusCode == 404) {
+      response = await http.get(Uri.parse(Urls.customQuests), headers: headers);
+    }
 
     print('🔵 [QuestService] getCustomQuests statusCode=${response.statusCode}');
     if (response.statusCode == 200) {
@@ -114,7 +123,7 @@ class QuestService {
     return [];
   }
 
-  /// 4. Create Cloud Custom Quest: POST /quests/custom or POST /custom-quests
+  /// 4. Create Cloud Custom Quest: POST /custom-quest or POST /quests/custom
   Future<Quest?> createCustomQuest({
     required String name,
     required String category,
@@ -125,13 +134,15 @@ class QuestService {
   }) async {
     final headers = await _getHeaders();
     final cleanRecurrence = recurrence.toUpperCase().replaceAll(' ', '_');
+    final clampedXp = xp.clamp(1, 15);
     final payload = {
       'title': name,
       'name': name,
       'category': category.toUpperCase(),
+      'frequency': cleanRecurrence,
       'recurrence': cleanRecurrence,
-      'xpReward': xp,
-      'xp': xp,
+      'xpReward': clampedXp,
+      'xp': clampedXp,
       if (description != null && description.isNotEmpty)
         'description': description,
       if (daysOfWeek != null && daysOfWeek.isNotEmpty) ...{
@@ -141,27 +152,27 @@ class QuestService {
     };
     final body = jsonEncode(payload);
 
-    print('🔵 [QuestService] POST ${Urls.customQuests} body=$body');
+    print('🔵 [QuestService] POST ${Urls.customQuest} body=$body');
     http.Response response;
     try {
       response = await http.post(
-        Uri.parse(Urls.customQuests),
+        Uri.parse(Urls.customQuest),
         headers: headers,
         body: body,
       );
     } catch (e) {
-      print('🟡 [QuestService] Primary custom-quest endpoint failed ($e), trying alternate: ${Urls.customQuestsAlt}');
+      print('🟡 [QuestService] Primary custom-quest failed ($e), trying alternate: ${Urls.customQuests}');
       response = await http.post(
-        Uri.parse(Urls.customQuestsAlt),
+        Uri.parse(Urls.customQuests),
         headers: headers,
         body: body,
       );
     }
 
     if (response.statusCode == 404) {
-      print('🟡 [QuestService] ${Urls.customQuests} returned 404, falling back to ${Urls.customQuestsAlt}');
+      print('🟡 [QuestService] ${Urls.customQuest} returned 404, falling back to ${Urls.customQuests}');
       response = await http.post(
-        Uri.parse(Urls.customQuestsAlt),
+        Uri.parse(Urls.customQuests),
         headers: headers,
         body: body,
       );
@@ -180,59 +191,84 @@ class QuestService {
     return null;
   }
 
-  /// 5. Delete Cloud Custom Quest: DELETE /quests/custom/:id
+  /// 5. Delete Cloud Custom Quest: DELETE /custom-quest/:id or DELETE /quests/custom/:id
   Future<bool> deleteCustomQuest(String id, {String? fallbackId}) async {
     final headers = await _getHeaders();
-    final candidates = <String>[];
-    if (id.isNotEmpty) candidates.add(id);
-    if (id.startsWith('custom_')) {
-      candidates.add(id.replaceFirst('custom_', ''));
-    }
-    if (fallbackId != null && fallbackId.isNotEmpty && !candidates.contains(fallbackId)) {
+    final cleanId = id.trim();
+    final rawId = cleanId.startsWith('custom_') ? cleanId.substring(7) : cleanId;
+    final candidates = <String>{cleanId, rawId};
+    if (fallbackId != null && fallbackId.isNotEmpty) {
       candidates.add(fallbackId);
       if (fallbackId.startsWith('custom_')) {
-        candidates.add(fallbackId.replaceFirst('custom_', ''));
+        candidates.add(fallbackId.substring(7));
       }
     }
 
     for (final targetId in candidates) {
-      final url = Urls.deleteCustomQuest(targetId);
-      print('🔵 [QuestService] DELETE $url');
-      try {
-        final response = await http.delete(
-          Uri.parse(url),
-          headers: headers,
-        );
-        print('🔵 [QuestService] deleteCustomQuest ($targetId) statusCode=${response.statusCode}');
-        if (response.statusCode == 200 || response.statusCode == 204) {
-          return true;
+      final urlsToTry = [
+        Urls.deleteCustomQuestV2(targetId),
+        Urls.deleteCustomQuest(targetId),
+      ];
+      for (final url in urlsToTry) {
+        print('🔵 [QuestService] DELETE $url');
+        try {
+          final response = await http.delete(
+            Uri.parse(url),
+            headers: headers,
+          );
+          print('🔵 [QuestService] deleteCustomQuest ($targetId) statusCode=${response.statusCode}');
+          if (response.statusCode == 200 || response.statusCode == 204) {
+            return true;
+          }
+        } catch (e) {
+          print('🔴 [QuestService] Error deleting quest $targetId on $url: $e');
         }
-      } catch (e) {
-        print('🔴 [QuestService] Error deleting quest $targetId: $e');
       }
     }
     return false;
   }
 
-  /// 6. Complete Custom Quest: POST /quests/custom/:id/complete
+  /// 6. Complete Custom Quest: POST /custom-quest/:id/complete (with PATCH / legacy fallbacks)
   Future<Map<String, dynamic>> completeCustomQuest(String id) async {
     final headers = await _getHeaders();
-    final url = Urls.completeCustomQuest(id);
-    print('🔵 [QuestService] POST $url');
+    final cleanId = id.trim();
+    final rawId = cleanId.startsWith('custom_') ? cleanId.substring(7) : cleanId;
 
-    final response = await http.post(
-      Uri.parse(url),
-      headers: headers,
-    );
+    final candidateUrls = <String>[
+      Urls.completeCustomQuestV2(cleanId),
+      if (cleanId != rawId) Urls.completeCustomQuestV2(rawId),
+      Urls.completeCustomQuest(cleanId),
+      if (cleanId != rawId) Urls.completeCustomQuest(rawId),
+    ];
 
-    print('🔵 [QuestService] completeCustomQuest statusCode=${response.statusCode}');
-    print('🔵 [QuestService] completeCustomQuest body=${response.body}');
+    for (final url in candidateUrls) {
+      print('🔵 [QuestService] Complete custom quest POST $url');
+      try {
+        var response = await http.post(
+          Uri.parse(url),
+          headers: headers,
+        );
+        print('🔵 [QuestService] completeCustomQuest statusCode=${response.statusCode} on $url');
+        if (response.statusCode == 404 || response.statusCode == 405) {
+          // Dual support: try PATCH
+          print('🔵 [QuestService] Trying PATCH $url');
+          response = await http.patch(
+            Uri.parse(url),
+            headers: headers,
+          );
+          print('🔵 [QuestService] completeCustomQuest PATCH statusCode=${response.statusCode}');
+        }
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      return jsonDecode(response.body) as Map<String, dynamic>;
-    } else {
-      throw Exception('Custom quest completion returned ${response.statusCode}');
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          print('✅ [QuestService] Custom quest successfully completed on $url');
+          return jsonDecode(response.body) as Map<String, dynamic>;
+        }
+      } catch (e) {
+        print('🟡 [QuestService] Error completing on $url: $e');
+      }
     }
+
+    throw Exception('Custom quest completion failed for $id');
   }
 
   /// 7. Complete Unified Quest: POST /quests/complete or POST /quests/today/complete (Milestone 3)

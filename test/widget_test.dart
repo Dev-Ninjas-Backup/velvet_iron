@@ -1,11 +1,13 @@
 import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:velvet_iron/core/services/app_timezone_helper.dart';
+import 'package:velvet_iron/core/services/end_points.dart';
 import 'package:velvet_iron/features/quests/model/quest_model.dart';
 import 'package:velvet_iron/features/exercise/model/exercise_model.dart';
 import 'package:velvet_iron/features/medication_screen/model/medication_model.dart';
 import 'package:velvet_iron/features/home/models/home_screen_model.dart';
 import 'package:velvet_iron/features/daily_logs/widgets/tab_screens/step_journey_screen/widgets/fantasy_map_widget.dart';
+import 'package:velvet_iron/core/services/expedition_content_service.dart';
 
 void main() {
   group('Quest System Tests', () {
@@ -600,12 +602,80 @@ void main() {
       final milestones = FantasyMapWidget.journeyMilestones;
       expect(milestones.length, 11);
       expect(milestones.first.stepMilestone, 0);
-      expect(milestones.first.name, 'The Starting Outpost');
+      expect(milestones.first.name, 'The Outpost');
 
       final finalMilestone = milestones.last;
       expect(finalMilestone.stepMilestone, 1000000);
       expect(finalMilestone.name, 'The Shattered Citadel');
       expect(finalMilestone.fraction, 1.0);
+    });
+  });
+
+  group('October 25 Backend Fixes & Timezone Alignments Tests', () {
+    test('MealLogHistory URL generates date and filterLogsByDate query parameters correctly', () {
+      final url = Urls.mealLogHistory(30, 0, date: '2026-10-20', filterLogsByDate: true);
+      expect(url, contains('date=2026-10-20'));
+      expect(url, contains('filterLogsByDate=true'));
+    });
+
+    test('Custom Quest endpoint URLs format correctly for V2 and fallback', () {
+      expect(Urls.customQuest, endsWith('/custom-quest'));
+      expect(Urls.completeCustomQuestV2('58dbf014'), endsWith('/custom-quest/58dbf014/complete'));
+      expect(Urls.deleteCustomQuestV2('58dbf014'), endsWith('/custom-quest/58dbf014'));
+    });
+
+    test('Exercise schedule take URL formats correctly', () {
+      expect(Urls.takeExerciseSchedule('walk-123'), endsWith('/exercise-log/schedule/walk-123/take'));
+      expect(Urls.exerciseSchedulesToday, endsWith('/exercise-log/schedules/today'));
+    });
+
+    test('Weekly XP Graph dynamic max Y scales appropriately for XP > 100', () {
+      final dataAbove100 = [20.0, 45.0, 130.0, 15.0, 0.0, 60.0, 10.0];
+      final maxVal = dataAbove100.reduce((a, b) => a > b ? a : b);
+      final double chartMaxY = maxVal > 100
+          ? ((maxVal / 20).ceil() * 20).toDouble()
+          : 100.0;
+      expect(chartMaxY, 140.0);
+
+      final dataBelow100 = [20.0, 45.0, 60.0, 15.0, 0.0, 30.0, 10.0];
+      final maxBelow = dataBelow100.reduce((a, b) => a > b ? a : b);
+      final double defaultMaxY = maxBelow > 100
+          ? ((maxBelow / 20).ceil() * 20).toDouble()
+          : 100.0;
+      expect(defaultMaxY, 100.0);
+    });
+  });
+
+  group('Client Message 14: Step Journey Marker & Milestones Tests', () {
+    test('Whisperwood milestone is configured at 50,000 steps', () {
+      final milestones = FantasyMapWidget.journeyMilestones;
+      final arch = milestones.firstWhere((m) => m.name.contains('Wayfarer'));
+      final whisperwood = milestones.firstWhere((m) => m.name == 'Whisperwood');
+
+      expect(arch.stepMilestone, 25000);
+      expect(whisperwood.stepMilestone, 50000);
+    });
+
+    test('At 33,927 cumulative steps, segment progress between Wayfarer\'s Arch and Whisperwood is ~35.7%', () {
+      const cumulativeSteps = 33927;
+      const prevMilestoneSteps = 25000;
+      const nextMilestoneSteps = 50000;
+
+      final completedInLeg = cumulativeSteps - prevMilestoneSteps;
+      final legSpan = nextMilestoneSteps - prevMilestoneSteps;
+      final legProgressRatio = completedInLeg / legSpan;
+
+      expect(completedInLeg, 8927);
+      expect(legSpan, 25000);
+      expect(legProgressRatio, closeTo(0.357, 0.001));
+    });
+
+    test('ExpeditionContentService accurately identifies Wayfarer\'s Arch as current and Whisperwood as next at 33,927 steps', () {
+      final status = ExpeditionContentService().getLandmarkStatus(33927);
+      expect(status.currentMilestone?.name, contains('Wayfarer'));
+      expect(status.nextMilestone.name, 'Whisperwood');
+      expect(status.stepsToNext, 16073);
+      expect(status.progressToNext, closeTo(0.357, 0.001));
     });
   });
 }

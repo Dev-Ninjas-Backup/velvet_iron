@@ -216,6 +216,8 @@ class MealLogService {
   static Future<MealLogHistoryModel?> getMealLogHistory({
     int limit = 30,
     int offset = 0,
+    String? date,
+    bool filterLogsByDate = true,
   }) async {
     try {
       final accessToken = await SharedPreferencesHelper.getAccessToken();
@@ -230,7 +232,15 @@ class MealLogService {
       }
 
       final timezone = await AppTimezoneHelper.getTimezoneName();
-      final uri = Uri.parse(Urls.mealLogHistory(limit, offset));
+      final targetDate = date ?? AppTimezoneHelper.getTodayDateString();
+      final uri = Uri.parse(
+        Urls.mealLogHistory(
+          limit,
+          offset,
+          date: targetDate,
+          filterLogsByDate: filterLogsByDate,
+        ),
+      );
 
       final response = await http.get(
         uri,

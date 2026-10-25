@@ -90,7 +90,7 @@ class ExpeditionContentService {
         dialogue: {},
       ),
       MilestoneInfo(
-        steps: 75000,
+        steps: 50000,
         name: "Whisperwood",
         lore: "The forest grows unnaturally quiet as the road disappears beneath silver roots.",
         canonicalClue: "Living things can sense the weakening boundary before people can.",

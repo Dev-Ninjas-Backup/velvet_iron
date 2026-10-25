@@ -201,7 +201,10 @@ class ExerciseService {
         'note': note.trim(),
         'scheduledAt': scheduledAt.toUtc().toIso8601String(),
         'recurrence': cleanRecurrence,
-        if (daysOfWeek != null && daysOfWeek.isNotEmpty) 'daysOfWeek': daysOfWeek,
+        if (daysOfWeek != null && daysOfWeek.isNotEmpty) ...{
+          'daysOfWeek': daysOfWeek,
+          'repeatDays': daysOfWeek,
+        },
       };
 
       final jsonHeaders = {
@@ -213,14 +216,14 @@ class ExerciseService {
       };
 
       var jsonRes = await http.post(
-        Uri.parse(Urls.exerciseLogSchedules),
+        Uri.parse(Urls.exerciseLogSchedule),
         headers: jsonHeaders,
         body: jsonEncode(jsonPayload),
       );
 
       if (jsonRes.statusCode == 404) {
         jsonRes = await http.post(
-          Uri.parse(Urls.exerciseLogSchedule),
+          Uri.parse(Urls.exerciseLogSchedules),
           headers: jsonHeaders,
           body: jsonEncode(jsonPayload),
         );
@@ -239,17 +242,81 @@ class ExerciseService {
     return null;
   }
 
-  /// Mark a scheduled exercise as taken (PATCH /exercise-log/{id}/taken?isTaken=true)
+  /// Fetch today's recurring scheduled exercises (GET /exercise-log/schedules/today)
+  Future<List<dynamic>> fetchTodaySchedules({String? date}) async {
+    final accessToken = await SharedPreferencesHelper.getAccessToken();
+    final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+    if (accessToken == null || refreshToken == null) return [];
+
+    final timezone = await AppTimezoneHelper.getTimezoneName();
+    final targetDate = date ?? AppTimezoneHelper.getTodayDateString();
+    final url = '${Urls.exerciseSchedulesToday}?date=$targetDate&timezone=$timezone';
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+          'x-refresh-token': refreshToken,
+          'x-timezone': timezone,
+        },
+      );
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        if (body is List) return body;
+        if (body is Map<String, dynamic> && body['data'] is List) {
+          return body['data'] as List;
+        }
+      }
+    } catch (e) {
+      print('🟡 [ExerciseService] fetchTodaySchedules error: $e');
+    }
+    return [];
+  }
+
+  /// Mark a scheduled exercise as taken for a specific date (POST /exercise-log/schedule/:id/take)
   Future<Map<String, dynamic>?> markExerciseAsTaken({
     required String exerciseId,
     required String accessToken,
     required String refreshToken,
+    String? date,
   }) async {
-    final uri = Uri.parse(Urls.updateExerciseHHistory(exerciseId));
-    print('[ExerciseService] Mark taken PATCH: $uri');
+    final timezone = await AppTimezoneHelper.getTimezoneName();
+    final targetDate = date ?? AppTimezoneHelper.getTodayDateString();
+
+    // 1. Try date-isolated schedule take: POST /exercise-log/schedule/:id/take
+    final takeUri = Uri.parse(Urls.takeExerciseSchedule(exerciseId));
+    print('[ExerciseService] Trying take POST: $takeUri with date=$targetDate');
 
     try {
-      final timezone = await AppTimezoneHelper.getTimezoneName();
+      final takeResponse = await http.post(
+        takeUri,
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+          'x-refresh-token': refreshToken,
+          'x-timezone': timezone,
+        },
+        body: jsonEncode({'date': targetDate}),
+      );
+
+      print('[ExerciseService] Take Response status: ${takeResponse.statusCode}');
+      if (takeResponse.statusCode >= 200 && takeResponse.statusCode < 300) {
+        final jsonData = jsonDecode(takeResponse.body) as Map<String, dynamic>;
+        print('[ExerciseService] Marked as taken via /take! id=$exerciseId');
+        return jsonData;
+      }
+    } catch (e) {
+      print('[ExerciseService] /take failed, trying fallback: $e');
+    }
+
+    // 2. Fallback: PATCH /exercise-log/:id/taken?isTaken=true
+    final uri = Uri.parse(Urls.updateExerciseHHistory(exerciseId));
+    print('[ExerciseService] Fallback Mark taken PATCH: $uri');
+
+    try {
       final response = await http.patch(
         uri,
         headers: {

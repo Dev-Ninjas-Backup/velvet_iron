@@ -74,12 +74,14 @@ class MoodLogService {
     required String refreshToken,
     int limit = 30,
     int offset = 0,
+    String? date,
   }) async {
-    final uri = Uri.parse(Urls.getMoodLogHistory(limit, offset));
+    final timezone = await AppTimezoneHelper.getTimezoneName();
+    final targetDate = date ?? AppTimezoneHelper.getTodayDateString();
+    final uri = Uri.parse(Urls.getMoodLogHistory(limit, offset, date: targetDate));
     debugPrint('MoodLog GET history: $uri');
 
     try {
-      final timezone = await AppTimezoneHelper.getTimezoneName();
       final response = await http.get(
         uri,
         headers: {
