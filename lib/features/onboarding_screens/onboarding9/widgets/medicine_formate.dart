@@ -129,6 +129,84 @@ class MedicineFormWidget extends StatelessWidget {
                   ),
                 ),
               ),
+              Obx(() {
+                if (controller.selectedMedicineType.value != 'INJECTION') {
+                  return const SizedBox.shrink();
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 12),
+                    Text(
+                      'Preferred Weekly Injection Day:',
+                      style: getTextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        {'day': 'Mon', 'val': 1},
+                        {'day': 'Tue', 'val': 2},
+                        {'day': 'Wed', 'val': 3},
+                        {'day': 'Thu', 'val': 4},
+                        {'day': 'Fri', 'val': 5},
+                        {'day': 'Sat', 'val': 6},
+                        {'day': 'Sun', 'val': 7},
+                      ].map((d) {
+                        final dayVal = d['val'] as int;
+                        final isDaySel =
+                            controller.selectedInjectionDay.value == dayVal;
+                        return GestureDetector(
+                          onTap: () => controller.selectInjectionDay(dayVal),
+                          child: Container(
+                            width: 36,
+                            height: 36,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: isDaySel
+                                  ? themeController.activeTheme.accentGoldColor
+                                      .withValues(alpha: 0.35)
+                                  : Colors.black26,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: isDaySel
+                                    ? themeController.activeTheme.accentGoldColor
+                                    : Colors.white24,
+                                width: isDaySel ? 1.5 : 1,
+                              ),
+                            ),
+                            child: Text(
+                              d['day'] as String,
+                              style: TextStyle(
+                                color: isDaySel
+                                    ? themeController.activeTheme.accentGoldColor
+                                    : Colors.white70,
+                                fontSize: 10,
+                                fontWeight: isDaySel
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Administered once weekly • Quest appears only on this day',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: themeController.activeTheme.accentGoldColor
+                            .withValues(alpha: 0.85),
+                      ),
+                    ),
+                  ],
+                );
+              }),
 
               const SizedBox(height: 12),
               Text(

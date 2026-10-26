@@ -233,10 +233,15 @@ class QuestService {
     final headers = await _getHeaders();
     final cleanId = id.trim();
     final rawId = cleanId.startsWith('custom_') ? cleanId.substring(7) : cleanId;
+    final todayDate = AppTimezoneHelper.getTodayDateString();
+    final reqBody = jsonEncode({'dateStr': todayDate});
 
     final candidateUrls = <String>[
+      '${Urls.completeCustomQuestV2(cleanId)}?date=$todayDate',
       Urls.completeCustomQuestV2(cleanId),
+      if (cleanId != rawId) '${Urls.completeCustomQuestV2(rawId)}?date=$todayDate',
       if (cleanId != rawId) Urls.completeCustomQuestV2(rawId),
+      '${Urls.completeCustomQuest(cleanId)}?date=$todayDate',
       Urls.completeCustomQuest(cleanId),
       if (cleanId != rawId) Urls.completeCustomQuest(rawId),
     ];
@@ -247,6 +252,7 @@ class QuestService {
         var response = await http.post(
           Uri.parse(url),
           headers: headers,
+          body: reqBody,
         );
         print('🔵 [QuestService] completeCustomQuest statusCode=${response.statusCode} on $url');
         if (response.statusCode == 404 || response.statusCode == 405) {
@@ -255,6 +261,7 @@ class QuestService {
           response = await http.patch(
             Uri.parse(url),
             headers: headers,
+            body: reqBody,
           );
           print('🔵 [QuestService] completeCustomQuest PATCH statusCode=${response.statusCode}');
         }
@@ -287,9 +294,11 @@ class QuestService {
 
     final headers = await _getHeaders();
     final cleanType = questType.toLowerCase().replaceAll('-', '_');
+    final todayDate = AppTimezoneHelper.getTodayDateString();
     final body = jsonEncode({
       'questId': questId,
       'questType': cleanType,
+      'dateStr': todayDate,
     });
 
     print('🔵 [QuestService] POST ${Urls.completeQuestToday} body=$body');

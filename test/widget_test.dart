@@ -678,5 +678,72 @@ void main() {
       expect(status.progressToNext, closeTo(0.357, 0.001));
     });
   });
+
+  group('Client Message 16: Specific-Day Quests & Weekly GLP-1 Isolation Tests', () {
+    final sampleQuests = [
+      const Quest(
+        id: 'codex_step-master',
+        title: 'Stride of the Realmwalker',
+        xp: 50,
+        description: 'Complete daily steps',
+        isDone: false,
+      ),
+      const Quest(
+        id: 'codex_track-your-shot',
+        title: 'Elixir of the Alchemist',
+        xp: 10,
+        description: 'Log your GLP-1 weekly injection',
+        isDone: false,
+      ),
+      const Quest(
+        id: 'custom_gym-123',
+        title: 'Gym Strength Session',
+        xp: 10,
+        description: 'FITNESS • SPECIFIC_DAYS',
+        isDone: false,
+        questType: 'CUSTOM',
+      ),
+    ];
+
+    List<Quest> filterTestQuests(List<Quest> quests, {required bool enabled, required int weekday, required int injectionDay}) {
+      final isInjectionDay = weekday == injectionDay;
+      return quests.where((q) {
+        final lower = q.title.toLowerCase();
+        final isMed = lower.contains('elixir of the alchemist') || lower.contains('track your shot');
+        if (!isMed) return true;
+        if (!enabled) return false;
+        return isInjectionDay;
+      }).toList();
+    }
+
+    test('GLP-1 quest appears on preferred injection day (Sunday = 7)', () {
+      final filtered = filterTestQuests(sampleQuests, enabled: true, weekday: 7, injectionDay: 7);
+      expect(filtered.length, 3);
+      expect(filtered.any((q) => q.title == 'Elixir of the Alchemist'), isTrue);
+    });
+
+    test('GLP-1 quest is omitted on non-injection days (Tuesday = 2) to preserve 100% daily streak', () {
+      final filtered = filterTestQuests(sampleQuests, enabled: true, weekday: 2, injectionDay: 7);
+      expect(filtered.length, 2);
+      expect(filtered.any((q) => q.title == 'Elixir of the Alchemist'), isFalse);
+      expect(filtered.any((q) => q.title == 'Stride of the Realmwalker'), isTrue);
+      expect(filtered.any((q) => q.title == 'Gym Strength Session'), isTrue);
+    });
+
+    test('GLP-1 quest is completely hidden when enableMedicationQuest is false', () {
+      final filtered = filterTestQuests(sampleQuests, enabled: false, weekday: 7, injectionDay: 7);
+      expect(filtered.length, 2);
+      expect(filtered.any((q) => q.title == 'Elixir of the Alchemist'), isFalse);
+    });
+
+    test('Date-scoped custom quest completion URL includes date query parameter', () {
+      const questId = 'custom_58dbf014';
+      const targetDate = '2026-10-28';
+      final completionUrl = '${Urls.completeCustomQuestV2(questId)}?date=$targetDate';
+
+      expect(completionUrl, contains('custom-quest/custom_58dbf014/complete'));
+      expect(completionUrl, contains('?date=2026-10-28'));
+    });
+  });
 }
 

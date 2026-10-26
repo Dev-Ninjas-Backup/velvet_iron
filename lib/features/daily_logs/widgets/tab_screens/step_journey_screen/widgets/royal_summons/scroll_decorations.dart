@@ -20,9 +20,7 @@ class ScrollDivider extends StatelessWidget {
           width: isSubtle ? 36 : 48,
           height: 1.0,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.transparent, color],
-            ),
+            gradient: LinearGradient(colors: [Colors.transparent, color]),
           ),
         ),
         Padding(
@@ -40,9 +38,7 @@ class ScrollDivider extends StatelessWidget {
           width: isSubtle ? 36 : 48,
           height: 1.0,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [color, Colors.transparent],
-            ),
+            gradient: LinearGradient(colors: [color, Colors.transparent]),
           ),
         ),
       ],

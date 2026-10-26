@@ -11,6 +11,7 @@ import 'package:velvet_iron/features/exercise/service/exercise_service.dart';
 import 'package:velvet_iron/features/home/controller/home_controller.dart';
 import 'package:velvet_iron/features/quests/model/quest_model.dart';
 import 'package:velvet_iron/features/quests/service/quests_service.dart';
+import 'package:velvet_iron/features/medication_screen/service/medication_service.dart';
 
 class QuestController extends GetxController {
   static const String _lastArticleXpKey = 'last_article_xp_time';
@@ -19,6 +20,7 @@ class QuestController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
   final RxBool enableMedicationQuest = false.obs;
+  final RxInt preferredInjectionDay = 7.obs; // 1 = Mon ... 7 = Sun (Default: Sunday)
 
   final QuestService _service = QuestService();
 
@@ -30,17 +32,51 @@ class QuestController extends GetxController {
   Future<void> loadMedicationPreference() async {
     final enabled = await SharedPreferencesHelper.getBool('enable_medication_quest');
     enableMedicationQuest.value = enabled ?? false;
+    final day = await SharedPreferencesHelper.getInt('preferred_injection_day');
+    preferredInjectionDay.value = (day != null && day >= 1 && day <= 7) ? day : 7;
+  }
+
+  Future<void> setPreferredInjectionDay(int day) async {
+    if (day < 1 || day > 7) return;
+    preferredInjectionDay.value = day;
+    await SharedPreferencesHelper.setInt('preferred_injection_day', day);
+    
+    // Sync weekly GLP-1 injection schedule with backend
+    try {
+      final accessToken = await SharedPreferencesHelper.getAccessToken();
+      final refreshToken = await SharedPreferencesHelper.getRefreshToken();
+      if (accessToken != null && refreshToken != null) {
+        await MedicationService().scheduleMedication(
+          name: 'GLP-1 Injection',
+          type: 'INJECTION',
+          doseMg: 5,
+          scheduleTime: DateTime.now().toUtc().toIso8601String(),
+          recurrence: 'WEEKLY',
+          daysOfWeek: [day],
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        );
+      }
+    } catch (e) {
+      print('🟡 [QuestController] Could not sync weekly injection schedule: $e');
+    }
+    await fetchQuests();
   }
 
   Future<void> toggleMedicationQuest(bool value) async {
     enableMedicationQuest.value = value;
     await SharedPreferencesHelper.setBool('enable_medication_quest', value);
     await SharedPreferencesHelper.setBool('user_takes_medication', value);
+    if (value) {
+      await setPreferredInjectionDay(preferredInjectionDay.value);
+    }
     await fetchQuests();
     if (value) {
-      EasyLoading.showSuccess('Medication quest added to your daily Codex!');
+      const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      final dayName = days[preferredInjectionDay.value - 1];
+      EasyLoading.showSuccess('Weekly GLP-1 quest scheduled for every $dayName!');
     } else {
-      EasyLoading.showInfo('Medication quest hidden from daily Codex.');
+      EasyLoading.showInfo('Medication quest hidden from Codex.');
     }
   }
 
@@ -163,16 +199,28 @@ class QuestController extends GetxController {
   }
 
   List<Quest> _filterQuestsIfNeeded(List<Quest> list) {
-    if (enableMedicationQuest.value) return list;
+    final todayWeekday = DateTime.now().weekday; // 1 = Monday ... 7 = Sunday
+    final isInjectionDay = todayWeekday == preferredInjectionDay.value;
+
     return list.where((q) {
       final lowerTitle = q.title.toLowerCase();
       final lowerId = q.id.toLowerCase();
-      final isMedQuest = lowerTitle.contains('elixir of the alchemist') ||
+      final isMedQuest = q.questType == 'MEDICATION_SCHEDULE' ||
+          lowerTitle.contains('elixir of the alchemist') ||
           lowerTitle.contains('track your shot') ||
+          lowerTitle.contains('glp-1') ||
+          lowerTitle.contains('injection') ||
           lowerId.contains('track-your-shot') ||
           lowerId.contains('track_your_shot') ||
           lowerId.startsWith('med_');
-      return !isMedQuest;
+
+      if (!isMedQuest) return true;
+
+      // If user disabled medication quest, hide it
+      if (!enableMedicationQuest.value) return false;
+
+      // If enabled, only appear on their preferred weekly injection day
+      return isInjectionDay;
     }).toList();
   }
 

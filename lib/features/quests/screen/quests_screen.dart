@@ -470,63 +470,155 @@ class QuestsScreen extends StatelessWidget {
                                   width: 1,
                                 ),
                               ),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: themeController
-                                          .activeTheme
-                                          .accentGoldColor
-                                          .withValues(alpha: 0.15),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Icon(
-                                      Icons.medication_outlined,
-                                      color: themeController
-                                          .activeTheme
-                                          .accentGoldColor,
-                                      size: 20,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                              child: Obx(
+                                () => Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
                                       children: [
-                                        Text(
-                                          "Track Medication / GLP-1",
-                                          style: getTextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white,
+                                        Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: themeController
+                                                .activeTheme
+                                                .accentGoldColor
+                                                .withValues(alpha: 0.15),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Icon(
+                                            Icons.medication_outlined,
+                                            color: themeController
+                                                .activeTheme
+                                                .accentGoldColor,
+                                            size: 20,
                                           ),
                                         ),
-                                        const SizedBox(height: 2),
-                                        Text(
-                                          "Include 'Elixir of the Alchemist' quest",
-                                          style: getTextStyle(
-                                            fontSize: 11,
-                                            color: Colors.white60,
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Track Medication / GLP-1",
+                                                style: getTextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 2),
+                                              Text(
+                                                "Weekly 'Elixir of the Alchemist' injection",
+                                                style: getTextStyle(
+                                                  fontSize: 11,
+                                                  color: Colors.white60,
+                                                ),
+                                              ),
+                                            ],
                                           ),
+                                        ),
+                                        Switch(
+                                          value: controller
+                                              .enableMedicationQuest
+                                              .value,
+                                          activeThumbColor: themeController
+                                              .activeTheme
+                                              .accentGoldColor,
+                                          onChanged: (val) =>
+                                              controller.toggleMedicationQuest(val),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  Obx(
-                                    () => Switch(
-                                      value: controller
-                                          .enableMedicationQuest
-                                          .value,
-                                      activeThumbColor: themeController
-                                          .activeTheme
-                                          .accentGoldColor,
-                                      onChanged: (val) =>
-                                          controller.toggleMedicationQuest(val),
-                                    ),
-                                  ),
-                                ],
+                                    if (controller.enableMedicationQuest.value) ...[
+                                      const SizedBox(height: 12),
+                                      Divider(
+                                        color: Colors.white.withValues(alpha: 0.12),
+                                        height: 1,
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        "Preferred Weekly Injection Day:",
+                                        style: getTextStyle(
+                                          fontSize: 11.5,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white70,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          {'day': 'Mon', 'val': 1},
+                                          {'day': 'Tue', 'val': 2},
+                                          {'day': 'Wed', 'val': 3},
+                                          {'day': 'Thu', 'val': 4},
+                                          {'day': 'Fri', 'val': 5},
+                                          {'day': 'Sat', 'val': 6},
+                                          {'day': 'Sun', 'val': 7},
+                                        ].map((d) {
+                                          final dayVal = d['val'] as int;
+                                          final isDaySel = controller
+                                                  .preferredInjectionDay.value ==
+                                              dayVal;
+                                          return GestureDetector(
+                                            onTap: () => controller
+                                                .setPreferredInjectionDay(dayVal),
+                                            child: Container(
+                                              width: 34,
+                                              height: 34,
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                color: isDaySel
+                                                    ? themeController
+                                                        .activeTheme
+                                                        .accentGoldColor
+                                                        .withValues(alpha: 0.35)
+                                                    : Colors.black26,
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                  color: isDaySel
+                                                      ? themeController
+                                                          .activeTheme
+                                                          .accentGoldColor
+                                                      : Colors.white24,
+                                                  width: isDaySel ? 1.5 : 1,
+                                                ),
+                                              ),
+                                              child: Text(
+                                                d['day'] as String,
+                                                style: TextStyle(
+                                                  color: isDaySel
+                                                      ? themeController
+                                                          .activeTheme
+                                                          .accentGoldColor
+                                                      : Colors.white70,
+                                                  fontSize: 10,
+                                                  fontWeight: isDaySel
+                                                      ? FontWeight.bold
+                                                      : FontWeight.normal,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        "Quest appears only on selected day • Resets weekly (+10 XP)",
+                                        style: getTextStyle(
+                                          fontSize: 10.5,
+                                          color: themeController
+                                              .activeTheme
+                                              .accentGoldColor
+                                              .withValues(alpha: 0.85),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
                               ),
                             ),
                             const SizedBox(height: 20),
