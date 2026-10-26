@@ -11,11 +11,7 @@ class RoyalSummonsDialog extends StatefulWidget {
   final VoidCallback? onAccept;
   final bool isReread;
 
-  const RoyalSummonsDialog({
-    super.key,
-    this.onAccept,
-    this.isReread = false,
-  });
+  const RoyalSummonsDialog({super.key, this.onAccept, this.isReread = false});
 
   static void show(
     BuildContext context, {
@@ -25,11 +21,9 @@ class RoyalSummonsDialog extends StatefulWidget {
     showDialog(
       context: context,
       barrierDismissible: isReread,
-      barrierColor: Colors.black.withValues(alpha: 0.82),
-      builder: (ctx) => RoyalSummonsDialog(
-        onAccept: onAccept,
-        isReread: isReread,
-      ),
+      barrierColor: Colors.black.withValues(alpha: 0.86),
+      builder: (ctx) =>
+          RoyalSummonsDialog(onAccept: onAccept, isReread: isReread),
     );
   }
 
@@ -90,7 +84,7 @@ class _RoyalSummonsDialogState extends State<RoyalSummonsDialog>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final maxHeight = size.height * 0.86;
+    final maxHeight = size.height * 0.88;
 
     return PopScope(
       canPop: false,
@@ -109,7 +103,10 @@ class _RoyalSummonsDialogState extends State<RoyalSummonsDialog>
         },
         child: Dialog(
           backgroundColor: Colors.transparent,
-          insetPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 14,
+            vertical: 18,
+          ),
           child: GestureDetector(
             // Prevent clicks inside the scroll from triggering backdrop dismissal
             behavior: HitTestBehavior.deferToChild,
@@ -121,20 +118,20 @@ class _RoyalSummonsDialogState extends State<RoyalSummonsDialog>
                   opacity: _fadeAnimation,
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
-                      maxWidth: 430,
+                      maxWidth: 440,
                       maxHeight: maxHeight,
                     ),
                     child: Stack(
                       clipBehavior: Clip.none,
                       children: [
-                        // Physical Medieval Scroll Container
+                        // Physical Ancient Royal Decree Scroll
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            // 1. Top Curled Scroll Roll / Spindle
+                            // 1. Top Antique Dark Timber & Bronze Scroll Rod
                             const ScrollRoll(isTop: true),
 
-                            // 2. Unfurling Parchment Body
+                            // 2. Unfurling Weathered High Fae Parchment Body
                             Flexible(
                               child: ClipRect(
                                 child: Align(
@@ -143,67 +140,56 @@ class _RoyalSummonsDialogState extends State<RoyalSummonsDialog>
                                   child: Container(
                                     width: double.infinity,
                                     margin: const EdgeInsets.symmetric(
-                                        horizontal: 12),
+                                      horizontal: 12,
+                                    ),
                                     decoration: BoxDecoration(
-                                      // Antique parchment coloring with weathered burnt edges
+                                      // Dark-fantasy aged parchment with scorched/weathered gradient
                                       gradient: const LinearGradient(
                                         begin: Alignment.centerLeft,
                                         end: Alignment.centerRight,
                                         colors: [
-                                          Color(0xFFD6B57E), // Shaded left edge
-                                          Color(0xFFFBF4DF), // Warm parchment core
-                                          Color(0xFFF9F0D4), // Soft vellum highlight
-                                          Color(0xFFF4E5BD), // Warm aged paper
-                                          Color(0xFFCEAA72), // Shaded right edge
+                                          Color(
+                                            0xFF7A5424,
+                                          ), // Scorched dark left edge
+                                          Color(
+                                            0xFFB8925A,
+                                          ), // Weathered transition
+                                          Color(0xFFE2CBA1), // Aged vellum core
+                                          Color(
+                                            0xFFD9BE8E,
+                                          ), // Natural aged parchment
+                                          Color(
+                                            0xFFA8824A,
+                                          ), // Weathered transition
+                                          Color(
+                                            0xFF6E481B,
+                                          ), // Scorched dark right edge
                                         ],
-                                        stops: [0.0, 0.08, 0.50, 0.92, 1.0],
+                                        stops: [
+                                          0.0,
+                                          0.05,
+                                          0.30,
+                                          0.70,
+                                          0.95,
+                                          1.0,
+                                        ],
                                       ),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black
-                                              .withValues(alpha: 0.55),
-                                          blurRadius: 18,
-                                          offset: const Offset(0, 8),
+                                          color: Colors.black.withValues(
+                                            alpha: 0.75,
+                                          ),
+                                          blurRadius: 22,
+                                          offset: const Offset(0, 10),
                                         ),
                                       ],
                                     ),
                                     child: Stack(
                                       children: [
-                                        // Subtle aged parchment grain / vignette overlay
+                                        // Weathered parchment texture, burnt vignette, and aging fibers
                                         Positioned.fill(
                                           child: CustomPaint(
                                             painter: ParchmentTexturePainter(),
-                                          ),
-                                        ),
-
-                                        // Inner Decorative Double Border
-                                        Positioned.fill(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(7.0),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  color: const Color(0xFF7A4F1D)
-                                                      .withValues(alpha: 0.50),
-                                                  width: 1.2,
-                                                ),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(2.5),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                      color: const Color(
-                                                              0xFFC29744)
-                                                          .withValues(
-                                                              alpha: 0.35),
-                                                      width: 0.8,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
                                           ),
                                         ),
 
@@ -212,255 +198,324 @@ class _RoyalSummonsDialogState extends State<RoyalSummonsDialog>
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Flexible(
-                                              child: Scrollbar(
-                                                thumbVisibility: true,
+                                              child: ScrollConfiguration(
+                                                behavior:
+                                                    ScrollConfiguration.of(
+                                                      context,
+                                                    ).copyWith(
+                                                      scrollbars: false,
+                                                    ),
                                                 child: SingleChildScrollView(
                                                   padding:
                                                       const EdgeInsets.fromLTRB(
-                                                          20, 22, 20, 16),
+                                                        20,
+                                                        16,
+                                                        20,
+                                                        24,
+                                                      ),
                                                   child: Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .center,
                                                     children: [
-                                                      // Top Imperial Heraldic Royal Crest
-                                                      const RoyalHeraldicCrest(),
-                                                      const SizedBox(height: 12),
+                                                      // Official Dravosi Royal Crest Artwork
+                                                      const RoyalHeraldicCrest(
+                                                        size: 110,
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
 
-                                                      // Header Decree Proclamation
+                                                      // Header Decree Proclamation in High Fae Calligraphy
                                                       Text(
                                                         'BY DECREE OF THE HIGH KING AND QUEEN',
                                                         textAlign:
                                                             TextAlign.center,
                                                         style:
-                                                            GoogleFonts.cinzel(
-                                                          fontSize: 13.5.sp,
-                                                          fontWeight:
-                                                              FontWeight.w900,
-                                                          color: const Color(
-                                                              0xFF3A1808),
-                                                          letterSpacing: 1.5,
-                                                        ),
+                                                            GoogleFonts.cinzelDecorative(
+                                                              fontSize: 13.5.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  const Color(
+                                                                    0xFF2E1303,
+                                                                  ),
+                                                              letterSpacing:
+                                                                  1.2,
+                                                              height: 1.35,
+                                                            ),
                                                       ),
-                                                      const SizedBox(height: 4),
+                                                      const SizedBox(height: 5),
 
                                                       Text(
                                                         'To those who walk between worlds,',
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style: GoogleFonts
-                                                            .playfairDisplay(
-                                                          fontSize: 12.5.sp,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FontStyle.italic,
-                                                          color: const Color(
-                                                              0xFF683E1C),
-                                                          letterSpacing: 0.4,
-                                                        ),
+                                                        style:
+                                                            GoogleFonts.cormorantGaramond(
+                                                              fontSize: 14.0.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              fontStyle:
+                                                                  FontStyle
+                                                                      .italic,
+                                                              color:
+                                                                  const Color(
+                                                                    0xFF59300E,
+                                                                  ),
+                                                              letterSpacing:
+                                                                  0.5,
+                                                            ),
                                                       ),
-                                                      const SizedBox(height: 14),
+                                                      const SizedBox(
+                                                        height: 12,
+                                                      ),
 
-                                                      // Ornamental Divider Flourish
+                                                      // Subtle High Fae Divider Flourish
                                                       const ScrollDivider(),
-                                                      const SizedBox(height: 14),
+                                                      const SizedBox(
+                                                        height: 12,
+                                                      ),
 
-                                                      // Opening Dramatic Proclamation (Directly on parchment, NO pink box)
+                                                      // Opening Proclamation with Dramatic High Fae Emphasis
                                                       Text(
                                                         'The Shattered Citadel has fallen.',
                                                         textAlign:
                                                             TextAlign.center,
                                                         style:
-                                                            GoogleFonts.cinzel(
-                                                          fontSize: 14.5.sp,
-                                                          fontWeight:
-                                                              FontWeight.w800,
-                                                          color: const Color(
-                                                              0xFF781212),
-                                                          letterSpacing: 1.0,
-                                                        ),
+                                                            GoogleFonts.cinzelDecorative(
+                                                              fontSize: 14.5.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  const Color(
+                                                                    0xFF6E0D0D,
+                                                                  ),
+                                                              letterSpacing:
+                                                                  0.8,
+                                                            ),
                                                       ),
-                                                      const SizedBox(height: 14),
+                                                      const SizedBox(
+                                                        height: 12,
+                                                      ),
 
                                                       _buildParchmentParagraph(
                                                         'A violent rupture has torn through the boundaries separating our realms. '
                                                         'Portals once thought impossible have opened, ancient powers have awakened, '
                                                         'and the very foundations of our kingdom tremble beneath an approaching darkness.',
                                                       ),
-                                                      const SizedBox(height: 11),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
 
                                                       _buildParchmentParagraph(
                                                         'Our scouts have vanished. Our roads have grown treacherous. '
                                                         'Whispers of things that should not exist now travel upon the wind.',
                                                       ),
-                                                      const SizedBox(height: 14),
+                                                      const SizedBox(
+                                                        height: 12,
+                                                      ),
 
                                                       // Turning point callout
                                                       Text(
                                                         'And yet, hope remains.',
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style: GoogleFonts
-                                                            .playfairDisplay(
-                                                          fontSize: 14.0.sp,
-                                                          fontWeight:
-                                                              FontWeight.w800,
-                                                          fontStyle:
-                                                              FontStyle.italic,
-                                                          color: const Color(
-                                                              0xFF6C3E08),
-                                                          letterSpacing: 0.5,
-                                                        ),
+                                                        style:
+                                                            GoogleFonts.cormorantGaramond(
+                                                              fontSize: 15.0.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              fontStyle:
+                                                                  FontStyle
+                                                                      .italic,
+                                                              color:
+                                                                  const Color(
+                                                                    0xFF542E08,
+                                                                  ),
+                                                              letterSpacing:
+                                                                  0.4,
+                                                            ),
                                                       ),
-                                                      const SizedBox(height: 14),
+                                                      const SizedBox(
+                                                        height: 12,
+                                                      ),
 
                                                       _buildParchmentParagraph(
                                                         'By the authority of the Crown, you are hereby summoned to undertake a journey '
                                                         'into the heart of our fractured kingdom.',
                                                       ),
-                                                      const SizedBox(height: 11),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
 
                                                       _buildParchmentParagraph(
                                                         'You shall depart from the Outpost, travel beyond the Wayfarer\'s Arch, and venture '
                                                         'through lands both wondrous and perilous toward the Shattered Citadel.',
                                                       ),
-                                                      const SizedBox(height: 11),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
 
                                                       _buildParchmentParagraph(
                                                         'The road will be long. The dangers, unknown. But you shall not walk it alone.',
                                                       ),
-                                                      const SizedBox(height: 11),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
 
                                                       _buildParchmentParagraph(
                                                         'Every step brings us closer to the truth. Every mile carries the hope of a kingdom '
                                                         'upon your shoulders.',
                                                       ),
-                                                      const SizedBox(height: 16),
+                                                      const SizedBox(
+                                                        height: 14,
+                                                      ),
 
-                                                      // Call to Action Proclamation directly on parchment
+                                                      // Call to Action Proclamation with High Fae Ornamental Styling
                                                       Container(
                                                         width: double.infinity,
                                                         padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                vertical: 8),
+                                                            const EdgeInsets.symmetric(
+                                                              vertical: 6,
+                                                            ),
                                                         child: Column(
                                                           children: [
                                                             const ScrollDivider(
-                                                                isSubtle: true),
+                                                              isSubtle: true,
+                                                            ),
                                                             const SizedBox(
-                                                                height: 8),
+                                                              height: 6,
+                                                            ),
                                                             Text(
                                                               'Answer the summons. Begin your journey. The realm awaits.',
                                                               textAlign:
                                                                   TextAlign
                                                                       .center,
-                                                              style: GoogleFonts
-                                                                  .cinzel(
+                                                              style: GoogleFonts.cinzel(
                                                                 fontSize:
                                                                     12.5.sp,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w800,
-                                                                color: const Color(
-                                                                    0xFF3C1F08),
+                                                                color:
+                                                                    const Color(
+                                                                      0xFF331604,
+                                                                    ),
                                                                 letterSpacing:
-                                                                    0.8,
+                                                                    0.9,
+                                                                height: 1.4,
+                                                              ),
                                                             ),
-                                                          ),
-                                                          const SizedBox(
-                                                              height: 8),
-                                                          const ScrollDivider(
-                                                              isSubtle: true),
-                                                        ],
+                                                            const SizedBox(
+                                                              height: 6,
+                                                            ),
+                                                            const ScrollDivider(
+                                                              isSubtle: true,
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    const SizedBox(height: 14),
+                                                      const SizedBox(
+                                                        height: 14,
+                                                      ),
 
-                                                    // Royal Sign-Off & Wax Seal Area
-                                                    const _RoyalSignOffSection(),
-                                                  ],
+                                                      // Official Royal Sign-Off & Dravosi Wax Seal
+                                                      const _RoyalSignOffSection(),
+                                                      const SizedBox(height: 8),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
 
-                                          // Ornate Medieval Fantasy Plaque Button
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                16, 6, 16, 14),
-                                            child: FantasyPlaqueButton(
-                                              label: widget.isReread
-                                                  ? 'CLOSE ROYAL DECREE'
-                                                  : 'ACCEPT THE SUMMONS',
-                                              onPressed: () => _handleClose(
-                                                triggerAccept: !widget.isReread,
+                                            // Ornate Medieval Fantasy Plaque Button
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                    16,
+                                                    6,
+                                                    16,
+                                                    14,
+                                                  ),
+                                              child: FantasyPlaqueButton(
+                                                label: widget.isReread
+                                                    ? 'CLOSE ROYAL DECREE'
+                                                    : 'ACCEPT THE SUMMONS',
+                                                onPressed: () => _handleClose(
+                                                  triggerAccept:
+                                                      !widget.isReread,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            // 3. Bottom Antique Dark Timber & Bronze Scroll Rod
+                            const ScrollRoll(isTop: false),
+                          ],
+                        ),
+
+                        // Top-right close button when re-reading decree
+                        if (widget.isReread)
+                          Positioned(
+                            top: -6,
+                            right: 4,
+                            child: GestureDetector(
+                              onTap: () => _handleClose(triggerAccept: false),
+                              child: Container(
+                                padding: const EdgeInsets.all(7),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: const RadialGradient(
+                                    colors: [
+                                      Color(0xFF4A1414),
+                                      Color(0xFF260808),
                                     ],
                                   ),
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          // 3. Bottom Curled Scroll Roll / Spindle
-                          const ScrollRoll(isTop: false),
-                        ],
-                      ),
-
-                      // Top-right close button when re-reading decree
-                      if (widget.isReread)
-                        Positioned(
-                          top: -6,
-                          right: 4,
-                          child: GestureDetector(
-                            onTap: () => _handleClose(triggerAccept: false),
-                            child: Container(
-                              padding: const EdgeInsets.all(7),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: const RadialGradient(
-                                  colors: [
-                                    Color(0xFF5A1E1E),
-                                    Color(0xFF320E0E)
+                                  border: Border.all(
+                                    color: const Color(0xFFC79E45),
+                                    width: 1.4,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.65,
+                                      ),
+                                      blurRadius: 6,
+                                      offset: const Offset(0, 2),
+                                    ),
                                   ],
                                 ),
-                                border: Border.all(
-                                  color: const Color(0xFFDFB65A),
-                                  width: 1.6,
+                                child: const Icon(
+                                  Icons.close,
+                                  color: Color(0xFFFFD54F),
+                                  size: 15,
                                 ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.6),
-                                    blurRadius: 6,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: const Icon(
-                                Icons.close,
-                                color: Color(0xFFFFE082),
-                                size: 15,
                               ),
                             ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildParchmentParagraph(String text) {
     return Align(
@@ -468,26 +523,26 @@ class _RoyalSummonsDialogState extends State<RoyalSummonsDialog>
       child: Text(
         text,
         textAlign: TextAlign.justify,
-        style: GoogleFonts.playfairDisplay(
-          fontSize: 12.8.sp,
-          fontWeight: FontWeight.w500,
-          color: const Color(0xFF261608),
-          height: 1.50,
-          letterSpacing: 0.18,
+        style: GoogleFonts.cormorantGaramond(
+          fontSize: 13.5.sp,
+          fontWeight: FontWeight.w600,
+          color: const Color(0xFF1E0E03), // Deep iron-gall ink
+          height: 1.55,
+          letterSpacing: 0.20,
         ),
       ),
     );
   }
 }
 
-/// Royal Sign-Off with Realistic 3D Physical Crimson Wax Seal & Ribbons
+/// Royal Sign-Off with Official Dravosi Royal Wax Seal & High Fae Signatures
 class _RoyalSignOffSection extends StatelessWidget {
   const _RoyalSignOffSection();
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 10, bottom: 6),
+      padding: const EdgeInsets.only(top: 8, bottom: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -498,29 +553,29 @@ class _RoyalSignOffSection extends StatelessWidget {
             children: [
               Text(
                 'By Order of Their Royal Majesties,',
-                style: GoogleFonts.playfairDisplay(
-                  fontSize: 11.8.sp,
-                  fontWeight: FontWeight.w600,
+                style: GoogleFonts.cormorantGaramond(
+                  fontSize: 12.5.sp,
+                  fontWeight: FontWeight.w700,
                   fontStyle: FontStyle.italic,
-                  color: const Color(0xFF5A3114),
+                  color: const Color(0xFF502B0E),
                 ),
               ),
-              const SizedBox(height: 3),
+              const SizedBox(height: 2),
               Text(
                 'The High King and Queen',
                 style: GoogleFonts.cinzel(
                   fontSize: 13.0.sp,
                   fontWeight: FontWeight.w900,
-                  color: const Color(0xFF331406),
-                  letterSpacing: 0.8,
+                  color: const Color(0xFF281002),
+                  letterSpacing: 0.9,
                 ),
               ),
             ],
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: 12),
 
-          // Physical Crimson Wax Seal with Draping Silk Ribbons
-          const CrimsonWaxSeal(),
+          // Official Dravosi Royal Wax Seal
+          const CrimsonWaxSeal(size: 50),
         ],
       ),
     );

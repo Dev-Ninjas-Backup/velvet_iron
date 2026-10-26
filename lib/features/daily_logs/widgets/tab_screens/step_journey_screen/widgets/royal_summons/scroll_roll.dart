@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// 3D Realistic Cylindrical Scroll Roll at Top and Bottom with Turned Finials
+/// Antique Carved Dark Timber & Aged Bronze Scroll Rods
 class ScrollRoll extends StatelessWidget {
   final bool isTop;
 
@@ -14,7 +14,7 @@ class ScrollRoll extends StatelessWidget {
         alignment: Alignment.center,
         clipBehavior: Clip.none,
         children: [
-          // Left Wooden Turned Finial / Knob
+          // Left Antique Carved Wooden Turned Finial / Knob
           Positioned(
             left: 0,
             child: Container(
@@ -25,25 +25,31 @@ class ScrollRoll extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Color(0xFF8B602A),
-                    Color(0xFFD4AF37),
-                    Color(0xFF573812),
+                    Color(0xFF2A170A), // Deep aged dark walnut
+                    Color(0xFF6B421E), // Polished timber highlight
+                    Color(0xFF8A6234), // Subtle antique bronze sheen
+                    Color(0xFF251407), // Shadowed underside
                   ],
                 ),
                 borderRadius: const BorderRadius.horizontal(
                   left: Radius.circular(8),
                 ),
+                border: Border.all(
+                  color: const Color(0xFF8A6234).withValues(alpha: 0.4),
+                  width: 0.8,
+                ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.5),
-                    blurRadius: 4,
+                    color: Colors.black.withValues(alpha: 0.65),
+                    blurRadius: 5,
+                    offset: const Offset(-1, 2),
                   ),
                 ],
               ),
             ),
           ),
 
-          // Right Wooden Turned Finial / Knob
+          // Right Antique Carved Wooden Turned Finial / Knob
           Positioned(
             right: 0,
             child: Container(
@@ -54,46 +60,52 @@ class ScrollRoll extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Color(0xFF8B602A),
-                    Color(0xFFD4AF37),
-                    Color(0xFF573812),
+                    Color(0xFF2A170A), // Deep aged dark walnut
+                    Color(0xFF6B421E), // Polished timber highlight
+                    Color(0xFF8A6234), // Subtle antique bronze sheen
+                    Color(0xFF251407), // Shadowed underside
                   ],
                 ),
                 borderRadius: const BorderRadius.horizontal(
                   right: Radius.circular(8),
                 ),
+                border: Border.all(
+                  color: const Color(0xFF8A6234).withValues(alpha: 0.4),
+                  width: 0.8,
+                ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.5),
-                    blurRadius: 4,
+                    color: Colors.black.withValues(alpha: 0.65),
+                    blurRadius: 5,
+                    offset: const Offset(1, 2),
                   ),
                 ],
               ),
             ),
           ),
 
-          // Central Curled Parchment Spindle Body
+          // Central Antique Rolled Parchment Cylinder Body
           Container(
             height: 20,
             margin: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(4),
               gradient: LinearGradient(
                 begin: isTop ? Alignment.topCenter : Alignment.bottomCenter,
                 end: isTop ? Alignment.bottomCenter : Alignment.topCenter,
                 colors: const [
-                  Color(0xFF6F4B1E), // Dark curl back
-                  Color(0xFFDFBA76), // Lit edge
-                  Color(0xFFFAF0D7), // Specular highlight ridge
-                  Color(0xFFDFBA76), // Mid tone
-                  Color(0xFF5E3D13), // Deep curl underside shadow
+                  Color(0xFF2B1607), // Deep shadow curl
+                  Color(0xFF5E3917), // Rich aged timber
+                  Color(0xFF9E7743), // Weathered antique parchment ridge
+                  Color(0xFF6B441F), // Shadowed wood
+                  Color(0xFF1E0E04), // Underside depth shadow
                 ],
-                stops: const [0.0, 0.22, 0.50, 0.78, 1.0],
+                stops: const [0.0, 0.20, 0.48, 0.78, 1.0],
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.65),
-                  blurRadius: 6,
+                  color: Colors.black.withValues(alpha: 0.75),
+                  blurRadius: 8,
                   offset: Offset(0, isTop ? 4 : -4),
                 ),
               ],

@@ -1,0 +1,27 @@
+Hi team,
+I also want to acknowledge the progress you've made! I've been testing the latest build, and I'm very
+happy to report that nearly everything appears to be functioning correctly now.
+The improvements are noticeable, and I genuinely appreciate all the work everyone has put into
+resolving the issues throughout development. It's exciting to finally see everything coming together!
+There are just two remaining issues I'd like you to check:
+1. Specific-Day Quest Scheduling
+When a quest is scheduled for specific days of the week, it appears to disappear after being
+completed on the first scheduled day. I'm concerned it may not reappear at midnight on the next
+selected day.
+Please verify that these quests reset and reappear correctly on every scheduled day, even after
+previous completions. They should remain active on their assigned schedule unless the user changes
+or deletes them.
+2. GLP-1 Optional Quest
+The optional GLP-1 injection quest is currently appearing as a daily quest. This is incorrect, as the
+GLP-1 injections supported by this feature are administered once per week.
+
+The user should be able to select their preferred injection day during setup. The quest should then
+appear only on that selected day each week, reset weekly, and award XP once per scheduled
+completion.
+It should not appear as a daily quest or require daily completion.
+Aside from these two issues, everything else I've tested appears to be working as intended!
+I've also been actively marketing Velvet & Iron Training Codex, growing our social media presence,
+and building our launch waitlist. People are already expressing interest, and I'm excited to finally get
+the app into their hands.
+Thank you again for your hard work and dedication. We're getting very close to launch, and I
+appreciate everyone's efforts to bring my vision to life!

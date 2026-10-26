@@ -165,4 +165,10 @@ class ImagePath {
       'assets/images/campsite/landmark_9_obsidian_keep.png';
   static const String landmarkCitadel =
       'assets/images/campsite/landmark_10_citadel.png';
+
+  // Dravosi Royal Summons Artifacts
+  static const String dravosiRoyalCrest =
+      'assets/images/dravosi_royal_crest.png';
+  static const String dravosiRoyalWaxSeal =
+      'assets/images/dravosi_royal_wax_seal.png';
 }
